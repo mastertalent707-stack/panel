@@ -7,6 +7,7 @@ import ActionBar from '@/elements/ActionBar.tsx';
 import Button from '@/elements/Button.tsx';
 import Code from '@/elements/Code.tsx';
 import ConfirmationModal from '@/elements/modals/ConfirmationModal.tsx';
+import { useKeyboardShortcuts } from '@/plugins/useKeyboardShortcuts.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';
 import { useAdminStore } from '@/stores/admin.tsx';
 import NodeAllocationsUpdateModal from './modals/NodeAllocationsUpdateModal.tsx';
@@ -33,6 +34,16 @@ export default function AllocationActionBar({ node, loadAllocations }: { node: N
         addToast(httpErrorToHuman(msg), 'error');
       });
   };
+
+  useKeyboardShortcuts({
+    shortcuts: [
+      {
+        key: 'Delete',
+        callback: () => setOpenModal('delete'),
+      },
+    ],
+    deps: [],
+  });
 
   return (
     <>
