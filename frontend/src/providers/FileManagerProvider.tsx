@@ -22,7 +22,7 @@ const FileManagerProvider = ({ children }: { children: ReactNode }) => {
   const [selectedFiles, setSelectedFiles] = useState(new Set<DirectoryEntry>());
   const [browsingBackup, setBrowsingBackup] = useState<ServerBackup | null>(null);
   const [browsingDirectory, setBrowsingDirectory] = useState('');
-  const [browsingEntries, setBrowsingEntries] = useState<ResponseMeta<DirectoryEntry>>(getEmptyPaginationSet());
+  const [browsingEntries, setBrowsingEntries] = useState<Pagination<DirectoryEntry>>(getEmptyPaginationSet());
   const [page, setPage] = useState(1);
   const [browsingWritableDirectory, setBrowsingWritableDirectory] = useState(true);
   const [browsingFastDirectory, setBrowsingFastDirectory] = useState(true);

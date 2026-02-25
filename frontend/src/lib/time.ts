@@ -1,3 +1,5 @@
+import { getTranslations } from '@/providers/TranslationProvider.tsx';
+
 export function formatMiliseconds(uptime: number) {
   const uptimeSeconds = Math.floor(uptime / 1000);
 
@@ -14,7 +16,7 @@ export function formatMiliseconds(uptime: number) {
 }
 
 export function formatDateTime(timestamp: string | number | Date) {
-  return new Date(timestamp).toLocaleString(undefined, {
+  return new Date(timestamp).toLocaleString(getTranslations().language, {
     year: 'numeric',
     month: 'short',
     day: 'numeric',

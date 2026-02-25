@@ -57,7 +57,8 @@ export default function AdminOverview() {
 
       {latestVersions && parseVersion(latestVersions.panel).isNewerThan(settings.version) && (
         <Alert className='mb-4' color='yellow'>
-          hihi {latestVersions.panel}
+          A new version is available for the panel! You are currently on {settings.version} and the latest version is{' '}
+          {latestVersions.panel}. You may want to consider upgrading.
         </Alert>
       )}
 

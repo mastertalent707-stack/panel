@@ -3,24 +3,24 @@ import { getEmptyPaginationSet } from '@/api/axios.ts';
 import { AdminStore } from '@/stores/admin.tsx';
 
 export interface NodesSlice {
-  nodes: ResponseMeta<Node>;
-  nodeMounts: ResponseMeta<NodeMount>;
-  nodeBackups: ResponseMeta<AdminServerBackup>;
-  nodeAllocations: ResponseMeta<NodeAllocation>;
+  nodes: Pagination<Node>;
+  nodeMounts: Pagination<NodeMount>;
+  nodeBackups: Pagination<AdminServerBackup>;
+  nodeAllocations: Pagination<NodeAllocation>;
   selectedNodeAllocations: NodeAllocation[];
 
-  setNodes: (nodes: ResponseMeta<Node>) => void;
+  setNodes: (nodes: Pagination<Node>) => void;
   addNode: (node: Node) => void;
   removeNode: (node: Node) => void;
 
-  setNodeMounts: (mounts: ResponseMeta<NodeMount>) => void;
+  setNodeMounts: (mounts: Pagination<NodeMount>) => void;
   addNodeMount: (mount: NodeMount) => void;
   removeNodeMount: (mount: NodeMount) => void;
 
-  setNodeBackups: (backups: ResponseMeta<AdminServerBackup>) => void;
+  setNodeBackups: (backups: Pagination<AdminServerBackup>) => void;
   removeNodeBackup: (backup: AdminServerBackup) => void;
 
-  setNodeAllocations: (allocations: ResponseMeta<NodeAllocation>) => void;
+  setNodeAllocations: (allocations: Pagination<NodeAllocation>) => void;
   removeNodeAllocations: (allocations: NodeAllocation[]) => void;
 
   setSelectedNodeAllocations: (allocations: NodeAllocation[]) => void;

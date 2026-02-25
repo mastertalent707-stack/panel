@@ -39,8 +39,8 @@ export interface FileManagerContextType {
   setBrowsingBackup: (backup: ServerBackup | null) => void;
   browsingDirectory: string;
   setBrowsingDirectory: (directory: string) => void;
-  browsingEntries: ResponseMeta<DirectoryEntry>;
-  setBrowsingEntries: (entries: ResponseMeta<DirectoryEntry>) => void;
+  browsingEntries: Pagination<DirectoryEntry>;
+  setBrowsingEntries: (entries: Pagination<DirectoryEntry>) => void;
   page: number;
   setPage: (page: number) => void;
   browsingWritableDirectory: boolean;

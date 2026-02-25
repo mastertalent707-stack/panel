@@ -11,7 +11,6 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { join } from 'pathe';
 import { memo, useState } from 'react';
-import { useSearchParams } from 'react-router';
 import { httpErrorToHuman } from '@/api/axios.ts';
 import copyFiles from '@/api/server/files/copyFiles.ts';
 import downloadFiles from '@/api/server/files/downloadFiles.ts';
@@ -20,13 +19,12 @@ import ActionBar from '@/elements/ActionBar.tsx';
 import Button from '@/elements/Button.tsx';
 import { ServerCan } from '@/elements/Can.tsx';
 import Tooltip from '@/elements/Tooltip.tsx';
+import { useKeyboardShortcuts } from '@/plugins/useKeyboardShortcuts.ts';
 import { useFileManager } from '@/providers/contexts/fileManagerContext.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';
 import { useServerStore } from '@/stores/server.ts';
-import { useFileKeyboardActions } from './hooks/useFileKeyboardActions.ts';
 
 function FileActionBar() {
-  const [_searchParams, _] = useSearchParams();
   const { addToast } = useToast();
   const { server } = useServerStore();
   const {
@@ -113,9 +111,59 @@ function FileActionBar() {
       .finally(() => setLoading(false));
   };
 
-  useFileKeyboardActions({
-    onDelete: () => doOpenModal('delete', [...selectedFiles]),
-    onPaste: () => (actingMode === 'copy' ? doCopy() : doMove()),
+  useKeyboardShortcuts({
+    shortcuts: [
+      {
+        key: 'Escape',
+        modifiers: ['ctrlOrMeta'],
+        callback: () => {
+          clearActingFiles();
+          doSelectFiles([]);
+        },
+      },
+      {
+        key: 'x',
+        modifiers: ['ctrlOrMeta'],
+        callback: () => {
+          if (actingFiles.size === 0 && selectedFiles.size > 0 && browsingWritableDirectory) {
+            doActFiles('move', [...selectedFiles]);
+            doSelectFiles([]);
+          }
+        },
+      },
+      {
+        key: 'c',
+        modifiers: ['ctrlOrMeta'],
+        callback: () => {
+          if (actingFiles.size === 0 && selectedFiles.size > 0) {
+            doActFiles('copy', [...selectedFiles]);
+            doSelectFiles([]);
+          }
+        },
+      },
+      {
+        key: 'v',
+        modifiers: ['ctrlOrMeta'],
+        callback: () => {
+          if (actingFiles.size > 0 && !loading) {
+            if (actingMode === 'copy') {
+              doCopy();
+            } else {
+              doMove();
+            }
+          }
+        },
+      },
+      {
+        key: 'Delete',
+        callback: () => {
+          if (actingFiles.size === 0 && selectedFiles.size > 0 && browsingWritableDirectory) {
+            doOpenModal('delete', [...selectedFiles]);
+          }
+        },
+      },
+    ],
+    deps: [actingMode, actingFiles, selectedFiles, loading, browsingWritableDirectory],
   });
 
   return (

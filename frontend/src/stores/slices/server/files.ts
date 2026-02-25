@@ -15,8 +15,8 @@ export interface FilesSlice {
   browsingFastDirectory: boolean;
   setBrowsingFastDirectory: (fast: boolean) => void;
 
-  browsingEntries: ResponseMeta<DirectoryEntry>;
-  setBrowsingEntries: (entries: ResponseMeta<DirectoryEntry>) => void;
+  browsingEntries: Pagination<DirectoryEntry>;
+  setBrowsingEntries: (entries: Pagination<DirectoryEntry>) => void;
   addBrowsingEntry: (entry: DirectoryEntry) => void;
   removeBrowsingEntry: (entry: DirectoryEntry) => void;
 

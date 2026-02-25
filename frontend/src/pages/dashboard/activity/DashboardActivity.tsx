@@ -16,7 +16,7 @@ export default function DashboardActivity() {
   const { user } = useAuth();
   const { t } = useTranslations();
 
-  const [activities, setActivities] = useState<ResponseMeta<UserActivity>>(getEmptyPaginationSet());
+  const [activities, setActivities] = useState<Pagination<UserActivity>>(getEmptyPaginationSet());
 
   const { loading, search, setSearch, setPage } = useSearchablePaginatedTable({
     fetcher: getUserActivity,

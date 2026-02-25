@@ -5,12 +5,12 @@ import getNodeResources from '@/api/me/servers/resources/getNodeResources.ts';
 import { UserStore } from '@/stores/user.ts';
 
 export interface ServerSlice {
-  servers: ResponseMeta<Server>;
+  servers: Pagination<Server>;
   serverResourceUsage: QuickLRU<string, ResourceUsage>;
   serverResourceUsagePendingNodes: Set<string>;
   serverGroups: UserServerGroup[];
 
-  setServers: (servers: ResponseMeta<Server>) => void;
+  setServers: (servers: Pagination<Server>) => void;
   addServerResourceUsage: (uuid: string, usage: ResourceUsage) => void;
   getServerResourceUsage: (uuid: string, nodeUuid: string) => ResourceUsage | undefined;
   setServerGroups: (serverGroups: UserServerGroup[]) => void;

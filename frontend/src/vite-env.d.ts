@@ -1273,7 +1273,7 @@ declare global {
     uptime: number;
   }
 
-  interface ResponseMeta<T> {
+  interface Pagination<T> {
     total: number;
     perPage: number;
     page: number;

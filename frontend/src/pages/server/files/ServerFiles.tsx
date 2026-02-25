@@ -17,6 +17,7 @@ import FileSearchBanner from '@/pages/server/files/FileSearchBanner.tsx';
 import FileSettings from '@/pages/server/files/FileSettings.tsx';
 import FileToolbar from '@/pages/server/files/FileToolbar.tsx';
 import FileUpload from '@/pages/server/files/FileUpload.tsx';
+import { useKeyboardShortcut } from '@/plugins/useKeyboardShortcuts.ts';
 import { useFileManager } from '@/providers/contexts/fileManagerContext.ts';
 import { FileManagerProvider } from '@/providers/FileManagerProvider.tsx';
 import { useServerStore } from '@/stores/server.ts';
@@ -59,6 +60,11 @@ function ServerFilesComponent() {
   };
 
   const onPageSelect = (page: number) => setSearchParams({ directory: browsingDirectory, page: page.toString() });
+
+  useKeyboardShortcut('a', () => setSelectedFiles(new Set(browsingEntries.data)), {
+    modifiers: ['ctrlOrMeta'],
+    deps: [browsingEntries],
+  });
 
   return (
     <div className='h-fit relative'>

@@ -5,8 +5,8 @@ import { httpErrorToHuman } from '@/api/axios.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';
 
 interface UseSearchablePaginatedTableOptions<T> {
-  fetcher: (page: number, search: string) => Promise<ResponseMeta<T>>;
-  setStoreData: (data: ResponseMeta<T>) => void;
+  fetcher: (page: number, search: string) => Promise<Pagination<T>>;
+  setStoreData: (data: Pagination<T>) => void;
   deps?: unknown[];
   debounceMs?: number;
   initialPage?: number;

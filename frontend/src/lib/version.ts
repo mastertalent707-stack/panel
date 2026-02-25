@@ -28,13 +28,13 @@ class CalagopusVersionInfo {
     return !this.commit && !this.branch;
   }
 
-  public isNewerThan(version: string) {
+  public isNewerThan(version: string | CalagopusVersionInfo) {
     const parsedVersion = parseVersion(version);
 
     return this.release.compare(parsedVersion.release) !== -1;
   }
 }
 
-export const parseVersion = (version: string) => {
-  return new CalagopusVersionInfo(version);
+export const parseVersion = (version: string | CalagopusVersionInfo) => {
+  return version instanceof CalagopusVersionInfo ? version : new CalagopusVersionInfo(version);
 };

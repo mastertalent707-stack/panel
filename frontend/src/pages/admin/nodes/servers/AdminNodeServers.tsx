@@ -18,7 +18,7 @@ import { useTranslations } from '@/providers/TranslationProvider.tsx';
 export default function AdminNodeServers({ node }: { node: Node }) {
   const { t, tItem } = useTranslations();
   const { addToast } = useToast();
-  const [nodeServers, setNodeServers] = useState<ResponseMeta<AdminServer>>(getEmptyPaginationSet());
+  const [nodeServers, setNodeServers] = useState<Pagination<AdminServer>>(getEmptyPaginationSet());
   const [selectedServers, setSelectedServers] = useState<Set<string>>(new Set());
   const selectedServersPreviousRef = useRef<Set<string>>(new Set());
   const [sKeyPressed, setSKeyPressed] = useState(false);
