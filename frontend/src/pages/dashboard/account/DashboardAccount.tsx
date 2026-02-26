@@ -1,6 +1,6 @@
 import { faShieldAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Grid } from '@mantine/core';
+import { Grid, Title } from '@mantine/core';
 import Alert from '@/elements/Alert.tsx';
 import AccountContentContainer from '@/elements/containers/AccountContentContainer.tsx';
 import { useAuth } from '@/providers/AuthProvider.tsx';
@@ -23,6 +23,10 @@ export default function DashboardAccount() {
 
   return (
     <AccountContentContainer title={t('pages.account.account.title', {})}>
+      <Title order={1} c='white'>
+        {t('pages.account.account.title', {})}
+      </Title>
+
       {requireTwoFactorActivation && (
         <Alert
           icon={<FontAwesomeIcon icon={faShieldAlt} />}

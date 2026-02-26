@@ -497,6 +497,7 @@ const baseTranslations = defineTranslations({
           },
           console: {
             title: 'Server Console',
+            searchContent: 'Search in console output',
             previousCommand: 'Previous command in history',
             nextCommand: 'Next command in history',
           },

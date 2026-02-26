@@ -11,7 +11,7 @@ import {
   IconDefinition,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Box, Flex, Stack, Text, Title } from '@mantine/core';
+import { Box, Flex, Group, Stack, Text, Title } from '@mantine/core';
 import AccountContentContainer from '@/elements/containers/AccountContentContainer.tsx';
 import TitleCard from '@/elements/TitleCard.tsx';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
@@ -128,6 +128,7 @@ export default function DashboardShortcuts() {
   ];
 
   const consoleShortcuts: ShortcutItemProps[] = [
+    { keys: [modKey, 'F'], description: t('pages.account.shortcuts.console.searchContent', {}) },
     { keys: [{ icon: faArrowUp }], description: t('pages.account.shortcuts.console.previousCommand', {}) },
     { keys: [{ icon: faArrowDown }], description: t('pages.account.shortcuts.console.nextCommand', {}) },
   ];
@@ -138,8 +139,8 @@ export default function DashboardShortcuts() {
 
   return (
     <AccountContentContainer title={t('pages.account.shortcuts.title', {})}>
-      <Flex justify='space-between' align='center' mb='lg'>
-        <Title order={2} c='gray.1'>
+      <Group justify='space-between' mb='md'>
+        <Title order={1} c='white'>
           {t('pages.account.shortcuts.title', {})}
         </Title>
         <Flex
@@ -158,7 +159,7 @@ export default function DashboardShortcuts() {
             {isMac ? t('pages.account.shortcuts.detectedMac', {}) : t('pages.account.shortcuts.detectedWindows', {})}
           </Text>
         </Flex>
-      </Flex>
+      </Group>
 
       <Text c='gray.5' mb='xl' size='sm'>
         {t('pages.account.shortcuts.description', {})}

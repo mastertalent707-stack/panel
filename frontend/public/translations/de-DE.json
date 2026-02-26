@@ -615,6 +615,7 @@
           },
           "console": {
             "title": "Server Konsole",
+            "searchContent": "Konsolenausgabe durchsuchen",
             "previousCommand": "Vorheriger Befehl im Verlauf",
             "nextCommand": "Nächster Befehl im Verlauf"
           },
