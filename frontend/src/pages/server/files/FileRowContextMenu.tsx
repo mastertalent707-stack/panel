@@ -35,8 +35,15 @@ export default function FileRowContextMenu({ file, children }: FileRowContextMen
   const { addToast } = useToast();
   const { addWindow } = useWindows();
   const { settings } = useGlobalStore();
-  const { server, browsingBackup, browsingWritableDirectory, setActingFiles } = useServerStore();
-  const { browsingDirectory, browsingFastDirectory, doOpenModal } = useFileManager();
+  const { server } = useServerStore();
+  const {
+    browsingBackup,
+    browsingDirectory,
+    browsingWritableDirectory,
+    browsingFastDirectory,
+    doOpenModal,
+    doActFiles,
+  } = useFileManager();
   const canCreate = useServerCan('files.create');
   const canArchive = useServerCan('files.archive');
 
@@ -112,7 +119,7 @@ export default function FileRowContextMenu({ file, children }: FileRowContextMen
           icon: faAnglesUp,
           label: 'Move',
           hidden: !!browsingBackup || !browsingWritableDirectory,
-          onClick: () => setActingFiles('move', [file]),
+          onClick: () => doActFiles('move', [file]),
           color: 'gray',
           canAccess: useServerCan('files.update'),
         },

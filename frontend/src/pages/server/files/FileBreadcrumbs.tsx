@@ -14,9 +14,17 @@ import { useServerStore } from '@/stores/server.ts';
 
 export default function FileBreadcrumbs({ path, inFileEditor }: { path: string; inFileEditor?: boolean }) {
   const { addToast } = useToast();
-  const { server, setBrowsingDirectory, actingFileNames } = useServerStore();
-  const { selectedFiles, browsingBackup, browsingEntries, doSelectFiles, setBrowsingBackup, doOpenModal } =
-    useFileManager();
+  const { server } = useServerStore();
+  const {
+    selectedFiles,
+    browsingBackup,
+    browsingEntries,
+    setBrowsingDirectory,
+    actingFiles,
+    doSelectFiles,
+    setBrowsingBackup,
+    doOpenModal,
+  } = useFileManager();
 
   const splittedPath = path.split('/').filter(Boolean);
   const pathItems = splittedPath.map((item, index) => {
@@ -80,7 +88,7 @@ export default function FileBreadcrumbs({ path, inFileEditor }: { path: string; 
     <div className='flex flex-row items-center justify-between'>
       <Breadcrumbs separatorMargin='xs'>
         <Checkbox
-          disabled={actingFileNames.size > 0}
+          disabled={actingFiles.size > 0}
           checked={!inFileEditor && selectedFiles.size > 0 && selectedFiles.size >= browsingEntries.data.length}
           indeterminate={selectedFiles.size > 0 && selectedFiles.size < browsingEntries.data.length}
           className='mr-2'

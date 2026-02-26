@@ -1,0 +1,32 @@
+import { faCog } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Popover } from '@mantine/core';
+import { useEffect } from 'react';
+import Button from '@/elements/Button.tsx';
+import Checkbox from '@/elements/input/Checkbox.tsx';
+import { useFileManager } from '@/providers/FileManagerProvider.tsx';
+
+export default function FileEditorSettings() {
+  const { editorMinimap, setEditorMinimap } = useFileManager();
+
+  useEffect(() => {
+    localStorage.setItem('file_editor_minimap', String(editorMinimap));
+  }, [editorMinimap]);
+
+  return (
+    <Popover position='bottom' withArrow shadow='md'>
+      <Popover.Target>
+        <Button variant='transparent' size='compact-xs'>
+          <FontAwesomeIcon size='lg' icon={faCog} />
+        </Button>
+      </Popover.Target>
+      <Popover.Dropdown>
+        <Checkbox
+          label='Show editor Minimap'
+          checked={editorMinimap}
+          onChange={(e) => setEditorMinimap(e.target.checked)}
+        />
+      </Popover.Dropdown>
+    </Popover>
+  );
+}

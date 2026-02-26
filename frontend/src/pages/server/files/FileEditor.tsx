@@ -1,4 +1,4 @@
-import { Title } from '@mantine/core';
+import { Group, Title } from '@mantine/core';
 import { type OnMount } from '@monaco-editor/react';
 import { join } from 'pathe';
 import { startTransition, useEffect, useRef, useState } from 'react';
@@ -16,10 +16,11 @@ import Spinner from '@/elements/Spinner.tsx';
 import { registerHoconLanguage, registerTomlLanguage } from '@/lib/monaco.ts';
 import NotFound from '@/pages/NotFound.tsx';
 import { useBlocker } from '@/plugins/useBlocker.ts';
-import { FileManagerProvider } from '@/providers/FileManagerProvider.tsx';
+import { FileManagerProvider, useFileManager } from '@/providers/FileManagerProvider.tsx';
 import { useToast } from '@/providers/ToastProvider.tsx';
 import { useServerStore } from '@/stores/server.ts';
 import FileBreadcrumbs from './FileBreadcrumbs.tsx';
+import FileEditorSettings from './FileEditorSettings.tsx';
 import FileNameModal from './modals/FileNameModal.tsx';
 
 function FileEditorComponent() {
@@ -29,7 +30,7 @@ function FileEditorComponent() {
   const navigate = useNavigate();
   const { addToast } = useToast();
   const server = useServerStore((state) => state.server);
-  const { browsingBackup, browsingWritableDirectory, browsingDirectory, setBrowsingDirectory } = useServerStore();
+  const { editorMinimap, browsingWritableDirectory, browsingDirectory, setBrowsingDirectory } = useFileManager();
 
   const [loading, setLoading] = useState(false);
   const [dirty, setDirty] = useState(false);
@@ -70,7 +71,7 @@ function FileEditorComponent() {
   const saveFile = (name?: string) => {
     setDirty(false);
 
-    if (!editorRef.current || browsingBackup || !browsingWritableDirectory) return;
+    if (!editorRef.current || !browsingWritableDirectory) return;
 
     const currentContent = editorRef.current.getValue();
     setSaving(true);
@@ -103,8 +104,12 @@ function FileEditorComponent() {
   return (
     <ServerContentContainer hideTitleComponent fullscreen title={title}>
       <div className='flex justify-between items-center lg:p-4 lg:pb-0 mx-5'>
-        <Title>{title}</Title>
-        <div hidden={!!browsingBackup || !browsingWritableDirectory || params.action === 'image'}>
+        <Group>
+          <Title>{title}</Title>
+
+          <FileEditorSettings />
+        </Group>
+        <div hidden={!browsingWritableDirectory || params.action === 'image'}>
           {params.action === 'edit' ? (
             <ServerCan action='files.update'>
               <Button loading={saving} onClick={() => saveFile()}>
@@ -164,9 +169,9 @@ function FileEditorComponent() {
                   defaultValue={content}
                   path={fileName}
                   options={{
-                    readOnly: !!browsingBackup || !browsingWritableDirectory,
+                    readOnly: !browsingWritableDirectory,
                     stickyScroll: { enabled: false },
-                    minimap: { enabled: false },
+                    minimap: { enabled: editorMinimap },
                     codeLens: false,
                     scrollBeyondLastLine: false,
                     smoothScrolling: true,
