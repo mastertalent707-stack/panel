@@ -1,5 +1,6 @@
 import { Group, Title } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';
+import { join } from 'pathe';
 import { type Ref, useCallback, useEffect, useRef } from 'react';
 import { createSearchParams, useNavigate, useSearchParams } from 'react-router';
 import loadDirectory from '@/api/server/files/loadDirectory.ts';
@@ -78,7 +79,7 @@ function ServerFilesComponent() {
       ) {
         if (file.directory || (isViewableArchive(file) && browsingFastDirectory)) {
           setSearchParams({
-            directory: `${browsingDirectory}/${file.name}`.replace('//', '/'),
+            directory: join(browsingDirectory, file.name),
           });
         } else {
           if (!canOpenFile) return;
@@ -111,6 +112,52 @@ function ServerFilesComponent() {
         key: 'n',
         modifiers: ['ctrlOrMeta', 'shift'],
         callback: () => doOpenModal('nameDirectory'),
+      },
+      {
+        key: 'ArrowUp',
+        callback: () => {
+          if (selectedFiles.size === 0) return;
+
+          const selectedIndices = [...selectedFiles.keys()]
+            .map((file) => browsingEntries.data.findIndex((value) => value.name === file.name))
+            .filter((index) => index !== -1);
+
+          if (selectedIndices.length === 0) return;
+
+          const minIndex = Math.min(...selectedIndices);
+          if (minIndex <= 0) return;
+
+          const nextFiles = selectedIndices.map((index) => browsingEntries.data[index - 1]);
+
+          setSelectedFiles(new Set(nextFiles));
+        },
+      },
+      {
+        key: 'ArrowDown',
+        callback: () => {
+          if (selectedFiles.size === 0) return;
+
+          const selectedIndices = [...selectedFiles.keys()]
+            .map((file) => browsingEntries.data.findIndex((value) => value.name === file.name))
+            .filter((index) => index !== -1);
+
+          if (selectedIndices.length === 0) return;
+
+          const maxIndex = Math.max(...selectedIndices);
+          if (maxIndex >= browsingEntries.data.length - 1) return;
+
+          const nextFiles = selectedIndices.map((index) => browsingEntries.data[index + 1]);
+
+          setSelectedFiles(new Set(nextFiles));
+        },
+      },
+      {
+        key: 'ArrowUp',
+        modifiers: ['alt'],
+        callback: () =>
+          setSearchParams({
+            directory: join(browsingDirectory, '..'),
+          }),
       },
       {
         key: 'f2',
