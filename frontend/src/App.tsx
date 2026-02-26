@@ -1,13 +1,15 @@
 import { MantineProvider } from '@mantine/core';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { createBrowserHistory } from 'history';
 import { useEffect } from 'react';
-import { BrowserRouter } from 'react-router';
+import { unstable_HistoryRouter as HistoryRouter } from 'react-router';
 import getLanguages from './api/getLanguages.ts';
 import getSettings from './api/getSettings.ts';
 import ErrorBoundary from './elements/ErrorBoundary.tsx';
 import Spinner from './elements/Spinner.tsx';
 import { CurrentWindowProvider } from './providers/CurrentWindowProvider.tsx';
+import { HistoryContext } from './providers/contexts/historyContext.ts';
 import { ToastProvider } from './providers/ToastProvider.tsx';
 import { WindowProvider } from './providers/WindowProvider.tsx';
 import RouterRoutes from './RouterRoutes.tsx';
@@ -24,6 +26,8 @@ const queryClient = new QueryClient({
     },
   },
 });
+
+const browserHistory = createBrowserHistory();
 
 export default function App() {
   const { settings, setSettings, setLanguages } = useGlobalStore();
@@ -42,9 +46,11 @@ export default function App() {
           <ToastProvider>
             <WindowProvider>
               <CurrentWindowProvider id={null}>
-                <BrowserRouter>
-                  <RouterRoutes isNormal />
-                </BrowserRouter>
+                <HistoryContext.Provider value={browserHistory}>
+                  <HistoryRouter history={browserHistory as never}>
+                    <RouterRoutes isNormal />
+                  </HistoryRouter>
+                </HistoryContext.Provider>
 
                 <ReactQueryDevtools initialIsOpen={false} />
               </CurrentWindowProvider>

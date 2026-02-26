@@ -8,11 +8,14 @@ import getFileContent from '@/api/server/files/getFileContent.ts';
 import saveFileContent from '@/api/server/files/saveFileContent.ts';
 import Button from '@/elements/Button.tsx';
 import { ServerCan } from '@/elements/Can.tsx';
+import Code from '@/elements/Code.tsx';
 import ServerContentContainer from '@/elements/containers/ServerContentContainer.tsx';
 import MonacoEditor from '@/elements/MonacoEditor.tsx';
+import ConfirmationModal from '@/elements/modals/ConfirmationModal.tsx';
 import Spinner from '@/elements/Spinner.tsx';
 import { registerHoconLanguage, registerTomlLanguage } from '@/lib/monaco.ts';
 import NotFound from '@/pages/NotFound.tsx';
+import { useBlocker } from '@/plugins/useBlocker.ts';
 import { FileManagerProvider } from '@/providers/FileManagerProvider.tsx';
 import { useToast } from '@/providers/ToastProvider.tsx';
 import { useServerStore } from '@/stores/server.ts';
@@ -29,6 +32,7 @@ function FileEditorComponent() {
   const { browsingBackup, browsingWritableDirectory, browsingDirectory, setBrowsingDirectory } = useServerStore();
 
   const [loading, setLoading] = useState(false);
+  const [dirty, setDirty] = useState(false);
   const [saving, setSaving] = useState(false);
   const [nameModalOpen, setNameModalOpen] = useState(false);
   const [fileName, setFileName] = useState('');
@@ -36,6 +40,8 @@ function FileEditorComponent() {
 
   const editorRef = useRef<Parameters<OnMount>[0]>(null);
   const contentRef = useRef(content);
+
+  const blocker = useBlocker(dirty);
 
   useEffect(() => {
     setBrowsingDirectory(searchParams.get('directory') || '/');
@@ -62,6 +68,8 @@ function FileEditorComponent() {
   }, [content]);
 
   const saveFile = (name?: string) => {
+    setDirty(false);
+
     if (!editorRef.current || browsingBackup || !browsingWritableDirectory) return;
 
     const currentContent = editorRef.current.getValue();
@@ -112,6 +120,17 @@ function FileEditorComponent() {
           )}
         </div>
       </div>
+
+      <ConfirmationModal
+        title='Unsaved Changes'
+        opened={blocker.state === 'blocked'}
+        onClose={() => blocker.reset()}
+        onConfirmed={() => blocker.proceed()}
+        confirm='Leave'
+      >
+        Are you sure you want to leave this page? You have unsaved changes in <Code>{fileName}</Code>.
+      </ConfirmationModal>
+
       {loading ? (
         <div className='w-full h-screen flex items-center justify-center'>
           <Spinner size={75} />
@@ -159,6 +178,7 @@ function FileEditorComponent() {
                     editorRef.current = editor;
                     editor.onDidChangeModelContent(() => {
                       contentRef.current = editor.getValue();
+                      setDirty(contentRef.current !== content);
                     });
                     editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
                       if (params.action === 'new') {
