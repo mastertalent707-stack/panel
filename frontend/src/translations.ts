@@ -478,12 +478,15 @@ const baseTranslations = defineTranslations({
           fileManager: {
             title: 'File Manager',
             selectAll: 'Select all files',
-            deselectAll: 'Deselect all files',
             cutFiles: 'Cut selected files',
             pasteFiles: 'Paste files',
+            searchFiles: 'Search files',
+            moveUpDirectory: 'Move Up a directory',
+            moveUpSelection: 'Move Up the selection',
+            moveDownSelection: 'Move Down the selection',
+            renameFile: 'Rename file',
+            deselectAll: 'Deselect all files',
             deleteFiles: 'Delete selected files',
-            dragToMove: 'Drag files or folder to move into folder',
-            search: 'Search files',
           },
           table: {
             title: 'Table Navigation',

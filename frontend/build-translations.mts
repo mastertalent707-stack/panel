@@ -25,10 +25,10 @@ await fs.mkdir('public/translations', { recursive: true });
 
 for (const [namespace, data] of Object.entries(baseTranslations.subTranslations)) {
   if (namespace === '') {
-    await fs.writeFile('public/translations/en-US.json', JSON.stringify(data, null, 2));
+    await fs.writeFile('public/translations/en-US.json', JSON.stringify(data, null, 2) + '\n');
     await fs.rmdir('public/translations/en-US').catch(() => null);
   } else {
     await fs.mkdir(`public/translations/en-US`, { recursive: true });
-    await fs.writeFile(`public/translations/en-US/${namespace}.json`, JSON.stringify(data, null, 2));
+    await fs.writeFile(`public/translations/en-US/${namespace}.json`, JSON.stringify(data, null, 2) + '\n');
   }
 }

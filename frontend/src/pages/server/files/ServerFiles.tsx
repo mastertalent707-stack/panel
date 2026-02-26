@@ -109,11 +109,6 @@ function ServerFilesComponent() {
         callback: () => doOpenModal('search'),
       },
       {
-        key: 'n',
-        modifiers: ['ctrlOrMeta', 'shift'],
-        callback: () => doOpenModal('nameDirectory'),
-      },
-      {
         key: 'ArrowUp',
         callback: () => {
           if (selectedFiles.size === 0) return;

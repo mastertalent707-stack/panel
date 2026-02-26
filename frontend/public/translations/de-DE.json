@@ -64,7 +64,7 @@
       "table": {
         "pagination": {
           "results": "Zeige {start} bis {end} von {total} Ergebnissen.",
-          "empty": "Es konnten keine Elemente gefunden werden, fast schon wie wenn sie sich verstecken."
+          "empty": "Es konnten keine Elemente gefunden werden, fast so, als würden sie sich verstecken."
         },
         "columns": {
           "name": "Name",
@@ -84,26 +84,26 @@
         "noAllocation": "Keine Allocation",
         "state": {
           "suspended": "Suspendiert",
-          "restoringBackup": "Stelle Backup wiederher",
-          "installing": "Installiere",
-          "InstallFailed": "Installation Fehlgeschlagen"
+          "restoringBackup": "Backup wird wiederhergestellt",
+          "installing": "Wird installiert",
+          "InstallFailed": "Installation fehlgeschlagen"
         }
       },
       "enum": {
         "userToastPosition": {
-          "topLeft": "Oben Links",
+          "topLeft": "Oben links",
           "topCenter": "Oben Mitte",
-          "topRight": "Oben Rechts",
-          "bottomLeft": "Unten Links",
+          "topRight": "Oben rechts",
+          "bottomLeft": "Unten links",
           "bottomCenter": "Unten Mitte",
-          "bottomRight": "Unten Rechts"
+          "bottomRight": "Unten rechts"
         },
         "serverState": {
           "unknown": "Unbekannt",
           "offline": "Offline",
           "running": "Läuft",
-          "starting": "Starte",
-          "stopping": "Stoppe"
+          "starting": "Startet",
+          "stopping": "Stoppt"
         },
         "connectionStatus": {
           "connected": "Verbunden",
@@ -188,10 +188,10 @@
         "location": {
           "title": "Standort-Konfiguration",
           "form": {
-            "locationName": "Standort Name",
+            "locationName": "Standort-Name",
             "locationNamePlaceholder": "Mein Zuhause",
             "backupName": "Backup Konfigurations-Name",
-            "backupNamePlaceholder": "Einhorn Cloud",
+            "backupNamePlaceholder": "Unicorn Cloud",
             "backupDisk": "Backup Festplatte",
             "backupDiskPlaceholder": "Backup Festplatte"
           },
@@ -268,7 +268,7 @@
           "tooltip": {
             "removeFromGroup": "Aus der Gruppe entfernen",
             "addToGroup": "Zur Gruppe hinzufügen",
-            "noGroups": "Keine Gruppen zum hinzufügen verfügbar",
+            "noGroups": "Keine Gruppen zum Hinzufügen verfügbar",
             "noGroup": "Dieser Server ist noch in keiner Gruppe"
           },
           "tabs": {
@@ -280,22 +280,22 @@
                 },
                 "modal": {
                   "createServerGroup": {
-                    "title": "Erstelle Server Gruppe",
+                    "title": "Server-Gruppe erstellen",
                     "toast": {
-                      "created": "Server Gruppe erstellt."
+                      "created": "Server-Gruppe erstellt."
                     }
                   },
                   "editServerGroup": {
-                    "title": "Bearbeite Server Gruppe",
+                    "title": "Server-Gruppe bearbeiten",
                     "toast": {
-                      "updated": "Server Gruppe aktualisiert."
+                      "updated": "Server-Gruppe aktualisiert."
                     }
                   },
                   "deleteServerGroup": {
-                    "title": "Bestätige Server Gruppen Löschung",
+                    "title": "Löschen der Server-Gruppe bestätigen",
                     "content": "Bist du sicher, dass du die Gruppe **{group}** von deinem Account löschen möchtest?",
                     "toast": {
-                      "deleted": "Server Gruppe gelöscht."
+                      "deleted": "Server-Gruppe gelöscht."
                     }
                   },
                   "addServerToGroup": {
@@ -317,16 +317,16 @@
                 },
                 "modal": {
                   "addToServerGroup": {
-                    "title": "Füge {server} zu einer Server Gruppe hinzu",
+                    "title": "{server} zu einer Server-Gruppe hinzufügen",
                     "form": {
-                      "serverGroup": "Server Gruppe"
+                      "serverGroup": "Server-Gruppe"
                     }
                   }
                 }
               }
             }
           },
-          "noServers": "Es konnten keine Server gefunden werden, Zeit einen hinzuzufügen?",
+          "noServers": "Es konnten keine Server gefunden werden, Zeit, einen hinzuzufügen?",
           "bulkActions": {
             "selectionMode": "Auswahlmodus",
             "select": "Server auswählen",
@@ -447,7 +447,7 @@
               }
             },
             "deleteSecurityKey": {
-              "title": "Bestätige Löschung des Sicherheitsschlüssels",
+              "title": "Löschen des Sicherheitsschlüssels bestätigen",
               "content": "Bist du sicher, dass du den Schlüssel **{key}** von deinem Account löschen möchtest?",
               "toast": {
                 "deleted": "Sicherheitsschlüssel erfolgreich gelöscht."
@@ -466,7 +466,7 @@
           },
           "modal": {
             "deleteSession": {
-              "title": "Bestätige Sitzungslöschung",
+              "title": "Löschen der Sitzung bestätigen",
               "content": "Bist du sicher, dass du die Sitzung **{ip}** von deinem Account löschen möchtest?",
               "toast": {
                 "deleted": "Sitzung gelöscht."
@@ -514,7 +514,7 @@
               }
             },
             "deleteSshKey": {
-              "title": "Bestätige Löschung des SSH-Schlüssels",
+              "title": "Löschen des SSH-Schlüssels bestätigen",
               "content": "Bist du sicher, dass du **{name}** von deinem Account löschen möchtest?",
               "toast": {
                 "removed": "SSH-Schlüssel entfernt."
@@ -536,7 +536,7 @@
           },
           "modal": {
             "deleteOAuthLink": {
-              "title": "Bestätige OAuth-Löschung",
+              "title": "Löschen der OAuth-Verknüpfung bestätigen",
               "content": "Bist du sicher, dass du die Verbindung zu **{provider}** von deinem Account löschen möchtest?",
               "toast": {
                 "removed": "OAuth-Verknüpfung entfernt."
@@ -570,7 +570,7 @@
               }
             },
             "deleteApiKey": {
-              "title": "Bestätige Löschung des API-Schlüssels",
+              "title": "Löschen des API-Schlüssels bestätigen",
               "content": "Bist du sicher, dass du **{name}** von deinem Account löschen möchtest?",
               "toast": {
                 "removed": "API-Schlüssel entfernt."
@@ -596,12 +596,15 @@
           "fileManager": {
             "title": "Dateimanager",
             "selectAll": "Alle Dateien auswählen",
-            "deselectAll": "Alle Dateien abwählen",
             "cutFiles": "Ausgewählte Dateien ausschneiden",
             "pasteFiles": "Dateien einfügen",
-            "deleteFiles": "Ausgewählte Dateien löschen",
-            "dragToMove": "Dateien oder Ordner ziehen, um sie in einen Ordner zu verschieben",
-            "search": "Dateien suchen"
+            "searchFiles": "Dateien suchen",
+            "moveUpDirectory": "Ein Verzeichnis nach oben",
+            "moveUpSelection": "Auswahl nach oben verschieben",
+            "moveDownSelection": "Auswahl nach unten verschieben",
+            "renameFile": "Datei umbenennen",
+            "deselectAll": "Alle Dateien abwählen",
+            "deleteFiles": "Ausgewählte Dateien löschen"
           },
           "table": {
             "title": "Tabellen-Navigation",
@@ -643,8 +646,8 @@
             "serverMarkedAs": "Server markiert als {state}...",
             "transferFailed": "Übertragung fehlgeschlagen.",
             "pullingImage": "Dein Server lädt gerade sein Docker-Image herunter. Bitte warten...",
-            "pulling": "Lade herunter",
-            "extracting": "Entpacke",
+            "pulling": "Wird heruntergeladen",
+            "extracting": "Wird entpackt",
             "layer": "Layer"
           },
           "details": {
@@ -760,7 +763,7 @@
               }
             },
             "deleteDatabase": {
-              "title": "Bestätige Datenbank-Löschung",
+              "title": "Löschen der Datenbank bestätigen",
               "content": "Das Löschen einer Datenbank ist endgültig und kann nicht rückgängig gemacht werden. Dies wird die Datenbank **{name}** und alle zugehörigen Daten permanent löschen.",
               "toast": {
                 "deleted": "Datenbank gelöscht."
@@ -800,7 +803,7 @@
               }
             },
             "removeSubuser": {
-              "title": "Bestätige Subuser-Entfernung",
+              "title": "Entfernen des Subusers bestätigen",
               "content": "Bist du sicher, dass du **{username}** von diesem Server entfernen möchtest?",
               "toast": {
                 "removed": "Subuser entfernt."
@@ -829,7 +832,7 @@
           },
           "toast": {
             "downloadStarted": "Download gestartet.",
-            "restoringBackup": "Stelle Backup wiederher..."
+            "restoringBackup": "Backup wird wiederhergestellt..."
           },
           "modal": {
             "createBackup": {
@@ -854,7 +857,7 @@
               "title": "Backup wiederherstellen"
             },
             "deleteBackup": {
-              "title": "Bestätige Backup-Löschung",
+              "title": "Löschen des Backups bestätigen",
               "content": "Bist du sicher, dass du **{name}** von diesem Server löschen möchtest?",
               "toast": {
                 "deleted": "Backup gelöscht."
@@ -895,7 +898,7 @@
               }
             },
             "removeAllocation": {
-              "title": "Bestätige Allocation-Entfernung",
+              "title": "Entfernen der Allocation bestätigen",
               "content": "Bist du sicher, dass du **{allocation}** von diesem Server entfernen möchtest?"
             }
           }
@@ -963,7 +966,7 @@
               "title": "Server neu installieren",
               "button": "Neu installieren",
               "toast": {
-                "reinstalling": "Installiere Server neu..."
+                "reinstalling": "Server wird neu installiert..."
               }
             }
           }

@@ -11,7 +11,7 @@ import {
   IconDefinition,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Box, Flex, SimpleGrid, Stack, Text, Title } from '@mantine/core';
+import { Box, Flex, Stack, Text, Title } from '@mantine/core';
 import AccountContentContainer from '@/elements/containers/AccountContentContainer.tsx';
 import TitleCard from '@/elements/TitleCard.tsx';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
@@ -108,13 +108,16 @@ export default function DashboardShortcuts() {
   const modKey = isMac ? 'Cmd' : 'Ctrl';
 
   const fileManagerShortcuts: ShortcutItemProps[] = [
-    { keys: [modKey, 'K'], description: t('pages.account.shortcuts.fileManager.search', {}) },
     { keys: [modKey, 'A'], description: t('pages.account.shortcuts.fileManager.selectAll', {}) },
-    { keys: [modKey, 'Esc'], description: t('pages.account.shortcuts.fileManager.deselectAll', {}) },
     { keys: [modKey, 'X'], description: t('pages.account.shortcuts.fileManager.cutFiles', {}) },
     { keys: [modKey, 'V'], description: t('pages.account.shortcuts.fileManager.pasteFiles', {}) },
+    { keys: [modKey, 'F'], description: t('pages.account.shortcuts.fileManager.searchFiles', {}) },
+    { keys: ['Alt', { icon: faArrowUp }], description: t('pages.account.shortcuts.fileManager.moveUpDirectory', {}) },
+    { keys: [{ icon: faArrowUp }], description: t('pages.account.shortcuts.fileManager.moveUpSelection', {}) },
+    { keys: [{ icon: faArrowDown }], description: t('pages.account.shortcuts.fileManager.moveDownSelection', {}) },
+    { keys: ['F2'], description: t('pages.account.shortcuts.fileManager.renameFile', {}) },
+    { keys: ['Esc'], description: t('pages.account.shortcuts.fileManager.deselectAll', {}) },
     { keys: ['Del'], description: t('pages.account.shortcuts.fileManager.deleteFiles', {}) },
-    { keys: ['D', 'Drag'], description: t('pages.account.shortcuts.fileManager.dragToMove', {}) },
   ];
 
   const tableShortcuts: ShortcutItemProps[] = [
@@ -161,7 +164,7 @@ export default function DashboardShortcuts() {
         {t('pages.account.shortcuts.description', {})}
       </Text>
 
-      <SimpleGrid cols={{ base: 1, md: 2 }} spacing='md'>
+      <div className='md:columns-2 gap-4 space-y-4'>
         <ShortcutSection
           title={t('pages.account.shortcuts.fileManager.title', {})}
           icon={faFolder}
@@ -182,7 +185,7 @@ export default function DashboardShortcuts() {
           icon={faServer}
           shortcuts={serverListShortcuts}
         />
-      </SimpleGrid>
+      </div>
     </AccountContentContainer>
   );
 }
