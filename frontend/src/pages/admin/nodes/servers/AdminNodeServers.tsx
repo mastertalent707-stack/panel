@@ -178,7 +178,6 @@ export default function AdminNodeServers({ node }: { node: Node }) {
       },
       {
         key: 'Escape',
-        modifiers: ['ctrlOrMeta'],
         callback: () => setSelectedServers(new Set()),
       },
     ],

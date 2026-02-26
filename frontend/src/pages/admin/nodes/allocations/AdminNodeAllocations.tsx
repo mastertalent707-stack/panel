@@ -86,7 +86,6 @@ export default function AdminNodeAllocations({ node }: { node: Node }) {
       },
       {
         key: 'Escape',
-        modifiers: ['ctrlOrMeta'],
         callback: () => setSelectedNodeAllocations([]),
       },
     ],

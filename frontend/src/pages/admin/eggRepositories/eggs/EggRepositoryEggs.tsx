@@ -52,7 +52,6 @@ export default function EggRepositoryEggs({ contextEggRepository }: { contextEgg
       },
       {
         key: 'Escape',
-        modifiers: ['ctrlOrMeta'],
         callback: () => setSelectedEggs(new Set()),
       },
     ],

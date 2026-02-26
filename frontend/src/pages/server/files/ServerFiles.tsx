@@ -1,13 +1,14 @@
 import { Group, Title } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';
-import { type Ref, useEffect, useRef } from 'react';
-import { useSearchParams } from 'react-router';
+import { type Ref, useCallback, useEffect, useRef } from 'react';
+import { createSearchParams, useNavigate, useSearchParams } from 'react-router';
 import loadDirectory from '@/api/server/files/loadDirectory.ts';
 import { ContextMenuProvider } from '@/elements/ContextMenu.tsx';
 import ServerContentContainer from '@/elements/containers/ServerContentContainer.tsx';
 import SelectionArea from '@/elements/SelectionArea.tsx';
 import Spinner from '@/elements/Spinner.tsx';
 import Table from '@/elements/Table.tsx';
+import { isEditableFile, isViewableArchive, isViewableImage } from '@/lib/files.ts';
 import FileActionBar from '@/pages/server/files/FileActionBar.tsx';
 import FileBreadcrumbs from '@/pages/server/files/FileBreadcrumbs.tsx';
 import FileModals from '@/pages/server/files/FileModals.tsx';
@@ -17,24 +18,31 @@ import FileSearchBanner from '@/pages/server/files/FileSearchBanner.tsx';
 import FileSettings from '@/pages/server/files/FileSettings.tsx';
 import FileToolbar from '@/pages/server/files/FileToolbar.tsx';
 import FileUpload from '@/pages/server/files/FileUpload.tsx';
-import { useKeyboardShortcut } from '@/plugins/useKeyboardShortcuts.ts';
+import { useKeyboardShortcuts } from '@/plugins/useKeyboardShortcuts.ts';
+import { useServerCan } from '@/plugins/usePermissions.ts';
 import { useFileManager } from '@/providers/contexts/fileManagerContext.ts';
 import { FileManagerProvider } from '@/providers/FileManagerProvider.tsx';
+import { useGlobalStore } from '@/stores/global.ts';
 import { useServerStore } from '@/stores/server.ts';
 
 function ServerFilesComponent() {
+  const { settings } = useGlobalStore();
   const { server } = useServerStore();
   const {
     selectedFiles,
     browsingDirectory,
     browsingEntries,
     page,
+    browsingFastDirectory,
     setSelectedFiles,
     setBrowsingEntries,
     setBrowsingWritableDirectory,
     setBrowsingFastDirectory,
+    doOpenModal,
   } = useFileManager();
   const [_, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const canOpenFile = useServerCan('files.read-content');
 
   const { data, isLoading } = useQuery({
     queryKey: ['server', server.uuid, 'files', { browsingDirectory, page }],
@@ -61,9 +69,67 @@ function ServerFilesComponent() {
 
   const onPageSelect = (page: number) => setSearchParams({ directory: browsingDirectory, page: page.toString() });
 
-  useKeyboardShortcut('a', () => setSelectedFiles(new Set(browsingEntries.data)), {
-    modifiers: ['ctrlOrMeta'],
-    deps: [browsingEntries],
+  const handleOpen = useCallback(
+    (file: DirectoryEntry) => {
+      if (
+        ((isEditableFile(file) || isViewableImage(file)) && file.size <= settings.server.maxFileManagerViewSize) ||
+        file.directory ||
+        (isViewableArchive(file) && browsingFastDirectory)
+      ) {
+        if (file.directory || (isViewableArchive(file) && browsingFastDirectory)) {
+          setSearchParams({
+            directory: `${browsingDirectory}/${file.name}`.replace('//', '/'),
+          });
+        } else {
+          if (!canOpenFile) return;
+
+          navigate(
+            `/server/${server.uuidShort}/files/${isViewableImage(file) ? 'image' : 'edit'}?${createSearchParams({
+              directory: browsingDirectory,
+              file: file.name,
+            })}`,
+          );
+        }
+      }
+    },
+    [server.uuidShort, settings, browsingDirectory, browsingFastDirectory, canOpenFile],
+  );
+
+  useKeyboardShortcuts({
+    shortcuts: [
+      {
+        key: 'a',
+        modifiers: ['ctrlOrMeta'],
+        callback: () => setSelectedFiles(new Set(browsingEntries.data)),
+      },
+      {
+        key: 'f',
+        modifiers: ['ctrlOrMeta'],
+        callback: () => doOpenModal('search'),
+      },
+      {
+        key: 'n',
+        modifiers: ['ctrlOrMeta', 'shift'],
+        callback: () => doOpenModal('nameDirectory'),
+      },
+      {
+        key: 'f2',
+        callback: () => {
+          if (selectedFiles.size === 1) {
+            doOpenModal('rename', [[...selectedFiles.keys()][0]]);
+          }
+        },
+      },
+      {
+        key: 'Enter',
+        callback: () => {
+          if (selectedFiles.size === 1) {
+            handleOpen([...selectedFiles.keys()][0]);
+          }
+        },
+      },
+    ],
+    deps: [browsingEntries.data, selectedFiles, handleOpen],
   });
 
   return (
@@ -109,6 +175,7 @@ function ServerFilesComponent() {
                     <FileRow
                       ref={innerRef as Ref<HTMLTableRowElement>}
                       file={entry}
+                      handleOpen={() => handleOpen(entry)}
                       isSelected={selectedFiles.has(entry)}
                       multipleSelected={selectedFiles.size > 1}
                     />

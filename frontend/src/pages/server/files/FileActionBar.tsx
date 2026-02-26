@@ -115,7 +115,6 @@ function FileActionBar() {
     shortcuts: [
       {
         key: 'Escape',
-        modifiers: ['ctrlOrMeta'],
         callback: () => {
           clearActingFiles();
           doSelectFiles([]);

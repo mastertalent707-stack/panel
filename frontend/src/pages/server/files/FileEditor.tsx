@@ -107,7 +107,7 @@ function FileEditorComponent() {
         <Group>
           <Title>{title}</Title>
 
-          <FileEditorSettings />
+          {(params.action === 'new' || params.action === 'edit') && <FileEditorSettings />}
         </Group>
         <div hidden={!browsingWritableDirectory || params.action === 'image'}>
           {params.action === 'edit' ? (

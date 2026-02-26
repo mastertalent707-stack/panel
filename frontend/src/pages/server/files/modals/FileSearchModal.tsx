@@ -95,15 +95,18 @@ function FilterSection({ icon, title, enabled, onToggle, children }: FilterSecti
   );
 }
 
-interface FileSearchModalProps extends ModalProps {
-  onSearchComplete?: (searchInfo: { query?: string; filters: z.infer<typeof serverFilesSearchSchema> }) => void;
-}
-
-export default function FileSearchModal({ opened, onClose, onSearchComplete }: FileSearchModalProps) {
+export default function FileSearchModal({ opened, onClose }: ModalProps) {
   const { addToast } = useToast();
   const { settings } = useGlobalStore();
   const { server } = useServerStore();
-  const { browsingDirectory, browsingFastDirectory, setBrowsingEntries, setSearchInfo } = useFileManager();
+  const {
+    browsingDirectory,
+    browsingFastDirectory,
+    setBrowsingEntries,
+    setSearchInfo,
+    setSelectedFiles,
+    clearActingFiles,
+  } = useFileManager();
 
   const [loading, setLoading] = useState(false);
   const [query, setQuery] = useState('');
@@ -159,6 +162,8 @@ export default function FileSearchModal({ opened, onClose, onSearchComplete }: F
       .then((entries) => {
         setBrowsingEntries({ total: entries.length, page: 1, perPage: entries.length, data: entries });
         setSearchInfo({ query, filters: searchFilters });
+        setSelectedFiles(new Set());
+        clearActingFiles();
         onClose();
       })
       .catch((msg) => {

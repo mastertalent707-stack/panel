@@ -104,7 +104,6 @@ function EggsContainer({ contextNest }: { contextNest: AdminNest }) {
       },
       {
         key: 'Escape',
-        modifiers: ['ctrlOrMeta'],
         callback: () => setSelectedEggs(new Set([])),
       },
     ],

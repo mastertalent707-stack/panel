@@ -71,7 +71,6 @@ export default function AdminAssets() {
       },
       {
         key: 'Escape',
-        modifiers: ['ctrlOrMeta'],
         callback: () => setSelectedAssets(new Set([])),
       },
     ],
