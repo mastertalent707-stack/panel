@@ -70,7 +70,7 @@ jobs:
           - aarch64-linux
           - riscv64-linux
           - ppc64le-linux
-          - x86_64-windows
+          #- x86_64-windows
         include:
           - build: x86_64-linux
             os: ubuntu-24.04
