@@ -113,7 +113,15 @@ export function Pagination<T>({ data, onPageSelect, ...props }: PaginationProps<
           total: data.total,
         })}
       </p>
-      <MantinePagination value={data.page} total={totalPages} withEdges onChange={setPage} />
+      <MantinePagination
+        styles={{
+          dots: { display: 'none' },
+        }}
+        boundaries={0}
+        value={data.page}
+        total={totalPages}
+        onChange={setPage}
+      />
     </Group>
   );
 }

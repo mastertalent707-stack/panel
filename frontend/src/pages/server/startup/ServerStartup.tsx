@@ -112,7 +112,7 @@ export default function ServerStartup() {
       title={t('pages.server.startup.title', {})}
       registry={window.extensionContext.extensionRegistry.pages.server.startup.container}
     >
-      <div className='grid grid-cols-3 gap-4 mt-2.5'>
+      <div className='flex flex-col md:grid md:grid-cols-3 gap-4 mt-2.5'>
         <TitleCard
           title={t('pages.server.startup.form.startupCommand', {})}
           icon={<FontAwesomeIcon icon={faPlay} />}
@@ -123,7 +123,7 @@ export default function ServerStartup() {
             placeholder={t('pages.server.startup.form.startupCommand', {})}
             value={command}
             onChange={(e) => setCommand(e.target.value)}
-            disabled={!useServerCan('startup.command') || !settings.server.allowEditingStartupCommand}
+            readOnly={!useServerCan('startup.command') || !settings.server.allowEditingStartupCommand}
             autosize
             rightSection={
               <Tooltip label={t('common.tooltip.resetToDefault', {})}>
