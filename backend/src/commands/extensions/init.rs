@@ -124,6 +124,13 @@ impl shared::extensions::commands::CliCommand<InitArgs> for InitCommand {
                     extension_distr.metadata_toml.name.cyan()
                 );
 
+                let old_package_name = std::mem::replace(
+                    &mut extension_distr.metadata_toml.package_name,
+                    args.package_name.clone(),
+                );
+                extension_distr.validate()?;
+                extension_distr.metadata_toml.package_name = old_package_name;
+
                 tokio::fs::create_dir_all(&frontend_path).await?;
                 tokio::fs::create_dir_all(&backend_path).await?;
                 tokio::fs::create_dir_all(&migrations_path).await?;
