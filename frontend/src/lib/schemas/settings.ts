@@ -37,7 +37,6 @@ export const publicSettingsCaptchaProviderSchema = z.discriminatedUnion('type', 
 export const publicSettingsSchema = z.object({
   version: z.string(),
   oobeStep: oobeStepKey.nullable(),
-  appDebug: z.boolean(),
   captchaProvider: publicSettingsCaptchaProviderSchema,
   app: z.object({
     url: z.string(),
@@ -45,6 +44,7 @@ export const publicSettingsSchema = z.object({
     name: z.string(),
     language: z.string(),
     registrationEnabled: z.boolean(),
+    debug: z.boolean(),
   }),
   server: z.object({
     maxFileManagerViewSize: z.number(),

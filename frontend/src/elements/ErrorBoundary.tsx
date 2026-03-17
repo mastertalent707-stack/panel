@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { ReactNode } from 'react';
 import { Component, type ErrorInfo } from 'react';
 import { TranslationContext } from 'shared';
-import { useGlobalStore } from '@/stores/global.ts';
+import { getGlobalStore } from '@/stores/global.ts';
 
 interface Props {
   children?: ReactNode;
@@ -43,7 +43,7 @@ class ErrorBoundary extends Component<Props, State> {
   override render() {
     if (this.state.hasError) {
       const { error, errorInfo, showDetails } = this.state;
-      const appDebug = useGlobalStore.getState().settings.appDebug ?? false;
+      const appDebug = getGlobalStore().settings.app.debug;
 
       return (
         <div className='flex items-center justify-center w-full my-4'>

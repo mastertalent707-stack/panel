@@ -16,6 +16,7 @@ mod get {
         name: &'a str,
         language: &'a str,
         registration_enabled: bool,
+        debug: bool,
     }
 
     #[derive(ToSchema, Serialize)]
@@ -34,7 +35,6 @@ mod get {
     struct Response<'a> {
         version: &'a str,
         oobe_step: Option<&'a str>,
-        app_debug: bool,
 
         #[schema(inline)]
         captcha_provider: shared::settings::PublicCaptchaProvider<'a>,
@@ -53,7 +53,6 @@ mod get {
         ApiResponse::new_serialized(Response {
             version: &state.version,
             oobe_step: settings.oobe_step.as_deref(),
-            app_debug: state.env.is_debug(),
             captcha_provider: settings.captcha_provider.to_public_provider(),
             app: ResponseApp {
                 url: &settings.app.url,
@@ -61,6 +60,7 @@ mod get {
                 name: &settings.app.name,
                 language: &settings.app.language,
                 registration_enabled: settings.app.registration_enabled,
+                debug: state.env.is_debug(),
             },
             server: ResponseServer {
                 max_file_manager_view_size: settings.server.max_file_manager_view_size,

@@ -4,6 +4,7 @@ import { getTranslationMapping, setGlobalTranslationHandle, TranslationContext, 
 import { z } from 'zod';
 import { $ZodConfig } from 'zod/v4/core';
 import { axiosInstance } from '@/api/axios.ts';
+import { getGlobalStore } from '@/stores/global.ts';
 import baseTranslations from '@/translations.ts';
 
 const modules = import.meta.glob('/node_modules/zod/v4/locales/*.js');
@@ -24,7 +25,9 @@ String.prototype.md = function (): ReactNode {
 };
 
 const TranslationProvider = ({ children }: { children: ReactNode }) => {
-  const [language, setLanguage] = useState('en');
+  const [language, setLanguage] = useState(
+    localStorage.getItem('last_language') || getGlobalStore().settings.app.language || 'en',
+  );
   const [languageData, setLanguageData] = useState<LanguageData | null>(null);
 
   const loadZod = async (lang: string) => {
@@ -82,15 +85,8 @@ const TranslationProvider = ({ children }: { children: ReactNode }) => {
       loadZod(language);
     });
 
-    localStorage.setItem('lastLanguage', language);
+    localStorage.setItem('last_language', language);
   }, [language]);
-
-  useEffect(() => {
-    const lastLanguage = localStorage.getItem('lastLanguage');
-    if (lastLanguage) {
-      setLanguage(lastLanguage);
-    }
-  }, []);
 
   const t = (key: string, values: Record<string, string | number>): string => {
     if (!languageData?.translations[key] && !baseTranslations.mapping[key as never]) {
