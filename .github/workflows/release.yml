@@ -277,23 +277,57 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  create-multiarch-heavy-image:
-    name: Create multi-arch Docker image
+  build-heavy-image:
+    name: Build Heavy Docker image (${{ matrix.platform }})
+    runs-on: ${{ matrix.runner }}
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux/amd64
+            runner: ubuntu-24.04
+            tag_suffix: amd64
+          - platform: linux/arm64
+            runner: ubuntu-24.04-arm
+            tag_suffix: arm64
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build & push platform image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile.heavy
+          platforms: ${{ matrix.platform }}
+          push: true
+          tags: ghcr.io/${{ env.REPO_NAME }}:heavy-build-${{ matrix.tag_suffix }}
+          cache-from: type=gha,scope=heavy-${{ matrix.tag_suffix }}
+          cache-to: type=gha,mode=max,scope=heavy-${{ matrix.tag_suffix }}
+
+  merge-heavy-image:
+    name: Merge Heavy Docker manifest
+    needs: [build-heavy-image]
     runs-on: ubuntu-24.04
     permissions:
       contents: read
       packages: write
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
@@ -306,20 +340,6 @@ jobs:
         run: |
           RAW_TAG="${{ github.ref_name }}"
           VERSION="${RAW_TAG#release-}"
-
-          DOCKER_TAGS="ghcr.io/${{ env.REPO_NAME }}:${VERSION}"
-
-          if [[ "$VERSION" == *-* ]]; then
-            DOCKER_TAGS="$DOCKER_TAGS,ghcr.io/${{ env.REPO_NAME }}:latest-pre"
-
-            if [[ "$VERSION" == 1.0.0-* ]]; then
-              DOCKER_TAGS="$DOCKER_TAGS,ghcr.io/${{ env.REPO_NAME }}:latest"
-            fi
-          else
-            DOCKER_TAGS="$DOCKER_TAGS,ghcr.io/${{ env.REPO_NAME }}:latest"
-          fi
-
-          echo "DOCKER_TAGS=$DOCKER_TAGS" >> $GITHUB_ENV
 
           HEAVY_TAGS="ghcr.io/${{ env.REPO_NAME }}:${VERSION}-heavy"
 
@@ -335,13 +355,12 @@ jobs:
 
           echo "HEAVY_TAGS=$HEAVY_TAGS" >> $GITHUB_ENV
 
-      - name: Build & push multi-arch heavy image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: Dockerfile.heavy
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: ${{ env.HEAVY_TAGS }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+      - name: Create and push multi-arch manifest
+        run: |
+          SOURCE_AMD64="ghcr.io/${{ env.REPO_NAME }}:heavy-build-amd64"
+          SOURCE_ARM64="ghcr.io/${{ env.REPO_NAME }}:heavy-build-arm64"
+
+          IFS=',' read -ra TAGS <<< "$HEAVY_TAGS"
+          for TAG in "${TAGS[@]}"; do
+            docker buildx imagetools create -t "$TAG" "$SOURCE_AMD64" "$SOURCE_ARM64"
+          done
