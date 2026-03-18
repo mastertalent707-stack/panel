@@ -277,6 +277,64 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+  create-multiarch-heavy-image:
+    name: Create multi-arch Docker image
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract version and determine tags
+        id: prep_tags
+        run: |
+          RAW_TAG="${{ github.ref_name }}"
+          VERSION="${RAW_TAG#release-}"
+
+          DOCKER_TAGS="ghcr.io/${{ env.REPO_NAME }}:${VERSION}"
+
+          if [[ "$VERSION" == *-* ]]; then
+            DOCKER_TAGS="$DOCKER_TAGS,ghcr.io/${{ env.REPO_NAME }}:latest-pre"
+
+            if [[ "$VERSION" == 1.0.0-* ]]; then
+              DOCKER_TAGS="$DOCKER_TAGS,ghcr.io/${{ env.REPO_NAME }}:latest"
+            fi
+          else
+            DOCKER_TAGS="$DOCKER_TAGS,ghcr.io/${{ env.REPO_NAME }}:latest"
+          fi
+
+          echo "DOCKER_TAGS=$DOCKER_TAGS" >> $GITHUB_ENV
+
+          HEAVY_TAGS="ghcr.io/${{ env.REPO_NAME }}:${VERSION}-heavy"
+
+          if [[ "$VERSION" == *-* ]]; then
+            HEAVY_TAGS="$HEAVY_TAGS,ghcr.io/${{ env.REPO_NAME }}:latest-pre-heavy"
+
+            if [[ "$VERSION" == 1.0.0-* ]]; then
+              HEAVY_TAGS="$HEAVY_TAGS,ghcr.io/${{ env.REPO_NAME }}:heavy"
+            fi
+          else
+            HEAVY_TAGS="$HEAVY_TAGS,ghcr.io/${{ env.REPO_NAME }}:heavy"
+          fi
+
+          echo "HEAVY_TAGS=$HEAVY_TAGS" >> $GITHUB_ENV
+
       - name: Build & push multi-arch heavy image
         uses: docker/build-push-action@v5
         with:
