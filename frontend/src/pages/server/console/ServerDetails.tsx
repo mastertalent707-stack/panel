@@ -19,14 +19,14 @@ import StatCard from './StatCard.tsx';
 export default function ServerDetails() {
   const { t } = useTranslations();
   const server = useServerStore((state) => state.server);
-  const stats = useServerStore((state) => state.stats!);
+  const stats = useServerStore((state) => state.stats);
   const state = useServerStore((state) => state.state);
 
   const [doNormalizeCpuLoad, setDoNormalizeCpuLoad] = useState(localStorage.getItem('normalize_cpu_load') === 'true');
 
   const networkRef = useRef({
-    rxBytes: stats?.network.rxBytes,
-    txBytes: stats?.network.txBytes,
+    rxBytes: stats?.network.rxBytes || 0,
+    txBytes: stats?.network.txBytes || 0,
     timestamp: Date.now(),
     rxSpeed: 0,
     txSpeed: 0,
@@ -88,11 +88,11 @@ export default function ServerDetails() {
           state === 'offline'
             ? t('common.enum.serverState.offline', {})
             : doNormalizeCpuLoad
-              ? `${((stats?.cpuAbsolute / (server.limits.cpu || 100)) * 100).toFixed(2)}%`
-              : `${stats?.cpuAbsolute.toFixed(2)}%`
+              ? `${(((stats?.cpuAbsolute || 0) / (server.limits.cpu || 100)) * 100).toFixed(2)}%`
+              : `${(stats?.cpuAbsolute || 0).toFixed(2)}%`
         }
         limit={
-          doNormalizeCpuLoad ? null : server.limits.cpu !== 0 ? server.limits.cpu + '%' : t('common.unlimited', {})
+          doNormalizeCpuLoad ? null : server.limits.cpu !== 0 ? `${server.limits.cpu}%` : t('common.unlimited', {})
         }
         popover={
           <Checkbox
@@ -106,21 +106,23 @@ export default function ServerDetails() {
         icon={faMemory}
         label={t('pages.server.console.details.memoryLoad', {})}
         order={50}
-        value={state === 'offline' ? t('common.enum.serverState.offline', {}) : bytesToString(stats?.memoryBytes)}
+        value={state === 'offline' ? t('common.enum.serverState.offline', {}) : bytesToString(stats?.memoryBytes || 0)}
         limit={server.limits.memory !== 0 ? bytesToString(mbToBytes(server.limits.memory)) : t('common.unlimited', {})}
       />
       <StatCard
         icon={faHardDrive}
         label={t('pages.server.console.details.diskUsage', {})}
         order={60}
-        value={bytesToString(stats?.diskBytes)}
+        value={bytesToString(stats?.diskBytes || 0)}
         limit={server.limits.disk !== 0 ? bytesToString(mbToBytes(server.limits.disk)) : t('common.unlimited', {})}
       />
       <StatCard
         icon={faCloudDownload}
         label={t('pages.server.console.details.networkIn', {})}
         order={70}
-        value={state === 'offline' ? t('common.enum.serverState.offline', {}) : bytesToString(stats?.network.rxBytes)}
+        value={
+          state === 'offline' ? t('common.enum.serverState.offline', {}) : bytesToString(stats?.network.rxBytes || 0)
+        }
         details={
           state === 'offline' ? null : `${bytesToString(Math.round(networkRef.current.rxSpeed), undefined, true)}/s`
         }
@@ -129,7 +131,9 @@ export default function ServerDetails() {
         icon={faCloudUpload}
         label={t('pages.server.console.details.networkOut', {})}
         order={80}
-        value={state === 'offline' ? t('common.enum.serverState.offline', {}) : bytesToString(stats?.network.txBytes)}
+        value={
+          state === 'offline' ? t('common.enum.serverState.offline', {}) : bytesToString(stats?.network.txBytes || 0)
+        }
         details={
           state === 'offline' ? null : `${bytesToString(Math.round(networkRef.current.txSpeed), undefined, true)}/s`
         }

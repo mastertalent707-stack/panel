@@ -281,22 +281,21 @@ export default function Terminal() {
     isFirstLine.current = true;
 
     const listeners: Record<string, (msg: string) => void> = {
-      [SocketEvent.STATUS]: (s) =>
+      [SocketEvent.STATUS]: (s) => {
+        const statusMapping: Record<string, string> = {
+          offline: t('common.enum.serverState.offline', {}),
+          running: t('common.enum.serverState.running', {}),
+          starting: t('common.enum.serverState.starting', {}),
+          stopping: t('common.enum.serverState.stopping', {}),
+        };
+
         addLine(
           t('pages.server.console.message.serverMarkedAs', {
-            state:
-              s === 'offline'
-                ? t('common.enum.serverState.offline', {})
-                : s === 'running'
-                  ? t('common.enum.serverState.running', {})
-                  : s === 'starting'
-                    ? t('common.enum.serverState.starting', {})
-                    : s === 'stopping'
-                      ? t('common.enum.serverState.stopping', {})
-                      : s,
+            state: statusMapping[s] || s,
           }),
           true,
-        ),
+        );
+      },
       [SocketEvent.CONSOLE_OUTPUT]: (l) => addLine(l),
       [SocketEvent.INSTALL_OUTPUT]: (l) => addLine(l),
       [SocketEvent.INSTALL_COMPLETED]: (s) => {

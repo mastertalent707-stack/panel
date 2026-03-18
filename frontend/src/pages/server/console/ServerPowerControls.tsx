@@ -4,15 +4,14 @@ import Button from '@/elements/Button.tsx';
 import { ServerCan } from '@/elements/Can.tsx';
 import ConfirmationModal from '@/elements/modals/ConfirmationModal.tsx';
 import { serverPowerAction } from '@/lib/schemas/server/server.ts';
+import { SocketRequest } from '@/plugins/useWebsocketEvent.ts';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import { useServerStore } from '@/stores/server.ts';
 
 export default function ServerPowerControls() {
   const { t } = useTranslations();
   const [open, setOpen] = useState(false);
-  const state = useServerStore((state) => state.state);
-  const instance = useServerStore((state) => state.socketInstance);
-  const socketConnected = useServerStore((state) => state.socketConnected);
+  const { server, state, socketInstance, socketConnected } = useServerStore();
 
   const killable = state === 'stopping';
 
@@ -21,9 +20,9 @@ export default function ServerPowerControls() {
       return setOpen(true);
     }
 
-    if (instance) {
+    if (socketInstance) {
       setOpen(false);
-      instance.send('set state', action === 'kill-confirmed' ? 'kill' : action);
+      socketInstance.send(SocketRequest.SET_STATE, action === 'kill-confirmed' ? 'kill' : action);
     }
   };
 
@@ -54,7 +53,9 @@ export default function ServerPowerControls() {
       <ServerCan action='control.start'>
         <Button
           color='green'
-          disabled={!socketConnected || state !== 'offline'}
+          disabled={
+            !socketConnected || state !== 'offline' || !!server.status || server.isSuspended || server.isTransferring
+          }
           loading={state === 'starting'}
           onClick={() => onButtonClick('start')}
           className='flex-1 min-w-fit'
@@ -65,7 +66,7 @@ export default function ServerPowerControls() {
       <ServerCan action='control.restart'>
         <Button
           color='gray'
-          disabled={!socketConnected || !state}
+          disabled={!socketConnected || !state || !!server.status || server.isSuspended || server.isTransferring}
           onClick={() => onButtonClick('restart')}
           className='flex-1 min-w-fit'
         >
@@ -75,7 +76,9 @@ export default function ServerPowerControls() {
       <ServerCan action='control.stop'>
         <Button
           color='red'
-          disabled={!socketConnected || state === 'offline'}
+          disabled={
+            !socketConnected || state === 'offline' || !!server.status || server.isSuspended || server.isTransferring
+          }
           onClick={() => onButtonClick(killable ? 'kill' : 'stop')}
           className='flex-1 min-w-fit'
         >

@@ -35,6 +35,7 @@ export enum SocketRequest {
   CONFIGURE_SOCKET = 'configure socket',
   SEND_LOGS = 'send logs',
   SEND_STATS = 'send stats',
+  SEND_STATUS = 'send status',
   SEND_COMMAND = 'send command',
   SET_STATE = 'set state',
   PING = 'ping',

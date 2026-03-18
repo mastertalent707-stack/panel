@@ -10,6 +10,7 @@ import ConfirmationModal from '@/elements/modals/ConfirmationModal.tsx';
 import Tooltip from '@/elements/Tooltip.tsx';
 import { serverPowerAction } from '@/lib/schemas/server/server.ts';
 import { statusToColor } from '@/lib/server.ts';
+import { SocketRequest } from '@/plugins/useWebsocketEvent.ts';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import { useServerStore } from '@/stores/server.ts';
 import Divider from './Divider.tsx';
@@ -18,9 +19,7 @@ export default function ServerStatusIndicator() {
   const { t } = useTranslations();
   const params = useParams<'id'>();
   const [open, setOpen] = useState(false);
-  const state = useServerStore((state) => state.state);
-  const socketConnected = useServerStore((state) => state.socketConnected);
-  const instance = useServerStore((state) => state.socketInstance);
+  const { server, state, socketInstance, socketConnected } = useServerStore();
 
   const killable = state === 'stopping';
 
@@ -29,9 +28,9 @@ export default function ServerStatusIndicator() {
       return setOpen(true);
     }
 
-    if (instance) {
+    if (socketInstance) {
       setOpen(false);
-      instance.send('set state', action === 'kill-confirmed' ? 'kill' : action);
+      socketInstance.send(SocketRequest.SET_STATE, action === 'kill-confirmed' ? 'kill' : action);
     }
   };
 
@@ -67,7 +66,7 @@ export default function ServerStatusIndicator() {
                 size='lg'
                 radius='md'
                 color={buttonColor}
-                disabled={!socketConnected}
+                disabled={!socketConnected || !!server.status || server.isSuspended || server.isTransferring}
                 onClick={() => onPowerAction(buttonAction)}
               >
                 <FontAwesomeIcon icon={buttonIcon} size='sm' />
@@ -80,7 +79,13 @@ export default function ServerStatusIndicator() {
                 size='lg'
                 radius='md'
                 color='gray'
-                disabled={!socketConnected || state === 'offline'}
+                disabled={
+                  !socketConnected ||
+                  state === 'offline' ||
+                  !!server.status ||
+                  server.isSuspended ||
+                  server.isTransferring
+                }
                 onClick={() => onPowerAction('restart')}
               >
                 <FontAwesomeIcon icon={faRefresh} size='sm' />

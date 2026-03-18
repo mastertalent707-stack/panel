@@ -3,6 +3,7 @@ import { MouseEvent as ReactMouseEvent, Ref, useCallback, useEffect, useRef, use
 import { z } from 'zod';
 import getAssets from '@/api/admin/assets/getAssets.ts';
 import { AdminCan } from '@/elements/Can.tsx';
+import { ContextMenuProvider } from '@/elements/ContextMenu.tsx';
 import AdminContentContainer from '@/elements/containers/AdminContentContainer.tsx';
 import SelectionArea from '@/elements/SelectionArea.tsx';
 import Spinner from '@/elements/Spinner.tsx';
@@ -103,28 +104,31 @@ export default function AdminAssets() {
         <Spinner.Centered />
       ) : (
         <SelectionArea onSelectedStart={onSelectedStart} onSelected={onSelected}>
-          <Table
-            columns={assetTableColumns}
-            loading={isLoading}
-            pagination={data}
-            onPageSelect={setPage}
-            allowSelect={false}
-          >
-            {data.data.map((asset) => (
-              <SelectionArea.Selectable key={asset.name} item={asset}>
-                {(innerRef: Ref<HTMLElement>) => (
-                  <AssetRow
-                    key={asset.name}
-                    asset={asset}
-                    isSelected={selectedAssets.has(asset.name)}
-                    addSelectedAsset={addSelectedAsset}
-                    removeSelectedAsset={removeSelectedAsset}
-                    ref={innerRef as Ref<HTMLTableRowElement>}
-                  />
-                )}
-              </SelectionArea.Selectable>
-            ))}
-          </Table>
+          <ContextMenuProvider>
+            <Table
+              columns={assetTableColumns}
+              loading={isLoading}
+              pagination={data}
+              onPageSelect={setPage}
+              allowSelect={false}
+            >
+              {data.data.map((asset) => (
+                <SelectionArea.Selectable key={asset.name} item={asset}>
+                  {(innerRef: Ref<HTMLElement>) => (
+                    <AssetRow
+                      key={asset.name}
+                      asset={asset}
+                      isSelected={selectedAssets.has(asset.name)}
+                      addSelectedAsset={addSelectedAsset}
+                      removeSelectedAsset={removeSelectedAsset}
+                      invalidateAssets={invalidateAssets}
+                      ref={innerRef as Ref<HTMLTableRowElement>}
+                    />
+                  )}
+                </SelectionArea.Selectable>
+              ))}
+            </Table>
+          </ContextMenuProvider>
         </SelectionArea>
       )}
     </AdminContentContainer>
