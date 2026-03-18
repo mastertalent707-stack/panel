@@ -8,3 +8,7 @@ logs/
 **/.idea
 exported-extensions/
 postgres/
+*.yml
+*.md
+LICENSE
+.git/

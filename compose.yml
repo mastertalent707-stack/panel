@@ -1,5 +1,6 @@
 services:
   web:
+    # image: ghcr.io/calagopus/panel:nightly # if you want to live on the edge
     image: ghcr.io/calagopus/panel:latest
     restart: unless-stopped
     environment:

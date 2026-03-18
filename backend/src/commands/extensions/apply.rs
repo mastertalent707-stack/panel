@@ -171,14 +171,14 @@ impl shared::extensions::commands::CliCommand<ApplyArgs> for ApplyCommand {
                 println!();
                 println!("building frontend...");
                 let status = Command::new(&pnpm_bin)
-                    .arg("build")
+                    .arg("build:fast")
                     .current_dir("frontend")
                     .status()
                     .await?;
                 if !status.success() {
                     eprintln!(
                         "{} {}",
-                        "pnpm build".bright_red(),
+                        "pnpm build:fast".bright_red(),
                         "did not run successfully, aborting process".red()
                     );
                     return Ok(1);

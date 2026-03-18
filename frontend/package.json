@@ -13,6 +13,7 @@
     "dev": "vite",
     "build": "pnpm build:translations && vite build",
     "build:ci": "tsgo && vite build",
+    "build:fast": "pnpm build:translations && FAST_REACT_COMPILER=true pnpm build",
     "build:docs": "typedoc --options typedoc.json --skipErrorChecking",
     "build:translations": "tsx build-translations.mts",
     "diff:translations": "tsx diff-translations.mts",

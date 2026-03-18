@@ -1,5 +1,6 @@
 services:
   web:
+    # image: ghcr.io/calagopus/panel:nightly-heavy # if you want to live on the edge
     image: ghcr.io/calagopus/panel:heavy
     restart: unless-stopped
     environment:
@@ -17,14 +18,10 @@ services:
     volumes:
       - ./data:/var/lib/calagopus
       - ./logs:/var/log/calagopus
-      - ./build/cargo-registry:/usr/local/cargo/registry
-      - ./build/cargo-git:/usr/local/cargo/git
       - ./build/binaries:/app/binaries
+      - ./build/translations:/app/translations
       - ./build/extensions:/app/extensions
-      - ./build/target:/app/repo/target
-      - ./build/database-node_modules:/app/repo/database/node_modules
-      - ./build/database-migrations:/app/repo/database/migrations-temp
-      - ./build/frontend-node_modules:/app/repo/frontend/node_modules
+      - ./build/extension-migrations:/app/repo/database/extension-migrations
     ports:
       - 8000:8000
     depends_on:

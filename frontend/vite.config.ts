@@ -8,6 +8,8 @@ import { defineConfig } from 'vite';
 import dynamicPublicDirectory from 'vite-multiple-assets';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 
+const useFastReactCompiler = process.env.FAST_REACT_COMPILER === 'true';
+
 // Minifies all JSON translation files in the dist/translations/ directory after build
 const minifyTranslations = () => {
   return {
@@ -82,15 +84,20 @@ const minifyTranslations = () => {
 export default defineConfig({
   plugins: [
     react(),
-    babel({
-      presets: [reactCompilerPreset()],
-      //overrides: [
-      //  {
-      //    include: ['./src/elements/**/*.{ts,tsx}', './src/pages/**/*.{ts,tsx}'],
-      //    plugins: ['babel-plugin-react-compiler'],
-      //  },
-      //],
-    }),
+    babel(
+      useFastReactCompiler
+        ? {
+            overrides: [
+              {
+                include: ['./src/elements/**/*.{ts,tsx}', './src/pages/**/*.{ts,tsx}'],
+                plugins: ['babel-plugin-react-compiler'],
+              },
+            ],
+          }
+        : {
+            presets: [reactCompilerPreset()],
+          },
+    ),
     tailwindcss(),
     dynamicPublicDirectory(['public/**', 'extensions/*/public/**'], {
       dst(path) {

@@ -555,32 +555,34 @@ async fn main() {
         .await;
     background_task_builder
         .add_task("delete_expired_sessions", async |state| {
+            tokio::time::sleep(std::time::Duration::from_mins(5)).await;
+
             let deleted_sessions =
                 shared::models::user_session::UserSession::delete_unused(&state.database).await?;
             if deleted_sessions > 0 {
                 tracing::info!("deleted {} expired user sessions", deleted_sessions);
             }
 
-            tokio::time::sleep(std::time::Duration::from_mins(5)).await;
-
             Ok(())
         })
         .await;
     background_task_builder
         .add_task("delete_expired_api_keys", async |state| {
+            tokio::time::sleep(std::time::Duration::from_mins(30)).await;
+
             let deleted_api_keys =
                 shared::models::user_api_key::UserApiKey::delete_expired(&state.database).await?;
             if deleted_api_keys > 0 {
                 tracing::info!("deleted {} expired user api keys", deleted_api_keys);
             }
 
-            tokio::time::sleep(std::time::Duration::from_mins(30)).await;
-
             Ok(())
         })
         .await;
     background_task_builder
         .add_task("delete_unconfigured_security_keys", async |state| {
+            tokio::time::sleep(std::time::Duration::from_mins(30)).await;
+
             let deleted_security_keys =
                 shared::models::user_security_key::UserSecurityKey::delete_unconfigured(
                     &state.database,
@@ -593,13 +595,13 @@ async fn main() {
                 );
             }
 
-            tokio::time::sleep(std::time::Duration::from_mins(30)).await;
-
             Ok(())
         })
         .await;
     background_task_builder
         .add_task("delete_old_activity", async |state| {
+            tokio::time::sleep(std::time::Duration::from_hours(1)).await;
+
             let settings = state.settings.get().await?;
             let admin_retention_days = settings.activity.admin_log_retention_days;
             let user_retention_days = settings.activity.user_log_retention_days;
@@ -638,8 +640,6 @@ async fn main() {
                     deleted_server_activity
                 );
             }
-
-            tokio::time::sleep(std::time::Duration::from_hours(1)).await;
 
             Ok(())
         })

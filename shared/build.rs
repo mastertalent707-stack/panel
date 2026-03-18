@@ -26,6 +26,8 @@ fn main() {
         }
 
         println!("cargo:rerun-if-changed=../.git/index");
+    } else {
+        println!("cargo:rustc-env=CARGO_GIT_BRANCH=unknown");
     }
 
     let mut git_hash = "unknown".to_string();

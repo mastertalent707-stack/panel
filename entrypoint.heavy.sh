@@ -8,20 +8,13 @@ touch /tmp/rebuild_trigger
 export EXTENSION_LOG="/tmp/extension_build.log"
 export EXTENSION_BUILD_LOCK="/tmp/extension_build.lock"
 
-export RUSTFLAGS="-C target-cpu=native"
-
-if [ ! -d "/usr/local/cargo/registry" ]; then
-	echo "Error: /usr/local/cargo/registry directory is missing. Please mount the cargo registry volume."
-	exit 1
-fi
-
-if [ ! -d "/usr/local/cargo/git" ]; then
-	echo "Error: /usr/local/cargo/git directory is missing. Please mount the cargo git volume."
-	exit 1
-fi
-
 if [ ! -d "/app/binaries" ]; then
 	echo "Error: /app/binaries directory is missing. Please mount the binaries volume."
+	exit 1
+fi
+
+if [ ! -d "/app/translations" ]; then
+	echo "Error: /app/translations directory is missing. Please mount the translations volume."
 	exit 1
 fi
 
@@ -30,27 +23,12 @@ if [ ! -d "/app/extensions" ]; then
 	exit 1
 fi
 
-if [ ! -d "/app/repo/target" ]; then
-	echo "Error: /app/repo/target directory is missing. Please mount a volume for rust dependencies."
+if [ ! -d "/app/repo/database/extension-migrations" ]; then
+	echo "Error: /app/repo/database/extension-migrations directory is missing. Please mount a volume for database extension migrations."
 	exit 1
 fi
 
-if [ ! -d "/app/repo/database/node_modules" ]; then
-	echo "Error: /app/repo/database/node_modules directory is missing. Please run 'pnpm install' in the database directory first."
-	exit 1
-fi
-
-if [ ! -d "/app/repo/database/migrations-temp" ]; then
-	echo "Error: /app/repo/database/migrations-temp directory is missing. Please mount a volume for database migrations."
-	exit 1
-fi
-
-if [ ! -d "/app/repo/frontend/node_modules" ]; then
-	echo "Error: /app/repo/frontend/node_modules directory is missing. Please run 'pnpm install' in the frontend directory first."
-	exit 1
-fi
-
-cp -R /app/repo/database/migrations/* /app/repo/database/migrations-temp/
+cp -R /app/translations/* /app/repo/frontend/public/translations/
 
 # calculate the combined sha256 hash of all arguments' contents
 hash_many() {
@@ -82,7 +60,7 @@ start_panel() {
 	echo "panel-rs started with PID: $PANEL_PID"
 }
 
-PANEL_VERSION=$(/usr/bin/panel-rs version)
+PANEL_VERSION=$(/app/repo/target/heavy-release/panel-rs version)
 PANEL_VERSION=$(echo $PANEL_VERSION | awk '{print $2}')
 
 execute_build() {
@@ -97,27 +75,26 @@ execute_build() {
 	touch "$EXTENSION_BUILD_LOCK"
 
 	local EXT_HASH=$(hash_many /app/extensions/*.c7s.zip)
-
-	cp -R /app/repo/database/migrations-temp/* /app/repo/database/migrations/
+	BINARY_PATH="/app/binaries/$PANEL_VERSION/$EXT_HASH/panel-rs"
 
 	echo "Building new binary with current extensions..."
 	# loop over all extension files
 	for ext_file in /app/extensions/*.c7s.zip; do
 		echo "Adding extension: $ext_file"
-		/usr/bin/panel-rs extensions add "$ext_file" >> "$EXTENSION_LOG" 2>&1
+		/app/repo/target/heavy-release/panel-rs extensions add "$ext_file" --skip-version-check >> "$EXTENSION_LOG" 2>&1
 	done
 
 	local PROFILE="balanced"
 	local PROFILE_PATH="heavy-release"
 
 	# resync internal extension list
-	/usr/bin/panel-rs extensions resync >> "$EXTENSION_LOG" 2>&1
-
-	cp -R /app/repo/database/migrations/* /app/repo/database/migrations-temp/
+	/app/repo/target/heavy-release/panel-rs extensions resync >> "$EXTENSION_LOG" 2>&1
 
 	# apply changes
 	export NODE_OPTIONS="--max-old-space-size=2048"
-	/usr/bin/panel-rs extensions apply --skip-replace-binary --profile $PROFILE >> "$EXTENSION_LOG" 2>&1
+	/app/repo/target/heavy-release/panel-rs extensions apply --skip-replace-binary --profile $PROFILE >> "$EXTENSION_LOG" 2>&1
+
+	cp -R /app/repo/frontend/public/translations/* /app/translations/
 
 	local EXIT_CODE=$?
 
@@ -152,7 +129,7 @@ if [ -f "$BINARY_PATH" ]; then
 	start_panel "$BINARY_PATH"
 else
 	echo "No existing binary found for current extensions. Temporarily using default binary."
-	start_panel "/usr/bin/panel-rs"
+	start_panel "/app/repo/target/heavy-release/panel-rs"
 
 	# execute build if extensions directory is not empty
 	if [ "$(ls -A /app/extensions)" ]; then
