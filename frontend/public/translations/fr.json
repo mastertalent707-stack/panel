@@ -1,7 +1,7 @@
 {
-  "items":{
-    "user":{
-      "zero":"{count} Utilisateurs"
+  "items": {
+    "user": {
+      "zero": "{count} Utilisateurs"
     }
   }
 }

@@ -366,6 +366,7 @@ export default function Terminal() {
           setHistoryIndex(-1);
           socketInstance?.send(SocketRequest.SEND_COMMAND, command);
           setInputValue('');
+          inputValueRef.current = '';
         }
       });
     },
