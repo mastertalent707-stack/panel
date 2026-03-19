@@ -17,8 +17,10 @@ import { WebglAddon } from '@xterm/addon-webgl';
 import { ITerminalInitOnlyOptions, ITerminalOptions, Terminal as XTerm } from '@xterm/xterm';
 import classNames from 'classnames';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import getServer from '@/api/server/getServer.ts';
 import Button from '@/elements/Button.tsx';
 import Card from '@/elements/Card.tsx';
+import Autocomplete from '@/elements/input/Autocomplete.tsx';
 import TextInput from '@/elements/input/TextInput.tsx';
 import Popover from '@/elements/Popover.tsx';
 import Progress from '@/elements/Progress.tsx';
@@ -34,8 +36,6 @@ import SshDetailsModal from './modals/SshDetailsModal.tsx';
 
 import '@xterm/xterm/css/xterm.css';
 import './xterm.css';
-import getServer from '@/api/server/getServer.ts';
-import Autocomplete from '@/elements/input/Autocomplete.tsx';
 
 const RAW_PRELUDE = '\u001b[1m\u001b[33mcontainer@calagopus~ \u001b[0m';
 
@@ -338,6 +338,7 @@ export default function Terminal() {
         const newIndex = Math.min(historyIndex + 1, history.length - 1);
         setHistoryIndex(newIndex);
         setInputValue(history[newIndex] || '');
+        inputValueRef.current = history[newIndex] || '';
         e.preventDefault();
       }
 
@@ -345,6 +346,7 @@ export default function Terminal() {
         const newIndex = Math.max(historyIndex - 1, -1);
         setHistoryIndex(newIndex);
         setInputValue(history[newIndex] || '');
+        inputValueRef.current = history[newIndex] || '';
         e.preventDefault();
       }
 

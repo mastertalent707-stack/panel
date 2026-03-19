@@ -53,9 +53,57 @@ function discoverLanguages(translationsDir: string): string[] {
   return [...languages];
 }
 
-const translationsPlugin = (): Plugin => {
-  const sourceDir = path.resolve(__dirname, 'public/translations');
+function discoverTranslationDirs(): string[] {
+  const dirs: string[] = [];
 
+  const mainDir = path.resolve(__dirname, 'public/translations');
+  if (fs.existsSync(mainDir)) dirs.push(mainDir);
+
+  const extensionsDir = path.resolve(__dirname, 'extensions');
+  if (fs.existsSync(extensionsDir)) {
+    for (const ext of fs.readdirSync(extensionsDir)) {
+      const extTransDir = path.join(extensionsDir, ext, 'public/translations');
+      if (fs.existsSync(extTransDir) && fs.statSync(extTransDir).isDirectory()) {
+        dirs.push(extTransDir);
+      }
+    }
+  }
+
+  return dirs;
+}
+
+function discoverAllLanguages(translationDirs: string[]): string[] {
+  const languages = new Set<string>();
+  for (const dir of translationDirs) {
+    for (const lang of discoverLanguages(dir)) {
+      languages.add(lang);
+    }
+  }
+  return [...languages];
+}
+
+function mergeAllTranslations(translationDirs: string[], language: string): Record<string, LanguageData> | null {
+  const merged: Record<string, LanguageData> = {};
+  let found = false;
+
+  for (const dir of translationDirs) {
+    const result = mergeLanguageTranslations(dir, language);
+    if (!result) continue;
+    found = true;
+
+    for (const [namespace, data] of Object.entries(result)) {
+      if (merged[namespace]) {
+        merged[namespace] = { ...merged[namespace], ...data };
+      } else {
+        merged[namespace] = data;
+      }
+    }
+  }
+
+  return found ? merged : null;
+}
+
+const translationsPlugin = (): Plugin => {
   return {
     name: 'translations',
 
@@ -67,7 +115,8 @@ const translationsPlugin = (): Plugin => {
         const language = match[1];
 
         try {
-          const merged = mergeLanguageTranslations(sourceDir, language);
+          const dirs = discoverTranslationDirs();
+          const merged = mergeAllTranslations(dirs, language);
           if (!merged) return next();
 
           res.setHeader('Content-Type', 'application/json');
@@ -81,7 +130,8 @@ const translationsPlugin = (): Plugin => {
 
     closeBundle() {
       const outDir = path.resolve(__dirname, 'dist/translations');
-      const languages = discoverLanguages(sourceDir);
+      const dirs = discoverTranslationDirs();
+      const languages = discoverAllLanguages(dirs);
 
       if (languages.length === 0) return;
 
@@ -90,20 +140,22 @@ const translationsPlugin = (): Plugin => {
 
       for (const language of languages) {
         try {
-          const merged = mergeLanguageTranslations(sourceDir, language);
+          const merged = mergeAllTranslations(dirs, language);
           if (!merged) continue;
 
           const minified = JSON.stringify(merged);
 
-          const topLevel = path.join(sourceDir, `${language}.json`);
-          if (fs.existsSync(topLevel)) {
-            totalSource += fs.readFileSync(topLevel, 'utf-8').length;
-          }
-          const langDir = path.join(sourceDir, language);
-          if (fs.existsSync(langDir) && fs.statSync(langDir).isDirectory()) {
-            for (const file of fs.readdirSync(langDir)) {
-              if (file.endsWith('.json')) {
-                totalSource += fs.readFileSync(path.join(langDir, file), 'utf-8').length;
+          for (const dir of dirs) {
+            const topLevel = path.join(dir, `${language}.json`);
+            if (fs.existsSync(topLevel)) {
+              totalSource += fs.readFileSync(topLevel, 'utf-8').length;
+            }
+            const langDir = path.join(dir, language);
+            if (fs.existsSync(langDir) && fs.statSync(langDir).isDirectory()) {
+              for (const file of fs.readdirSync(langDir)) {
+                if (file.endsWith('.json')) {
+                  totalSource += fs.readFileSync(path.join(langDir, file), 'utf-8').length;
+                }
               }
             }
           }
@@ -115,7 +167,9 @@ const translationsPlugin = (): Plugin => {
         }
       }
 
-      console.log(`[translations] Merged ${languages.length} languages into dist/translations/`);
+      console.log(
+        `[translations] Merged ${languages.length} languages from ${dirs.length} source(s) into dist/translations/`,
+      );
       console.log(`[translations] Source: ${totalSource} bytes → Minified: ${totalMinified} bytes`);
     },
   };
