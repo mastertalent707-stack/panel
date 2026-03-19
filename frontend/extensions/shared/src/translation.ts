@@ -89,6 +89,30 @@ export class DefinedTranslations<
       },
     };
   }
+
+  public getTranslations() {
+    const context = globalTranslationHandle;
+    if (!context) {
+      throw new Error('getTranslations can only be used after the translation handle has been set');
+    }
+
+    const namespace = this.namespace;
+
+    return {
+      language: context.language,
+      setLanguage: context.setLanguage,
+      t<K extends keyof P>(
+        key: K,
+        // @ts-expect-error this is fine
+        values: Record<GetPlaceholders<P[K]>[number], string | number>,
+      ): string {
+        return context.t(`${namespace}.${key as string}`, values);
+      },
+      tItem(key: keyof I, count: number): string {
+        return context.tItem(`${namespace}.${key as string}`, count);
+      },
+    };
+  }
 }
 
 type UnionToIntersection<U> = (U extends unknown ? (k: U) => void : never) extends (k: infer I) => void ? I : never;
