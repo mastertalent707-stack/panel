@@ -50,11 +50,9 @@ const TranslationProvider = ({ children }: { children: ReactNode }) => {
         axiosInstance
           .get(`/translations/${language}.json`)
           .then(({ data }) => {
-            const dataSpace = import.meta.env.DEV ? data : data[''];
-
             const result: LanguageData = {
-              items: dataSpace.items,
-              translations: dataSpace.translations,
+              items: data[''].items,
+              translations: data[''].translations,
             };
 
             for (const key in data) {

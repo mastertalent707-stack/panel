@@ -13,7 +13,7 @@ services:
       - APP_PRIMARY=true # sets whether this panel instance is responsible for running background tasks (e.g. cleanup)
       - APP_ENCRYPTION_KEY=CHANGEME
       - APP_USE_DECRYPTION_CACHE=true # caches decrypted values in memory to improve performance, can be considered less secure
-      - APP_USE_INTERNAL_CACHE=true # if you disable this without redis, there will essentially be no caching at all which will significantly degrade performance
+      - APP_USE_INTERNAL_CACHE=true
     volumes:
       - ./data:/var/lib/calagopus
       - ./logs:/var/log/calagopus
@@ -21,7 +21,6 @@ services:
       - 8000:8000
     depends_on:
       - db
-      - cache
 
   db:
     image: ghcr.io/calagopus/pgautoupgrade:18-alpine

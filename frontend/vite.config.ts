@@ -4,78 +4,119 @@ import babel from '@rolldown/plugin-babel';
 import tailwindcss from '@tailwindcss/vite';
 import react, { reactCompilerPreset } from '@vitejs/plugin-react';
 import type { LanguageData } from 'shared';
+import type { Plugin } from 'vite';
 import { defineConfig } from 'vite';
 import dynamicPublicDirectory from 'vite-multiple-assets';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 
 const useFastReactCompiler = process.env.FAST_REACT_COMPILER === 'true';
 
-// Minifies all JSON translation files in the dist/translations/ directory after build
-const minifyTranslations = () => {
+function mergeLanguageTranslations(translationsDir: string, language: string): Record<string, LanguageData> | null {
+  const namespaces: Record<string, LanguageData> = {};
+  let found = false;
+
+  const topLevelFile = path.join(translationsDir, `${language}.json`);
+  if (fs.existsSync(topLevelFile)) {
+    namespaces[''] = JSON.parse(fs.readFileSync(topLevelFile, 'utf-8'));
+    found = true;
+  }
+
+  const langDir = path.join(translationsDir, language);
+  if (fs.existsSync(langDir) && fs.statSync(langDir).isDirectory()) {
+    for (const file of fs.readdirSync(langDir)) {
+      if (file.endsWith('.json')) {
+        const content = fs.readFileSync(path.join(langDir, file), 'utf-8');
+        namespaces[file.replace('.json', '')] = JSON.parse(content);
+        found = true;
+      }
+    }
+  }
+
+  return found ? namespaces : null;
+}
+
+function discoverLanguages(translationsDir: string): string[] {
+  if (!fs.existsSync(translationsDir)) return [];
+
+  const languages = new Set<string>();
+
+  for (const entry of fs.readdirSync(translationsDir)) {
+    const fullPath = path.join(translationsDir, entry);
+
+    if (entry.endsWith('.json')) {
+      languages.add(entry.replace('.json', ''));
+    } else if (fs.statSync(fullPath).isDirectory()) {
+      languages.add(entry);
+    }
+  }
+
+  return [...languages];
+}
+
+const translationsPlugin = (): Plugin => {
+  const sourceDir = path.resolve(__dirname, 'public/translations');
+
   return {
-    name: 'minify-translations',
-    closeBundle: () => {
-      const dir = path.resolve(__dirname, 'dist/translations');
+    name: 'translations',
 
-      if (fs.existsSync(dir)) {
-        const files = fs.readdirSync(dir);
-        let count = 0;
-        let total = 0;
-        let minified = 0;
+    configureServer(server) {
+      server.middlewares.use((req, res, next) => {
+        const match = req.url?.match(/^\/translations\/([^/]+)\.json$/);
+        if (!match) return next();
 
-        const languageData: Record<string, Record<string, LanguageData>> = {};
+        const language = match[1];
 
-        files.forEach((file) => {
-          if (file.endsWith('.json')) {
-            const filePath = path.join(dir, file);
-            try {
-              const content = fs.readFileSync(filePath, 'utf-8');
-              total += content.length;
+        try {
+          const merged = mergeLanguageTranslations(sourceDir, language);
+          if (!merged) return next();
 
-              const jsonParsed = JSON.parse(content);
-              if (!languageData[file.replace('.json', '')]) {
-                languageData[file.replace('.json', '')] = {};
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify(merged));
+        } catch (err) {
+          console.error(`[translations] Dev serve error for "${language}":`, err);
+          next();
+        }
+      });
+    },
+
+    closeBundle() {
+      const outDir = path.resolve(__dirname, 'dist/translations');
+      const languages = discoverLanguages(sourceDir);
+
+      if (languages.length === 0) return;
+
+      let totalSource = 0;
+      let totalMinified = 0;
+
+      for (const language of languages) {
+        try {
+          const merged = mergeLanguageTranslations(sourceDir, language);
+          if (!merged) continue;
+
+          const minified = JSON.stringify(merged);
+
+          const topLevel = path.join(sourceDir, `${language}.json`);
+          if (fs.existsSync(topLevel)) {
+            totalSource += fs.readFileSync(topLevel, 'utf-8').length;
+          }
+          const langDir = path.join(sourceDir, language);
+          if (fs.existsSync(langDir) && fs.statSync(langDir).isDirectory()) {
+            for (const file of fs.readdirSync(langDir)) {
+              if (file.endsWith('.json')) {
+                totalSource += fs.readFileSync(path.join(langDir, file), 'utf-8').length;
               }
-              languageData[file.replace('.json', '')][''] = jsonParsed;
-            } catch (error) {
-              console.error(`[minify-translations] Error processing ${file}:`, error);
-            }
-          } else {
-            const subDirPath = path.join(dir, file);
-            if (fs.statSync(subDirPath).isDirectory()) {
-              const subFiles = fs.readdirSync(subDirPath);
-              subFiles.forEach((subFile) => {
-                if (subFile.endsWith('.json')) {
-                  const subFilePath = path.join(subDirPath, subFile);
-                  try {
-                    const content = fs.readFileSync(subFilePath, 'utf-8');
-                    total += content.length;
-
-                    const jsonParsed = JSON.parse(content);
-                    if (!languageData[file]) {
-                      languageData[file] = {};
-                    }
-                    languageData[file][subFile.replace('.json', '')] = jsonParsed;
-                  } catch (error) {
-                    console.error(`[minify-translations] Error processing ${subFile} in ${file}:`, error);
-                  }
-                }
-              });
             }
           }
-        });
 
-        for (const [language, namespaces] of Object.entries(languageData)) {
-          const minifiedContent = JSON.stringify(namespaces);
-          fs.writeFileSync(path.join(dir, `${language}.json`), minifiedContent);
-          count++;
-          minified += minifiedContent.length;
+          fs.writeFileSync(path.join(outDir, `${language}.json`), minified);
+          totalMinified += minified.length;
+        } catch (err) {
+          console.error(`[translations] Build error for "${language}":`, err);
         }
-
-        console.log(`[minify-translations] Minified ${count} JSON files in dist/translations`);
-        console.log(`[minify-translations] Total size before minification: ${total} bytes`);
-        console.log(`[minify-translations] Total size after minification: ${minified} bytes`);
       }
+
+      console.log(`[translations] Merged ${languages.length} languages into dist/translations/`);
+      console.log(`[translations] Source: ${totalSource} bytes → Minified: ${totalMinified} bytes`);
     },
   };
 };
@@ -108,7 +149,7 @@ export default defineConfig({
         return path.dstFile;
       },
     }),
-    minifyTranslations(),
+    translationsPlugin(),
     viteStaticCopy({
       targets: [
         {
