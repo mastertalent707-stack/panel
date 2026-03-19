@@ -58,11 +58,11 @@ const TranslationProvider = ({ children }: { children: ReactNode }) => {
             for (const key in data) {
               if (key === '') continue;
 
-              for (const item in data.items) {
-                result.items[`${key}.${item}`] = data.items[item];
+              for (const item in data[key].items) {
+                result.items[`${key}.${item}`] = data[key].items[item];
               }
-              for (const translation in data.translation) {
-                result.items[`${key}.${translation}`] = data.translations[translation];
+              for (const translation in data[key].translations) {
+                result.translations[`${key}.${translation}`] = data[key].translations[translation];
               }
             }
 
