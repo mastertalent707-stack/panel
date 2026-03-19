@@ -21,7 +21,6 @@ export default function WebauthnContainer() {
   const [loading, setLoading] = useState(false);
 
   const form = useForm<z.infer<typeof adminSettingsWebauthnSchema>>({
-    mode: 'uncontrolled',
     initialValues: {
       rpId: '',
       rpOrigin: '',

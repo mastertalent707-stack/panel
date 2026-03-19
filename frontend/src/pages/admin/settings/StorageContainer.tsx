@@ -27,7 +27,6 @@ export default function StorageContainer() {
   const [loading, setLoading] = useState(false);
 
   const form = useForm<z.infer<typeof adminSettingsStorageSchema>>({
-    mode: 'uncontrolled',
     initialValues: {
       type: 'filesystem',
       path: '',

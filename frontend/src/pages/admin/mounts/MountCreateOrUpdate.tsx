@@ -21,7 +21,6 @@ export default function MountCreateOrUpdate({ contextMount }: { contextMount?: z
   const [openModal, setOpenModal] = useState<'delete' | null>(null);
 
   const form = useForm<z.infer<typeof adminMountUpdateSchema>>({
-    mode: 'uncontrolled',
     initialValues: {
       name: '',
       description: null,

@@ -60,6 +60,7 @@ export default function EggCreateOrUpdate({
 }) {
   const { addToast } = useToast();
 
+  const [isValid, setIsValid] = useState(false);
   const [openModal, setOpenModal] = useState<'move' | 'delete' | null>(null);
   const [selectedEggRepositoryUuid, setSelectedEggRepositoryUuid] = useState<string>(
     contextEgg?.eggRepositoryEgg?.eggRepository.uuid ?? '',
@@ -98,6 +99,7 @@ export default function EggCreateOrUpdate({
       dockerImages: {},
       fileDenylist: [],
     },
+    onValuesChange: () => setIsValid(form.isValid()),
     validateInputOnBlur: true,
     validate: zod4Resolver(adminEggUpdateSchema),
   });
@@ -669,7 +671,7 @@ export default function EggCreateOrUpdate({
 
         <Group mt='md'>
           <AdminCan action={contextEgg ? 'eggs.update' : 'eggs.create'} cantSave>
-            <Button type='submit' disabled={!form.isValid()} loading={loading}>
+            <Button type='submit' disabled={!isValid} loading={loading}>
               Save
             </Button>
             {contextEgg && (

@@ -31,7 +31,6 @@ export default function EmailContainer() {
   const [openModal, setOpenModal] = useState<'sendTestEmail' | null>(null);
 
   const form = useForm<z.infer<typeof adminSettingsEmailSchema>>({
-    mode: 'uncontrolled',
     initialValues: {
       type: 'none',
     },

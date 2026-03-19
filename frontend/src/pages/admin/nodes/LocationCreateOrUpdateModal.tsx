@@ -34,7 +34,6 @@ export default function LocationCreateOrUpdateModal({
   const [loading, setLoading] = useState(false);
 
   const form = useForm<z.infer<typeof adminLocationUpdateSchema>>({
-    mode: 'uncontrolled',
     initialValues: {
       name: '',
       description: null,

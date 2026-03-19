@@ -26,7 +26,7 @@ export const adminBackupConfigurationSchema = z.object({
   backupConfigs: z.object({
     s3: adminBackupConfigurationS3Schema.nullable(),
     restic: adminBackupConfigurationResticSchema.nullable(),
-  }),
+  }).optional(),
   created: z.date(),
 });
 

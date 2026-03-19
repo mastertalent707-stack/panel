@@ -22,7 +22,6 @@ export default function ServerContainer() {
   const [loading, setLoading] = useState(false);
 
   const form = useForm<z.infer<typeof adminSettingsServerSchema>>({
-    mode: 'uncontrolled',
     initialValues: {
       maxFileManagerViewSize: 0,
       maxFileManagerContentSearchSize: 0,

@@ -21,7 +21,6 @@ export default function ActivityContainer() {
   const [loading, setLoading] = useState(false);
 
   const form = useForm<z.infer<typeof adminSettingsActivitySchema>>({
-    mode: 'uncontrolled',
     initialValues: {
       adminLogRetentionDays: 1,
       userLogRetentionDays: 1,

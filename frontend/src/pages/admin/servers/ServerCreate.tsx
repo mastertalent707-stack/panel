@@ -69,6 +69,7 @@ export default function ServerCreate() {
   const canReadEggs = useAdminCan('eggs.read');
   const canReadBackupConfigurations = useAdminCan('backup-configurations.read');
 
+  const [isValid, setIsValid] = useState(false);
   const [openModal, setOpenModal] = useState<'confirm-no-allocation' | null>(null);
 
   const form = useForm<z.infer<typeof adminServerCreateSchema>>({
@@ -107,6 +108,7 @@ export default function ServerCreate() {
       allocationUuids: [],
       variables: [],
     },
+    onValuesChange: () => setIsValid(form.isValid()),
     validateInputOnBlur: true,
     validate: zod4Resolver(adminServerCreateSchema),
   });
@@ -617,10 +619,10 @@ export default function ServerCreate() {
 
           <Group>
             <AdminCan action='servers.create' cantSave>
-              <Button type='submit' disabled={!form.isValid()} loading={loading}>
+              <Button type='submit' disabled={!isValid} loading={loading}>
                 Save
               </Button>
-              <Button onClick={() => doCreateOrUpdate(true)} disabled={!form.isValid()} loading={loading}>
+              <Button onClick={() => doCreateOrUpdate(true)} disabled={!isValid} loading={loading}>
                 Save & Stay
               </Button>
             </AdminCan>

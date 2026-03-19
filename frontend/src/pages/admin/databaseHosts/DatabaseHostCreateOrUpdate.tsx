@@ -36,7 +36,6 @@ export default function DatabaseHostCreateOrUpdate({
   const [openModal, setOpenModal] = useState<'delete' | null>(null);
 
   const form = useForm<z.infer<typeof adminDatabaseHostUpdateSchema>>({
-    mode: 'uncontrolled',
     initialValues: {
       name: '',
       username: '',

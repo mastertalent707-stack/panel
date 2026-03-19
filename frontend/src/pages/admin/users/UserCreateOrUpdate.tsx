@@ -34,7 +34,6 @@ export default function UserCreateOrUpdate({ contextUser }: { contextUser?: z.in
   const [openModal, setOpenModal] = useState<'delete' | 'disable_two_factor' | null>(null);
 
   const form = useForm<z.infer<typeof adminUserUpdateSchema>>({
-    mode: 'uncontrolled',
     initialValues: {
       username: '',
       email: '',

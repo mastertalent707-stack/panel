@@ -56,6 +56,8 @@ export default function ServerUpdate({ contextServer }: { contextServer: z.infer
   const canReadEggs = useAdminCan('eggs.read');
   const canReadBackupConfigurations = useAdminCan('backup-configurations.read');
 
+  const [isValid, setIsValid] = useState(false);
+
   const form = useForm<z.infer<typeof adminServerUpdateSchema>>({
     mode: 'uncontrolled',
     initialValues: {
@@ -86,6 +88,7 @@ export default function ServerUpdate({ contextServer }: { contextServer: z.infer
         schedules: 5,
       },
     },
+    onValuesChange: () => setIsValid(form.isValid()),
     validateInputOnBlur: true,
     validate: zod4Resolver(adminServerUpdateSchema),
   });
@@ -472,7 +475,7 @@ export default function ServerUpdate({ contextServer }: { contextServer: z.infer
 
           <Group>
             <AdminCan action='servers.update' cantSave>
-              <Button type='submit' disabled={!form.isValid()} loading={loading}>
+              <Button type='submit' disabled={!isValid} loading={loading}>
                 Save
               </Button>
             </AdminCan>

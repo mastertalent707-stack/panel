@@ -27,7 +27,6 @@ export default ({ contextLocation }: { contextLocation?: z.infer<typeof adminLoc
   const [openModal, setOpenModal] = useState<'delete' | null>(null);
 
   const form = useForm<z.infer<typeof adminLocationUpdateSchema>>({
-    mode: 'uncontrolled',
     initialValues: {
       name: '',
       description: null,

@@ -29,7 +29,6 @@ export default function EggRepositoryCreateOrUpdate({
   const [openModal, setOpenModal] = useState<'delete' | null>(null);
 
   const form = useForm<z.infer<typeof adminEggRepositoryUpdateSchema>>({
-    mode: 'uncontrolled',
     initialValues: {
       name: '',
       description: null,

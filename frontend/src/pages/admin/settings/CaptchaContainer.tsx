@@ -31,7 +31,6 @@ export default function CaptchaContainer() {
   const [loading, setLoading] = useState(false);
 
   const form = useForm<z.infer<typeof adminSettingsCaptchaProviderSchema>>({
-    mode: 'uncontrolled',
     initialValues: {
       type: 'none',
     },

@@ -34,7 +34,6 @@ export default function BackupConfigurationCreateOrUpdate({
   const [openModal, setOpenModal] = useState<'delete' | null>(null);
 
   const form = useForm<Partial<z.infer<typeof adminBackupConfigurationUpdateSchema>>>({
-    mode: 'uncontrolled',
     initialValues: {
       name: '',
       description: null,
@@ -46,7 +45,6 @@ export default function BackupConfigurationCreateOrUpdate({
   });
 
   const backupConfigS3Form = useForm<z.infer<typeof adminBackupConfigurationS3Schema>>({
-    mode: 'uncontrolled',
     initialValues: {
       accessKey: '',
       secretKey: '',
@@ -61,7 +59,6 @@ export default function BackupConfigurationCreateOrUpdate({
   });
 
   const backupConfigResticForm = useForm<z.infer<typeof adminBackupConfigurationResticSchema>>({
-    mode: 'uncontrolled',
     initialValues: {
       repository: '',
       retryLockSeconds: 0,
@@ -116,10 +113,10 @@ export default function BackupConfigurationCreateOrUpdate({
         maintenanceEnabled: contextBackupConfiguration.maintenanceEnabled,
         backupDisk: contextBackupConfiguration.backupDisk,
       });
-      if (contextBackupConfiguration.backupConfigs.s3) {
+      if (contextBackupConfiguration.backupConfigs?.s3) {
         backupConfigS3Form.setValues(contextBackupConfiguration.backupConfigs.s3);
       }
-      if (contextBackupConfiguration.backupConfigs.restic) {
+      if (contextBackupConfiguration.backupConfigs?.restic) {
         backupConfigResticForm.setValues(contextBackupConfiguration.backupConfigs.restic);
       }
     }

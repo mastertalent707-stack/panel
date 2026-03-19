@@ -27,7 +27,6 @@ export default function RoleCreateOrUpdate({ contextRole }: { contextRole?: z.in
   const [openModal, setOpenModal] = useState<'delete' | null>(null);
 
   const form = useForm<z.infer<typeof adminRoleUpdateSchema>>({
-    mode: 'uncontrolled',
     initialValues: {
       name: '',
       description: null,

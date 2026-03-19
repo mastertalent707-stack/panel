@@ -31,6 +31,7 @@ import { useToast } from '@/providers/ToastProvider.tsx';
 export default function NodeCreateOrUpdate({ contextNode }: { contextNode?: z.infer<typeof adminNodeSchema> }) {
   const { addToast } = useToast();
 
+  const [isValid, setIsValid] = useState(false);
   const [openModal, setOpenModal] = useState<'delete' | null>(null);
 
   const form = useForm<z.infer<typeof adminNodeUpdateSchema>>({
@@ -49,6 +50,7 @@ export default function NodeCreateOrUpdate({ contextNode }: { contextNode?: z.in
       memory: 8192,
       disk: 10240,
     },
+    onValuesChange: () => setIsValid(form.isValid()),
     validateInputOnBlur: true,
     validate: zod4Resolver(adminNodeUpdateSchema),
   });
@@ -250,11 +252,11 @@ export default function NodeCreateOrUpdate({ contextNode }: { contextNode?: z.in
 
           <Group>
             <AdminCan action={contextNode ? 'nodes.update' : 'nodes.create'} cantSave>
-              <Button type='submit' disabled={!form.isValid()} loading={loading}>
+              <Button type='submit' disabled={!isValid} loading={loading}>
                 Save
               </Button>
               {!contextNode && (
-                <Button onClick={() => doCreateOrUpdate(true)} disabled={!form.isValid()} loading={loading}>
+                <Button onClick={() => doCreateOrUpdate(true)} disabled={!isValid} loading={loading}>
                   Save & Stay
                 </Button>
               )}

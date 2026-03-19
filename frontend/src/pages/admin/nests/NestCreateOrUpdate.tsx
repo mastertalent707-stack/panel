@@ -20,7 +20,6 @@ export default function NestCreateOrUpdate({ contextNest }: { contextNest?: z.in
   const [openModal, setOpenModal] = useState<'delete' | null>(null);
 
   const form = useForm<z.infer<typeof adminNestUpdateSchema>>({
-    mode: 'uncontrolled',
     initialValues: {
       author: '',
       name: '',

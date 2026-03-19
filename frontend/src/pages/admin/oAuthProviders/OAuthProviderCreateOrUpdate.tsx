@@ -34,6 +34,7 @@ export default function OAuthProviderCreateOrUpdate({
   const { addToast } = useToast();
   const { settings } = useGlobalStore();
 
+  const [isValid, setIsValid] = useState(false);
   const [openModal, setOpenModal] = useState<'delete' | null>(null);
 
   const form = useForm<z.infer<typeof adminOAuthProviderUpdateSchema>>({
@@ -58,6 +59,7 @@ export default function OAuthProviderCreateOrUpdate({
       userManageable: true,
       basicAuth: false,
     },
+    onValuesChange: () => setIsValid(form.isValid()),
     validateInputOnBlur: true,
     validate: zod4Resolver(adminOAuthProviderUpdateSchema),
   });
@@ -327,11 +329,11 @@ export default function OAuthProviderCreateOrUpdate({
 
           <Group>
             <AdminCan action={contextOAuthProvider ? 'oauth-providers.update' : 'oauth-providers.create'} cantSave>
-              <Button type='submit' disabled={!form.isValid()} loading={loading}>
+              <Button type='submit' disabled={!isValid} loading={loading}>
                 Save
               </Button>
               {!contextOAuthProvider && (
-                <Button onClick={() => doCreateOrUpdate(true)} disabled={!form.isValid()} loading={loading}>
+                <Button onClick={() => doCreateOrUpdate(true)} disabled={!isValid} loading={loading}>
                   Save & Stay
                 </Button>
               )}
