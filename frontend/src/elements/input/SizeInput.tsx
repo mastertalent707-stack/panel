@@ -1,5 +1,5 @@
 import { ChangeEvent, startTransition, useEffect, useRef, useState } from 'react';
-import { closestUnit, formatUnitBytes, mbToBytes, UNITS, unitToBytes } from '@/lib/size.ts';
+import { closestUnit, formatUnitBytes, mapUnitToLocale, mbToBytes, UNITS, unitToBytes } from '@/lib/size.ts';
 import Select from './Select.tsx';
 import TextInput from './TextInput.tsx';
 
@@ -88,7 +88,10 @@ export default function SizeInput({ mode, min, value, onChange, ...rest }: SizeI
       rightSectionWidth={72}
       rightSection={
         <Select
-          data={availableUnits}
+          data={availableUnits.map((u) => ({
+            label: mapUnitToLocale(u),
+            value: u,
+          }))}
           value={unit}
           onChange={handleUnitChange}
           styles={{
@@ -97,6 +100,7 @@ export default function SizeInput({ mode, min, value, onChange, ...rest }: SizeI
               borderTopLeftRadius: 0,
               borderBottomLeftRadius: 0,
               width: 72,
+              marginTop: -5,
               marginRight: -2,
             },
           }}

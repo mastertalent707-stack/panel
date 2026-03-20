@@ -1,5 +1,13 @@
 {
   "items": {
+    "byte": {
+      "zero": "{count} Bytes",
+      "one": "{count} Byte",
+      "two": "{count} Bytes",
+      "few": "{count} Bytes",
+      "many": "{count} Bytes",
+      "other": "{count} Bytes"
+    },
     "user": {
       "zero": "{count} Users",
       "one": "{count} User",
@@ -155,6 +163,16 @@
           "stopped": "Stopped",
           "restarted": "Restarted",
           "killed": "Killed"
+        }
+      },
+      "unit": {
+        "bytes": {
+          "bytes": "B",
+          "kibibytes": "KiB",
+          "mebibytes": "MiB",
+          "gibibytes": "GiB",
+          "tebibytes": "TiB",
+          "pebibytes": "PiB"
         }
       },
       "unlimited": "Unlimited",

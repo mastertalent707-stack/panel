@@ -174,10 +174,10 @@ function ServerFilesComponent() {
 
           if (selectedIndices.length === 0) return;
 
-          const minIndex = Math.min(...selectedIndices);
-          if (minIndex <= 0) return;
-
-          const nextFiles = selectedIndices.map((index) => browsingEntries.data[index - 1]);
+          const nextFiles = selectedIndices.map((index) => {
+            const newIndex = (index - 1 + browsingEntries.data.length) % browsingEntries.data.length;
+            return browsingEntries.data[newIndex];
+          });
 
           doSelectFiles(nextFiles);
         },
@@ -194,10 +194,10 @@ function ServerFilesComponent() {
 
           if (selectedIndices.length === 0) return;
 
-          const maxIndex = Math.max(...selectedIndices);
-          if (maxIndex >= browsingEntries.data.length - 1) return;
-
-          const nextFiles = selectedIndices.map((index) => browsingEntries.data[index + 1]);
+          const nextFiles = selectedIndices.map((index) => {
+            const newIndex = (index + 1) % browsingEntries.data.length;
+            return browsingEntries.data[newIndex];
+          });
 
           doSelectFiles(nextFiles);
         },

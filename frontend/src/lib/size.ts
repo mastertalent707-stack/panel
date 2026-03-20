@@ -1,12 +1,29 @@
+import { getTranslations } from '@/providers/TranslationProvider.tsx';
+
 const _CONVERSION_UNIT = 1024;
 
 export const UNITS = Object.freeze(['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB'] as const);
+
+export type Unit = (typeof UNITS)[number];
 
 /**
  * Given a value in megabytes converts it back down into bytes.
  */
 export function mbToBytes(megabytes: number): number {
   return Math.floor(megabytes * _CONVERSION_UNIT * _CONVERSION_UNIT);
+}
+
+export function mapUnitToLocale(unit: Unit): string {
+  const unitToLocaleMapping: Record<Unit, string> = {
+    B: getTranslations().t('common.unit.bytes.bytes', {}),
+    KiB: getTranslations().t('common.unit.bytes.kibibytes', {}),
+    MiB: getTranslations().t('common.unit.bytes.mebibytes', {}),
+    GiB: getTranslations().t('common.unit.bytes.gibibytes', {}),
+    TiB: getTranslations().t('common.unit.bytes.tebibytes', {}),
+    PiB: getTranslations().t('common.unit.bytes.pebibytes', {}),
+  };
+
+  return unitToLocaleMapping[unit];
 }
 
 /**
@@ -16,20 +33,27 @@ export function mbToBytes(megabytes: number): number {
 export function bytesToString(bytes: number, decimals = 2, shortBytes = false): string {
   const k = _CONVERSION_UNIT;
 
-  if (!bytes || bytes < 1) return `0 ${shortBytes ? 'B' : 'Bytes'}`;
+  if (!bytes || bytes < 1)
+    return shortBytes ? `0 ${getTranslations().t('common.unit.bytes.bytes', {})}` : getTranslations().tItem('byte', 0);
 
   decimals = Math.floor(Math.max(0, decimals));
   const i = Math.floor(Math.log(bytes) / Math.log(k));
-  const value = Number((bytes / k ** i).toFixed(decimals));
 
-  const units = [shortBytes ? 'B' : 'Bytes', ...UNITS.slice(1)];
-  const unitOverflow = i - units.length + 1;
+  const unitOverflow = i - UNITS.length + 1;
+
+  let value = Number((bytes / k ** i).toFixed(decimals));
+  let unit = UNITS[i];
 
   if (unitOverflow >= 1) {
-    return `${(value * k ** unitOverflow).toFixed(decimals)} ${units[units.length - 1]}`;
+    value = Number((value * k ** unitOverflow).toFixed(decimals));
+    unit = UNITS[UNITS.length - unitOverflow];
   }
 
-  return `${value} ${units[i]}`;
+  return unit === 'B'
+    ? shortBytes
+      ? `0 ${getTranslations().t('common.unit.bytes.bytes', {})}`
+      : getTranslations().tItem('byte', 0)
+    : `${value} ${mapUnitToLocale(unit)}`;
 }
 
 export function closestUnit(bytes: number): (typeof UNITS)[number] {
@@ -41,7 +65,7 @@ export function closestUnit(bytes: number): (typeof UNITS)[number] {
   return UNITS[i];
 }
 
-export function formatUnitBytes(unit: (typeof UNITS)[number], bytes: number): number {
+export function formatUnitBytes(unit: Unit, bytes: number): number {
   const k = _CONVERSION_UNIT;
 
   const unitIndex = UNITS.indexOf(unit);
@@ -53,7 +77,7 @@ export function formatUnitBytes(unit: (typeof UNITS)[number], bytes: number): nu
   return bytes / Math.pow(k, unitIndex);
 }
 
-export function unitToBytes(unit: (typeof UNITS)[number], value: number): number {
+export function unitToBytes(unit: Unit, value: number): number {
   const k = _CONVERSION_UNIT;
 
   const unitIndex = UNITS.indexOf(unit);

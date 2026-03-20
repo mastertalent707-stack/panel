@@ -9,6 +9,7 @@ try {
 
 const baseTranslations = defineTranslations({
   items: {
+    byte: defineEnglishItem('Byte', 'Bytes'),
     user: defineEnglishItem('User', 'Users'),
     file: defineEnglishItem('File', 'Files'),
     server: defineEnglishItem('Server', 'Servers'),
@@ -137,6 +138,16 @@ const baseTranslations = defineTranslations({
           stopped: 'Stopped',
           restarted: 'Restarted',
           killed: 'Killed',
+        },
+      },
+      unit: {
+        bytes: {
+          bytes: 'B',
+          kibibytes: 'KiB',
+          mebibytes: 'MiB',
+          gibibytes: 'GiB',
+          tebibytes: 'TiB',
+          pebibytes: 'PiB',
         },
       },
       unlimited: 'Unlimited',
