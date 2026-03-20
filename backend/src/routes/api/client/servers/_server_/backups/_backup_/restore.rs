@@ -56,6 +56,12 @@ mod post {
                 .ok();
         }
 
+        if !backup.successful {
+            return ApiResponse::error("backup has failed and cannot be restored")
+                .with_status(StatusCode::EXPECTATION_FAILED)
+                .ok();
+        }
+
         let mut transaction = state.database.write().begin().await?;
 
         let rows_affected = sqlx::query!(

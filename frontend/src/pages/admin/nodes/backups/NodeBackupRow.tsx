@@ -44,6 +44,8 @@ export default function NodeBackupRow({
       });
   };
 
+  const isFailed = !backup.isSuccessful && !!backup.completed;
+
   return (
     <>
       <NodeBackupsRestoreModal
@@ -64,6 +66,7 @@ export default function NodeBackupRow({
           {
             icon: faFileArrowDown,
             label: t('common.button.download', {}),
+            hidden: !backup.completed || isFailed,
             onClick: !backup.isStreaming ? () => doDownload('tar_gz') : () => null,
             color: 'gray',
             items: backup.isStreaming
@@ -79,12 +82,14 @@ export default function NodeBackupRow({
           {
             icon: faRotateLeft,
             label: t('common.button.restore', {}),
+            hidden: !backup.completed || isFailed,
             onClick: () => setOpenModal('restore'),
             color: 'gray',
             canAccess: useAdminCan('nodes.backups'),
           },
           {
             icon: faTrash,
+            hidden: !backup.completed,
             label: t('common.button.delete', {}),
             onClick: () => setOpenModal('delete'),
             color: 'red',
@@ -116,7 +121,7 @@ export default function NodeBackupRow({
               </Code>
             </TableData>
 
-            {backup.isSuccessful || !backup.completed ? (
+            {!isFailed ? (
               <>
                 <TableData>{backup.checksum && <Code>{backup.checksum}</Code>}</TableData>
 

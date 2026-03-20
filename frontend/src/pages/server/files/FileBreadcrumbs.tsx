@@ -107,16 +107,22 @@ export default function FileBreadcrumbs({ path, inFileEditor }: { path: string; 
         {items}
       </Breadcrumbs>
 
-      <NavLink to={`/server/${server?.uuidShort}/files`} hidden={!browsingBackup || inFileEditor}>
-        <Button variant='light' leftSection={<FontAwesomeIcon icon={faDoorOpen} />}>
-          {t('pages.server.files.button.exitBackup', {})}
-        </Button>
-      </NavLink>
-      <span hidden={inFileEditor}>
-        <Button variant='light' leftSection={<FontAwesomeIcon icon={faSearch} />} onClick={() => doOpenModal('search')}>
-          {t('pages.server.files.button.search', {})}
-        </Button>
-      </span>
+      <div className='space-x-2'>
+        <NavLink to={`/server/${server?.uuidShort}/files`} hidden={!browsingBackup || inFileEditor}>
+          <Button variant='light' leftSection={<FontAwesomeIcon icon={faDoorOpen} />}>
+            {t('pages.server.files.button.exitBackup', {})}
+          </Button>
+        </NavLink>
+        <span hidden={inFileEditor}>
+          <Button
+            variant='light'
+            leftSection={<FontAwesomeIcon icon={faSearch} />}
+            onClick={() => doOpenModal('search')}
+          >
+            {t('pages.server.files.button.search', {})}
+          </Button>
+        </span>
+      </div>
     </div>
   );
 }

@@ -41,6 +41,8 @@ export default function AdminBackupConfigurationBackupRow({
       });
   };
 
+  const isFailed = !backup.isSuccessful && !!backup.completed;
+
   return (
     <>
       <NodeBackupsRestoreModal
@@ -61,6 +63,7 @@ export default function AdminBackupConfigurationBackupRow({
           {
             icon: faFileArrowDown,
             label: t('common.button.download', {}),
+            hidden: !backup.completed || isFailed,
             onClick: !backup.isStreaming ? () => doDownload('tar_gz') : () => null,
             color: 'gray',
             items: backup.isStreaming
@@ -76,6 +79,7 @@ export default function AdminBackupConfigurationBackupRow({
           {
             icon: faRotateLeft,
             label: t('common.button.restore', {}),
+            hidden: !backup.completed || isFailed,
             onClick: () => setOpenModal('restore'),
             color: 'gray',
             canAccess: useAdminCan('nodes.backups'),
@@ -83,6 +87,7 @@ export default function AdminBackupConfigurationBackupRow({
           {
             icon: faTrash,
             label: t('common.button.delete', {}),
+            hidden: !backup.completed,
             onClick: () => setOpenModal('delete'),
             color: 'red',
             canAccess: useAdminCan('nodes.backups'),
@@ -124,7 +129,7 @@ export default function AdminBackupConfigurationBackupRow({
               </Code>
             </TableData>
 
-            {backup.isSuccessful || !backup.completed ? (
+            {!isFailed ? (
               <>
                 <TableData>{backup.checksum && <Code>{backup.checksum}</Code>}</TableData>
 

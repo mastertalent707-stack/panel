@@ -86,7 +86,6 @@ export default function BackupRow({ backup }: { backup: z.infer<typeof serverBac
           {
             icon: faPencil,
             label: t('common.button.edit', {}),
-            hidden: isFailed,
             onClick: () => setOpenModal('edit'),
             color: 'gray',
             canAccess: useServerCan('backups.update'),
@@ -94,7 +93,7 @@ export default function BackupRow({ backup }: { backup: z.infer<typeof serverBac
           {
             icon: faShare,
             label: t('pages.server.backups.button.browse', {}),
-            hidden: !backup.isBrowsable || isFailed,
+            hidden: !backup.completed || !backup.isBrowsable || isFailed,
             onClick: () =>
               navigate(
                 `/server/${server?.uuidShort}/files?${createSearchParams({
@@ -107,7 +106,7 @@ export default function BackupRow({ backup }: { backup: z.infer<typeof serverBac
           {
             icon: faFileArrowDown,
             label: t('common.button.download', {}),
-            hidden: isFailed,
+            hidden: !backup.completed || isFailed,
             onClick: !backup.isStreaming ? () => doDownload('tar_gz') : () => null,
             color: 'gray',
             items: backup.isStreaming
@@ -123,7 +122,7 @@ export default function BackupRow({ backup }: { backup: z.infer<typeof serverBac
           {
             icon: faRotateLeft,
             label: t('common.button.restore', {}),
-            hidden: isFailed,
+            hidden: !backup.completed || isFailed,
             onClick: () => setOpenModal('restore'),
             color: 'gray',
             canAccess: useServerCan('backups.restore'),
@@ -131,6 +130,7 @@ export default function BackupRow({ backup }: { backup: z.infer<typeof serverBac
           {
             icon: faTrash,
             label: t('common.button.delete', {}),
+            hidden: !backup.completed,
             disabled: backup.isLocked,
             onClick: () => setOpenModal('delete'),
             color: 'red',

@@ -43,7 +43,7 @@ function FormattedTimestamp({ timestamp, className, autoUpdate = true, precise }
   }, [timestamp, autoUpdate]);
 
   return (
-    <Tooltip label={formatDateTime(timestamp, precise)}>
+    <Tooltip label={formatDateTime(timestamp, precise, false)}>
       <span className={classNames('cursor-help', className)}>{formatTimestamp(timestamp)}</span>
     </Tooltip>
   );

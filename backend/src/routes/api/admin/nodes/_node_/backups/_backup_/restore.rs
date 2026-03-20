@@ -58,6 +58,12 @@ mod post {
                 .ok();
         }
 
+        if !backup.successful {
+            return ApiResponse::error("backup has failed and cannot be restored")
+                .with_status(StatusCode::EXPECTATION_FAILED)
+                .ok();
+        }
+
         let server =
             match Server::by_uuid_optional_cached(&state.database, data.server_uuid).await? {
                 Some(server) => server,

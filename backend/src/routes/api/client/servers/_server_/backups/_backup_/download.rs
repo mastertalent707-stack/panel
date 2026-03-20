@@ -65,6 +65,12 @@ mod get {
                 .ok();
         }
 
+        if !backup.successful {
+            return ApiResponse::error("backup has failed and cannot be downloaded")
+                .with_status(StatusCode::EXPECTATION_FAILED)
+                .ok();
+        }
+
         let node = server.node.fetch_cached(&state.database).await?;
 
         let url = backup

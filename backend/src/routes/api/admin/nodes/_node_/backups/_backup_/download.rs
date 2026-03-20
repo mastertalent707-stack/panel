@@ -61,6 +61,12 @@ mod get {
                 .ok();
         }
 
+        if !backup.successful {
+            return ApiResponse::error("backup has failed and cannot be downloaded")
+                .with_status(StatusCode::EXPECTATION_FAILED)
+                .ok();
+        }
+
         let url = backup
             .download_url(&state, &user, &node, params.archive_format)
             .await?;

@@ -180,23 +180,16 @@ mod delete {
 mod patch {
     use crate::routes::api::client::servers::_server_::backups::_backup_::GetServerBackup;
     use axum::http::StatusCode;
-    use garde::Validate;
-    use serde::{Deserialize, Serialize};
+    use serde::Serialize;
     use shared::{
         ApiError, GetState,
-        models::{server::GetServerActivityLogger, user::GetPermissionManager},
+        models::{
+            UpdatableModel, server::GetServerActivityLogger,
+            server_backup::UpdateServerBackupOptions, user::GetPermissionManager,
+        },
         response::{ApiResponse, ApiResponseResult},
     };
     use utoipa::ToSchema;
-
-    #[derive(ToSchema, Validate, Deserialize)]
-    pub struct Payload {
-        #[garde(length(chars, min = 1, max = 255))]
-        #[schema(min_length = 1, max_length = 255)]
-        name: Option<compact_str::CompactString>,
-        #[garde(skip)]
-        locked: Option<bool>,
-    }
 
     #[derive(ToSchema, Serialize)]
     struct Response {}
@@ -217,13 +210,13 @@ mod patch {
             description = "The backup ID",
             example = "123e4567-e89b-12d3-a456-426614174000",
         ),
-    ), request_body = inline(Payload))]
+    ), request_body = inline(UpdateServerBackupOptions))]
     pub async fn route(
         state: GetState,
         permissions: GetPermissionManager,
         activity_logger: GetServerActivityLogger,
         mut backup: GetServerBackup,
-        shared::Payload(data): shared::Payload<Payload>,
+        shared::Payload(data): shared::Payload<UpdateServerBackupOptions>,
     ) -> ApiResponseResult {
         if let Err(errors) = shared::utils::validate_data(&data) {
             return ApiResponse::new_serialized(ApiError::new_strings_value(errors))
@@ -233,29 +226,7 @@ mod patch {
 
         permissions.has_server_permission("backups.update")?;
 
-        if backup.completed.is_none() {
-            return ApiResponse::error("backup has not been completed yet")
-                .with_status(StatusCode::EXPECTATION_FAILED)
-                .ok();
-        }
-
-        if let Some(name) = data.name {
-            backup.name = name
-        }
-        if let Some(locked) = data.locked {
-            backup.locked = locked;
-        }
-
-        sqlx::query!(
-            "UPDATE server_backups
-            SET name = $1, locked = $2
-            WHERE server_backups.uuid = $3",
-            &backup.name,
-            backup.locked,
-            backup.uuid,
-        )
-        .execute(state.database.write())
-        .await?;
+        backup.update(&state, data).await?;
 
         activity_logger
             .log(

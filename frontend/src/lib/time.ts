@@ -16,10 +16,10 @@ export function formatMilliseconds(uptime: number, short = true) {
   return formatter.format({ days, hours, minutes, seconds });
 }
 
-export function formatDateTime(timestamp: string | number | Date, precise?: boolean) {
+export function formatDateTime(timestamp: string | number | Date, precise?: boolean, short = true) {
   return new Date(timestamp).toLocaleString(getTranslations().language, {
     year: 'numeric',
-    month: 'short',
+    month: short ? 'short' : 'long',
     day: 'numeric',
     hour: 'numeric',
     minute: 'numeric',
