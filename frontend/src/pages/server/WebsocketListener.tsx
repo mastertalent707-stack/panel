@@ -217,7 +217,7 @@ export default function WebsocketListener() {
     const fileOperation = fileOperations.get(uuid);
     if (!fileOperation) return;
 
-    const totalTime = formatMilliseconds(Date.now() - new Date(fileOperation.startTime).getTime());
+    const totalTime = formatMilliseconds(Date.now() - new Date(fileOperation.startTime).getTime(), false);
 
     switch (fileOperation.type) {
       case 'compress':

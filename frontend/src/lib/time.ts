@@ -1,6 +1,6 @@
 import { getTranslations } from '@/providers/TranslationProvider.tsx';
 
-export function formatMilliseconds(uptime: number) {
+export function formatMilliseconds(uptime: number, short = true) {
   const uptimeSeconds = Math.floor(uptime / 1000);
 
   const days = Math.floor(uptimeSeconds / 86400);
@@ -9,7 +9,7 @@ export function formatMilliseconds(uptime: number) {
   const seconds = Math.floor(uptimeSeconds % 60);
 
   const formatter = new Intl.DurationFormat(getTranslations().language, {
-    style: 'narrow',
+    style: short ? 'narrow' : 'long',
     secondsDisplay: 'always',
   });
 
