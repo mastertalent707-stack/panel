@@ -44,7 +44,7 @@ export default function AdminExtensions() {
               (be) => !window.extensionContext.extensions.find((e) => e.packageName === be.metadataToml.packageName),
             )
             .map((backendExtension) => (
-              <ExtensionCard key={backendExtension.uuid} backendExtension={backendExtension} />
+              <ExtensionCard key={backendExtension.metadataToml.packageName} backendExtension={backendExtension} />
             ))}
         </div>
       )}
