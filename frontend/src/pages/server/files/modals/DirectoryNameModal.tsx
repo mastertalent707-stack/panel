@@ -55,6 +55,7 @@ export default function DirectoryNameModal({ opened, onClose }: ModalProps) {
           withAsterisk
           label={t('pages.server.files.modal.createDirectory.form.directoryName', {})}
           placeholder={t('pages.server.files.modal.createDirectory.form.directoryName', {})}
+          data-autofocus
           {...form.getInputProps('name')}
         />
 

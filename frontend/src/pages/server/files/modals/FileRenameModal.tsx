@@ -22,7 +22,8 @@ export default function FileRenameModal({ file, opened, onClose }: Props) {
   const { t } = useTranslations();
   const { addToast } = useToast();
   const { server } = useServerStore();
-  const { browsingDirectory, invalidateFilemanager } = useFileManager();
+  const { browsingDirectory, selectedFiles, addSelectedFile, removeSelectedFile, invalidateFilemanager } =
+    useFileManager();
 
   const [loading, setLoading] = useState(false);
 
@@ -65,6 +66,11 @@ export default function FileRenameModal({ file, opened, onClose }: Props) {
 
         addToast(t('pages.server.files.toast.fileRenamed', {}), 'success');
         invalidateFilemanager();
+        if (selectedFiles.has(file)) {
+          removeSelectedFile(file);
+          file.name = form.values.name;
+          addSelectedFile(file);
+        }
         onClose();
       })
       .catch((msg) => {
@@ -80,6 +86,7 @@ export default function FileRenameModal({ file, opened, onClose }: Props) {
           withAsterisk
           label={t('pages.server.files.modal.renameFile.form.fileName', {})}
           placeholder={t('pages.server.files.modal.renameFile.form.fileName', {})}
+          data-autofocus
           {...form.getInputProps('name')}
         />
 

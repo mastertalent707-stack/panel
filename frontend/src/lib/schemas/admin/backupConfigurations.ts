@@ -23,10 +23,12 @@ export const adminBackupConfigurationSchema = z.object({
   description: z.preprocess(nullableString, z.string().max(1024).nullable()),
   maintenanceEnabled: z.boolean(),
   backupDisk: z.enum(['local', 's3', 'ddup-bak', 'btrfs', 'zfs', 'restic']),
-  backupConfigs: z.object({
-    s3: adminBackupConfigurationS3Schema.nullable(),
-    restic: adminBackupConfigurationResticSchema.nullable(),
-  }).optional(),
+  backupConfigs: z
+    .object({
+      s3: adminBackupConfigurationS3Schema.nullable(),
+      restic: adminBackupConfigurationResticSchema.nullable(),
+    })
+    .optional(),
   created: z.date(),
 });
 

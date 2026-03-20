@@ -109,6 +109,7 @@ export default function FileCopyModal({ file, opened, onClose }: Props) {
         <TextInput
           label={t('pages.server.files.modal.copyFile.form.fileName', {})}
           placeholder={t('pages.server.files.modal.copyFile.form.fileName', {})}
+          data-autofocus
           {...form.getInputProps('name')}
         />
 

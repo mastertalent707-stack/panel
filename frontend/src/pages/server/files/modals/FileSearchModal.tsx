@@ -186,7 +186,7 @@ export default function FileSearchModal({ opened, onClose }: ModalProps) {
             onChange={(e) => setQuery(e.target.value)}
             leftSection={<FontAwesomeIcon icon={faSearch} style={{ color: 'var(--mantine-color-gray-5)' }} />}
             size='md'
-            autoFocus
+            data-autofocus
           />
 
           <UnstyledButton onClick={() => setShowAdvanced(!showAdvanced)}>
