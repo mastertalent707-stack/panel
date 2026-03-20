@@ -36,6 +36,7 @@ export class DefinedTranslations<
 > {
   namespace: string;
   items: I;
+  itemsObj: I;
   obj: O;
   paths: keyof P;
   mapping: P;
@@ -45,10 +46,11 @@ export class DefinedTranslations<
   constructor(data: { items: I; translations: O }) {
     this.namespace = '';
     this.items = data.items;
+    this.itemsObj = structuredClone(data.items);
     this.obj = data.translations;
     this.paths = null as never;
     this.mapping = getTranslationMapping(data.translations) as never;
-    this.subTranslations = { '': data };
+    this.subTranslations = { '': { items: this.itemsObj, translations: this.obj } };
   }
 
   public mergeFrom(other: this): this {
@@ -59,7 +61,7 @@ export class DefinedTranslations<
       (this.mapping as Record<string, string>)[`${other.namespace}.${key}` as string] = other.mapping[key] as string;
     }
     this.subTranslations[other.namespace] = {
-      items: other.items,
+      items: other.itemsObj,
       translations: other.obj,
     };
 
