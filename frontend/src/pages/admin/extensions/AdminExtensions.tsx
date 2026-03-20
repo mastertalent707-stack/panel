@@ -28,7 +28,7 @@ export default function AdminExtensions() {
     <AdminContentContainer title='Extensions'>
       {!backendExtensions ? (
         <Spinner.Centered />
-      ) : !backendExtensions.length ? (
+      ) : !backendExtensions.length && !window.extensionContext.extensions.length ? (
         <span>No extensions installed.</span>
       ) : (
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
@@ -39,6 +39,13 @@ export default function AdminExtensions() {
               backendExtension={backendExtensions.find((e) => e.metadataToml.packageName === extension.packageName)}
             />
           ))}
+          {backendExtensions
+            .filter(
+              (be) => !window.extensionContext.extensions.find((e) => e.packageName === be.metadataToml.packageName),
+            )
+            .map((backendExtension) => (
+              <ExtensionCard key={backendExtension.uuid} backendExtension={backendExtension} />
+            ))}
         </div>
       )}
     </AdminContentContainer>

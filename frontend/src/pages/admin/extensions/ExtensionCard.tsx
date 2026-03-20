@@ -22,7 +22,7 @@ export default function ExtensionCard({
     <TitleCard
       title={backendExtension?.metadataToml.name || extension?.packageName || 'Unknown Extension'}
       icon={<FontAwesomeIcon icon={faPuzzlePiece} />}
-      className='w-xl'
+      className='max-w-xl'
     >
       <div className='flex flex-col'>
         <div className='flex flex-row'>
