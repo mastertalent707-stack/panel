@@ -220,6 +220,7 @@ export default function ServerUpdate({ contextServer }: { contextServer: z.infer
                     searchValue={users.search}
                     onSearchChange={users.setSearch}
                     disabled={!canReadUsers}
+                    loading={users.loading}
                     key={form.key('ownerUuid')}
                     {...form.getInputProps('ownerUuid')}
                   />
@@ -236,6 +237,7 @@ export default function ServerUpdate({ contextServer }: { contextServer: z.infer
                     allowDeselect
                     clearable
                     disabled={!canReadBackupConfigurations}
+                    loading={backupConfigurations.loading}
                     key={form.key('backupConfigurationUuid')}
                     {...form.getInputProps('backupConfigurationUuid')}
                   />
@@ -256,6 +258,7 @@ export default function ServerUpdate({ contextServer }: { contextServer: z.infer
                     searchValue={nests.search}
                     onSearchChange={nests.setSearch}
                     disabled={!canReadNests}
+                    loading={nests.loading}
                   />
                   <Select
                     withAsterisk
@@ -269,6 +272,7 @@ export default function ServerUpdate({ contextServer }: { contextServer: z.infer
                     searchable
                     searchValue={eggs.search}
                     onSearchChange={eggs.setSearch}
+                    loading={eggs.loading}
                     key={form.key('eggUuid')}
                     {...form.getInputProps('eggUuid')}
                   />

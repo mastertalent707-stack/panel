@@ -92,6 +92,7 @@ export default function ServerSwitcher({ className, isServer }: { className?: st
       searchable
       searchValue={servers.search}
       onSearchChange={servers.setSearch}
+      loading={servers.loading}
       renderOption={renderOption}
     />
   );

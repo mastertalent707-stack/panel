@@ -87,7 +87,7 @@ function FilterSection({ icon, title, enabled, onToggle, children }: FilterSecti
           }}
         />
       </UnstyledButton>
-      <Collapse in={enabled}>
+      <Collapse expanded={enabled}>
         <Box px='sm' pb='sm' pt={4}>
           {children}
         </Box>
@@ -252,7 +252,7 @@ export default function FileSearchModal({ opened, onClose }: ModalProps) {
             </Flex>
           </UnstyledButton>
 
-          <Collapse in={showAdvanced}>
+          <Collapse expanded={showAdvanced}>
             <Stack gap='xs'>
               <FilterSection
                 icon={faFolder}

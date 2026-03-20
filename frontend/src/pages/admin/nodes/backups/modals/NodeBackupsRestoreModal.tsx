@@ -69,6 +69,7 @@ export default function NodeBackupsRestoreModal({ node, backup, opened, onClose 
           searchable
           searchValue={servers.search}
           onSearchChange={servers.setSearch}
+          loading={servers.loading}
         />
 
         <Switch

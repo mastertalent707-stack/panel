@@ -106,6 +106,7 @@ export default ({ contextLocation }: { contextLocation?: z.infer<typeof adminLoc
               allowDeselect
               clearable
               disabled={!canReadBackupConfigurations}
+              loading={backupConfigurations.loading}
               key={form.key('backupConfigurationUuid')}
               {...form.getInputProps('backupConfigurationUuid')}
             />

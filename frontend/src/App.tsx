@@ -1,4 +1,4 @@
-import { MantineProvider, type MantineThemeOverride } from '@mantine/core';
+import { MantineProvider, type MantineThemeOverride, v8CssVariablesResolver } from '@mantine/core';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { createBrowserHistory } from 'history';
@@ -11,13 +11,13 @@ import Spinner from './elements/Spinner.tsx';
 import { CurrentWindowProvider } from './providers/CurrentWindowProvider.tsx';
 import { HistoryContext } from './providers/contexts/historyContext.ts';
 import { ToastProvider } from './providers/ToastProvider.tsx';
+import TranslationProvider from './providers/TranslationProvider.tsx';
 import { WindowProvider } from './providers/WindowProvider.tsx';
 import RouterRoutes from './RouterRoutes.tsx';
 import { useGlobalStore } from './stores/global.ts';
 
 import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css';
-import TranslationProvider from './providers/TranslationProvider.tsx';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -42,7 +42,7 @@ export default function App({ theme }: { theme: MantineThemeOverride }) {
 
   return Object.keys(settings).length > 0 ? (
     <ErrorBoundary>
-      <MantineProvider theme={theme} forceColorScheme='dark'>
+      <MantineProvider theme={theme} forceColorScheme='dark' cssVariablesResolver={v8CssVariablesResolver}>
         <QueryClientProvider client={queryClient}>
           <TranslationProvider>
             <ToastProvider>

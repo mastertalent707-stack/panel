@@ -98,6 +98,7 @@ export default function LocationCreateOrUpdateModal({
                 allowDeselect
                 clearable
                 disabled={!canReadBackupConfigurations}
+                loading={backupConfigurations.loading}
                 key={form.key('backupConfigurationUuid')}
                 {...form.getInputProps('backupConfigurationUuid')}
               />

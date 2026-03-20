@@ -64,6 +64,7 @@ export default function EggMountAddModal({
           searchable
           searchValue={mounts.search}
           onSearchChange={mounts.setSearch}
+          loading={mounts.loading}
         />
 
         <ModalFooter>

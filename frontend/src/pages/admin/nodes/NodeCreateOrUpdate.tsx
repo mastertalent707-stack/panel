@@ -152,6 +152,7 @@ export default function NodeCreateOrUpdate({ contextNode }: { contextNode?: z.in
               searchable
               searchValue={locations.search}
               onSearchChange={locations.setSearch}
+              loading={locations.loading}
               key={form.key('locationUuid')}
               {...form.getInputProps('locationUuid')}
             />
@@ -225,6 +226,7 @@ export default function NodeCreateOrUpdate({ contextNode }: { contextNode?: z.in
               onSearchChange={backupConfigurations.setSearch}
               allowDeselect
               clearable
+              loading={backupConfigurations.loading}
               key={form.key('backupConfigurationUuid')}
               {...form.getInputProps('backupConfigurationUuid')}
             />

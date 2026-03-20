@@ -120,6 +120,7 @@ export default function ServerTransferModal({
             searchable
             searchValue={nodes.search}
             onSearchChange={nodes.setSearch}
+            loading={nodes.loading}
           />
 
           <Select
@@ -138,6 +139,7 @@ export default function ServerTransferModal({
             searchValue={availablePrimaryAllocations.search}
             onSearchChange={availablePrimaryAllocations.setSearch}
             allowDeselect
+            loading={availablePrimaryAllocations.loading}
           />
 
           <MultiSelect
@@ -155,6 +157,7 @@ export default function ServerTransferModal({
             searchable
             searchValue={availableAllocations.search}
             onSearchChange={availableAllocations.setSearch}
+            loading={availableAllocations.loading}
           />
 
           <MultiSelect
@@ -169,6 +172,7 @@ export default function ServerTransferModal({
             searchable
             searchValue={backups.search}
             onSearchChange={backups.setSearch}
+            loading={backups.loading}
           />
 
           <Switch

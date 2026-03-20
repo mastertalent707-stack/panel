@@ -188,6 +188,7 @@ export default function UserCreateOrUpdate({ contextUser }: { contextUser?: z.in
               allowDeselect
               clearable
               disabled={!canReadRoles}
+              loading={roles.loading}
               key={form.key('roleUuid')}
               {...form.getInputProps('roleUuid')}
             />

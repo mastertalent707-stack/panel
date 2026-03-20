@@ -69,6 +69,7 @@ export default function ServerMountAddModal({
           searchable
           searchValue={mounts.search}
           onSearchChange={mounts.setSearch}
+          loading={mounts.loading}
         />
 
         <ModalFooter>

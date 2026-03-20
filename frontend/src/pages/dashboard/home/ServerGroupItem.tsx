@@ -225,7 +225,7 @@ export default function ServerGroupItem({
           </div>
         </div>
 
-        <Collapse in={isExpanded}>
+        <Collapse expanded={isExpanded}>
           <div className='p-3'>
             {loading ? (
               <Spinner.Centered />

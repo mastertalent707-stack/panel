@@ -79,6 +79,7 @@ export default function CommandSnippetCreateModal({ opened, onClose }: ModalProp
           searchable
           searchValue={eggs.search}
           onSearchChange={eggs.setSearch}
+          loading={eggs.loading}
           {...form.getInputProps('eggs')}
         />
 

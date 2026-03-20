@@ -78,6 +78,7 @@ export default function EggRepositoryEggsInstallModal({
           searchable
           searchValue={nests.search}
           onSearchChange={nests.setSearch}
+          loading={nests.loading}
         />
 
         <ModalFooter>

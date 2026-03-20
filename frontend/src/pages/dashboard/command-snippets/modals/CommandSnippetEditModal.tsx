@@ -91,6 +91,7 @@ export default function CommandSnippetEditModal({ commandSnippet, opened, onClos
           searchable
           searchValue={eggs.search}
           onSearchChange={eggs.setSearch}
+          loading={eggs.loading}
           {...form.getInputProps('eggs')}
         />
 

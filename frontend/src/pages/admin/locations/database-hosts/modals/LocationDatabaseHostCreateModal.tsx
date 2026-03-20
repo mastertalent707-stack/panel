@@ -73,6 +73,7 @@ export default function LocationDatabaseHostCreateModal({
           searchable
           searchValue={databaseHosts.search}
           onSearchChange={databaseHosts.setSearch}
+          loading={databaseHosts.loading}
         />
 
         <ModalFooter>

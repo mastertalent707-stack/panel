@@ -22,9 +22,12 @@ export function useSearchableResource<T>({
 
   const [items, setItems] = useState<T[]>([]);
   const [search, setSearch] = useState(defaultSearchValue);
+  const [loading, setLoading] = useState(false);
 
   const fetchData = (searchValue: string) => {
     if (!canRequest) return;
+
+    setLoading(true);
 
     fetcher(searchValue)
       .then((response) => {
@@ -32,7 +35,8 @@ export function useSearchableResource<T>({
       })
       .catch((err) => {
         addToast(httpErrorToHuman(err), 'error');
-      });
+      })
+      .finally(() => setLoading(false));
   };
 
   const setDebouncedSearch = useCallback(
@@ -52,5 +56,5 @@ export function useSearchableResource<T>({
     fetchData(defaultSearchValue);
   }, deps);
 
-  return { items, search, setSearch, refetch: () => fetchData(search) };
+  return { items, loading, search, setSearch, refetch: () => fetchData(search) };
 }

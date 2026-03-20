@@ -75,6 +75,7 @@ export default function GroupAddServerModal({ serverGroup, opened, onClose, onSe
         searchable
         searchValue={servers.search}
         onSearchChange={servers.setSearch}
+        loading={servers.loading}
       />
 
       <ModalFooter>

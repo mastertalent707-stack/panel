@@ -111,6 +111,7 @@ export default function ServersTransferModal({
             searchable
             searchValue={nodes.search}
             onSearchChange={nodes.setSearch}
+            loading={nodes.loading}
           />
 
           <Switch

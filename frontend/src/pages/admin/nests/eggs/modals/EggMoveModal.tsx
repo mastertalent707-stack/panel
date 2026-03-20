@@ -63,6 +63,7 @@ export default function EggMoveModal({
           searchable
           searchValue={nests.search}
           onSearchChange={nests.setSearch}
+          loading={nests.loading}
         />
 
         <ModalFooter>

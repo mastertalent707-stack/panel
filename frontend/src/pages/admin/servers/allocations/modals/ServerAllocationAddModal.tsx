@@ -76,6 +76,7 @@ export default function ServerAllocationAddModal({
           searchable
           searchValue={availableAllocations.search}
           onSearchChange={availableAllocations.setSearch}
+          loading={availableAllocations.loading}
         />
 
         <ModalFooter>

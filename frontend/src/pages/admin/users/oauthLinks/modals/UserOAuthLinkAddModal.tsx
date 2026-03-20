@@ -75,6 +75,7 @@ export default function UserOAuthLinkAddModal({
           searchable
           searchValue={oauthProviders.search}
           onSearchChange={oauthProviders.setSearch}
+          loading={oauthProviders.loading}
         />
 
         <TextInput

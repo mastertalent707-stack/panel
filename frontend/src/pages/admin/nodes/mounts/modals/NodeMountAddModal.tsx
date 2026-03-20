@@ -69,6 +69,7 @@ export default function NodeMountAddModal({
           searchable
           searchValue={mounts.search}
           onSearchChange={mounts.setSearch}
+          loading={mounts.loading}
         />
 
         <ModalFooter>

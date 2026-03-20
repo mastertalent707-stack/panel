@@ -321,6 +321,7 @@ export default function EggCreateOrUpdate({
               searchable
               searchValue={eggRepositories.search}
               onSearchChange={eggRepositories.setSearch}
+              loading={eggRepositories.loading}
             />
             <Select
               label='Egg Repository Egg'
@@ -335,6 +336,7 @@ export default function EggCreateOrUpdate({
               clearable
               searchValue={eggRepositoryEggs.search}
               onSearchChange={eggRepositoryEggs.setSearch}
+              loading={eggRepositoryEggs.loading}
               key={form.key('eggRepositoryEggUuid')}
               {...form.getInputProps('eggRepositoryEggUuid')}
             />

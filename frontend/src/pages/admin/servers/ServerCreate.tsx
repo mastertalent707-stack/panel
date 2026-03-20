@@ -258,6 +258,7 @@ export default function ServerCreate() {
                     searchValue={nodes.search}
                     onSearchChange={nodes.setSearch}
                     disabled={!canReadNodes}
+                    loading={nodes.loading}
                     key={form.key('nodeUuid')}
                     {...form.getInputProps('nodeUuid')}
                   />
@@ -272,6 +273,7 @@ export default function ServerCreate() {
                     searchable
                     searchValue={users.search}
                     onSearchChange={users.setSearch}
+                    loading={users.loading}
                     disabled={!canReadUsers}
                     key={form.key('ownerUuid')}
                     {...form.getInputProps('ownerUuid')}
@@ -293,6 +295,7 @@ export default function ServerCreate() {
                     searchValue={nests.search}
                     onSearchChange={nests.setSearch}
                     disabled={!canReadNests}
+                    loading={nests.loading}
                   />
                   <Select
                     withAsterisk
@@ -306,6 +309,7 @@ export default function ServerCreate() {
                     searchable
                     searchValue={eggs.search}
                     onSearchChange={eggs.setSearch}
+                    loading={eggs.loading}
                     key={form.key('eggUuid')}
                     {...form.getInputProps('eggUuid')}
                   />
@@ -325,6 +329,7 @@ export default function ServerCreate() {
                     allowDeselect
                     clearable
                     disabled={!canReadBackupConfigurations}
+                    loading={backupConfigurations.loading}
                     key={form.key('backupConfigurationUuid')}
                     {...form.getInputProps('backupConfigurationUuid')}
                   />

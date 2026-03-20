@@ -89,6 +89,7 @@ export default function FileCopyRemoteModal({ files, opened, onClose }: Props) {
             searchable
             searchValue={servers.search}
             onSearchChange={servers.setSearch}
+            loading={servers.loading}
             allowDeselect
             {...form.getInputProps('destinationServer')}
             onChange={(value) => form.setFieldValue('destinationServer', value || '')}
