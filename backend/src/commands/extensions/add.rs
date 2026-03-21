@@ -164,6 +164,7 @@ impl shared::extensions::commands::CliCommand<AddArgs> for AddCommand {
                 tokio::fs::create_dir_all(&backend_path).await?;
                 let migrations_path = Path::new("database/extension-migrations")
                     .join(extension_distr.metadata_toml.get_package_identifier());
+                tokio::fs::create_dir_all(&migrations_path).await?;
 
                 let mut extension_distr = tokio::task::spawn_blocking(move || {
                     extension_distr.extract_frontend(frontend_path)?;
