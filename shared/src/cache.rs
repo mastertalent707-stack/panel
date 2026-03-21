@@ -18,6 +18,15 @@ use std::{
     time::{Duration, Instant},
 };
 
+#[derive(Clone, Serialize)]
+pub struct BulkStringRef<'a>(
+    #[serde(
+        deserialize_with = "::rustis::resp::deserialize_byte_buf",
+        serialize_with = "::rustis::resp::serialize_byte_buf"
+    )]
+    pub &'a [u8],
+);
+
 #[derive(Clone, Debug)]
 struct DataEntry {
     data: Arc<Vec<u8>>,
@@ -384,7 +393,7 @@ impl Cache {
                     let _ = client
                         .set_with_options(
                             key,
-                            serialized_arc.as_slice(),
+                            BulkStringRef(&serialized_arc),
                             None,
                             SetExpiration::Ex(ttl),
                         )
@@ -467,7 +476,12 @@ impl Cache {
 
         if let Some(client) = &self.client {
             client
-                .set_with_options(key, serialized_arc.as_slice(), None, SetExpiration::Ex(ttl))
+                .set_with_options(
+                    key,
+                    BulkStringRef(&serialized_arc),
+                    None,
+                    SetExpiration::Ex(ttl),
+                )
                 .await?;
         }
 

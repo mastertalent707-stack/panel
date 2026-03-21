@@ -58,7 +58,11 @@ export default function AdminOverview() {
       {latestVersions && parseVersion(latestVersions.panel).isNewerThan(settings.version) && (
         <Alert className='mb-4' color='yellow'>
           A new version is available for the panel! You are currently on {settings.version} and the latest version is{' '}
-          {latestVersions.panel}. You may want to consider upgrading.
+          {latestVersions.panel}. You may want to consider upgrading.{' '}
+          <a href='https://calagopus.com/docs/panel/updating' className='underline text-blue-400'>
+            Click here
+          </a>{' '}
+          to view upgrade instructions.
         </Alert>
       )}
 

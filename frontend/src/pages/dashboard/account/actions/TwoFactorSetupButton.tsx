@@ -1,3 +1,5 @@
+import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Modal as MantineModal, Stack, Text, useModalsStack } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { zod4Resolver } from 'mantine-form-zod-resolver';
@@ -7,6 +9,7 @@ import { z } from 'zod';
 import { httpErrorToHuman } from '@/api/axios.ts';
 import enableTwoFactor from '@/api/me/account/enableTwoFactor.ts';
 import getTwoFactor from '@/api/me/account/getTwoFactor.ts';
+import Alert from '@/elements/Alert.tsx';
 import Button from '@/elements/Button.tsx';
 import Code from '@/elements/Code.tsx';
 import CopyOnClick from '@/elements/CopyOnClick.tsx';
@@ -22,6 +25,7 @@ import { useTranslations } from '@/providers/TranslationProvider.tsx';
 export interface TwoFactorSetupResponse {
   otpUrl: string;
   secret: string;
+  serverTime: Date;
 }
 
 export default function TwoFactorSetupButton() {
@@ -34,6 +38,7 @@ export default function TwoFactorSetupButton() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [token, setToken] = useState<TwoFactorSetupResponse | null>(null);
   const [recoveryCodes, setRecoveryCodes] = useState<string[]>([]);
+  const [timeOffset, setTimeOffset] = useState(0);
   const [loading, setLoading] = useState(false);
 
   const form = useForm<z.infer<typeof dashboardTwoFactorEnableSchema>>({
@@ -56,6 +61,7 @@ export default function TwoFactorSetupButton() {
     getTwoFactor()
       .then((res) => {
         setToken(res);
+        setTimeOffset(Date.now() - res.serverTime.getTime());
       })
       .catch((msg) => {
         addToast(httpErrorToHuman(msg), 'error');
@@ -94,6 +100,17 @@ export default function TwoFactorSetupButton() {
           {...stageStack.register('setup')}
           title={t('pages.account.account.containers.twoFactor.modal.setupTwoFactor.title', {})}
         >
+          {(timeOffset > 5000 || timeOffset < -5000) && (
+            <Alert
+              icon={<FontAwesomeIcon icon={faExclamationTriangle} />}
+              color='yellow'
+              className='mb-4'
+              title={t('common.alert.warning', {})}
+            >
+              {t('common.alert.clockOffset', { offset: String(Math.round(timeOffset / 1000)) })}
+            </Alert>
+          )}
+
           <Stack>
             <Text>{t('pages.account.account.containers.twoFactor.modal.setupTwoFactor.description', {})}</Text>
             {!token ? (

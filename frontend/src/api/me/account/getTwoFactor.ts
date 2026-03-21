@@ -5,7 +5,12 @@ export default async (): Promise<TwoFactorSetupResponse> => {
   return new Promise((resolve, reject) => {
     axiosInstance
       .get('/api/client/account/two-factor')
-      .then(({ data }) => resolve(data))
+      .then(({ data, headers }) =>
+        resolve({
+          ...data,
+          serverTime: new Date(headers['date']),
+        } as TwoFactorSetupResponse),
+      )
       .catch(reject);
   });
 };

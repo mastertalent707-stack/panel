@@ -48,6 +48,8 @@ const baseTranslations = defineTranslations({
         error: 'Error',
         warning: 'Warning',
         success: 'Success',
+        clockOffset:
+          'Your system clock is out of sync with the server by more than 5 seconds. This may cause issues with passkey authentication and two-factor authentication. Please sync your clock if issues arise. Current offset: {offset} second(s).',
       },
       divider: {
         or: 'OR',
@@ -438,10 +440,6 @@ const baseTranslations = defineTranslations({
           loginWith: 'Login with {name}',
         },
         login: {
-          alert: {
-            clockOffset:
-              'Your system clock is out of sync with the server by more than 5 seconds. This may cause issues with passkey authentication and two-factor authentication. Please sync your clock if issues arise. Current offset: {offset} seconds.',
-          },
           error: {
             usernameRequired: 'Please enter a username',
           },

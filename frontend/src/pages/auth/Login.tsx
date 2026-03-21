@@ -213,7 +213,7 @@ export default function Login() {
             color='yellow'
             title={t('common.alert.warning', {})}
           >
-            {t('pages.auth.login.alert.clockOffset', { offset: String(Math.round(timeOffset / 1000)) })}
+            {t('common.alert.clockOffset', { offset: String(Math.round(timeOffset / 1000)) })}
           </Alert>
         )}
         {error && (

@@ -65,7 +65,8 @@
       "alert": {
         "error": "Fehler",
         "warning": "Warnung",
-        "success": "Erfolg"
+        "success": "Erfolg",
+        "clockOffset": "Deine Systemuhr weicht um mehr als 5 Sekunden vom Server ab. Dies kann Probleme mit der Passkey-Authentifizierung und der Zwei-Faktor-Authentifizierung verursachen. Bitte synchronisiere deine Uhr, falls Probleme auftreten. Aktuelle Abweichung: {offset} Sekunde(n)."
       },
       "divider": {
         "or": "ODER"
@@ -438,9 +439,6 @@
           "loginWith": "Anmelden mit {name}"
         },
         "login": {
-          "alert": {
-            "clockOffset": "Deine Systemuhr weicht um mehr als 5 Sekunden vom Server ab. Dies kann Probleme mit der Passkey-Authentifizierung und der Zwei-Faktor-Authentifizierung verursachen. Bitte synchronisiere deine Uhr, falls Probleme auftreten. Aktuelle Abweichung: {offset} Sekunden."
-          },
           "error": {
             "usernameRequired": "Bitte gib einen Benutzernamen ein"
           },
