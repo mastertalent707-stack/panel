@@ -1561,6 +1561,7 @@ dependencies = [
  "chrono",
  "clap",
  "colored",
+ "dialoguer",
  "futures-util",
  "include_dir",
  "serde",

@@ -17,3 +17,4 @@ include_dir = { workspace = true }
 sqlx = { workspace = true }
 clap = { workspace = true }
 futures-util = { workspace = true }
+dialoguer = { workspace = true }
