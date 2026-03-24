@@ -89,7 +89,6 @@ export default function OobeLocation({ onNext, skipFrom }: OobeComponentProps) {
       })
       .catch((msg) => {
         setError(httpErrorToHuman(msg));
-        setLoading(false);
       });
   };
 

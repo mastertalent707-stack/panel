@@ -1,5 +1,6 @@
 import {
   faCogs,
+  faDownload,
   faEarthAmerica,
   faGraduationCap,
   faRocket,
@@ -16,6 +17,7 @@ import OobeLocation from '@/pages/oobe/OobeLocation.tsx';
 import OobeLogin from '@/pages/oobe/OobeLogin.tsx';
 import OobeNode from '@/pages/oobe/OobeNode.tsx';
 import OobeRegister from '@/pages/oobe/OobeRegister.tsx';
+import OobeRepositories from '@/pages/oobe/OobeRepositories.tsx';
 import OobeWelcome from '@/pages/oobe/OobeWelcome.tsx';
 import { OobeComponentProps } from '@/routers/OobeRouter.tsx';
 
@@ -61,6 +63,14 @@ export const steps: OobeStep[] = [
     component: OobeConfiguration,
   },
   {
+    path: '/repositories',
+    stepKey: 'repositories',
+    label: 'Egg Repositories',
+    icon: faDownload,
+    component: OobeRepositories,
+    skipTo: 'location',
+  },
+  {
     path: '/location',
     stepKey: 'location',
     label: 'Location',
@@ -72,6 +82,14 @@ export const steps: OobeStep[] = [
     path: '/node',
     stepKey: 'node',
     label: 'Node',
+    icon: faServer,
+    component: OobeNode,
+    skipTo: 'finished',
+  },
+  {
+    path: '/server',
+    stepKey: 'server',
+    label: 'Server',
     icon: faServer,
     component: OobeNode,
     skipTo: 'finished',

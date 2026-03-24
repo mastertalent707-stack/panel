@@ -419,6 +419,27 @@ const baseTranslations = defineTranslations({
             submit: 'Update Settings & Continue',
           },
         },
+        eggRepositories: {
+          title: 'Egg Repositories',
+          description: 'These are the source repositories of your eggs. You may change these repositories at any time.',
+          repositories: {
+            pterodactylGame: {
+              title: 'Pterodactyl Game Eggs',
+              description: 'Eggs for games like Minecraft, Terraria, and a lot more.',
+            },
+            pterodactylApplication: {
+              title: 'Pterodactyl Application Eggs',
+              description: 'Eggs for applications like Grafana, Meilisearch, and various databases.',
+            },
+            pterodactylGeneral: {
+              title: 'Pterodactyl Generic Eggs',
+              description: 'Eggs for generic application runtimes like Node JS, Java, and Rust.',
+            },
+          },
+          button: {
+            submit: 'Import',
+          },
+        },
         finished: {
           title: 'Setup Complete!',
           subtitle: 'Your Calagopus panel is ready to use',

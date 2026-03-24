@@ -208,7 +208,7 @@ export default function OobeNode({ onNext, skipFrom }: OobeComponentProps) {
                 {t('common.button.skip', {})}
               </Button>
             )}
-            <Button type='submit' disabled={!form.isValid()} loading={loading}>
+            <Button type='submit' disabled={!form.isValid() || !allocationsForm.isValid()} loading={loading}>
               {t('pages.oobe.node.button.create', {})}
             </Button>
           </Group>

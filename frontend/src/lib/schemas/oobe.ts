@@ -1,7 +1,15 @@
 import { z } from 'zod';
 import { nullableString } from '../transformers.ts';
 
-export const oobeStepKey = z.enum(['register', 'configuration', 'location', 'node', 'node_verify', 'finished', '']);
+export const oobeStepKey = z.enum([
+  'register',
+  'configuration',
+  'location',
+  'node',
+  'repositories',
+  'server',
+  'finished',
+]);
 
 export const oobeConfigurationSchema = z.object({
   applicationName: z.string().min(3).max(255),
