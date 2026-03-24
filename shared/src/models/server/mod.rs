@@ -1240,10 +1240,9 @@ impl Server {
         settings: &crate::settings::AppSettings,
         user: &super::user::User,
     ) -> Vec<&str> {
-        let mut permissions = Vec::new();
+        let mut permissions = vec!["websocket.connect", "meta.calagopus"];
         if user.admin {
-            permissions.reserve_exact(5);
-            permissions.push("websocket.connect");
+            permissions.reserve_exact(4);
 
             permissions.push("*");
             permissions.push("admin.websocket.errors");
@@ -1254,8 +1253,7 @@ impl Server {
         }
 
         if let Some(subuser_permissions) = &self.subuser_permissions {
-            permissions.reserve_exact(subuser_permissions.len() + 1);
-            permissions.push("websocket.connect");
+            permissions.reserve(subuser_permissions.len());
 
             for permission in subuser_permissions.iter() {
                 if permission == "control.read-console" {
@@ -1270,8 +1268,7 @@ impl Server {
                 permissions.push(permission.as_str());
             }
         } else {
-            permissions.reserve_exact(2);
-            permissions.push("websocket.connect");
+            permissions.reserve(3);
 
             if settings.server.allow_viewing_installation_logs {
                 permissions.push("admin.websocket.install");
@@ -1291,10 +1288,9 @@ impl Server {
         settings: &crate::settings::AppSettings,
         subuser: &'a super::server_subuser::ServerSubuser,
     ) -> Vec<&'a str> {
-        let mut permissions = Vec::new();
+        let mut permissions = vec!["websocket.connect", "meta.calagopus"];
         if subuser.user.admin {
-            permissions.reserve_exact(5);
-            permissions.push("websocket.connect");
+            permissions.reserve_exact(4);
 
             permissions.push("*");
             permissions.push("admin.websocket.errors");
@@ -1304,8 +1300,7 @@ impl Server {
             return permissions;
         }
 
-        permissions.reserve_exact(subuser.permissions.len() + 1);
-        permissions.push("websocket.connect");
+        permissions.reserve(subuser.permissions.len() + 1);
 
         for permission in subuser.permissions.iter() {
             if permission == "control.read-console" {

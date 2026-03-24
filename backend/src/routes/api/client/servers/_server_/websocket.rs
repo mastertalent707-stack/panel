@@ -36,7 +36,6 @@ mod get {
             user_uuid: uuid::Uuid,
             server_uuid: uuid::Uuid,
             permissions: Vec<&'a str>,
-            use_console_read_permission: bool,
         }
 
         let node = server.node.fetch_cached(&state.database).await?;
@@ -57,7 +56,6 @@ mod get {
                 user_uuid: user.uuid,
                 server_uuid: server.uuid,
                 permissions: server.wings_permissions(&*state.settings.get().await?, &user),
-                use_console_read_permission: true,
             },
         )?;
 
