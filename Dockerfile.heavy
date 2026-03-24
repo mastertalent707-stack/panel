@@ -1,7 +1,7 @@
-FROM node:24-bookworm-slim AS node_source
+FROM node:24-slim AS node_source
 
 # ---
-FROM rust:bookworm AS planner
+FROM rust:slim AS planner
 RUN apt-get update && apt-get install -y --no-install-recommends build-essential && rm -rf /var/lib/apt/lists/*
 RUN cargo install cargo-chef
 COPY . /app/repo
@@ -9,7 +9,7 @@ WORKDIR /app/repo
 RUN cargo chef prepare --recipe-path recipe.json
 
 # ---
-FROM rust:bookworm AS builder
+FROM rust:slim AS builder
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     inotify-tools \
