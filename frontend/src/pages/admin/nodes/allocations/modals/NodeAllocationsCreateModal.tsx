@@ -9,6 +9,7 @@ import Button from '@/elements/Button.tsx';
 import TagsInput from '@/elements/input/TagsInput.tsx';
 import TextInput from '@/elements/input/TextInput.tsx';
 import { Modal, ModalFooter } from '@/elements/modals/Modal.tsx';
+import { resolvePorts } from '@/lib/ip.ts';
 import { adminNodeAllocationsSchema, adminNodeSchema } from '@/lib/schemas/admin/nodes.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';
 
@@ -34,32 +35,10 @@ export default function NodeAllocationsCreateModal({
   });
 
   useEffect(() => {
-    const resolved: number[] = [];
+    const { resolved, toRemove } = resolvePorts(form.values.ports);
 
-    for (const range of form.values.ports) {
-      const integer = Number(range);
-
-      if (Number.isFinite(integer) && Number.isInteger(integer)) {
-        resolved.push(integer);
-      } else if (range.includes('-')) {
-        const [start, end] = range.split('-');
-
-        const startInteger = Number(start);
-        const endInteger = Number(end);
-
-        if (
-          Number.isFinite(startInteger) &&
-          Number.isInteger(startInteger) &&
-          Number.isFinite(endInteger) &&
-          Number.isInteger(endInteger)
-        ) {
-          for (let i = startInteger; i <= endInteger; i++) {
-            resolved.push(i);
-          }
-        }
-      } else {
-        form.setFieldValue('ports', (p) => p.filter((r) => r !== range));
-      }
+    for (const removable in toRemove) {
+      form.setFieldValue('ports', (p) => p.filter((r) => r !== removable));
     }
 
     setResolvedPorts(resolved);
@@ -92,7 +71,12 @@ export default function NodeAllocationsCreateModal({
 
         <TextInput label='IP Alias' placeholder='IP Alias' {...form.getInputProps('ipAlias')} />
 
-        <TagsInput label='Port Ranges' placeholder='Port Ranges' {...form.getInputProps('ports')} />
+        <TagsInput
+          withAsterisk
+          label='Port Ranges'
+          placeholder='Port Ranges (eg. 3000-4000)'
+          {...form.getInputProps('ports')}
+        />
 
         <ModalFooter>
           <Button onClick={doCreate} loading={loading} disabled={!form.isValid() || !resolvedPorts.length}>

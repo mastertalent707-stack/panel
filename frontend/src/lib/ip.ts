@@ -77,3 +77,41 @@ export function isIP(ip: string, type: 'v4' | 'v6' | 'v6 | v4' = 'v6 | v4'): 'v4
 
   return false;
 }
+
+interface ResolvedPorts {
+  resolved: number[];
+  toRemove: string[];
+}
+
+export function resolvePorts(ports: string[]): ResolvedPorts {
+  const resolved: number[] = [];
+  const toRemove: string[] = [];
+
+  for (const range of ports) {
+    const integer = Number(range);
+
+    if (Number.isFinite(integer) && Number.isInteger(integer)) {
+      resolved.push(integer);
+    } else if (range.includes('-')) {
+      const [start, end] = range.split('-');
+
+      const startInteger = Number(start);
+      const endInteger = Number(end);
+
+      if (
+        Number.isFinite(startInteger) &&
+        Number.isInteger(startInteger) &&
+        Number.isFinite(endInteger) &&
+        Number.isInteger(endInteger)
+      ) {
+        for (let i = startInteger; i <= endInteger; i++) {
+          resolved.push(i);
+        }
+      }
+    } else {
+      toRemove.push(range);
+    }
+  }
+
+  return { resolved, toRemove };
+}

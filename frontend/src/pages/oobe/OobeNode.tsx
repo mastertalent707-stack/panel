@@ -6,13 +6,18 @@ import { zod4Resolver } from 'mantine-form-zod-resolver';
 import { useEffect, useState } from 'react';
 import { z } from 'zod';
 import getLocations from '@/api/admin/locations/getLocations.ts';
+import createNodeAllocations from '@/api/admin/nodes/allocations/createNodeAllocations.ts';
 import createNode from '@/api/admin/nodes/createNode.ts';
 import { httpErrorToHuman } from '@/api/axios.ts';
 import AlertError from '@/elements/alerts/AlertError.tsx';
 import Button from '@/elements/Button.tsx';
+import Card from '@/elements/Card.tsx';
 import NumberInput from '@/elements/input/NumberInput.tsx';
 import SizeInput from '@/elements/input/SizeInput.tsx';
+import TagsInput from '@/elements/input/TagsInput.tsx';
 import TextInput from '@/elements/input/TextInput.tsx';
+import { resolvePorts } from '@/lib/ip.ts';
+import { adminNodeAllocationsSchema } from '@/lib/schemas/admin/nodes.ts';
 import { oobeNodeSchema } from '@/lib/schemas/oobe.ts';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import { OobeComponentProps } from '@/routers/OobeRouter.tsx';
@@ -23,6 +28,7 @@ export default function OobeNode({ onNext, skipFrom }: OobeComponentProps) {
   const [error, setError] = useState('');
 
   const [locationUuid, setLocationUuid] = useState('');
+  const [resolvedPorts, setResolvedPorts] = useState<number[]>([]);
 
   const form = useForm<z.infer<typeof oobeNodeSchema>>({
     initialValues: {
@@ -36,6 +42,16 @@ export default function OobeNode({ onNext, skipFrom }: OobeComponentProps) {
     },
     validateInputOnBlur: true,
     validate: zod4Resolver(oobeNodeSchema),
+  });
+
+  const allocationsForm = useForm<z.infer<typeof adminNodeAllocationsSchema>>({
+    initialValues: {
+      ip: '',
+      ipAlias: null,
+      ports: [],
+    },
+    validateInputOnBlur: true,
+    validate: zod4Resolver(adminNodeAllocationsSchema),
   });
 
   useEffect(() => {
@@ -55,6 +71,16 @@ export default function OobeNode({ onNext, skipFrom }: OobeComponentProps) {
       });
   }, []);
 
+  useEffect(() => {
+    const { resolved, toRemove } = resolvePorts(allocationsForm.values.ports);
+
+    for (const removable in toRemove) {
+      allocationsForm.setFieldValue('ports', (p) => p.filter((r) => r !== removable));
+    }
+
+    setResolvedPorts(resolved);
+  }, [allocationsForm.values.ports]);
+
   const onSubmit = async () => {
     setLoading(true);
 
@@ -72,8 +98,14 @@ export default function OobeNode({ onNext, skipFrom }: OobeComponentProps) {
       locationUuid: locationUuid,
       backupConfigurationUuid: null,
     })
-      .then(() => {
-        onNext();
+      .then((node) => {
+        createNodeAllocations(node.uuid, {
+          ip: allocationsForm.values.ip,
+          ipAlias: null,
+          ports: resolvedPorts,
+        }).then(() => {
+          onNext();
+        });
       })
       .catch((msg) => {
         setError(httpErrorToHuman(msg));
@@ -151,6 +183,23 @@ export default function OobeNode({ onNext, skipFrom }: OobeComponentProps) {
                 onChange={(value) => form.setFieldValue('disk', value)}
               />
             </Group>
+            <Card>
+              <Title order={4}>{t('pages.oobe.node.allocationsTitle', {})}</Title>
+              <Group grow>
+                <TextInput
+                  withAsterisk
+                  label={t('pages.oobe.node.form.ip', {})}
+                  placeholder={t('pages.oobe.node.form.ip', {})}
+                  {...allocationsForm.getInputProps('ip')}
+                />
+                <TagsInput
+                  withAsterisk
+                  label={t('pages.oobe.node.form.portRanges', {})}
+                  placeholder={t('pages.oobe.node.form.portRangesPlaceholder', {})}
+                  {...allocationsForm.getInputProps('ports')}
+                />
+              </Group>
+            </Card>
           </div>
 
           <Group justify='flex-end'>

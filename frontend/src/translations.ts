@@ -373,6 +373,7 @@ const baseTranslations = defineTranslations({
         },
         node: {
           title: 'Node Configuration',
+          allocationsTitle: 'Allocations Configuration',
           form: {
             name: 'Name',
             namePlaceholder: 'My Server',
@@ -388,6 +389,9 @@ const baseTranslations = defineTranslations({
             sftpPortPlaceholder: 'SFTP Port',
             memory: 'Memory',
             disk: 'Disk',
+            ip: 'IP',
+            portRanges: 'Port Ranges',
+            portRangesPlaceholder: 'Port Ranges (eg. 3000-4000)',
           },
           error: {
             noLocations: 'Something went wrong. No locations were found.',
