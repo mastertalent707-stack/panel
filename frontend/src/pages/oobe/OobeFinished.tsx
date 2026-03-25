@@ -37,7 +37,7 @@ export default function OobeFinished() {
   });
 
   const handleFinish = () => {
-    updateOobeSettings('').then(() => {
+    updateOobeSettings(null).then(() => {
       setSettings({ ...settings, oobeStep: null });
       navigate('/');
     });
