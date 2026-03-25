@@ -108,6 +108,10 @@ export default function WebsocketHandler() {
           setSocketError(null);
         });
 
+        socket.on('SOCKET_MESSAGE', () => {
+          setSocketError(null);
+        });
+
         socket.on('status', (status) => setState(status));
 
         socket.on('daemon error', (message: string) => {
@@ -132,7 +136,7 @@ export default function WebsocketHandler() {
 
           setSocketError({
             type: SocketErrorType.AUTH_FAILED,
-            message: t('elements.serverWebsocket.error.authFailed', {}),
+            message: t('elements.serverWebsocket.error.authFailed', { error }),
             recoverable: true,
             reconnectAttempt: 0,
             nextRetryMs: null,

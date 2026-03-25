@@ -161,6 +161,8 @@ export class Websocket extends EventEmitter {
 
     this.socket.onmessage = async (e: MessageEvent) => {
       try {
+        this.emit('SOCKET_MESSAGE', e);
+
         if (typeof e.data === 'string') {
           const { event, args } = JSON.parse(e.data) as { event: string; args: string[] };
           this.emit(event, ...args);

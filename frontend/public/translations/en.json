@@ -274,7 +274,7 @@
           "connectionFailed": "Unable to connect after multiple attempts. Please refresh the page.",
           "connectionClosed": "Connection to server was closed. Attempting to reconnect...",
           "connectionRetry": "Connection lost. Retrying (attempt {attempt})...",
-          "authFailed": "Authentication failed. Attempting to refresh credentials...",
+          "authFailed": "Authentication failed. Attempting to refresh credentials... ({error})",
           "authRefreshFailed": "Failed to refresh credentials. Please refresh the page to try again.",
           "permissionRevoked": "Connection closed: your access to this server has been revoked.",
           "tokenRefreshLoop": "Authentication loop detected. Please refresh the page to try again."
@@ -391,6 +391,7 @@
         },
         "node": {
           "title": "Node Configuration",
+          "allocationsTitle": "Allocations Configuration",
           "form": {
             "name": "Name",
             "namePlaceholder": "My Server",
@@ -405,7 +406,10 @@
             "sftpPort": "SFTP Port",
             "sftpPortPlaceholder": "SFTP Port",
             "memory": "Memory",
-            "disk": "Disk"
+            "disk": "Disk",
+            "ip": "IP",
+            "portRanges": "Port Ranges",
+            "portRangesPlaceholder": "Port Ranges (eg. 3000-4000)"
           },
           "error": {
             "noLocations": "Something went wrong. No locations were found."
@@ -430,6 +434,27 @@
           },
           "button": {
             "submit": "Update Settings & Continue"
+          }
+        },
+        "eggRepositories": {
+          "title": "Egg Repositories",
+          "description": "These are the source repositories of your eggs. You may change these repositories at any time.",
+          "repositories": {
+            "pterodactylGame": {
+              "title": "Pterodactyl Game Eggs",
+              "description": "Eggs for games like Minecraft, Terraria, and a lot more."
+            },
+            "pterodactylApplication": {
+              "title": "Pterodactyl Application Eggs",
+              "description": "Eggs for applications like Grafana, Meilisearch, and various databases."
+            },
+            "pterodactylGeneral": {
+              "title": "Pterodactyl Generic Eggs",
+              "description": "Eggs for generic application runtimes like Node JS, Java, and Rust."
+            }
+          },
+          "button": {
+            "submit": "Import"
           }
         },
         "finished": {

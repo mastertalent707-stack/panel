@@ -255,7 +255,7 @@ const baseTranslations = defineTranslations({
           connectionFailed: 'Unable to connect after multiple attempts. Please refresh the page.',
           connectionClosed: 'Connection to server was closed. Attempting to reconnect...',
           connectionRetry: 'Connection lost. Retrying (attempt {attempt})...',
-          authFailed: 'Authentication failed. Attempting to refresh credentials...',
+          authFailed: 'Authentication failed. Attempting to refresh credentials... ({error})',
           authRefreshFailed: 'Failed to refresh credentials. Please refresh the page to try again.',
           permissionRevoked: 'Connection closed: your access to this server has been revoked.',
           tokenRefreshLoop: 'Authentication loop detected. Please refresh the page to try again.',

@@ -256,7 +256,7 @@
           "connectionFailed": "Verbindung nach mehreren Versuchen nicht möglich. Bitte lade die Seite neu.",
           "connectionClosed": "Verbindung zum Server wurde geschlossen. Verbindung wird wiederhergestellt...",
           "connectionRetry": "Verbindung verloren. Erneuter Versuch (Versuch {attempt})...",
-          "authFailed": "Authentifizierung fehlgeschlagen. Anmeldedaten werden aktualisiert...",
+          "authFailed": "Authentifizierung fehlgeschlagen. Anmeldedaten werden aktualisiert... ({error})",
           "authRefreshFailed": "Aktualisierung der Anmeldedaten fehlgeschlagen. Bitte lade die Seite neu, um es erneut zu versuchen.",
           "permissionRevoked": "Verbindung geschlossen: Dein Zugriff auf diesen Server wurde widerrufen.",
           "tokenRefreshLoop": "Authentifizierungsschleife erkannt. Bitte lade die Seite neu, um es erneut zu versuchen."
