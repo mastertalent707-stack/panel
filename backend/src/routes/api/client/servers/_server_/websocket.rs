@@ -36,6 +36,7 @@ mod get {
             user_uuid: uuid::Uuid,
             server_uuid: uuid::Uuid,
             permissions: Vec<&'a str>,
+            ignored_files: &'a [compact_str::CompactString],
         }
 
         let node = server.node.fetch_cached(&state.database).await?;
@@ -56,6 +57,7 @@ mod get {
                 user_uuid: user.uuid,
                 server_uuid: server.uuid,
                 permissions: server.wings_permissions(&*state.settings.get().await?, &user),
+                ignored_files: server.subuser_ignored_files.as_deref().unwrap_or(&[]),
             },
         )?;
 
