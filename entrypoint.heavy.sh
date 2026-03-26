@@ -31,7 +31,7 @@ fi
 PROFILE=${CARGO_BUILD_PROFILE:-balanced}
 PROFILE_PATH=${CARGO_TARGET_PROFILE:-heavy-release}
 
-cp -R /app/translations/* /app/repo/frontend/public/translations/ 2>/dev/null || true
+cp -R /app/repo/frontend/public/translations/* /app/translations/ 2>/dev/null || true
 
 # calculate the combined sha256 hash of all arguments' contents
 hash_many() {
