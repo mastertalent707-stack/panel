@@ -3,369 +3,445 @@ import { z } from 'zod';
 import Code from '@/elements/Code.tsx';
 import { serverScheduleStepActionSchema } from '@/lib/schemas/server/schedules.ts';
 import { formatMilliseconds } from '@/lib/time.ts';
+import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import ScheduleDynamicParameterRenderer from '../ScheduleDynamicParameterRenderer.tsx';
 
 type ActionRendererMode = 'compact' | 'detailed';
+type Action = z.infer<typeof serverScheduleStepActionSchema>;
+type Translations = ReturnType<typeof useTranslations>;
 
-type ServerScheduleStepActionSchema = z.infer<typeof serverScheduleStepActionSchema>;
+function renderCompact(action: Action, { t, tReact, tItem }: Translations): React.ReactNode {
+  switch (action.type) {
+    case 'sleep':
+      return <span>{t('pages.server.schedules.steps.sleep.renderer.compact', { duration: action.duration })}</span>;
+    case 'ensure':
+      return <span>{t('pages.server.schedules.steps.ensure.renderer.compact', {})}</span>;
+    case 'format':
+      return (
+        <span>
+          {tReact('pages.server.schedules.steps.format.renderer.compact', {
+            outputInto: <ScheduleDynamicParameterRenderer value={action.outputInto} />,
+          })}
+        </span>
+      );
+    case 'match_regex':
+      return (
+        <span>
+          {tReact('pages.server.schedules.steps.matchRegex.renderer.compact', {
+            input: <ScheduleDynamicParameterRenderer value={action.input} />,
+            regex: <Code>{action.regex}</Code>,
+          })}
+        </span>
+      );
+    case 'wait_for_console_line':
+      return (
+        <span>
+          {tReact('pages.server.schedules.steps.waitForConsoleLine.renderer.compact', {
+            timeout: formatMilliseconds(action.timeout),
+            contains: <ScheduleDynamicParameterRenderer value={action.contains} />,
+          })}
+        </span>
+      );
+    case 'send_power':
+      return <span>{t('pages.server.schedules.steps.sendPower.renderer.compact', { action: action.action })}</span>;
+    case 'send_command':
+      return (
+        <span>
+          {tReact('pages.server.schedules.steps.sendCommand.renderer.compact', {
+            command: <ScheduleDynamicParameterRenderer value={action.command} />,
+          })}
+        </span>
+      );
+    case 'create_backup':
+      return (
+        <span>
+          {tReact('pages.server.schedules.steps.createBackup.renderer.compact', {
+            name: <ScheduleDynamicParameterRenderer value={action.name} />,
+          })}
+        </span>
+      );
+    case 'create_directory':
+      return (
+        <span>
+          {tReact('pages.server.schedules.steps.createDirectory.renderer.compact', {
+            name: <ScheduleDynamicParameterRenderer value={action.name} />,
+            root: <ScheduleDynamicParameterRenderer value={action.root} />,
+          })}
+        </span>
+      );
+    case 'write_file':
+      return (
+        <span>
+          {tReact('pages.server.schedules.steps.writeFile.renderer.compact', {
+            file: <ScheduleDynamicParameterRenderer value={action.file} />,
+          })}
+        </span>
+      );
+    case 'copy_file':
+      return (
+        <span>
+          {tReact('pages.server.schedules.steps.copyFile.renderer.compact', {
+            file: <ScheduleDynamicParameterRenderer value={action.file} />,
+            destination: <ScheduleDynamicParameterRenderer value={action.destination} />,
+          })}
+        </span>
+      );
+    case 'delete_files':
+      return (
+        <span>
+          {tReact('pages.server.schedules.steps.deleteFiles.renderer.compact', {
+            files: <Code>{action.files.join(', ')}</Code>,
+          })}
+        </span>
+      );
+    case 'rename_files':
+      return (
+        <span>
+          {t('pages.server.schedules.steps.renameFiles.renderer.compact', {
+            files: tItem('file', action.files.length),
+          })}
+        </span>
+      );
+    case 'compress_files':
+      return (
+        <span>
+          {tReact('pages.server.schedules.steps.compressFiles.renderer.compact', {
+            files: tItem('file', action.files.length),
+            root: <ScheduleDynamicParameterRenderer value={action.root} />,
+            name: <ScheduleDynamicParameterRenderer value={action.name} />,
+          })}
+        </span>
+      );
+    case 'decompress_file':
+      return (
+        <span>
+          {tReact('pages.server.schedules.steps.decompressFile.renderer.compact', {
+            file: <ScheduleDynamicParameterRenderer value={action.file} />,
+            root: <ScheduleDynamicParameterRenderer value={action.root} />,
+          })}
+        </span>
+      );
+    case 'update_startup_variable':
+      return (
+        <span>
+          {tReact('pages.server.schedules.steps.updateStartupVariable.renderer.compact', {
+            variable: <ScheduleDynamicParameterRenderer value={action.envVariable} />,
+            value: <ScheduleDynamicParameterRenderer value={action.value} />,
+          })}
+        </span>
+      );
+    case 'update_startup_command':
+      return (
+        <span>
+          {tReact('pages.server.schedules.steps.updateStartupCommand.renderer.compact', {
+            command: <ScheduleDynamicParameterRenderer value={action.command} />,
+          })}
+        </span>
+      );
+    case 'update_startup_docker_image':
+      return (
+        <span>
+          {tReact('pages.server.schedules.steps.updateStartupDockerImage.renderer.compact', {
+            image: <ScheduleDynamicParameterRenderer value={action.image} />,
+          })}
+        </span>
+      );
+    default:
+      return <span>{t('pages.server.schedules.renderer.noActionSelected', {})}</span>;
+  }
+}
+
+function renderDetailed(action: Action, { t, tReact, tItem }: Translations): React.ReactNode {
+  const yesNo = (val: boolean) => t(val ? 'common.yes' : 'common.no', {});
+
+  switch (action.type) {
+    case 'sleep':
+      return (
+        <Text size='sm'>{t('pages.server.schedules.steps.sleep.renderer.compact', { duration: action.duration })}</Text>
+      );
+    case 'ensure':
+      return <Text size='sm'>{t('pages.server.schedules.steps.ensure.renderer.compact', {})}</Text>;
+    case 'format':
+      return (
+        <Text size='sm'>
+          {tReact('pages.server.schedules.steps.format.renderer.compact', {
+            outputInto: <ScheduleDynamicParameterRenderer value={action.outputInto} />,
+          })}
+        </Text>
+      );
+    case 'match_regex':
+      return (
+        <Text size='sm'>
+          {tReact('pages.server.schedules.steps.matchRegex.renderer.compact', {
+            input: <ScheduleDynamicParameterRenderer value={action.input} />,
+            regex: <Code>{action.regex}</Code>,
+          })}
+        </Text>
+      );
+    case 'wait_for_console_line':
+      return (
+        <Stack gap='xs'>
+          <Text size='sm'>
+            {tReact('pages.server.schedules.steps.waitForConsoleLine.renderer.detail.lineContains', {
+              contains: <ScheduleDynamicParameterRenderer value={action.contains} />,
+            })}
+          </Text>
+          <Text size='sm'>
+            {tReact('pages.server.schedules.steps.waitForConsoleLine.renderer.detail.timeout', {
+              timeout: <Code>{action.timeout}ms</Code>,
+            })}
+          </Text>
+          <Text size='xs' c='dimmed'>
+            {t('pages.server.schedules.renderer.ignoreFailure', { value: yesNo(action.ignoreFailure) })}
+          </Text>
+        </Stack>
+      );
+    case 'send_power':
+      return (
+        <Stack gap='xs'>
+          <Text size='sm'>
+            {tReact('pages.server.schedules.steps.sendPower.renderer.detail.powerAction', {
+              action: <Code>{action.action}</Code>,
+            })}
+          </Text>
+          <Text size='xs' c='dimmed'>
+            {t('pages.server.schedules.renderer.ignoreFailure', { value: yesNo(action.ignoreFailure) })}
+          </Text>
+        </Stack>
+      );
+    case 'send_command':
+      return (
+        <Stack gap='xs'>
+          <Text size='sm'>
+            {tReact('pages.server.schedules.steps.sendCommand.renderer.detail.command', {
+              command: <ScheduleDynamicParameterRenderer value={action.command} />,
+            })}
+          </Text>
+          <Text size='xs' c='dimmed'>
+            {t('pages.server.schedules.renderer.ignoreFailure', { value: yesNo(action.ignoreFailure) })}
+          </Text>
+        </Stack>
+      );
+    case 'create_backup':
+      return (
+        <Stack gap='xs'>
+          <Text size='sm'>
+            {tReact('pages.server.schedules.steps.createBackup.renderer.detail.backupName', {
+              name: <ScheduleDynamicParameterRenderer value={action.name} />,
+            })}
+          </Text>
+          <Text size='xs' c='dimmed'>
+            {t('pages.server.schedules.renderer.foreground', { value: yesNo(action.foreground) })}
+          </Text>
+          <Text size='xs' c='dimmed'>
+            {t('pages.server.schedules.renderer.ignoreFailure', { value: yesNo(action.ignoreFailure) })}
+          </Text>
+          {action.ignoredFiles.length > 0 && (
+            <Text size='xs' c='dimmed'>
+              {t('pages.server.schedules.steps.createBackup.renderer.detail.ignoredFiles', {
+                files: action.ignoredFiles.join(', '),
+              })}
+            </Text>
+          )}
+        </Stack>
+      );
+    case 'create_directory':
+      return (
+        <Stack gap='xs'>
+          <Text size='sm'>
+            {tReact('pages.server.schedules.steps.createDirectory.renderer.detail.directory', {
+              name: <ScheduleDynamicParameterRenderer value={action.name} />,
+            })}
+          </Text>
+          <Text size='sm'>
+            {tReact('pages.server.schedules.steps.createDirectory.renderer.detail.root', {
+              root: <ScheduleDynamicParameterRenderer value={action.root} />,
+            })}
+          </Text>
+          <Text size='xs' c='dimmed'>
+            {t('pages.server.schedules.renderer.ignoreFailure', { value: yesNo(action.ignoreFailure) })}
+          </Text>
+        </Stack>
+      );
+    case 'write_file':
+      return (
+        <Stack gap='xs'>
+          <Text size='sm'>
+            {tReact('pages.server.schedules.steps.writeFile.renderer.detail.file', {
+              file: <ScheduleDynamicParameterRenderer value={action.file} />,
+            })}
+          </Text>
+          <Text size='xs' c='dimmed'>
+            {tReact('pages.server.schedules.steps.writeFile.renderer.detail.append', {
+              value: <Code>{yesNo(action.append)}</Code>,
+            })}
+          </Text>
+          <Text size='xs' c='dimmed'>
+            {t('pages.server.schedules.renderer.ignoreFailure', { value: yesNo(action.ignoreFailure) })}
+          </Text>
+        </Stack>
+      );
+    case 'copy_file':
+      return (
+        <Stack gap='xs'>
+          <Text size='sm'>
+            {tReact('pages.server.schedules.steps.copyFile.renderer.detail.from', {
+              file: <ScheduleDynamicParameterRenderer value={action.file} />,
+            })}
+          </Text>
+          <Text size='sm'>
+            {tReact('pages.server.schedules.steps.copyFile.renderer.detail.to', {
+              destination: <ScheduleDynamicParameterRenderer value={action.destination} />,
+            })}
+          </Text>
+          <Text size='xs' c='dimmed'>
+            {t('pages.server.schedules.renderer.foreground', { value: yesNo(action.foreground) })}
+          </Text>
+          <Text size='xs' c='dimmed'>
+            {t('pages.server.schedules.renderer.ignoreFailure', { value: yesNo(action.ignoreFailure) })}
+          </Text>
+        </Stack>
+      );
+    case 'delete_files':
+      return (
+        <Stack gap='xs'>
+          <Text size='sm'>
+            {tReact('pages.server.schedules.steps.deleteFiles.renderer.detail.root', {
+              root: <ScheduleDynamicParameterRenderer value={action.root} />,
+            })}
+          </Text>
+          <Text size='xs' c='dimmed'>
+            {t('pages.server.schedules.steps.deleteFiles.renderer.detail.files', { files: action.files.join(', ') })}
+          </Text>
+        </Stack>
+      );
+    case 'rename_files':
+      return (
+        <Stack gap='xs'>
+          <Text size='sm'>
+            {tReact('pages.server.schedules.steps.renameFiles.renderer.detail.root', {
+              root: <ScheduleDynamicParameterRenderer value={action.root} />,
+            })}
+          </Text>
+          <Text size='xs' c='dimmed'>
+            {t('pages.server.schedules.steps.renameFiles.renderer.detail.files', {
+              files: tItem('file', action.files.length),
+            })}
+          </Text>
+        </Stack>
+      );
+    case 'compress_files':
+      return (
+        <Stack gap='xs'>
+          <Text size='sm'>
+            {tReact('pages.server.schedules.steps.compressFiles.renderer.detail.output', {
+              name: <ScheduleDynamicParameterRenderer value={action.name} />,
+            })}
+          </Text>
+          <Text size='sm'>
+            {tReact('pages.server.schedules.steps.compressFiles.renderer.detail.root', {
+              root: <ScheduleDynamicParameterRenderer value={action.root} />,
+            })}
+          </Text>
+          <Text size='xs' c='dimmed'>
+            {t('pages.server.schedules.steps.compressFiles.renderer.detail.files', {
+              files: tItem('file', action.files.length),
+            })}
+          </Text>
+          <Text size='xs' c='dimmed'>
+            {t('pages.server.schedules.steps.compressFiles.renderer.detail.format', {
+              format: action.format,
+            })}
+          </Text>
+          <Text size='xs' c='dimmed'>
+            {t('pages.server.schedules.renderer.foreground', { value: yesNo(action.foreground) })}
+          </Text>
+          <Text size='xs' c='dimmed'>
+            {t('pages.server.schedules.renderer.ignoreFailure', { value: yesNo(action.ignoreFailure) })}
+          </Text>
+        </Stack>
+      );
+    case 'decompress_file':
+      return (
+        <Stack gap='xs'>
+          <Text size='sm'>
+            {tReact('pages.server.schedules.steps.decompressFile.renderer.detail.file', {
+              file: <ScheduleDynamicParameterRenderer value={action.file} />,
+            })}
+          </Text>
+          <Text size='sm'>
+            {tReact('pages.server.schedules.steps.decompressFile.renderer.detail.root', {
+              root: <ScheduleDynamicParameterRenderer value={action.root} />,
+            })}
+          </Text>
+          <Text size='xs' c='dimmed'>
+            {t('pages.server.schedules.renderer.foreground', { value: yesNo(action.foreground) })}
+          </Text>
+          <Text size='xs' c='dimmed'>
+            {t('pages.server.schedules.renderer.ignoreFailure', { value: yesNo(action.ignoreFailure) })}
+          </Text>
+        </Stack>
+      );
+    case 'update_startup_variable':
+      return (
+        <Stack gap='xs'>
+          <Text size='sm'>
+            {tReact('pages.server.schedules.steps.updateStartupVariable.renderer.detail.variable', {
+              variable: <ScheduleDynamicParameterRenderer value={action.envVariable} />,
+            })}
+          </Text>
+          <Text size='sm'>
+            {tReact('pages.server.schedules.steps.updateStartupVariable.renderer.detail.value', {
+              value: <ScheduleDynamicParameterRenderer value={action.value} />,
+            })}
+          </Text>
+          <Text size='xs' c='dimmed'>
+            {t('pages.server.schedules.renderer.ignoreFailure', { value: yesNo(action.ignoreFailure) })}
+          </Text>
+        </Stack>
+      );
+    case 'update_startup_command':
+      return (
+        <Stack gap='xs'>
+          <Text size='sm'>
+            {tReact('pages.server.schedules.steps.updateStartupCommand.renderer.detail.command', {
+              command: <ScheduleDynamicParameterRenderer value={action.command} />,
+            })}
+          </Text>
+          <Text size='xs' c='dimmed'>
+            {t('pages.server.schedules.renderer.ignoreFailure', { value: yesNo(action.ignoreFailure) })}
+          </Text>
+        </Stack>
+      );
+    case 'update_startup_docker_image':
+      return (
+        <Stack gap='xs'>
+          <Text size='sm'>
+            {tReact('pages.server.schedules.steps.updateStartupDockerImage.renderer.detail.image', {
+              image: <ScheduleDynamicParameterRenderer value={action.image} />,
+            })}
+          </Text>
+          <Text size='xs' c='dimmed'>
+            {t('pages.server.schedules.renderer.ignoreFailure', { value: yesNo(action.ignoreFailure) })}
+          </Text>
+        </Stack>
+      );
+    default:
+      return (
+        <Text size='sm' c='dimmed'>
+          {t('pages.server.schedules.renderer.noActionDetails', {})}
+        </Text>
+      );
+  }
+}
 
 interface ActionRendererProps {
-  action: ServerScheduleStepActionSchema;
+  action: Action;
   mode?: ActionRendererMode;
 }
 
-class RendererMap {
-  // @ts-ignore
-  private compactRenderers: Record<ServerScheduleStepActionSchema['type'], (action: never) => React.ReactNode> = {};
-  // @ts-ignore
-  private detailedRenderers: Record<ServerScheduleStepActionSchema['type'], (action: never) => React.ReactNode> = {};
-
-  public addRenderer<T extends ServerScheduleStepActionSchema['type']>(
-    type: T,
-    compactRenderer: (action: Extract<ServerScheduleStepActionSchema, { type: T }>) => React.ReactNode,
-    detailedRenderer: (action: Extract<ServerScheduleStepActionSchema, { type: T }>) => React.ReactNode,
-  ) {
-    this.compactRenderers[type] = compactRenderer;
-    this.detailedRenderers[type] = detailedRenderer;
-  }
-
-  public getRenderer<T extends ServerScheduleStepActionSchema['type']>(
-    type: T,
-    mode: ActionRendererMode,
-  ): ((action: Extract<ServerScheduleStepActionSchema, { type: T }>) => React.ReactNode) | undefined {
-    return mode === 'compact' ? (this.compactRenderers[type] as never) : (this.detailedRenderers[type] as never);
-  }
-}
-
-const rendererMap = new RendererMap();
-
-rendererMap.addRenderer(
-  'sleep',
-  (a) => <span>Sleep for {a.duration}ms</span>,
-  (a) => <Text size='sm'>Sleep for {a.duration}ms</Text>,
-);
-rendererMap.addRenderer(
-  'ensure',
-  () => <span>Ensure a condition matches</span>,
-  () => <Text size='sm'>Ensure a condition matches</Text>,
-);
-rendererMap.addRenderer(
-  'format',
-  (a) => (
-    <span>
-      Format a string into <ScheduleDynamicParameterRenderer value={a.outputInto} />
-    </span>
-  ),
-  (a) => (
-    <Text size='sm'>
-      Format a string into <ScheduleDynamicParameterRenderer value={a.outputInto} />
-    </Text>
-  ),
-);
-rendererMap.addRenderer(
-  'match_regex',
-  (a) => (
-    <span>
-      Match <ScheduleDynamicParameterRenderer value={a.input} /> with regex <Code>{a.regex}</Code>
-    </span>
-  ),
-  (a) => (
-    <Text size='sm'>
-      Match <ScheduleDynamicParameterRenderer value={a.input} /> with regex <Code>{a.regex}</Code>
-    </Text>
-  ),
-);
-rendererMap.addRenderer(
-  'wait_for_console_line',
-  (a) => (
-    <span>
-      Wait {formatMilliseconds(a.timeout)} for console line containing{' '}
-      <ScheduleDynamicParameterRenderer value={a.contains} />
-    </span>
-  ),
-  (a) => (
-    <Stack gap='xs'>
-      <Text size='sm'>
-        Line must contain: <ScheduleDynamicParameterRenderer value={a.contains} />
-      </Text>
-      <Text size='sm'>
-        Timeout: <Code>{a.timeout}ms</Code>
-      </Text>
-      <Text size='xs' c='dimmed'>
-        Ignore Failure: {a.ignoreFailure ? 'Yes' : 'No'}
-      </Text>
-    </Stack>
-  ),
-);
-rendererMap.addRenderer(
-  'send_power',
-  (a) => <span>Do {a.action}</span>,
-  (a) => (
-    <Stack gap='xs'>
-      <Text size='sm'>
-        Power Action: <Code>{a.action}</Code>
-      </Text>
-      <Text size='xs' c='dimmed'>
-        Ignore Failure: {a.ignoreFailure ? 'Yes' : 'No'}
-      </Text>
-    </Stack>
-  ),
-);
-rendererMap.addRenderer(
-  'send_command',
-  (a) => (
-    <span>
-      Run <ScheduleDynamicParameterRenderer value={a.command} />
-    </span>
-  ),
-  (a) => (
-    <Stack gap='xs'>
-      <Text size='sm'>
-        Command: <ScheduleDynamicParameterRenderer value={a.command} />
-      </Text>
-      <Text size='xs' c='dimmed'>
-        Ignore Failure: {a.ignoreFailure ? 'Yes' : 'No'}
-      </Text>
-    </Stack>
-  ),
-);
-rendererMap.addRenderer(
-  'create_backup',
-  (a) => (
-    <span>
-      Create <ScheduleDynamicParameterRenderer value={a.name} />
-    </span>
-  ),
-  (a) => (
-    <Stack gap='xs'>
-      <Text size='sm'>
-        Backup Name: <ScheduleDynamicParameterRenderer value={a.name} />
-      </Text>
-      <Text size='xs' c='dimmed'>
-        Foreground: {a.foreground ? 'Yes' : 'No'} | Ignore Failure: {a.ignoreFailure ? 'Yes' : 'No'}
-      </Text>
-      {a.ignoredFiles.length > 0 && (
-        <Text size='xs' c='dimmed'>
-          Ignored Files: {a.ignoredFiles.join(', ')}
-        </Text>
-      )}
-    </Stack>
-  ),
-);
-rendererMap.addRenderer(
-  'create_directory',
-  (a) => (
-    <span>
-      Create <ScheduleDynamicParameterRenderer value={a.name} /> in <ScheduleDynamicParameterRenderer value={a.root} />
-    </span>
-  ),
-  (a) => (
-    <Stack gap='xs'>
-      <Text size='sm'>
-        Directory: <ScheduleDynamicParameterRenderer value={a.name} />
-      </Text>
-      <Text size='sm'>
-        Root: <ScheduleDynamicParameterRenderer value={a.root} />
-      </Text>
-      <Text size='xs' c='dimmed'>
-        Ignore Failure: {a.ignoreFailure ? 'Yes' : 'No'}
-      </Text>
-    </Stack>
-  ),
-);
-rendererMap.addRenderer(
-  'write_file',
-  (a) => (
-    <span>
-      Write to <ScheduleDynamicParameterRenderer value={a.file} />
-    </span>
-  ),
-  (a) => (
-    <Stack gap='xs'>
-      <Text size='sm'>
-        File: <ScheduleDynamicParameterRenderer value={a.file} />
-      </Text>
-      <Text size='xs' c='dimmed'>
-        Append: <Code>{a.append ? 'Yes' : 'No'}</Code>
-      </Text>
-      <Text size='xs' c='dimmed'>
-        Ignore Failure: {a.ignoreFailure ? 'Yes' : 'No'}
-      </Text>
-    </Stack>
-  ),
-);
-rendererMap.addRenderer(
-  'copy_file',
-  (a) => (
-    <span>
-      Copy <ScheduleDynamicParameterRenderer value={a.file} /> to{' '}
-      <ScheduleDynamicParameterRenderer value={a.destination} />
-    </span>
-  ),
-  (a) => (
-    <Stack gap='xs'>
-      <Text size='sm'>
-        From: <ScheduleDynamicParameterRenderer value={a.file} />
-      </Text>
-      <Text size='sm'>
-        To: <ScheduleDynamicParameterRenderer value={a.destination} />
-      </Text>
-      <Text size='xs' c='dimmed'>
-        Foreground: {a.foreground ? 'Yes' : 'No'} | Ignore Failure: {a.ignoreFailure ? 'Yes' : 'No'}
-      </Text>
-    </Stack>
-  ),
-);
-rendererMap.addRenderer(
-  'delete_files',
-  (a) => (
-    <span>
-      Delete <Code>{a.files.join(', ')}</Code>
-    </span>
-  ),
-  (a) => (
-    <Stack gap='xs'>
-      <Text size='sm'>
-        Root: <ScheduleDynamicParameterRenderer value={a.root} />
-      </Text>
-      <Text size='xs' c='dimmed'>
-        Files: {a.files.join(', ')}
-      </Text>
-    </Stack>
-  ),
-);
-rendererMap.addRenderer(
-  'rename_files',
-  (a) => <span>Rename {a.files.length} files</span>,
-  (a) => (
-    <Stack gap='xs'>
-      <Text size='sm'>
-        Root: <ScheduleDynamicParameterRenderer value={a.root} />
-      </Text>
-      <Text size='xs' c='dimmed'>
-        Files: {a.files.length} file(s)
-      </Text>
-    </Stack>
-  ),
-);
-rendererMap.addRenderer(
-  'compress_files',
-  (a) => (
-    <span>
-      Compress {a.files.length} files in <ScheduleDynamicParameterRenderer value={a.root} /> to{' '}
-      <ScheduleDynamicParameterRenderer value={a.name} />
-    </span>
-  ),
-  (a) => (
-    <Stack gap='xs'>
-      <Text size='sm'>
-        Output: <ScheduleDynamicParameterRenderer value={a.name} />
-      </Text>
-      <Text size='sm'>
-        Root: <ScheduleDynamicParameterRenderer value={a.root} />
-      </Text>
-      <Text size='xs' c='dimmed'>
-        Files: {a.files.length} file(s) | Format: {a.format}
-      </Text>
-      <Text size='xs' c='dimmed'>
-        Foreground: {a.foreground ? 'Yes' : 'No'} | Ignore Failure: {a.ignoreFailure ? 'Yes' : 'No'}
-      </Text>
-    </Stack>
-  ),
-);
-rendererMap.addRenderer(
-  'decompress_file',
-  (a) => (
-    <span>
-      Decompress <ScheduleDynamicParameterRenderer value={a.file} /> to{' '}
-      <ScheduleDynamicParameterRenderer value={a.root} />
-    </span>
-  ),
-  (a) => (
-    <Stack gap='xs'>
-      <Text size='sm'>
-        File: <ScheduleDynamicParameterRenderer value={a.file} />
-      </Text>
-      <Text size='sm'>
-        Root: <ScheduleDynamicParameterRenderer value={a.root} />
-      </Text>
-      <Text size='xs' c='dimmed'>
-        Foreground: {a.foreground ? 'Yes' : 'No'} | Ignore Failure: {a.ignoreFailure ? 'Yes' : 'No'}
-      </Text>
-    </Stack>
-  ),
-);
-rendererMap.addRenderer(
-  'update_startup_variable',
-  (a) => (
-    <span>
-      Set <ScheduleDynamicParameterRenderer value={a.envVariable} /> to{' '}
-      <ScheduleDynamicParameterRenderer value={a.value} />
-    </span>
-  ),
-  (a) => (
-    <Stack gap='xs'>
-      <Text size='sm'>
-        Variable: <ScheduleDynamicParameterRenderer value={a.envVariable} />
-      </Text>
-      <Text size='sm'>
-        Value: <ScheduleDynamicParameterRenderer value={a.value} />
-      </Text>
-      <Text size='xs' c='dimmed'>
-        Ignore Failure: {a.ignoreFailure ? 'Yes' : 'No'}
-      </Text>
-    </Stack>
-  ),
-);
-rendererMap.addRenderer(
-  'update_startup_command',
-  (a) => (
-    <span>
-      Set to <ScheduleDynamicParameterRenderer value={a.command} />
-    </span>
-  ),
-  (a) => (
-    <Stack gap='xs'>
-      <Text size='sm'>
-        Command: <ScheduleDynamicParameterRenderer value={a.command} />
-      </Text>
-      <Text size='xs' c='dimmed'>
-        Ignore Failure: {a.ignoreFailure ? 'Yes' : 'No'}
-      </Text>
-    </Stack>
-  ),
-);
-rendererMap.addRenderer(
-  'update_startup_docker_image',
-  (a) => (
-    <span>
-      Set to <ScheduleDynamicParameterRenderer value={a.image} />
-    </span>
-  ),
-  (a) => (
-    <Stack gap='xs'>
-      <Text size='sm'>
-        Image: <ScheduleDynamicParameterRenderer value={a.image} />
-      </Text>
-      <Text size='xs' c='dimmed'>
-        Ignore Failure: {a.ignoreFailure ? 'Yes' : 'No'}
-      </Text>
-    </Stack>
-  ),
-);
-
 export default function ActionRenderer({ action, mode = 'compact' }: ActionRendererProps) {
-  const renderer = rendererMap.getRenderer(action.type, mode);
+  const translations = useTranslations();
 
-  if (!renderer) {
-    return mode === 'compact' ? (
-      <span>Select an action type to configure</span>
-    ) : (
-      <Text size='sm' c='dimmed'>
-        Action details not available
-      </Text>
-    );
-  }
-
-  return <>{renderer(action)}</>;
+  return <>{mode === 'compact' ? renderCompact(action, translations) : renderDetailed(action, translations)}</>;
 }

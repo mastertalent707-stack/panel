@@ -150,6 +150,17 @@
           "starting": "Starting",
           "stopping": "Stopping"
         },
+        "serverPowerAction": {
+          "start": "Start",
+          "stop": "Stop",
+          "restart": "Restart",
+          "kill": "Kill"
+        },
+        "serverBackupStatus": {
+          "starting": "Starting",
+          "finished": "Finished",
+          "failed": "Failed"
+        },
         "connectionStatus": {
           "connected": "Connected",
           "offline": "Offline"
@@ -227,6 +238,9 @@
         "selectedPermissions": "Selected Permissions ({count})",
         "noPermissions": "No permissions selected."
       },
+      "selectInput": {
+        "noResults": "No Results found."
+      },
       "can": {
         "tooltip": {
           "cantSave": "You do not have permission to save.",
@@ -268,6 +282,16 @@
             }
           }
         }
+      },
+      "scheduleDynamicInput": {
+        "enterVariable": "Please enter the variable name to evaluate.",
+        "enterData": "Please enter the data to send.",
+        "inputType": "Input Type",
+        "dataType": "Data type to send",
+        "selectType": "Select Type",
+        "none": "None",
+        "rawString": "Raw String",
+        "variable": "Variable"
       },
       "serverWebsocket": {
         "error": {
@@ -1089,10 +1113,6 @@
             "normalizeCpuLoad": "Normalize CPU Load (shifted to max 100%)"
           },
           "power": {
-            "start": "Start",
-            "stop": "Stop",
-            "restart": "Restart",
-            "kill": "Kill",
             "modal": {
               "forceStop": {
                 "title": "Forcibly Stop Process",
@@ -1387,9 +1407,435 @@
         },
         "schedules": {
           "title": "Schedules",
+          "subtitle": "{current} of {max} maximum schedules created.",
           "dropzone": {
             "title": "Drop some files here to import them as Schedules",
             "subtitle": "Release to start importing"
+          },
+          "tooltip": {
+            "limitReached": "This server is limited to {max} schedules."
+          },
+          "table": {
+            "columns": {
+              "lastRun": "Last Run",
+              "lastFailure": "Last Failure",
+              "status": "Status"
+            }
+          },
+          "button": {
+            "import": "Import",
+            "trigger": "Trigger",
+            "triggerWithCondition": "Trigger (do not skip condition)",
+            "triggerSkipCondition": "Trigger (skip condition)",
+            "addTrigger": "Add Trigger",
+            "addCondition": "Add Condition",
+            "addStep": "Add Step",
+            "createFirstStep": "Create First Step",
+            "addOutput": "Add Output",
+            "addFile": "Add File",
+            "exitEditor": "Exit Editor"
+          },
+          "toast": {
+            "imported": "Schedule imported.",
+            "created": "Schedule created.",
+            "updated": "Schedule updated.",
+            "deleted": "Schedule deleted.",
+            "triggered": "Schedule triggered.",
+            "exported": "Schedule exported.",
+            "parseError": "Failed to parse schedule: {error}",
+            "step": {
+              "created": "Schedule step created.",
+              "updated": "Schedule step updated.",
+              "deleted": "Schedule step deleted."
+            }
+          },
+          "enum": {
+            "schedulePreConditionType": {
+              "none": "None",
+              "and": "AND (All must be true)",
+              "or": "OR (Any must be true)",
+              "not": "NOT (Must not be true)",
+              "serverState": "Server State",
+              "uptime": "Uptime",
+              "cpuUsage": "CPU Usage",
+              "memoryUsage": "Memory Usage",
+              "diskUsage": "Disk Usage",
+              "fileExists": "File Exists"
+            },
+            "scheduleConditionType": {
+              "none": "None",
+              "and": "AND (All must be true)",
+              "or": "OR (Any must be true)",
+              "not": "NOT (Must not be true)",
+              "variableExists": "Variable Exists",
+              "variableContains": "Variable Contains",
+              "variableEquals": "Variable Equals",
+              "variableStartsWith": "Variable Starts With",
+              "variableEndsWith": "Variable Ends With"
+            }
+          },
+          "modal": {
+            "createSchedule": {
+              "title": "Create Schedule"
+            },
+            "updateSchedule": {
+              "title": "Update Schedule"
+            },
+            "deleteSchedule": {
+              "title": "Confirm Schedule Deletion",
+              "content": "Are you sure you want to delete {name} from this server?"
+            },
+            "createStep": {
+              "title": "Create Schedule Step"
+            },
+            "editStep": {
+              "title": "Edit Schedule Step"
+            },
+            "deleteStep": {
+              "title": "Confirm Schedule Step Deletion",
+              "content": "Are you sure you want to delete this schedule step?"
+            }
+          },
+          "view": {
+            "badge": {
+              "running": "Running"
+            },
+            "tooltip": {
+              "cannotTrigger": "Cannot trigger a disabled schedule"
+            },
+            "tabs": {
+              "actions": "Actions",
+              "conditions": "Conditions",
+              "triggers": "Triggers"
+            },
+            "sections": {
+              "actions": "Schedule Actions",
+              "preConditions": "Schedule Pre-Conditions",
+              "triggers": "Schedule Triggers"
+            },
+            "alert": {
+              "noActions": "No actions configured for this schedule",
+              "noTriggers": "No triggers configured for this schedule"
+            }
+          },
+          "form": {
+            "scheduleName": "Schedule Name",
+            "enabled": "Enabled",
+            "triggersList": "Triggers",
+            "triggerNumber": "Trigger {number}",
+            "actionType": "Action Type",
+            "conditionType": "Condition Type",
+            "serverState": "Server State",
+            "comparator": "Comparator",
+            "rootPath": "Root Path",
+            "outputInto": "Output into",
+            "ignoreFailure": "Ignore Failure",
+            "runInForeground": "Run in Foreground"
+          },
+          "condition": {
+            "variable": "Variable",
+            "equals": "Equals",
+            "contains": "Contains",
+            "startsWith": "Starts With",
+            "endsWith": "Ends With",
+            "allMustBeTrue": "All conditions must be true:",
+            "anyMustBeTrue": "Any condition must be true:",
+            "mustNotBeTrue": "Condition must not be true:"
+          },
+          "preCondition": {
+            "valueSeconds": "Value (seconds)",
+            "valuePercent": "Value (%)",
+            "value": "Value",
+            "filePath": "File Path"
+          },
+          "triggers": {
+            "cron": {
+              "title": "Cron",
+              "form": {
+                "cronSchedule": "Cron Schedule"
+              },
+              "card": {
+                "content": "On Cron Interval `{schedule}`, Next run is {timestamp} - Last run was {lastTimestamp}."
+              }
+            },
+            "powerAction": {
+              "title": "Power Action",
+              "form": {
+                "powerAction": "Power Action"
+              },
+              "card": {
+                "content": "When Power Action `{action}` is requested."
+              }
+            },
+            "serverState": {
+              "title": "Server State",
+              "card": {
+                "content": "When Server State `{state}` is reached."
+              }
+            },
+            "backupStatus": {
+              "title": "Backup Status",
+              "form": {
+                "backupStatus": "Backup Status"
+              },
+              "card": {
+                "content": "When Backup reaches Status `{status}`."
+              }
+            },
+            "consoleLine": {
+              "title": "Console Line",
+              "form": {
+                "lineContains": "Line Contains"
+              },
+              "card": {
+                "content": "When Console Output reaches line that contains `{contains}`"
+              }
+            },
+            "crash": {
+              "title": "Crash",
+              "card": {
+                "content": "When Server crashes."
+              }
+            }
+          },
+          "renderer": {
+            "noActionSelected": "Select an action type to configure",
+            "noActionDetails": "Action details not available",
+            "ignoreFailure": "Ignore Failure: {value}",
+            "foreground": "Foreground: {value}"
+          },
+          "steps": {
+            "empty": {
+              "title": "No Steps Configured",
+              "description": "This schedule doesn't have any steps yet. Add some actions to get started."
+            },
+            "sleep": {
+              "title": "Sleep",
+              "form": {
+                "duration": "Duration (milliseconds)"
+              },
+              "renderer": {
+                "compact": "Sleep for {duration}ms"
+              }
+            },
+            "ensure": {
+              "title": "Ensure",
+              "renderer": {
+                "compact": "Ensure a condition matches"
+              }
+            },
+            "format": {
+              "title": "Format",
+              "form": {
+                "formatString": "Format String",
+                "formatStringDescription": "The format string, can include variables by wrapping inside {wrapper}"
+              },
+              "renderer": {
+                "compact": "Format a string into {outputInto}"
+              }
+            },
+            "matchRegex": {
+              "title": "Match Regex",
+              "form": {
+                "input": "Input",
+                "regex": "Regex",
+                "outputs": "Outputs",
+                "outputNumber": "Output {number}"
+              },
+              "renderer": {
+                "compact": "Match {input} with regex {regex}"
+              }
+            },
+            "waitForConsoleLine": {
+              "title": "Wait for Console Line",
+              "form": {
+                "lineContains": "Line contains",
+                "timeout": "Timeout (milliseconds)"
+              },
+              "renderer": {
+                "compact": "Wait {timeout} for console line containing {contains}",
+                "detail": {
+                  "lineContains": "Line must contain: {contains}",
+                  "timeout": "Timeout: {timeout}"
+                }
+              }
+            },
+            "sendCommand": {
+              "title": "Send Command",
+              "form": {
+                "command": "Command"
+              },
+              "renderer": {
+                "compact": "Run {command}",
+                "detail": {
+                  "command": "Command: {command}"
+                }
+              }
+            },
+            "sendPower": {
+              "title": "Send Power Signal",
+              "form": {
+                "powerAction": "Power Action"
+              },
+              "renderer": {
+                "compact": "Do {action}",
+                "detail": {
+                  "powerAction": "Power Action: {action}"
+                }
+              }
+            },
+            "createBackup": {
+              "title": "Create Backup",
+              "form": {
+                "backupName": "Backup Name",
+                "ignoredFiles": "Ignored Files"
+              },
+              "renderer": {
+                "compact": "Create {name}",
+                "detail": {
+                  "backupName": "Backup Name: {name}",
+                  "ignoredFiles": "Ignored Files: {files}"
+                }
+              }
+            },
+            "createDirectory": {
+              "title": "Create Directory",
+              "form": {
+                "directoryName": "Directory Name"
+              },
+              "renderer": {
+                "compact": "Create {name} in {root}",
+                "detail": {
+                  "directory": "Directory: {name}",
+                  "root": "Root: {root}"
+                }
+              }
+            },
+            "writeFile": {
+              "title": "Write File",
+              "form": {
+                "filePath": "File Path",
+                "content": "Content",
+                "appendToFile": "Append to File"
+              },
+              "renderer": {
+                "compact": "Write to {file}",
+                "detail": {
+                  "file": "File: {file}",
+                  "append": "Append: {value}"
+                }
+              }
+            },
+            "copyFile": {
+              "title": "Copy File",
+              "form": {
+                "sourceFile": "Source File",
+                "destination": "Destination"
+              },
+              "renderer": {
+                "compact": "Copy {file} to {destination}",
+                "detail": {
+                  "from": "From: {file}",
+                  "to": "To: {destination}"
+                }
+              }
+            },
+            "deleteFiles": {
+              "title": "Delete Files",
+              "form": {
+                "filesToDelete": "Files to Delete"
+              },
+              "renderer": {
+                "compact": "Delete {files}",
+                "detail": {
+                  "root": "Root: {root}",
+                  "files": "Files: {files}"
+                }
+              }
+            },
+            "renameFiles": {
+              "title": "Rename Files",
+              "form": {
+                "files": "Files",
+                "from": "from",
+                "to": "to"
+              },
+              "renderer": {
+                "compact": "Rename {files}",
+                "detail": {
+                  "root": "Root: {root}",
+                  "files": "Files: {files}"
+                }
+              }
+            },
+            "compressFiles": {
+              "title": "Compress Files",
+              "form": {
+                "filesToCompress": "Files to Compress",
+                "archiveFormat": "Archive Format",
+                "archiveName": "Archive Name"
+              },
+              "renderer": {
+                "compact": "Compress {files} in {root} to {name}",
+                "detail": {
+                  "output": "Output: {name}",
+                  "root": "Root: {root}",
+                  "format": "Format: {format}",
+                  "files": "Files: {files}"
+                }
+              }
+            },
+            "decompressFile": {
+              "title": "Decompress File",
+              "form": {
+                "file": "File"
+              },
+              "renderer": {
+                "compact": "Decompress {file} to {root}",
+                "detail": {
+                  "file": "File: {file}",
+                  "root": "Root: {root}"
+                }
+              }
+            },
+            "updateStartupVariable": {
+              "title": "Update Startup Variable",
+              "form": {
+                "envVariable": "Environment Variable",
+                "value": "Value"
+              },
+              "renderer": {
+                "compact": "Set {variable} to {value}",
+                "detail": {
+                  "variable": "Variable: {variable}",
+                  "value": "Value: {value}"
+                }
+              }
+            },
+            "updateStartupCommand": {
+              "title": "Update Startup Command",
+              "form": {
+                "startupCommand": "Startup Command"
+              },
+              "renderer": {
+                "compact": "Set to {command}",
+                "detail": {
+                  "command": "Command: {command}"
+                }
+              }
+            },
+            "updateStartupDockerImage": {
+              "title": "Update Docker Image",
+              "form": {
+                "dockerImage": "Docker Image"
+              },
+              "renderer": {
+                "compact": "Set to {image}",
+                "detail": {
+                  "image": "Image: {image}"
+                }
+              }
+            }
           }
         },
         "subusers": {

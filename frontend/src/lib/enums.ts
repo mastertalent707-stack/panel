@@ -58,6 +58,7 @@ import {
 import { serverBackupStatus, serverPowerAction, serverPowerState } from '@/lib/schemas/server/server.ts';
 import { publicSettingsCaptchaProviderSchema } from '@/lib/schemas/settings.ts';
 import { userSshKeyProvider } from '@/lib/schemas/user/sshKeys.ts';
+import { getTranslations } from '@/providers/TranslationProvider.tsx';
 
 export const captchaProviderTypeLabelMapping: Record<
   z.infer<typeof publicSettingsCaptchaProviderSchema>['type'],
@@ -152,30 +153,36 @@ export const fingerprintAlgorithmLabelMapping: Record<z.infer<typeof fingerprint
 
 export const schedulePreConditionLabelMapping: Record<
   z.infer<typeof serverSchedulePreConditionSchema>['type'],
-  string
+  () => string
 > = {
-  none: 'None',
-  and: 'AND (All must be true)',
-  or: 'OR (Any must be true)',
-  not: 'NOT (Must not be true)',
-  server_state: 'Server State',
-  uptime: 'Uptime',
-  cpu_usage: 'CPU Usage',
-  memory_usage: 'Memory Usage',
-  disk_usage: 'Disk Usage',
-  file_exists: 'File Exists',
+  none: () => getTranslations().t('pages.server.schedules.enum.schedulePreConditionType.none', {}),
+  and: () => getTranslations().t('pages.server.schedules.enum.schedulePreConditionType.and', {}),
+  or: () => getTranslations().t('pages.server.schedules.enum.schedulePreConditionType.or', {}),
+  not: () => getTranslations().t('pages.server.schedules.enum.schedulePreConditionType.not', {}),
+  server_state: () => getTranslations().t('pages.server.schedules.enum.schedulePreConditionType.serverState', {}),
+  uptime: () => getTranslations().t('pages.server.schedules.enum.schedulePreConditionType.uptime', {}),
+  cpu_usage: () => getTranslations().t('pages.server.schedules.enum.schedulePreConditionType.cpuUsage', {}),
+  memory_usage: () => getTranslations().t('pages.server.schedules.enum.schedulePreConditionType.memoryUsage', {}),
+  disk_usage: () => getTranslations().t('pages.server.schedules.enum.schedulePreConditionType.diskUsage', {}),
+  file_exists: () => getTranslations().t('pages.server.schedules.enum.schedulePreConditionType.fileExists', {}),
 };
 
-export const scheduleConditionLabelMapping: Record<z.infer<typeof serverScheduleConditionSchema>['type'], string> = {
-  none: 'None',
-  and: 'AND (All must be true)',
-  or: 'OR (Any must be true)',
-  not: 'NOT (Must not be true)',
-  variable_exists: 'Variable Exists',
-  variable_contains: 'Variable Contains',
-  variable_equals: 'Variable Equals',
-  variable_starts_with: 'Variable Starts With',
-  variable_ends_with: 'Variable Ends With',
+export const scheduleConditionLabelMapping: Record<
+  z.infer<typeof serverScheduleConditionSchema>['type'],
+  () => string
+> = {
+  none: () => getTranslations().t('pages.server.schedules.enum.scheduleConditionType.none', {}),
+  and: () => getTranslations().t('pages.server.schedules.enum.scheduleConditionType.and', {}),
+  or: () => getTranslations().t('pages.server.schedules.enum.scheduleConditionType.or', {}),
+  not: () => getTranslations().t('pages.server.schedules.enum.scheduleConditionType.not', {}),
+  variable_exists: () => getTranslations().t('pages.server.schedules.enum.scheduleConditionType.variableExists', {}),
+  variable_contains: () =>
+    getTranslations().t('pages.server.schedules.enum.scheduleConditionType.variableContains', {}),
+  variable_equals: () => getTranslations().t('pages.server.schedules.enum.scheduleConditionType.variableEquals', {}),
+  variable_starts_with: () =>
+    getTranslations().t('pages.server.schedules.enum.scheduleConditionType.variableStartsWith', {}),
+  variable_ends_with: () =>
+    getTranslations().t('pages.server.schedules.enum.scheduleConditionType.variableEndsWith', {}),
 };
 
 export const scheduleComparatorLabelMapping: Record<z.infer<typeof serverScheduleComparator>, string> = {
@@ -194,45 +201,46 @@ export const scheduleComparatorOperatorMapping: Record<z.infer<typeof serverSche
   greater_than_or_equals: '>=',
 };
 
-export const serverPowerStateLabelMapping: Record<z.infer<typeof serverPowerState>, string> = {
-  running: 'Running',
-  offline: 'Offline',
-  starting: 'Starting',
-  stopping: 'Stopping',
+export const serverPowerStateLabelMapping: Record<z.infer<typeof serverPowerState>, () => string> = {
+  running: () => getTranslations().t('common.enum.serverState.running', {}),
+  offline: () => getTranslations().t('common.enum.serverState.offline', {}),
+  starting: () => getTranslations().t('common.enum.serverState.starting', {}),
+  stopping: () => getTranslations().t('common.enum.serverState.stopping', {}),
 };
 
-export const serverPowerActionLabelMapping: Record<z.infer<typeof serverPowerAction>, string> = {
-  start: 'Start',
-  stop: 'Stop',
-  restart: 'Restart',
-  kill: 'Kill',
+export const serverPowerActionLabelMapping: Record<z.infer<typeof serverPowerAction>, () => string> = {
+  start: () => getTranslations().t('common.enum.serverPowerAction.start', {}),
+  stop: () => getTranslations().t('common.enum.serverPowerAction.stop', {}),
+  restart: () => getTranslations().t('common.enum.serverPowerAction.restart', {}),
+  kill: () => getTranslations().t('common.enum.serverPowerAction.kill', {}),
 };
 
-export const serverBackupStatusLabelMapping: Record<z.infer<typeof serverBackupStatus>, string> = {
-  starting: 'Starting',
-  finished: 'Finished',
-  failed: 'Failed',
+export const serverBackupStatusLabelMapping: Record<z.infer<typeof serverBackupStatus>, () => string> = {
+  starting: () => getTranslations().t('common.enum.serverBackupStatus.starting', {}),
+  finished: () => getTranslations().t('common.enum.serverBackupStatus.finished', {}),
+  failed: () => getTranslations().t('common.enum.serverBackupStatus.failed', {}),
 };
 
-export const scheduleStepLabelMapping: Record<z.infer<typeof serverScheduleStepActionSchema>['type'], string> = {
-  sleep: 'Sleep',
-  ensure: 'Ensure',
-  format: 'Format',
-  match_regex: 'Match Regex',
-  wait_for_console_line: 'Wait for Console Line',
-  send_power: 'Send Power Signal',
-  send_command: 'Send Command',
-  create_backup: 'Create Backup',
-  create_directory: 'Create Directory',
-  write_file: 'Write File',
-  copy_file: 'Copy File',
-  delete_files: 'Delete Files',
-  rename_files: 'Rename Files',
-  compress_files: 'Compress Files',
-  decompress_file: 'Decompress File',
-  update_startup_variable: 'Update Startup Variable',
-  update_startup_command: 'Update Startup Command',
-  update_startup_docker_image: 'Update Docker Image',
+export const scheduleStepLabelMapping: Record<z.infer<typeof serverScheduleStepActionSchema>['type'], () => string> = {
+  sleep: () => getTranslations().t('pages.server.schedules.steps.sleep.title', {}),
+  ensure: () => getTranslations().t('pages.server.schedules.steps.ensure.title', {}),
+  format: () => getTranslations().t('pages.server.schedules.steps.format.title', {}),
+  match_regex: () => getTranslations().t('pages.server.schedules.steps.matchRegex.title', {}),
+  wait_for_console_line: () => getTranslations().t('pages.server.schedules.steps.waitForConsoleLine.title', {}),
+  send_power: () => getTranslations().t('pages.server.schedules.steps.sendPower.title', {}),
+  send_command: () => getTranslations().t('pages.server.schedules.steps.sendCommand.title', {}),
+  create_backup: () => getTranslations().t('pages.server.schedules.steps.createBackup.title', {}),
+  create_directory: () => getTranslations().t('pages.server.schedules.steps.createDirectory.title', {}),
+  write_file: () => getTranslations().t('pages.server.schedules.steps.writeFile.title', {}),
+  copy_file: () => getTranslations().t('pages.server.schedules.steps.copyFile.title', {}),
+  delete_files: () => getTranslations().t('pages.server.schedules.steps.deleteFiles.title', {}),
+  rename_files: () => getTranslations().t('pages.server.schedules.steps.renameFiles.title', {}),
+  compress_files: () => getTranslations().t('pages.server.schedules.steps.compressFiles.title', {}),
+  decompress_file: () => getTranslations().t('pages.server.schedules.steps.decompressFile.title', {}),
+  update_startup_variable: () => getTranslations().t('pages.server.schedules.steps.updateStartupVariable.title', {}),
+  update_startup_command: () => getTranslations().t('pages.server.schedules.steps.updateStartupCommand.title', {}),
+  update_startup_docker_image: () =>
+    getTranslations().t('pages.server.schedules.steps.updateStartupDockerImage.title', {}),
 };
 
 export const scheduleStepDefaultMapping: Record<
@@ -425,13 +433,13 @@ export const scheduleTriggerColorMapping: Record<z.infer<typeof serverScheduleTr
   crash: 'red',
 };
 
-export const scheduleTriggerLabelMapping: Record<z.infer<typeof serverScheduleTriggerSchema>['type'], string> = {
-  cron: 'Cron',
-  power_action: 'Power Action',
-  server_state: 'Server State',
-  backup_status: 'Backup Status',
-  console_line: 'Console Line',
-  crash: 'Crash',
+export const scheduleTriggerLabelMapping: Record<z.infer<typeof serverScheduleTriggerSchema>['type'], () => string> = {
+  cron: () => getTranslations().t('pages.server.schedules.triggers.cron.title', {}),
+  power_action: () => getTranslations().t('pages.server.schedules.triggers.powerAction.title', {}),
+  server_state: () => getTranslations().t('pages.server.schedules.triggers.serverState.title', {}),
+  backup_status: () => getTranslations().t('pages.server.schedules.triggers.backupStatus.title', {}),
+  console_line: () => getTranslations().t('pages.server.schedules.triggers.consoleLine.title', {}),
+  crash: () => getTranslations().t('pages.server.schedules.triggers.crash.title', {}),
 };
 
 export const scheduleTriggerDefaultMapping: Record<

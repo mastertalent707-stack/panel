@@ -60,7 +60,7 @@ export default function ServerPowerControls() {
           onClick={() => onButtonClick('start')}
           className='flex-1 min-w-fit'
         >
-          {t('pages.server.console.power.start', {})}
+          {t('common.enum.serverPowerAction.start', {})}
         </Button>
       </ServerCan>
       <ServerCan action='control.restart'>
@@ -70,7 +70,7 @@ export default function ServerPowerControls() {
           onClick={() => onButtonClick('restart')}
           className='flex-1 min-w-fit'
         >
-          {t('pages.server.console.power.restart', {})}
+          {t('common.enum.serverPowerAction.restart', {})}
         </Button>
       </ServerCan>
       <ServerCan action='control.stop'>
@@ -82,7 +82,7 @@ export default function ServerPowerControls() {
           onClick={() => onButtonClick(killable ? 'kill' : 'stop')}
           className='flex-1 min-w-fit'
         >
-          {killable ? t('pages.server.console.power.kill', {}) : t('pages.server.console.power.stop', {})}
+          {killable ? t('common.enum.serverPowerAction.kill', {}) : t('common.enum.serverPowerAction.stop', {})}
         </Button>
       </ServerCan>
 

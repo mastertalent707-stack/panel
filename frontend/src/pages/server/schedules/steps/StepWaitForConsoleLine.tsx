@@ -4,6 +4,7 @@ import { z } from 'zod';
 import NumberInput from '@/elements/input/NumberInput.tsx';
 import Switch from '@/elements/input/Switch.tsx';
 import { serverScheduleStepUpdateSchema } from '@/lib/schemas/server/schedules.ts';
+import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import ScheduleDynamicParameterInput from '../ScheduleDynamicParameterInput.tsx';
 
 export default function StepWaitForConsoleLine({
@@ -11,30 +12,35 @@ export default function StepWaitForConsoleLine({
 }: {
   form: UseFormReturnType<z.infer<typeof serverScheduleStepUpdateSchema>>;
 }) {
+  const { t } = useTranslations();
+
   return (
     <Stack>
       <ScheduleDynamicParameterInput
-        label='Line contains'
-        placeholder='Text to make sure is in the console line'
+        label={t('pages.server.schedules.steps.waitForConsoleLine.form.lineContains', {})}
+        placeholder={t('pages.server.schedules.steps.waitForConsoleLine.form.lineContains', {})}
         value={form.getInputProps('contains.root').value}
         onChange={(v) => form.setFieldValue('action.contains', v)}
       />
       <NumberInput
         withAsterisk
-        label='Timeout (milliseconds)'
+        label={t('pages.server.schedules.steps.waitForConsoleLine.form.timeout', {})}
         placeholder='1000'
         min={1}
         {...form.getInputProps('action.timeout')}
       />
       <ScheduleDynamicParameterInput
-        label='Output into'
-        placeholder='Output the captured line into a variable'
+        label={t('pages.server.schedules.form.outputInto', {})}
+        placeholder={t('pages.server.schedules.form.outputInto', {})}
         allowNull
         allowString={false}
         value={form.getInputProps('action.outputInto').value}
         onChange={(v) => form.setFieldValue('action.outputInto', v)}
       />
-      <Switch label='Ignore Failure' {...form.getInputProps('action.ignoreFailure', { type: 'checkbox' })} />
+      <Switch
+        label={t('pages.server.schedules.form.ignoreFailure', {})}
+        {...form.getInputProps('action.ignoreFailure', { type: 'checkbox' })}
+      />
     </Stack>
   );
 }

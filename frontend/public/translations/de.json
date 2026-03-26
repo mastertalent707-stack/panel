@@ -1,5 +1,13 @@
 {
   "items": {
+    "byte": {
+      "zero": "{count} Bytes",
+      "one": "{count} Byte",
+      "two": "{count} Bytes",
+      "few": "{count} Bytes",
+      "many": "{count} Bytes",
+      "other": "{count} Bytes"
+    },
     "user": {
       "zero": "{count} Benutzer",
       "one": "{count} Benutzer",
@@ -50,6 +58,7 @@
         "cancel": "Abbrechen",
         "continue": "Weiter",
         "skip": "Überspringen",
+        "okay": "Okay",
         "back": "Zurück",
         "next": "Weiter",
         "install": "Installieren",
@@ -58,7 +67,6 @@
         "restore": "Wiederherstellen",
         "download": "Herunterladen",
         "downloadAs": "Als {format} herunterladen",
-        "okay": "Okay",
         "export": "Exportieren",
         "exportAs": "Als {format} exportieren"
       },
@@ -119,10 +127,10 @@
         "noAllocation": "Keine Allocation",
         "state": {
           "suspended": "Suspendiert",
-          "restoringBackup": "Backup wird wiederhergestellt",
-          "installing": "Wird installiert",
           "transferring": "Server wird übertragen",
           "nodeMaintenance": "Node in Wartung",
+          "restoringBackup": "Backup wird wiederhergestellt",
+          "installing": "Wird installiert",
           "installFailed": "Installation fehlgeschlagen"
         }
       },
@@ -142,6 +150,17 @@
           "starting": "Startet",
           "stopping": "Stoppt"
         },
+        "serverPowerAction": {
+          "start": "Starten",
+          "stop": "Stoppen",
+          "restart": "Neustarten",
+          "kill": "Killen"
+        },
+        "serverBackupStatus": {
+          "starting": "Startet",
+          "finished": "Abgeschlossen",
+          "failed": "Fehlgeschlagen"
+        },
         "connectionStatus": {
           "connected": "Verbunden",
           "offline": "Offline"
@@ -156,6 +175,16 @@
           "stopped": "Gestoppt",
           "restarted": "Neu gestartet",
           "killed": "Gekillt"
+        }
+      },
+      "unit": {
+        "bytes": {
+          "bytes": "B",
+          "kibibytes": "KiB",
+          "mebibytes": "MiB",
+          "gibibytes": "GiB",
+          "tebibytes": "TiB",
+          "pebibytes": "PiB"
         }
       },
       "unlimited": "Unendlich",
@@ -209,6 +238,9 @@
         "selectedPermissions": "Ausgewählte Berechtigungen ({count})",
         "noPermissions": "Keine Berechtigungen ausgewählt."
       },
+      "selectInput": {
+        "noResults": "Keine Ergebnisse gefunden."
+      },
       "can": {
         "tooltip": {
           "cantSave": "Du hast keine Berechtigung zum Speichern.",
@@ -250,6 +282,16 @@
             }
           }
         }
+      },
+      "scheduleDynamicInput": {
+        "enterVariable": "Bitte gib den Namen der auszuwertenden Variablen ein.",
+        "enterData": "Bitte gib die zu sendenden Daten ein.",
+        "inputType": "Eingabetyp",
+        "dataType": "Zu sendender Datentyp",
+        "selectType": "Typ auswählen",
+        "none": "Keine",
+        "rawString": "Rohdaten-String",
+        "variable": "Variable"
       },
       "serverWebsocket": {
         "error": {
@@ -373,6 +415,7 @@
         },
         "node": {
           "title": "Node-Konfiguration",
+          "allocationsTitle": "Allocations-Konfiguration",
           "form": {
             "name": "Name",
             "namePlaceholder": "Mein Server",
@@ -387,7 +430,10 @@
             "sftpPort": "SFTP Port",
             "sftpPortPlaceholder": "SFTP Port",
             "memory": "Arbeitsspeicher (RAM)",
-            "disk": "Festplattenspeicher"
+            "disk": "Festplattenspeicher",
+            "ip": "IP",
+            "portRanges": "Port-Bereiche",
+            "portRangesPlaceholder": "Port-Bereiche (z.B. 3000-4000)"
           },
           "error": {
             "noLocations": "Etwas ist schiefgelaufen. Es wurden keine Standorte gefunden."
@@ -412,6 +458,27 @@
           },
           "button": {
             "submit": "Einstellungen aktualisieren & Weiter"
+          }
+        },
+        "eggRepositories": {
+          "title": "Egg-Repositories",
+          "description": "Dies sind die Quell-Repositories deiner Eggs. Du kannst diese Repositories jederzeit ändern.",
+          "repositories": {
+            "pterodactylGame": {
+              "title": "Pterodactyl Game Eggs",
+              "description": "Eggs für Spiele wie Minecraft, Terraria und viele mehr."
+            },
+            "pterodactylApplication": {
+              "title": "Pterodactyl Application Eggs",
+              "description": "Eggs für Anwendungen wie Grafana, Meilisearch und verschiedene Datenbanken."
+            },
+            "pterodactylGeneral": {
+              "title": "Pterodactyl Generic Eggs",
+              "description": "Eggs für generische Laufzeitumgebungen wie Node JS, Java und Rust."
+            }
+          },
+          "button": {
+            "submit": "Importieren"
           }
         },
         "finished": {
@@ -556,10 +623,10 @@
           "tooltip": {
             "removeFromGroup": "Aus der Gruppe entfernen",
             "addToGroup": "Zur Gruppe hinzufügen",
-            "noGroups": "Keine Gruppen zum Hinzufügen verfügbar",
-            "noGroup": "Dieser Server ist noch in keiner Gruppe",
             "addServerToGroup": "Server zur Gruppe hinzufügen",
-            "groupActions": "Gruppen-Aktionen"
+            "groupActions": "Gruppen-Aktionen",
+            "noGroups": "Keine Gruppen zum Hinzufügen verfügbar",
+            "noGroup": "Dieser Server ist noch in keiner Gruppe"
           },
           "tabs": {
             "groupedServers": {
@@ -998,6 +1065,7 @@
             "installFailed": "Installation ist fehlgeschlagen.",
             "installCompleted": "Installation wurde erfolgreich abgeschlossen.",
             "transferFailed": "Übertragung fehlgeschlagen.",
+            "transferCompleted": "Übertragung wurde erfolgreich abgeschlossen. Verbindung zum Server wird wiederhergestellt...",
             "pullingImage": "Dein Server lädt gerade sein Docker-Image herunter. Bitte warten...",
             "pulling": "Wird heruntergeladen",
             "extracting": "Wird entpackt",
@@ -1045,10 +1113,6 @@
             "normalizeCpuLoad": "Normalisiere CPU-Last (skaliert auf max. 100%)"
           },
           "power": {
-            "start": "Starten",
-            "stop": "Stoppen",
-            "restart": "Neustarten",
-            "kill": "Killen",
             "modal": {
               "forceStop": {
                 "title": "Prozess gewaltsam stoppen",
@@ -1343,9 +1407,435 @@
         },
         "schedules": {
           "title": "Zeitpläne",
+          "subtitle": "{current} von maximal {max} Zeitplänen erstellt.",
           "dropzone": {
             "title": "Dateien hier ablegen, um sie als Zeitpläne zu importieren",
             "subtitle": "Loslassen, um den Import zu starten"
+          },
+          "tooltip": {
+            "limitReached": "Dieser Server ist auf {max} Zeitpläne limitiert."
+          },
+          "table": {
+            "columns": {
+              "lastRun": "Letzte Ausführung",
+              "lastFailure": "Letzter Fehlschlag",
+              "status": "Status"
+            }
+          },
+          "button": {
+            "import": "Importieren",
+            "trigger": "Auslösen",
+            "triggerWithCondition": "Auslösen (Bedingung nicht überspringen)",
+            "triggerSkipCondition": "Auslösen (Bedingung überspringen)",
+            "addTrigger": "Auslöser hinzufügen",
+            "addCondition": "Bedingung hinzufügen",
+            "addStep": "Schritt hinzufügen",
+            "createFirstStep": "Ersten Schritt erstellen",
+            "addOutput": "Ausgabe hinzufügen",
+            "addFile": "Datei hinzufügen",
+            "exitEditor": "Editor verlassen"
+          },
+          "toast": {
+            "imported": "Zeitplan importiert.",
+            "created": "Zeitplan erstellt.",
+            "updated": "Zeitplan aktualisiert.",
+            "deleted": "Zeitplan gelöscht.",
+            "triggered": "Zeitplan ausgelöst.",
+            "exported": "Zeitplan exportiert.",
+            "parseError": "Fehler beim Parsen des Zeitplans: {error}",
+            "step": {
+              "created": "Zeitplan-Schritt erstellt.",
+              "updated": "Zeitplan-Schritt aktualisiert.",
+              "deleted": "Zeitplan-Schritt gelöscht."
+            }
+          },
+          "enum": {
+            "schedulePreConditionType": {
+              "none": "Keine",
+              "and": "UND (Alle müssen wahr sein)",
+              "or": "ODER (Mindestens eine muss wahr sein)",
+              "not": "NICHT (Darf nicht wahr sein)",
+              "serverState": "Server-Status",
+              "uptime": "Laufzeit",
+              "cpuUsage": "CPU-Auslastung",
+              "memoryUsage": "RAM-Auslastung",
+              "diskUsage": "Festplattennutzung",
+              "fileExists": "Datei existiert"
+            },
+            "scheduleConditionType": {
+              "none": "Keine",
+              "and": "UND (Alle müssen wahr sein)",
+              "or": "ODER (Mindestens eine muss wahr sein)",
+              "not": "NICHT (Darf nicht wahr sein)",
+              "variableExists": "Variable existiert",
+              "variableContains": "Variable enthält",
+              "variableEquals": "Variable ist gleich",
+              "variableStartsWith": "Variable beginnt mit",
+              "variableEndsWith": "Variable endet mit"
+            }
+          },
+          "modal": {
+            "createSchedule": {
+              "title": "Zeitplan erstellen"
+            },
+            "updateSchedule": {
+              "title": "Zeitplan aktualisieren"
+            },
+            "deleteSchedule": {
+              "title": "Löschen des Zeitplans bestätigen",
+              "content": "Bist du sicher, dass du {name} von diesem Server löschen möchtest?"
+            },
+            "createStep": {
+              "title": "Zeitplan-Schritt erstellen"
+            },
+            "editStep": {
+              "title": "Zeitplan-Schritt bearbeiten"
+            },
+            "deleteStep": {
+              "title": "Löschen des Zeitplan-Schritts bestätigen",
+              "content": "Bist du sicher, dass du diesen Zeitplan-Schritt löschen möchtest?"
+            }
+          },
+          "view": {
+            "badge": {
+              "running": "Läuft"
+            },
+            "tooltip": {
+              "cannotTrigger": "Ein deaktivierter Zeitplan kann nicht ausgelöst werden"
+            },
+            "tabs": {
+              "actions": "Aktionen",
+              "conditions": "Bedingungen",
+              "triggers": "Auslöser"
+            },
+            "sections": {
+              "actions": "Zeitplan-Aktionen",
+              "preConditions": "Zeitplan-Vorbedingungen",
+              "triggers": "Zeitplan-Auslöser"
+            },
+            "alert": {
+              "noActions": "Keine Aktionen für diesen Zeitplan konfiguriert",
+              "noTriggers": "Keine Auslöser für diesen Zeitplan konfiguriert"
+            }
+          },
+          "form": {
+            "scheduleName": "Zeitplan-Name",
+            "enabled": "Aktiviert",
+            "triggersList": "Auslöser",
+            "triggerNumber": "Auslöser {number}",
+            "actionType": "Aktionstyp",
+            "conditionType": "Bedingungstyp",
+            "serverState": "Server-Status",
+            "comparator": "Vergleichsoperator",
+            "rootPath": "Root-Pfad",
+            "outputInto": "Ausgabe in",
+            "ignoreFailure": "Fehler ignorieren",
+            "runInForeground": "Im Vordergrund ausführen"
+          },
+          "condition": {
+            "variable": "Variable",
+            "equals": "Ist gleich",
+            "contains": "Enthält",
+            "startsWith": "Beginnt mit",
+            "endsWith": "Endet mit",
+            "allMustBeTrue": "Alle Bedingungen müssen wahr sein:",
+            "anyMustBeTrue": "Mindestens eine Bedingung muss wahr sein:",
+            "mustNotBeTrue": "Bedingung darf nicht wahr sein:"
+          },
+          "preCondition": {
+            "valueSeconds": "Wert (Sekunden)",
+            "valuePercent": "Wert (%)",
+            "value": "Wert",
+            "filePath": "Dateipfad"
+          },
+          "triggers": {
+            "cron": {
+              "title": "Cron",
+              "form": {
+                "cronSchedule": "Cron-Zeitplan"
+              },
+              "card": {
+                "content": "Im Cron-Intervall `{schedule}`, nächste Ausführung ist {timestamp} - letzte Ausführung war {lastTimestamp}."
+              }
+            },
+            "powerAction": {
+              "title": "Power-Aktion",
+              "form": {
+                "powerAction": "Power-Aktion"
+              },
+              "card": {
+                "content": "Wenn Power-Aktion `{action}` angefordert wird."
+              }
+            },
+            "serverState": {
+              "title": "Server-Status",
+              "card": {
+                "content": "Wenn Server-Status `{state}` erreicht wird."
+              }
+            },
+            "backupStatus": {
+              "title": "Backup-Status",
+              "form": {
+                "backupStatus": "Backup-Status"
+              },
+              "card": {
+                "content": "Wenn das Backup den Status `{status}` erreicht."
+              }
+            },
+            "consoleLine": {
+              "title": "Konsolenzeile",
+              "form": {
+                "lineContains": "Zeile enthält"
+              },
+              "card": {
+                "content": "Wenn die Konsolenausgabe eine Zeile erreicht, die `{contains}` enthält"
+              }
+            },
+            "crash": {
+              "title": "Absturz",
+              "card": {
+                "content": "Wenn der Server abstürzt."
+              }
+            }
+          },
+          "renderer": {
+            "noActionSelected": "Wähle einen Aktionstyp zur Konfiguration aus",
+            "noActionDetails": "Aktionsdetails nicht verfügbar",
+            "ignoreFailure": "Fehler ignorieren: {value}",
+            "foreground": "Vordergrund: {value}"
+          },
+          "steps": {
+            "empty": {
+              "title": "Keine Schritte konfiguriert",
+              "description": "Dieser Zeitplan hat noch keine Schritte. Füge einige Aktionen hinzu, um loszulegen."
+            },
+            "sleep": {
+              "title": "Pausieren (Sleep)",
+              "form": {
+                "duration": "Dauer (Millisekunden)"
+              },
+              "renderer": {
+                "compact": "Pausieren für {duration}ms"
+              }
+            },
+            "ensure": {
+              "title": "Sicherstellen",
+              "renderer": {
+                "compact": "Sicherstellen, dass eine Bedingung zutrifft"
+              }
+            },
+            "format": {
+              "title": "Formatieren",
+              "form": {
+                "formatString": "Format-String",
+                "formatStringDescription": "Der Format-String, kann Variablen enthalten, indem sie in {wrapper} gewrappt werden"
+              },
+              "renderer": {
+                "compact": "Formatiere einen String in {outputInto}"
+              }
+            },
+            "matchRegex": {
+              "title": "Regex abgleichen",
+              "form": {
+                "input": "Eingabe",
+                "regex": "Regex",
+                "outputs": "Ausgaben",
+                "outputNumber": "Ausgabe {number}"
+              },
+              "renderer": {
+                "compact": "Gleiche {input} mit Regex {regex} ab"
+              }
+            },
+            "waitForConsoleLine": {
+              "title": "Auf Konsolenzeile warten",
+              "form": {
+                "lineContains": "Zeile enthält",
+                "timeout": "Zeitüberschreitung (Millisekunden)"
+              },
+              "renderer": {
+                "compact": "Warte {timeout} auf Konsolenzeile, die {contains} enthält",
+                "detail": {
+                  "lineContains": "Zeile muss enthalten: {contains}",
+                  "timeout": "Zeitüberschreitung: {timeout}"
+                }
+              }
+            },
+            "sendCommand": {
+              "title": "Befehl senden",
+              "form": {
+                "command": "Befehl"
+              },
+              "renderer": {
+                "compact": "Führe {command} aus",
+                "detail": {
+                  "command": "Befehl: {command}"
+                }
+              }
+            },
+            "sendPower": {
+              "title": "Power-Signal senden",
+              "form": {
+                "powerAction": "Power-Aktion"
+              },
+              "renderer": {
+                "compact": "Führe {action} aus",
+                "detail": {
+                  "powerAction": "Power-Aktion: {action}"
+                }
+              }
+            },
+            "createBackup": {
+              "title": "Backup erstellen",
+              "form": {
+                "backupName": "Backup-Name",
+                "ignoredFiles": "Ignorierte Dateien"
+              },
+              "renderer": {
+                "compact": "Erstelle {name}",
+                "detail": {
+                  "backupName": "Backup-Name: {name}",
+                  "ignoredFiles": "Ignorierte Dateien: {files}"
+                }
+              }
+            },
+            "createDirectory": {
+              "title": "Verzeichnis erstellen",
+              "form": {
+                "directoryName": "Verzeichnisname"
+              },
+              "renderer": {
+                "compact": "Erstelle {name} in {root}",
+                "detail": {
+                  "directory": "Verzeichnis: {name}",
+                  "root": "Root: {root}"
+                }
+              }
+            },
+            "writeFile": {
+              "title": "Datei schreiben",
+              "form": {
+                "filePath": "Dateipfad",
+                "content": "Inhalt",
+                "appendToFile": "An Datei anhängen"
+              },
+              "renderer": {
+                "compact": "Schreibe in {file}",
+                "detail": {
+                  "file": "Datei: {file}",
+                  "append": "Anhängen: {value}"
+                }
+              }
+            },
+            "copyFile": {
+              "title": "Datei kopieren",
+              "form": {
+                "sourceFile": "Quelldatei",
+                "destination": "Ziel"
+              },
+              "renderer": {
+                "compact": "Kopiere {file} nach {destination}",
+                "detail": {
+                  "from": "Von: {file}",
+                  "to": "Nach: {destination}"
+                }
+              }
+            },
+            "deleteFiles": {
+              "title": "Dateien löschen",
+              "form": {
+                "filesToDelete": "Zu löschende Dateien"
+              },
+              "renderer": {
+                "compact": "Lösche {files}",
+                "detail": {
+                  "root": "Root: {root}",
+                  "files": "Dateien: {files}"
+                }
+              }
+            },
+            "renameFiles": {
+              "title": "Dateien umbenennen",
+              "form": {
+                "files": "Dateien",
+                "from": "von",
+                "to": "nach"
+              },
+              "renderer": {
+                "compact": "Benenne {files} um",
+                "detail": {
+                  "root": "Root: {root}",
+                  "files": "Dateien: {files}"
+                }
+              }
+            },
+            "compressFiles": {
+              "title": "Dateien komprimieren",
+              "form": {
+                "filesToCompress": "Zu komprimierende Dateien",
+                "archiveFormat": "Archivformat",
+                "archiveName": "Archivname"
+              },
+              "renderer": {
+                "compact": "Komprimiere {files} in {root} nach {name}",
+                "detail": {
+                  "output": "Ausgabe: {name}",
+                  "root": "Root: {root}",
+                  "format": "Format: {format}",
+                  "files": "Dateien: {files}"
+                }
+              }
+            },
+            "decompressFile": {
+              "title": "Datei entpacken",
+              "form": {
+                "file": "Datei"
+              },
+              "renderer": {
+                "compact": "Entpacke {file} nach {root}",
+                "detail": {
+                  "file": "Datei: {file}",
+                  "root": "Root: {root}"
+                }
+              }
+            },
+            "updateStartupVariable": {
+              "title": "Startvariable aktualisieren",
+              "form": {
+                "envVariable": "Umgebungsvariable",
+                "value": "Wert"
+              },
+              "renderer": {
+                "compact": "Setze {variable} auf {value}",
+                "detail": {
+                  "variable": "Variable: {variable}",
+                  "value": "Wert: {value}"
+                }
+              }
+            },
+            "updateStartupCommand": {
+              "title": "Startbefehl aktualisieren",
+              "form": {
+                "startupCommand": "Startbefehl"
+              },
+              "renderer": {
+                "compact": "Setze auf {command}",
+                "detail": {
+                  "command": "Befehl: {command}"
+                }
+              }
+            },
+            "updateStartupDockerImage": {
+              "title": "Docker Image aktualisieren",
+              "form": {
+                "dockerImage": "Docker Image"
+              },
+              "renderer": {
+                "compact": "Setze auf {image}",
+                "detail": {
+                  "image": "Image: {image}"
+                }
+              }
+            }
           }
         },
         "subusers": {

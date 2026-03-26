@@ -17,6 +17,7 @@ import { Modal, ModalFooter } from '@/elements/modals/Modal.tsx';
 import { scheduleTriggerDefaultMapping, scheduleTriggerLabelMapping } from '@/lib/enums.ts';
 import { serverScheduleSchema, serverScheduleUpdateSchema } from '@/lib/schemas/server/schedules.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';
+import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import { useServerStore } from '@/stores/server.ts';
 import { TriggerExtraForm, TriggerInlineForm } from '../triggers/TriggerForm.tsx';
 
@@ -25,12 +26,8 @@ type Props = ModalProps & {
   onScheduleUpdate?: (schedule: z.infer<typeof serverScheduleUpdateSchema>) => void;
 };
 
-const TRIGGER_TYPE_OPTIONS = Object.entries(scheduleTriggerLabelMapping).map(([value, label]) => ({
-  value,
-  label,
-}));
-
 export default function ScheduleCreateOrUpdateModal({ propSchedule, onScheduleUpdate, opened, onClose }: Props) {
+  const { t } = useTranslations();
   const { addToast } = useToast();
   const { server, addSchedule } = useServerStore();
 
@@ -65,7 +62,7 @@ export default function ScheduleCreateOrUpdateModal({ propSchedule, onScheduleUp
     if (propSchedule?.uuid) {
       updateSchedule(server.uuid, propSchedule.uuid, form.values)
         .then(() => {
-          addToast('Schedule updated.', 'success');
+          addToast(t('pages.server.schedules.toast.updated', {}), 'success');
           onClose();
           onScheduleUpdate!(form.values);
         })
@@ -76,7 +73,7 @@ export default function ScheduleCreateOrUpdateModal({ propSchedule, onScheduleUp
     } else {
       createSchedule(server.uuid, form.values)
         .then((schedule) => {
-          addToast('Schedule created.', 'success');
+          addToast(t('pages.server.schedules.toast.created', {}), 'success');
           form.reset();
           onClose();
           addSchedule(schedule);
@@ -97,26 +94,46 @@ export default function ScheduleCreateOrUpdateModal({ propSchedule, onScheduleUp
   };
 
   return (
-    <Modal title={`${propSchedule?.uuid ? 'Update' : 'Create'} Schedule`} onClose={onClose} opened={opened} size='lg'>
+    <Modal
+      title={
+        propSchedule?.uuid
+          ? t('pages.server.schedules.modal.updateSchedule.title', {})
+          : t('pages.server.schedules.modal.createSchedule.title', {})
+      }
+      onClose={onClose}
+      opened={opened}
+      size='lg'
+    >
       <Stack>
-        <TextInput label='Schedule Name' placeholder='Schedule Name' {...form.getInputProps('name')} />
+        <TextInput
+          label={t('pages.server.schedules.form.scheduleName', {})}
+          placeholder={t('pages.server.schedules.form.scheduleName', {})}
+          {...form.getInputProps('name')}
+        />
 
-        <Switch label='Enabled' name='enabled' {...form.getInputProps('enabled', { type: 'checkbox' })} />
+        <Switch
+          label={t('pages.server.schedules.form.enabled', {})}
+          name='enabled'
+          {...form.getInputProps('enabled', { type: 'checkbox' })}
+        />
 
         <div>
           <Title order={4} mb='sm'>
-            Triggers
+            {t('pages.server.schedules.form.triggersList', {})}
           </Title>
-          {form.values.triggers.map((trigger, index) => (
+          {form.values.triggers.map((_, index) => (
             <div key={`trigger-${index}`} className='flex flex-col'>
               {index !== 0 && <Divider my='sm' />}
 
               <div className='flex flex-row items-end space-x-2 mb-2'>
                 <Select
-                  label={`Trigger ${index + 1}`}
-                  placeholder={`Trigger ${index + 1}`}
+                  label={t('pages.server.schedules.form.triggerNumber', { number: index + 1 })}
+                  placeholder={t('pages.server.schedules.form.triggerNumber', { number: index + 1 })}
                   className='flex-1'
-                  data={TRIGGER_TYPE_OPTIONS}
+                  data={Object.entries(scheduleTriggerLabelMapping).map(([value, label]) => ({
+                    value,
+                    label: label(),
+                  }))}
                   {...form.getInputProps(`triggers.${index}.type`)}
                 />
 
@@ -132,16 +149,16 @@ export default function ScheduleCreateOrUpdateModal({ propSchedule, onScheduleUp
           ))}
 
           <Button onClick={addTrigger} variant='light' leftSection={<FontAwesomeIcon icon={faPlus} />}>
-            Add Trigger
+            {t('pages.server.schedules.button.addTrigger', {})}
           </Button>
         </div>
 
         <ModalFooter>
           <Button onClick={doCreateOrUpdate} loading={loading} disabled={!form.isValid()}>
-            {propSchedule?.uuid ? 'Update' : 'Create'}
+            {propSchedule?.uuid ? t('common.button.update', {}) : t('common.button.create', {})}
           </Button>
           <Button variant='default' onClick={onClose}>
-            Close
+            {t('common.button.close', {})}
           </Button>
         </ModalFooter>
       </Stack>

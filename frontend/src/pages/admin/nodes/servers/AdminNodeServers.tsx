@@ -228,7 +228,7 @@ export default function AdminNodeServers({ node }: { node: z.infer<typeof adminN
               loading={allActionLoading === 'start'}
               disabled={(allActionLoading !== null && allActionLoading !== 'start') || nodeServers.total === 0}
             >
-              {t('pages.server.console.power.start', {})} ({nodeServers.total})
+              {t('common.enum.serverPowerAction.start', {})} ({nodeServers.total})
             </Button>
             <Button
               color='gray'
@@ -236,7 +236,7 @@ export default function AdminNodeServers({ node }: { node: z.infer<typeof adminN
               loading={allActionLoading === 'restart'}
               disabled={(allActionLoading !== null && allActionLoading !== 'restart') || nodeServers.total === 0}
             >
-              {t('pages.server.console.power.restart', {})} ({nodeServers.total})
+              {t('common.enum.serverPowerAction.restart', {})} ({nodeServers.total})
             </Button>
             <Button
               color='red'
@@ -244,7 +244,7 @@ export default function AdminNodeServers({ node }: { node: z.infer<typeof adminN
               loading={allActionLoading === 'stop'}
               disabled={(allActionLoading !== null && allActionLoading !== 'stop') || nodeServers.total === 0}
             >
-              {t('pages.server.console.power.stop', {})} ({nodeServers.total})
+              {t('common.enum.serverPowerAction.stop', {})} ({nodeServers.total})
             </Button>
             <Button
               color='gray'

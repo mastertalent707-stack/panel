@@ -2,11 +2,11 @@ import { faUpload } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { memo } from 'react';
 
-interface ExtensionAddOverlayProps {
+interface ExtensionInstallOverlayProps {
   visible: boolean;
 }
 
-function ExtensionAddOverlay({ visible }: ExtensionAddOverlayProps) {
+function ExtensionInstallOverlay({ visible }: ExtensionInstallOverlayProps) {
   if (!visible) return null;
 
   return (
@@ -16,9 +16,9 @@ function ExtensionAddOverlay({ visible }: ExtensionAddOverlayProps) {
           <div className='flex flex-col items-center gap-4 z-100'>
             <FontAwesomeIcon icon={faUpload} className='text-6xl text-blue-500 dark:text-blue-400 animate-bounce' />
             <p className='text-xl font-semibold text-gray-800 dark:text-gray-200'>
-              Drop some files here to add as Extensions
+              Drop some files here to install as Extensions
             </p>
-            <p className='text-sm text-gray-600 dark:text-gray-400'>Release to start adding</p>
+            <p className='text-sm text-gray-600 dark:text-gray-400'>Release to start installing</p>
           </div>
         </div>
       </div>
@@ -26,4 +26,4 @@ function ExtensionAddOverlay({ visible }: ExtensionAddOverlayProps) {
   );
 }
 
-export default memo(ExtensionAddOverlay);
+export default memo(ExtensionInstallOverlay);

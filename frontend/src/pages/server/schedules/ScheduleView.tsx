@@ -61,7 +61,7 @@ export default function ScheduleView() {
 
       triggerSchedule(server.uuid, params.id, skipCondition)
         .then(() => {
-          addToast('Schedule triggered.', 'success');
+          addToast(t('pages.server.schedules.toast.triggered', {}), 'success');
         })
         .finally(() => setLoading(false));
     }
@@ -73,7 +73,7 @@ export default function ScheduleView() {
 
       updateSchedule(server.uuid, params.id, { condition: schedule!.condition })
         .then(() => {
-          addToast('Schedule updated.', 'success');
+          addToast(t('pages.server.schedules.toast.updated', {}), 'success');
         })
         .finally(() => setLoading(false));
     }
@@ -88,7 +88,7 @@ export default function ScheduleView() {
   }
 
   return (
-    <ServerContentContainer title='Schedule' hideTitleComponent>
+    <ServerContentContainer title={t('pages.server.schedules.title', {})} hideTitleComponent>
       <ScheduleCreateOrUpdateModal
         propSchedule={schedule}
         onScheduleUpdate={(s) => setSchedule({ ...schedule, ...s })}
@@ -103,7 +103,7 @@ export default function ScheduleView() {
               {schedule.name}
             </Title>
             <Badge color={schedule.enabled ? 'green' : 'red'} size='lg'>
-              {schedule.enabled ? 'Active' : 'Inactive'}
+              {schedule.enabled ? t('common.badge.active', {}) : t('common.badge.inactive', {})}
             </Badge>
           </Group>
 
@@ -115,13 +115,13 @@ export default function ScheduleView() {
                     items={[
                       {
                         icon: faPlayCircle,
-                        label: 'Trigger (do not skip condition)',
+                        label: t('pages.server.schedules.button.triggerWithCondition', {}),
                         onClick: () => doTriggerSchedule(false),
                         color: 'gray',
                       },
                       {
                         icon: faPlay,
-                        label: 'Trigger (skip condition)',
+                        label: t('pages.server.schedules.button.triggerSkipCondition', {}),
                         onClick: () => doTriggerSchedule(true),
                         color: 'gray',
                       },
@@ -139,10 +139,10 @@ export default function ScheduleView() {
                           color='green'
                           rightSection={<FontAwesomeIcon icon={faChevronDown} />}
                         >
-                          Trigger
+                          {t('pages.server.schedules.button.trigger', {})}
                         </Button>
                       ) : (
-                        <Tooltip label='Cannot Trigger disabled schedule'>
+                        <Tooltip label={t('pages.server.schedules.view.tooltip.cannotTrigger', {})}>
                           <Button
                             disabled
                             onClick={(e) => {
@@ -153,7 +153,7 @@ export default function ScheduleView() {
                             color='green'
                             rightSection={<FontAwesomeIcon icon={faChevronDown} />}
                           >
-                            Trigger
+                            {t('pages.server.schedules.button.trigger', {})}
                           </Button>
                         </Tooltip>
                       )
@@ -166,7 +166,7 @@ export default function ScheduleView() {
                 color='blue'
                 leftSection={<FontAwesomeIcon icon={faPencil} />}
               >
-                Edit
+                {t('common.button.edit', {})}
               </Button>
             </Group>
           </ServerCan>
@@ -175,13 +175,13 @@ export default function ScheduleView() {
         <div className='flex flex-row space-x-2'>
           <DetailCard
             icon={<FontAwesomeIcon icon={faClockRotateLeft} />}
-            label='Last Run'
+            label={t('pages.server.schedules.table.columns.lastRun', {})}
             value={schedule.lastRun ? <FormattedTimestamp timestamp={schedule.lastRun} /> : t('common.never', {})}
             color='blue'
           />
           <DetailCard
             icon={<FontAwesomeIcon icon={faExclamationTriangle} />}
-            label='Last Failure'
+            label={t('pages.server.schedules.table.columns.lastFailure', {})}
             value={
               schedule.lastFailure ? <FormattedTimestamp timestamp={schedule.lastFailure} /> : t('common.never', {})
             }
@@ -191,15 +191,15 @@ export default function ScheduleView() {
 
         <Tabs defaultValue='actions'>
           <Tabs.List>
-            <Tabs.Tab value='actions'>Actions</Tabs.Tab>
-            <Tabs.Tab value='conditions'>Conditions</Tabs.Tab>
-            <Tabs.Tab value='triggers'>Triggers</Tabs.Tab>
+            <Tabs.Tab value='actions'>{t('pages.server.schedules.view.tabs.actions', {})}</Tabs.Tab>
+            <Tabs.Tab value='conditions'>{t('pages.server.schedules.view.tabs.conditions', {})}</Tabs.Tab>
+            <Tabs.Tab value='triggers'>{t('pages.server.schedules.view.tabs.triggers', {})}</Tabs.Tab>
           </Tabs.List>
 
           <Tabs.Panel value='actions' pt='md'>
             <Group justify='space-between' align='start'>
               <Title order={2} mb='md'>
-                Schedule Actions
+                {t('pages.server.schedules.view.sections.actions', {})}
               </Title>
               <ServerCan action='schedules.update'>
                 <Button
@@ -207,7 +207,9 @@ export default function ScheduleView() {
                   variant='outline'
                   leftSection={<FontAwesomeIcon icon={openModal === 'actions' ? faReply : faPencil} />}
                 >
-                  {openModal === 'actions' ? 'Exit Editor' : 'Edit'}
+                  {openModal === 'actions'
+                    ? t('pages.server.schedules.button.exitEditor', {})
+                    : t('common.button.edit', {})}
                 </Button>
               </ServerCan>
             </Group>
@@ -216,7 +218,7 @@ export default function ScheduleView() {
               <StepsEditor schedule={schedule} />
             ) : scheduleSteps.length === 0 ? (
               <Alert icon={<FontAwesomeIcon icon={faExclamationTriangle} />} color='yellow'>
-                No actions configured for this schedule
+                {t('pages.server.schedules.view.alert.noActions', {})}
               </Alert>
             ) : (
               <Timeline
@@ -238,7 +240,7 @@ export default function ScheduleView() {
 
           <Tabs.Panel value='conditions' pt='md'>
             <Title order={2} mb='md'>
-              Schedule Pre-Conditions
+              {t('pages.server.schedules.view.sections.preConditions', {})}
             </Title>
 
             <SchedulePreConditionBuilder
@@ -249,7 +251,7 @@ export default function ScheduleView() {
             <ServerCan action='schedules.update'>
               <div className='flex flex-row mt-4'>
                 <Button loading={loading} onClick={doUpdate}>
-                  Update
+                  {t('common.button.update', {})}
                 </Button>
               </div>
             </ServerCan>
@@ -257,12 +259,12 @@ export default function ScheduleView() {
 
           <Tabs.Panel value='triggers' pt='md'>
             <Title order={2} mb='md'>
-              Schedule Triggers
+              {t('pages.server.schedules.view.sections.triggers', {})}
             </Title>
 
             {schedule.triggers.length === 0 ? (
               <Alert icon={<FontAwesomeIcon icon={faExclamationTriangle} />} color='yellow'>
-                No triggers configured for this schedule
+                {t('pages.server.schedules.view.alert.noTriggers', {})}
               </Alert>
             ) : (
               <Stack gap='md'>

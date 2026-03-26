@@ -17,8 +17,8 @@ import Spinner from '@/elements/Spinner.tsx';
 import { adminBackendExtensionSchema } from '@/lib/schemas/admin/backendExtension.ts';
 import { useImportDragAndDrop } from '@/plugins/useImportDragAndDrop.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';
-import ExtensionAddOverlay from './ExtensionAddOverlay.tsx';
 import ExtensionCard from './ExtensionCard.tsx';
+import ExtensionInstallOverlay from './ExtensionInstallOverlay.tsx';
 import BuildLogsModal from './modals/BuildLogsModal.tsx';
 
 export default function AdminExtensions() {
@@ -201,7 +201,7 @@ export default function AdminExtensions() {
       }
     >
       <BuildLogsModal opened={openModal === 'logs'} onClose={() => setOpenModal(null)} />
-      <ExtensionAddOverlay visible={isDragging} />
+      <ExtensionInstallOverlay visible={isDragging} />
 
       {!backendExtensions ? (
         <Spinner.Centered />

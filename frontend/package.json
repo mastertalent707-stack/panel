@@ -87,7 +87,7 @@
     "zustand-utils": "^2.1.1"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.4.7",
+    "@biomejs/biome": "2.4.9",
     "@rolldown/plugin-babel": "^0.2.2",
     "@types/events": "^3.0.3",
     "@types/grecaptcha": "^3.0.9",
@@ -98,7 +98,7 @@
     "@types/react-dom": "^19.2.3",
     "@types/react-google-recaptcha": "^2.1.9",
     "@types/semver": "^7.7.1",
-    "@typescript/native-preview": "7.0.0-dev.20260321.1",
+    "@typescript/native-preview": "7.0.0-dev.20260326.1",
     "@vitejs/plugin-react": "6.0.1",
     "babel-plugin-react-compiler": "^1.0.0",
     "globals": "^17.4.0",
@@ -107,7 +107,7 @@
     "typedoc": "^0.28.18",
     "typedoc-plugin-rename-defaults": "^0.7.3",
     "typedoc-plugin-zod": "^1.4.3",
-    "vite": "^8.0.2",
+    "vite": "^8.0.3",
     "vite-multiple-assets": "^2.2.6",
     "vite-plugin-static-copy": "^3.4.0"
   },

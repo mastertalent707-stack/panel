@@ -6,6 +6,7 @@ import Select from '@/elements/input/Select.tsx';
 import TextInput from '@/elements/input/TextInput.tsx';
 import { serverBackupStatusLabelMapping, serverPowerStateLabelMapping } from '@/lib/enums.ts';
 import { serverScheduleTriggerSchema, serverScheduleUpdateSchema } from '@/lib/schemas/server/schedules.ts';
+import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import ScheduleDynamicParameterInput from '../ScheduleDynamicParameterInput.tsx';
 
 const CRON_SEGMENTS = ['Second', 'Minute', 'Hour', 'Day', 'Month', 'Weekday'] as const;
@@ -62,6 +63,8 @@ interface TriggerFormProps {
 }
 
 function CronTriggerForm({ form, index }: TriggerFormProps) {
+  const { t } = useTranslations();
+
   if (form.values.triggers[index].type !== 'cron') return null;
 
   return (
@@ -69,8 +72,8 @@ function CronTriggerForm({ form, index }: TriggerFormProps) {
       <Popover.Target>
         <TextInput
           withAsterisk
-          label='Cron Schedule'
-          placeholder='Cron Schedule'
+          label={t('pages.server.schedules.triggers.cron.form.cronSchedule', {})}
+          placeholder={t('pages.server.schedules.triggers.cron.form.cronSchedule', {})}
           className='flex-1'
           {...form.getInputProps(`triggers.${index}.schedule`)}
         />
@@ -86,13 +89,15 @@ function CronTriggerForm({ form, index }: TriggerFormProps) {
 }
 
 function PowerActionTriggerForm({ form, index }: TriggerFormProps) {
+  const { t } = useTranslations();
+
   if (form.values.triggers[index].type !== 'power_action') return null;
 
   return (
     <Select
       withAsterisk
-      label='Power Action'
-      placeholder='Power Action'
+      label={t('pages.server.schedules.triggers.powerAction.form.powerAction', {})}
+      placeholder={t('pages.server.schedules.triggers.powerAction.form.powerAction', {})}
       className='flex-1'
       data={[
         { value: 'start', label: 'Start' },
@@ -106,17 +111,19 @@ function PowerActionTriggerForm({ form, index }: TriggerFormProps) {
 }
 
 function ServerStateTriggerForm({ form, index }: TriggerFormProps) {
+  const { t } = useTranslations();
+
   if (form.values.triggers[index].type !== 'server_state') return null;
 
   return (
     <Select
       withAsterisk
-      label='Server State'
-      placeholder='Server State'
+      label={t('pages.server.schedules.form.serverState', {})}
+      placeholder={t('pages.server.schedules.form.serverState', {})}
       className='flex-1'
       data={Object.entries(serverPowerStateLabelMapping).map(([value, label]) => ({
         value,
-        label,
+        label: label(),
       }))}
       {...form.getInputProps(`triggers.${index}.state`)}
     />
@@ -124,17 +131,19 @@ function ServerStateTriggerForm({ form, index }: TriggerFormProps) {
 }
 
 function BackupStatusTriggerForm({ form, index }: TriggerFormProps) {
+  const { t } = useTranslations();
+
   if (form.values.triggers[index].type !== 'backup_status') return null;
 
   return (
     <Select
       withAsterisk
-      label='Backup Status'
-      placeholder='Backup Status'
+      label={t('pages.server.schedules.triggers.backupStatus.form.backupStatus', {})}
+      placeholder={t('pages.server.schedules.triggers.backupStatus.form.backupStatus', {})}
       className='flex-1'
       data={Object.entries(serverBackupStatusLabelMapping).map(([value, label]) => ({
         value,
-        label,
+        label: label(),
       }))}
       {...form.getInputProps(`triggers.${index}.status`)}
     />
@@ -142,13 +151,15 @@ function BackupStatusTriggerForm({ form, index }: TriggerFormProps) {
 }
 
 function ConsoleLineTriggerForm({ form, index }: TriggerFormProps) {
+  const { t } = useTranslations();
+
   if (form.values.triggers[index].type !== 'console_line') return null;
 
   return (
     <TextInput
       withAsterisk
-      label='Line Contains'
-      placeholder='Line Contains'
+      label={t('pages.server.schedules.triggers.consoleLine.form.lineContains', {})}
+      placeholder={t('pages.server.schedules.triggers.consoleLine.form.lineContains', {})}
       className='flex-1'
       {...form.getInputProps(`triggers.${index}.contains`)}
     />
@@ -156,12 +167,14 @@ function ConsoleLineTriggerForm({ form, index }: TriggerFormProps) {
 }
 
 function ConsoleLineOutputForm({ form, index }: TriggerFormProps) {
+  const { t } = useTranslations();
+
   if (form.values.triggers[index].type !== 'console_line') return null;
 
   return (
     <ScheduleDynamicParameterInput
-      label='Output into'
-      placeholder='Output the captured line into a variable'
+      label={t('pages.server.schedules.form.outputInto', {})}
+      placeholder={t('pages.server.schedules.form.outputInto', {})}
       className='mb-2'
       allowNull
       allowString={false}

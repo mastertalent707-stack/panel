@@ -6,6 +6,7 @@ import { z } from 'zod';
 import Button from '@/elements/Button.tsx';
 import TextInput from '@/elements/input/TextInput.tsx';
 import { serverScheduleStepMatchRegexSchema, serverScheduleStepUpdateSchema } from '@/lib/schemas/server/schedules.ts';
+import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import ScheduleDynamicParameterInput from '../ScheduleDynamicParameterInput.tsx';
 
 export default function StepMatchRegex({
@@ -13,30 +14,32 @@ export default function StepMatchRegex({
 }: {
   form: UseFormReturnType<z.infer<typeof serverScheduleStepUpdateSchema>>;
 }) {
+  const { t } = useTranslations();
+
   return (
     <Stack>
       <ScheduleDynamicParameterInput
-        label='Input'
-        placeholder='The input data to be matched by the regex'
+        label={t('pages.server.schedules.steps.matchRegex.form.input', {})}
+        placeholder={t('pages.server.schedules.steps.matchRegex.form.input', {})}
         value={form.getInputProps('action.input').value}
         onChange={(v) => form.setFieldValue('action.input', v)}
       />
 
       <TextInput
-        label='Regex'
-        placeholder='The regex to use for matching, must comply with https://crates.io/crates/regex'
+        label={t('pages.server.schedules.steps.matchRegex.form.regex', {})}
+        placeholder={t('pages.server.schedules.steps.matchRegex.form.regex', {})}
         {...form.getInputProps('action.regex')}
       />
 
       <div>
         <Title order={4} mb='sm'>
-          Outputs
+          {t('pages.server.schedules.steps.matchRegex.form.outputs', {})}
         </Title>
         {(form.values.action as z.infer<typeof serverScheduleStepMatchRegexSchema>).outputInto.map(
           (outputInto, index) => (
             <div key={`output-${index}`} className='flex flex-row items-end space-x-2 mb-2'>
               <ScheduleDynamicParameterInput
-                label={`Output ${index + 1}`}
+                label={t('pages.server.schedules.steps.matchRegex.form.outputNumber', { number: index + 1 })}
                 allowNull
                 allowString={false}
                 value={form.getInputProps(`action.outputInto.${index}`).value}
@@ -60,7 +63,7 @@ export default function StepMatchRegex({
           variant='light'
           leftSection={<FontAwesomeIcon icon={faPlus} />}
         >
-          Add Output
+          {t('pages.server.schedules.button.addOutput', {})}
         </Button>
       </div>
     </Stack>

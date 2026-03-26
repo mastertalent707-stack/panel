@@ -110,27 +110,78 @@ const TranslationProvider = ({ children }: { children: ReactNode }) => {
     let translation = languageData?.translations[key] || (baseTranslations.mapping[key as never] as string);
 
     if (values) {
+      const reactNodeKeys: string[] = [];
       Object.keys(values).forEach((placeholder) => {
-        translation = translation.replaceAll(`{${placeholder}}`, `%%${placeholder}%%`);
+        const value = values[placeholder];
+        if (typeof value === 'string' || typeof value === 'number') {
+          translation = translation.replaceAll(`{${placeholder}}`, String(value));
+        } else {
+          reactNodeKeys.push(placeholder);
+          translation = translation.replaceAll(`{${placeholder}}`, `%%${placeholder}%%`);
+        }
       });
 
-      const parts = translation.split(/(%%\w+%%)/g);
+      if (reactNodeKeys.length === 0) {
+        return (
+          <Markdown
+            components={{
+              p: ({ children }) => <>{children}</>,
+            }}
+          >
+            {translation}
+          </Markdown>
+        );
+      }
 
+      const parts = translation.split(/(%%\w+%%)/g);
       return (
-        <>
+        <span>
           {parts.map((part, index) => {
             const match = part.match(/%%(\w+)%%/);
             if (match) {
               const placeholder = match[1];
               return <Fragment key={index}>{values[placeholder]}</Fragment>;
             }
-            return <Fragment key={index}>{part}</Fragment>;
+
+            const leadingSpace = part.startsWith(' ') ? ' ' : '';
+            const trailingSpace = part.endsWith(' ') ? ' ' : '';
+            const trimmed = part.trim();
+            if (!trimmed) {
+              return <Fragment key={index}>{part}</Fragment>;
+            }
+
+            const hasMarkdown = /[*_`~[!#]/.test(trimmed);
+            if (!hasMarkdown) {
+              return <Fragment key={index}>{part}</Fragment>;
+            }
+
+            return (
+              <Fragment key={index}>
+                {leadingSpace}
+                <Markdown
+                  components={{
+                    p: ({ children }) => <>{children}</>,
+                  }}
+                >
+                  {trimmed}
+                </Markdown>
+                {trailingSpace}
+              </Fragment>
+            );
           })}
-        </>
+        </span>
       );
     }
 
-    return translation;
+    return (
+      <Markdown
+        components={{
+          p: ({ children }) => <>{children}</>,
+        }}
+      >
+        {translation}
+      </Markdown>
+    );
   };
 
   const tItem = (key: string, count: number): string => {

@@ -22,7 +22,7 @@ export default function BulkActionBar({ selectedCount, onClear, onAction, loadin
         loading={loading === 'start'}
         disabled={loading !== null && loading !== 'start'}
       >
-        {t('pages.server.console.power.start', {})} ({selectedCount})
+        {t('common.enum.serverPowerAction.start', {})} ({selectedCount})
       </Button>
       <Button
         color='gray'
@@ -30,7 +30,7 @@ export default function BulkActionBar({ selectedCount, onClear, onAction, loadin
         loading={loading === 'restart'}
         disabled={loading !== null && loading !== 'restart'}
       >
-        {t('pages.server.console.power.restart', {})} ({selectedCount})
+        {t('common.enum.serverPowerAction.restart', {})} ({selectedCount})
       </Button>
       <Button
         color='red'
@@ -38,7 +38,7 @@ export default function BulkActionBar({ selectedCount, onClear, onAction, loadin
         loading={loading === 'stop'}
         disabled={loading !== null && loading !== 'stop'}
       >
-        {t('pages.server.console.power.stop', {})} ({selectedCount})
+        {t('common.enum.serverPowerAction.stop', {})} ({selectedCount})
       </Button>
       <Button variant='default' onClick={onClear}>
         {t('common.button.cancel', {})}

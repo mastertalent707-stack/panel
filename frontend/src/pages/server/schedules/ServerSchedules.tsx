@@ -14,12 +14,14 @@ import Table from '@/elements/Table.tsx';
 import { useImportDragAndDrop } from '@/plugins/useImportDragAndDrop.ts';
 import { useSearchablePaginatedTable } from '@/plugins/useSearchablePageableTable.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';
+import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import { useServerStore } from '@/stores/server.ts';
 import ScheduleCreateOrUpdateModal from './modals/ScheduleCreateOrUpdateModal.tsx';
 import ScheduleImportOverlay from './ScheduleImportOverlay.tsx';
 import ScheduleRow from './ScheduleRow.tsx';
 
 export default function ServerSchedules() {
+  const { t } = useTranslations();
   const { addToast } = useToast();
   const { server, schedules, setSchedules, addSchedule } = useServerStore();
 
@@ -42,14 +44,14 @@ export default function ServerSchedules() {
         data = jsYaml.load(text) as object;
       }
     } catch (err) {
-      addToast(`Failed to parse schedule: ${err}`, 'error');
+      addToast(t('pages.server.schedules.toast.parseError', { error: String(err) }), 'error');
       return;
     }
 
     importSchedule(server.uuid, data)
       .then((data) => {
         addSchedule(data);
-        addToast('Schedule imported.', 'success');
+        addToast(t('pages.server.schedules.toast.imported', {}), 'success');
       })
       .catch((msg) => {
         addToast(httpErrorToHuman(msg), 'error');
@@ -71,8 +73,8 @@ export default function ServerSchedules() {
 
   return (
     <ServerContentContainer
-      title='Schedules'
-      subtitle={`${schedules.total} of ${server.featureLimits.schedules} maximum schedules created.`}
+      title={t('pages.server.schedules.title', {})}
+      subtitle={t('pages.server.schedules.subtitle', { current: schedules.total, max: server.featureLimits.schedules })}
       search={search}
       setSearch={setSearch}
       contentRight={
@@ -80,11 +82,11 @@ export default function ServerSchedules() {
           <ServerCan action='schedules.create'>
             <Button onClick={() => fileInputRef.current?.click()} color='blue'>
               <FontAwesomeIcon icon={faUpload} className='mr-2' />
-              Import
+              {t('pages.server.schedules.button.import', {})}
             </Button>
             <ConditionalTooltip
               enabled={schedules.total >= server.featureLimits.schedules}
-              label={`This server is limited to ${server.featureLimits.schedules} schedules.`}
+              label={t('pages.server.schedules.tooltip.limitReached', { max: server.featureLimits.schedules })}
             >
               <Button
                 disabled={schedules.total >= server.featureLimits.schedules}
@@ -92,7 +94,7 @@ export default function ServerSchedules() {
                 color='blue'
                 leftSection={<FontAwesomeIcon icon={faPlus} />}
               >
-                Create
+                {t('common.button.create', {})}
               </Button>
             </ConditionalTooltip>
           </ServerCan>
@@ -112,7 +114,14 @@ export default function ServerSchedules() {
 
       <ContextMenuProvider>
         <Table
-          columns={['Name', 'Last Run', 'Last Failure', 'Status', 'Created', '']}
+          columns={[
+            t('common.table.columns.name', {}),
+            t('pages.server.schedules.table.columns.lastRun', {}),
+            t('pages.server.schedules.table.columns.lastFailure', {}),
+            t('pages.server.schedules.table.columns.status', {}),
+            t('common.table.columns.created', {}),
+            '',
+          ]}
           loading={loading}
           pagination={schedules}
           onPageSelect={setPage}

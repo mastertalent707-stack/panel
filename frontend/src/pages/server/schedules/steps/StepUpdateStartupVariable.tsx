@@ -3,6 +3,7 @@ import { UseFormReturnType } from '@mantine/form';
 import { z } from 'zod';
 import Switch from '@/elements/input/Switch.tsx';
 import { serverScheduleStepUpdateSchema } from '@/lib/schemas/server/schedules.ts';
+import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import ScheduleDynamicParameterInput from '../ScheduleDynamicParameterInput.tsx';
 
 export default function StepUpdateStartupVariable({
@@ -10,23 +11,28 @@ export default function StepUpdateStartupVariable({
 }: {
   form: UseFormReturnType<z.infer<typeof serverScheduleStepUpdateSchema>>;
 }) {
+  const { t } = useTranslations();
+
   return (
     <Stack>
       <ScheduleDynamicParameterInput
         withAsterisk
-        label='Environment Variable'
-        placeholder='JAVA_OPTS'
+        label={t('pages.server.schedules.steps.updateStartupVariable.form.envVariable', {})}
+        placeholder={t('pages.server.schedules.steps.updateStartupVariable.form.envVariable', {})}
         value={form.getInputProps('action.envVariable').value}
         onChange={(v) => form.setFieldValue('action.envVariable', v)}
       />
       <ScheduleDynamicParameterInput
         withAsterisk
-        label='Value'
-        placeholder='-Xmx2G -Xms1G'
+        label={t('pages.server.schedules.steps.updateStartupVariable.form.value', {})}
+        placeholder={t('pages.server.schedules.steps.updateStartupVariable.form.value', {})}
         value={form.getInputProps('action.value').value}
         onChange={(v) => form.setFieldValue('action.value', v)}
       />
-      <Switch label='Ignore Failure' {...form.getInputProps('action.ignoreFailure', { type: 'checkbox' })} />
+      <Switch
+        label={t('pages.server.schedules.form.ignoreFailure', {})}
+        {...form.getInputProps('action.ignoreFailure', { type: 'checkbox' })}
+      />
     </Stack>
   );
 }

@@ -3,6 +3,7 @@ import { UseFormReturnType } from '@mantine/form';
 import { z } from 'zod';
 import TextArea from '@/elements/input/TextArea.tsx';
 import { serverScheduleStepUpdateSchema } from '@/lib/schemas/server/schedules.ts';
+import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import ScheduleDynamicParameterInput from '../ScheduleDynamicParameterInput.tsx';
 
 export default function StepFormat({
@@ -10,19 +11,21 @@ export default function StepFormat({
 }: {
   form: UseFormReturnType<z.infer<typeof serverScheduleStepUpdateSchema>>;
 }) {
+  const { t } = useTranslations();
+
   return (
     <Stack>
       <TextArea
         withAsterisk
-        label='Format String'
-        description='The Format string, can include variables by wrapping inside {...}'
-        placeholder='Hello {variable}!'
+        label={t('pages.server.schedules.steps.format.form.formatString', {})}
+        description={t('pages.server.schedules.steps.format.form.formatStringDescription', { wrapper: '{...}' })}
+        placeholder={t('pages.server.schedules.steps.format.form.formatString', {})}
         {...form.getInputProps('action.format')}
       />
 
       <ScheduleDynamicParameterInput
-        label='Output into'
-        placeholder='Output the concatinated string into a variable'
+        label={t('pages.server.schedules.form.outputInto', {})}
+        placeholder={t('pages.server.schedules.form.outputInto', {})}
         allowString={false}
         value={form.getInputProps('action.outputInto').value}
         onChange={(v) => form.setFieldValue('action.outputInto', v)}

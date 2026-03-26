@@ -5,6 +5,7 @@ import { z } from 'zod';
 import Button from '@/elements/Button.tsx';
 import { scheduleConditionLabelMapping } from '@/lib/enums.ts';
 import { serverScheduleConditionSchema } from '@/lib/schemas/server/schedules.ts';
+import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import ScheduleDynamicParameterInput from './ScheduleDynamicParameterInput.tsx';
 
 const maxConditionDepth = 3;
@@ -16,6 +17,7 @@ interface ConditionBuilderProps {
 }
 
 export default function ScheduleConditionBuilder({ condition, onChange, depth = 0 }: ConditionBuilderProps) {
+  const { t } = useTranslations();
   const handleTypeChange = (type: string) => {
     switch (type) {
       case 'none':
@@ -76,13 +78,13 @@ export default function ScheduleConditionBuilder({ condition, onChange, depth = 
     <div style={{ marginLeft: depth * 20 }}>
       <Stack>
         <Select
-          label='Condition Type'
+          label={t('pages.server.schedules.form.conditionType', {})}
           value={condition.type}
           onChange={(value) => value && handleTypeChange(value)}
           data={Object.entries(scheduleConditionLabelMapping)
             .map(([value, label]) => ({
               value,
-              label,
+              label: label(),
             }))
             .filter((c) => depth < maxConditionDepth || !['and', 'or', 'not'].includes(c.value))}
         />
@@ -93,7 +95,7 @@ export default function ScheduleConditionBuilder({ condition, onChange, depth = 
           condition.type === 'variable_starts_with' ||
           condition.type === 'variable_ends_with') && (
           <ScheduleDynamicParameterInput
-            label='Variable'
+            label={t('pages.server.schedules.condition.variable', {})}
             allowString={false}
             value={condition.variable}
             onChange={(v) => onChange({ ...condition, variable: v })}
@@ -102,28 +104,28 @@ export default function ScheduleConditionBuilder({ condition, onChange, depth = 
 
         {condition.type === 'variable_equals' && (
           <ScheduleDynamicParameterInput
-            label='Equals'
+            label={t('pages.server.schedules.condition.equals', {})}
             value={condition.equals}
             onChange={(v) => onChange({ ...condition, equals: v })}
           />
         )}
         {condition.type === 'variable_contains' && (
           <ScheduleDynamicParameterInput
-            label='Contains'
+            label={t('pages.server.schedules.condition.contains', {})}
             value={condition.contains}
             onChange={(v) => onChange({ ...condition, contains: v })}
           />
         )}
         {condition.type === 'variable_starts_with' && (
           <ScheduleDynamicParameterInput
-            label='Starts With'
+            label={t('pages.server.schedules.condition.startsWith', {})}
             value={condition.startsWith}
             onChange={(v) => onChange({ ...condition, startsWith: v })}
           />
         )}
         {condition.type === 'variable_ends_with' && (
           <ScheduleDynamicParameterInput
-            label='Ends With'
+            label={t('pages.server.schedules.condition.endsWith', {})}
             value={condition.endsWith}
             onChange={(v) => onChange({ ...condition, endsWith: v })}
           />
@@ -134,7 +136,9 @@ export default function ScheduleConditionBuilder({ condition, onChange, depth = 
             {depth < maxConditionDepth && (
               <Group>
                 <Text size='sm'>
-                  {condition.type === 'and' ? 'All conditions must be true:' : 'Any condition must be true:'}
+                  {condition.type === 'and'
+                    ? t('pages.server.schedules.condition.allMustBeTrue', {})
+                    : t('pages.server.schedules.condition.anyMustBeTrue', {})}
                 </Text>
                 <Button
                   size='xs'
@@ -142,7 +146,7 @@ export default function ScheduleConditionBuilder({ condition, onChange, depth = 
                   leftSection={<FontAwesomeIcon icon={faPlus} />}
                   onClick={addNestedCondition}
                 >
-                  Add Condition
+                  {t('pages.server.schedules.button.addCondition', {})}
                 </Button>
               </Group>
             )}
@@ -165,7 +169,7 @@ export default function ScheduleConditionBuilder({ condition, onChange, depth = 
         )}
         {condition.type === 'not' && (
           <>
-            <Text size='sm'>Condition must not be true:</Text>
+            <Text size='sm'>{t('pages.server.schedules.condition.mustNotBeTrue', {})}</Text>
 
             <div style={{ flex: 1 }}>
               <ScheduleConditionBuilder

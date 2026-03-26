@@ -48,10 +48,10 @@ export default function ServerStatusIndicator() {
 
   const buttonAction = isOffline ? 'start' : killable ? 'kill' : 'stop';
   const buttonLabel = isOffline
-    ? 'pages.server.console.power.start'
+    ? 'common.enum.serverPowerAction.start'
     : killable
-      ? 'pages.server.console.power.kill'
-      : 'pages.server.console.power.stop';
+      ? 'common.enum.serverPowerAction.kill'
+      : 'common.enum.serverPowerAction.stop';
   const buttonColor = isOffline ? 'green' : 'red';
   const buttonIcon = isOffline ? faPlay : killable ? faSkull : faStop;
 
@@ -74,7 +74,7 @@ export default function ServerStatusIndicator() {
             </Tooltip>
           </ServerCan>
           <ServerCan action='control.restart'>
-            <Tooltip label={t('pages.server.console.power.restart', {})}>
+            <Tooltip label={t('common.enum.serverPowerAction.restart', {})}>
               <ActionIcon
                 size='lg'
                 radius='md'

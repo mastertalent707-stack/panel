@@ -10,6 +10,7 @@ import { DndContainer, DndItem, SortableItem } from '@/elements/DragAndDrop.tsx'
 import Spinner from '@/elements/Spinner.tsx';
 import { serverScheduleSchema, serverScheduleStepSchema } from '@/lib/schemas/server/schedules.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';
+import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import { useServerStore } from '@/stores/server.ts';
 import StepCreateOrUpdateModal from './modals/StepCreateOrUpdateModal.tsx';
 import StepCard from './StepCard.tsx';
@@ -21,6 +22,7 @@ interface DndScheduleStep extends z.infer<typeof serverScheduleStepSchema>, DndI
 const MemoizedStepCard = memo(StepCard);
 
 export default function StepsEditor({ schedule }: { schedule: z.infer<typeof serverScheduleSchema> }) {
+  const { t } = useTranslations();
   const { server, scheduleSteps, setScheduleSteps } = useServerStore();
   const { addToast } = useToast();
 
@@ -129,13 +131,13 @@ export default function StepsEditor({ schedule }: { schedule: z.infer<typeof ser
               <FontAwesomeIcon icon={faGear} />
             </ThemeIcon>
             <Title order={3} c='dimmed' mb='sm'>
-              No Steps Configured
+              {t('pages.server.schedules.steps.empty.title', {})}
             </Title>
             <Text c='dimmed' mb='md'>
-              This schedule doesn&apos;t have any steps yet. Add some actions to get started.
+              {t('pages.server.schedules.steps.empty.description', {})}
             </Text>
             <Button onClick={() => setOpenModal('create')} leftSection={<FontAwesomeIcon icon={faPlus} />}>
-              Create First Step
+              {t('pages.server.schedules.button.createFirstStep', {})}
             </Button>
           </Paper>
         ) : (
@@ -167,7 +169,7 @@ export default function StepsEditor({ schedule }: { schedule: z.infer<typeof ser
         {sortedSteps.length > 0 && (
           <Group justify='center'>
             <Button onClick={() => setOpenModal('create')} leftSection={<FontAwesomeIcon icon={faPlus} />}>
-              Add Step
+              {t('pages.server.schedules.button.addStep', {})}
             </Button>
           </Group>
         )}

@@ -19,6 +19,7 @@ import {
   serverScheduleStepUpdateSchema,
 } from '@/lib/schemas/server/schedules.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';
+import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import { useServerStore } from '@/stores/server.ts';
 import StepCompressFiles from '../steps/StepCompressFiles.tsx';
 import StepCopyFile from '../steps/StepCopyFile.tsx';
@@ -56,6 +57,7 @@ export default function StepCreateOrUpdateModal({
   opened,
   onClose,
 }: Props) {
+  const { t } = useTranslations();
   const { addToast } = useToast();
   const server = useServerStore((state) => state.server);
 
@@ -86,7 +88,7 @@ export default function StepCreateOrUpdateModal({
       updateScheduleStep(server.uuid, schedule.uuid, propStep.uuid, form.values)
         .then(() => {
           onClose();
-          addToast('Schedule step updated.', 'success');
+          addToast(t('pages.server.schedules.toast.step.updated', {}), 'success');
           onStepUpdate?.({ ...propStep, ...form.values });
         })
         .catch((msg) => {
@@ -97,7 +99,7 @@ export default function StepCreateOrUpdateModal({
       createScheduleStep(server.uuid, schedule.uuid, form.values)
         .then((step) => {
           onClose();
-          addToast('Schedule step created.', 'success');
+          addToast(t('pages.server.schedules.toast.step.created', {}), 'success');
           onStepCreate?.(step);
         })
         .catch((msg) => {
@@ -108,13 +110,21 @@ export default function StepCreateOrUpdateModal({
   };
 
   return (
-    <Modal opened={opened} onClose={onClose} title={propStep ? 'Edit Schedule Step' : 'Create Schedule Step'}>
+    <Modal
+      opened={opened}
+      onClose={onClose}
+      title={
+        propStep
+          ? t('pages.server.schedules.modal.editStep.title', {})
+          : t('pages.server.schedules.modal.createStep.title', {})
+      }
+    >
       <Stack gap='md'>
         <Select
-          label='Action Type'
+          label={t('pages.server.schedules.form.actionType', {})}
           data={Object.entries(scheduleStepLabelMapping).map(([value, label]) => ({
             value,
-            label,
+            label: label(),
           }))}
           searchable
           value={form.getValues().action.type}
@@ -165,15 +175,15 @@ export default function StepCreateOrUpdateModal({
         ) : form.values.action.type === 'update_startup_docker_image' ? (
           <StepUpdateStartupDockerImage form={form} />
         ) : (
-          <Text c='dimmed'>Select an action type to configure</Text>
+          <Text c='dimmed'>{t('pages.server.schedules.form.actionType', {})}</Text>
         )}
 
         <ModalFooter>
           <Button onClick={doCreateOrUpdate} leftSection={<FontAwesomeIcon icon={faSave} />} loading={loading}>
-            {propStep ? 'Update' : 'Create'}
+            {propStep ? t('common.button.update', {}) : t('common.button.create', {})}
           </Button>
           <Button variant='default' onClick={onClose}>
-            Cancel
+            {t('common.button.cancel', {})}
           </Button>
         </ModalFooter>
       </Stack>

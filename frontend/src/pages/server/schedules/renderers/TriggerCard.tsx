@@ -3,7 +3,6 @@ import { Group, Text, ThemeIcon } from '@mantine/core';
 import { CronExpressionParser } from 'cron-parser';
 import { z } from 'zod';
 import Card from '@/elements/Card.tsx';
-import Code from '@/elements/Code.tsx';
 import FormattedTimestamp from '@/elements/time/FormattedTimestamp.tsx';
 import { scheduleTriggerColorMapping, scheduleTriggerIconMapping } from '@/lib/enums.ts';
 import { serverScheduleTriggerSchema } from '@/lib/schemas/server/schedules.ts';
@@ -16,7 +15,7 @@ interface TriggerCardProps {
 }
 
 export default function TriggerCard({ date, timezone, trigger }: TriggerCardProps) {
-  const { t } = useTranslations();
+  const { t, tReact } = useTranslations();
 
   return (
     <Card>
@@ -25,40 +24,53 @@ export default function TriggerCard({ date, timezone, trigger }: TriggerCardProp
           <FontAwesomeIcon icon={scheduleTriggerIconMapping[trigger.type]} />
         </ThemeIcon>
         {trigger.type === 'cron' ? (
-          <span className='flex flex-row'>
-            <Text className='mr-1!'>
-              On Cron Interval <Code>{trigger.schedule}</Code>, Next run is
-            </Text>
-            <FormattedTimestamp
-              timestamp={CronExpressionParser.parse(trigger.schedule, {
-                currentDate: date,
-                tz: timezone,
-              })
-                .next()
-                .toDate()}
-              autoUpdate={false}
-              precise
-            />
-            .
-          </span>
-        ) : trigger.type === 'power_action' ? (
-          <Text>
-            When Power Action <Code>{trigger.action}</Code> is requested.
+          <Text className='mr-1!'>
+            {tReact('pages.server.schedules.triggers.cron.card.content', {
+              schedule: trigger.schedule,
+              timestamp: (
+                <FormattedTimestamp
+                  timestamp={CronExpressionParser.parse(trigger.schedule, {
+                    currentDate: date,
+                    tz: timezone,
+                  })
+                    .next()
+                    .toDate()}
+                  autoUpdate={false}
+                  precise
+                  tooltipClassName='inline-block'
+                />
+              ),
+              lastTimestamp: (
+                <FormattedTimestamp
+                  timestamp={CronExpressionParser.parse(trigger.schedule, {
+                    currentDate: date,
+                    tz: timezone,
+                  })
+                    .prev()
+                    .toDate()}
+                  autoUpdate={false}
+                  precise
+                  tooltipClassName='inline-block'
+                />
+              ),
+            })}
           </Text>
+        ) : trigger.type === 'power_action' ? (
+          <Text>{t('pages.server.schedules.triggers.powerAction.card.content', { action: trigger.action }).md()}</Text>
         ) : trigger.type === 'server_state' ? (
           <Text>
-            When Server State <Code>{t(`common.enum.serverState.${trigger.state}`, {})}</Code> is reached.
+            {t('pages.server.schedules.triggers.serverState.card.content', {
+              state: t(`common.enum.serverState.${trigger.state}`, {}),
+            }).md()}
           </Text>
         ) : trigger.type === 'backup_status' ? (
-          <Text>
-            When Backup reaches Status <Code>{trigger.status}</Code>.
-          </Text>
+          <Text>{t('pages.server.schedules.triggers.backupStatus.card.content', { status: trigger.status }).md()}</Text>
         ) : trigger.type === 'console_line' ? (
           <Text>
-            When Console Output reaches line that contains <Code>{trigger.contains}</Code>.
+            {t('pages.server.schedules.triggers.consoleLine.card.content', { contains: trigger.contains }).md()}
           </Text>
         ) : trigger.type === 'crash' ? (
-          <Text>When Server crashes.</Text>
+          <Text>{t('pages.server.schedules.triggers.crash.card.content', {}).md()}</Text>
         ) : null}
       </Group>
     </Card>

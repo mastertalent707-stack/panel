@@ -6,8 +6,9 @@ import AnimatedHourglass from '@/elements/AnimatedHourglass.tsx';
 import Badge from '@/elements/Badge.tsx';
 import Card from '@/elements/Card.tsx';
 import Tooltip from '@/elements/Tooltip.tsx';
-import { scheduleStepIconMapping } from '@/lib/enums.ts';
+import { scheduleStepIconMapping, scheduleStepLabelMapping } from '@/lib/enums.ts';
 import { serverScheduleStepSchema } from '@/lib/schemas/server/schedules.ts';
+import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import ActionRenderer from './ActionRenderer.tsx';
 
 interface ActionStepProps {
@@ -16,6 +17,8 @@ interface ActionStepProps {
 }
 
 export default function ActionStep({ step, isActive }: ActionStepProps) {
+  const { t } = useTranslations();
+
   return (
     <Timeline.Item
       bullet={
@@ -27,8 +30,8 @@ export default function ActionStep({ step, isActive }: ActionStepProps) {
       }
       title={
         <Group gap='sm' align='start'>
-          <Text fw={600}>{step.action.type.replace(/_/g, ' ').toUpperCase()} </Text>
-          {isActive && <Badge ml='md'>Running</Badge>}
+          <Text fw={600}>{scheduleStepLabelMapping[step.action.type]()} </Text>
+          {isActive && <Badge ml='md'>{t('pages.server.schedules.view.badge.running', {})}</Badge>}
           {step.error && (
             <Tooltip label={step.error}>
               <ThemeIcon size='sm' color='red' className='cursor-help'>

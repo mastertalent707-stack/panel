@@ -8,7 +8,6 @@ import deleteSchedule from '@/api/server/schedules/deleteSchedule.ts';
 import exportSchedule from '@/api/server/schedules/exportSchedule.ts';
 import triggerSchedule from '@/api/server/schedules/triggerSchedule.ts';
 import Badge from '@/elements/Badge.tsx';
-import Code from '@/elements/Code.tsx';
 import ContextMenu, { ContextMenuToggle } from '@/elements/ContextMenu.tsx';
 import ConfirmationModal from '@/elements/modals/ConfirmationModal.tsx';
 import { TableData, TableRow } from '@/elements/Table.tsx';
@@ -31,7 +30,7 @@ export default function ScheduleRow({ schedule }: { schedule: z.infer<typeof ser
   const doDelete = async () => {
     await deleteSchedule(server.uuid, schedule.uuid)
       .then(() => {
-        addToast('Schedule deleted.', 'success');
+        addToast(t('pages.server.schedules.toast.deleted', {}), 'success');
         setOpenModal(null);
         removeSchedule(schedule);
       })
@@ -43,7 +42,7 @@ export default function ScheduleRow({ schedule }: { schedule: z.infer<typeof ser
   const doExport = (format: 'json' | 'yaml') => {
     exportSchedule(server.uuid, schedule.uuid)
       .then((data) => {
-        addToast('Schedule exported.', 'success');
+        addToast(t('pages.server.schedules.toast.exported', {}), 'success');
 
         if (format === 'json') {
           const jsonData = JSON.stringify(data, undefined, 2);
@@ -76,7 +75,7 @@ export default function ScheduleRow({ schedule }: { schedule: z.infer<typeof ser
 
   const doTriggerSchedule = (skipCondition: boolean) => {
     triggerSchedule(server.uuid, schedule.uuid, skipCondition).then(() => {
-      addToast('Schedule triggered.', 'success');
+      addToast(t('pages.server.schedules.toast.triggered', {}), 'success');
     });
   };
 
@@ -85,29 +84,29 @@ export default function ScheduleRow({ schedule }: { schedule: z.infer<typeof ser
       <ConfirmationModal
         opened={openModal === 'delete'}
         onClose={() => setOpenModal(null)}
-        title='Confirm Schedule Deletion'
-        confirm='Delete'
+        title={t('pages.server.schedules.modal.deleteSchedule.title', {})}
+        confirm={t('common.button.delete', {})}
         onConfirmed={doDelete}
       >
-        Are you sure you want to delete <Code>{schedule.name}</Code> from this server?
+        {t('pages.server.schedules.modal.deleteSchedule.content', { name: schedule.name })}
       </ConfirmationModal>
 
       <ContextMenu
         items={[
           {
             icon: faPlay,
-            label: 'Trigger',
+            label: t('pages.server.schedules.button.trigger', {}),
             onClick: () => null,
             items: [
               {
                 icon: faPlayCircle,
-                label: 'Trigger (do not skip condition)',
+                label: t('pages.server.schedules.button.triggerWithCondition', {}),
                 onClick: () => doTriggerSchedule(false),
                 color: 'gray',
               },
               {
                 icon: faPlay,
-                label: 'Trigger (skip condition)',
+                label: t('pages.server.schedules.button.triggerSkipCondition', {}),
                 onClick: () => doTriggerSchedule(true),
                 color: 'gray',
               },
@@ -116,18 +115,18 @@ export default function ScheduleRow({ schedule }: { schedule: z.infer<typeof ser
           },
           {
             icon: faShareAlt,
-            label: 'Export',
+            label: t('common.button.export', {}),
             onClick: () => null,
             items: [
               {
                 icon: faFileDownload,
-                label: 'as JSON',
+                label: t('common.button.exportAs', { format: 'JSON' }),
                 onClick: () => doExport('json'),
                 color: 'gray',
               },
               {
                 icon: faFileDownload,
-                label: 'as YAML',
+                label: t('common.button.exportAs', { format: 'YAML' }),
                 onClick: () => doExport('yaml'),
                 color: 'gray',
               },
@@ -136,7 +135,7 @@ export default function ScheduleRow({ schedule }: { schedule: z.infer<typeof ser
           },
           {
             icon: faTrash,
-            label: 'Delete',
+            label: t('common.button.delete', {}),
             onClick: () => setOpenModal('delete'),
             color: 'red',
             canAccess: useServerCan('schedules.delete'),

@@ -6,6 +6,7 @@ import Select from '@/elements/input/Select.tsx';
 import TextArea from '@/elements/input/TextArea.tsx';
 import TextInput from '@/elements/input/TextInput.tsx';
 import { serverScheduleStepDynamicSchema, serverScheduleStepVariableSchema } from '@/lib/schemas/server/schedules.ts';
+import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import { useServerStore } from '@/stores/server.ts';
 
 interface ScheduleDynamicParameterInputProps<
@@ -35,6 +36,7 @@ export default function ScheduleDynamicParameterInput<N extends boolean = false,
   onChange,
   ...rest
 }: ScheduleDynamicParameterInputProps<N, S>) {
+  const { t } = useTranslations();
   const schedule = useServerStore((server) => server.schedule);
   const scheduleSteps = useServerStore((server) => server.scheduleSteps);
 
@@ -72,7 +74,7 @@ export default function ScheduleDynamicParameterInput<N extends boolean = false,
     <div className={classNames('grid grid-cols-6 gap-2', className)}>
       {value && typeof value === 'object' ? (
         <Autocomplete
-          description='Please enter the variable name to evaluate.'
+          description={t('elements.scheduleDynamicInput.enterVariable', {})}
           className='col-span-4'
           value={value.variable}
           onChange={(v) => onChange({ variable: v })}
@@ -80,10 +82,14 @@ export default function ScheduleDynamicParameterInput<N extends boolean = false,
           {...rest}
         />
       ) : textArea ? (
-        <TextArea description='Please enter the data to send.' className='col-span-4' {...rest} />
+        <TextArea description={t('elements.scheduleDynamicInput.enterData', {})} className='col-span-4' {...rest} />
       ) : (
         <TextInput
-          description={!allowString ? 'Please enter the variable name to evaluate.' : 'Please enter the data to send.'}
+          description={
+            !allowString
+              ? t('elements.scheduleDynamicInput.enterVariable', {})
+              : t('elements.scheduleDynamicInput.enterData', {})
+          }
           className='col-span-4'
           disabled={allowNull && value === null}
           value={value || ''}
@@ -92,16 +98,16 @@ export default function ScheduleDynamicParameterInput<N extends boolean = false,
         />
       )}
       <Select
-        label='Input Type'
-        description='Data type to send'
-        placeholder='Select Type'
+        label={t('elements.scheduleDynamicInput.inputType', {})}
+        description={t('elements.scheduleDynamicInput.dataType', {})}
+        placeholder={t('elements.scheduleDynamicInput.selectType', {})}
         className='col-span-2'
         value={value === undefined ? null : value === null ? 'null' : typeof value === 'string' ? 'raw' : 'variable'}
         data={[
           ...(allowNull
             ? [
                 {
-                  label: 'None',
+                  label: t('elements.scheduleDynamicInput.none', {}),
                   value: 'null',
                 },
               ]
@@ -109,13 +115,13 @@ export default function ScheduleDynamicParameterInput<N extends boolean = false,
           ...(allowString
             ? [
                 {
-                  label: 'Raw String',
+                  label: t('elements.scheduleDynamicInput.rawString', {}),
                   value: 'raw',
                 },
               ]
             : []),
           {
-            label: 'Variable',
+            label: t('elements.scheduleDynamicInput.variable', {}),
             value: 'variable',
           },
         ]}

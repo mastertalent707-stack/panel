@@ -187,7 +187,7 @@ export default function ServerGroupItem({
                   onClick={() => handleGroupPowerAction('start')}
                   disabled={groupActionLoading !== null || serverCount === 0}
                 >
-                  {t('pages.server.console.power.start', {})}
+                  {t('common.enum.serverPowerAction.start', {})}
                 </Menu.Item>
                 <Menu.Item
                   leftSection={<FontAwesomeIcon icon={faPowerOff} />}
@@ -195,7 +195,7 @@ export default function ServerGroupItem({
                   onClick={() => handleGroupPowerAction('restart')}
                   disabled={groupActionLoading !== null || serverCount === 0}
                 >
-                  {t('pages.server.console.power.restart', {})}
+                  {t('common.enum.serverPowerAction.restart', {})}
                 </Menu.Item>
                 <Menu.Item
                   leftSection={<FontAwesomeIcon icon={faPowerOff} />}
@@ -203,7 +203,7 @@ export default function ServerGroupItem({
                   onClick={() => handleGroupPowerAction('stop')}
                   disabled={groupActionLoading !== null || serverCount === 0}
                 >
-                  {t('pages.server.console.power.stop', {})}
+                  {t('common.enum.serverPowerAction.stop', {})}
                 </Menu.Item>
               </Menu.Dropdown>
             </Menu>

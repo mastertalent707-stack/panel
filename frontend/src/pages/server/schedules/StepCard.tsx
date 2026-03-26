@@ -10,6 +10,7 @@ import ConfirmationModal from '@/elements/modals/ConfirmationModal.tsx';
 import { scheduleStepIconMapping, scheduleStepLabelMapping } from '@/lib/enums.ts';
 import { serverScheduleSchema, serverScheduleStepSchema } from '@/lib/schemas/server/schedules.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';
+import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import { useServerStore } from '@/stores/server.ts';
 import StepCreateOrUpdateModal from './modals/StepCreateOrUpdateModal.tsx';
 import ActionRenderer from './renderers/ActionRenderer.tsx';
@@ -22,6 +23,7 @@ interface Props {
 }
 
 export default function StepCard({ schedule, step, onStepUpdate, onStepDelete }: Props) {
+  const { t } = useTranslations();
   const { addToast } = useToast();
   const server = useServerStore((state) => state.server);
 
@@ -30,7 +32,7 @@ export default function StepCard({ schedule, step, onStepUpdate, onStepDelete }:
   const doDelete = async () => {
     await deleteScheduleStep(server.uuid, schedule.uuid, step.uuid)
       .then(() => {
-        addToast('Schedule step deleted.', 'success');
+        addToast(t('pages.server.schedules.toast.step.deleted', {}), 'success');
         onStepDelete(step.uuid);
       })
       .catch((msg) => {
@@ -51,11 +53,11 @@ export default function StepCard({ schedule, step, onStepUpdate, onStepDelete }:
       <ConfirmationModal
         opened={openModal === 'delete'}
         onClose={() => setOpenModal(null)}
-        title='Confirm Schedule Step Deletion'
-        confirm='Delete'
+        title={t('pages.server.schedules.modal.deleteStep.title', {})}
+        confirm={t('common.button.delete', {})}
         onConfirmed={doDelete}
       >
-        Are you sure you want to delete this schedule step?
+        {t('pages.server.schedules.modal.deleteStep.content', {})}
       </ConfirmationModal>
 
       <Group justify='space-between' align='flex-start'>
@@ -64,7 +66,7 @@ export default function StepCard({ schedule, step, onStepUpdate, onStepDelete }:
             <FontAwesomeIcon icon={scheduleStepIconMapping[step.action.type] || faGear} />
           </ThemeIcon>
           <Stack gap={4}>
-            <Text fw={600}>{scheduleStepLabelMapping[step.action.type] || step.action.type}</Text>
+            <Text fw={600}>{scheduleStepLabelMapping[step.action.type]()}</Text>
             <Text size='sm' c='dimmed'>
               <ActionRenderer action={step.action} mode='compact' />
             </Text>

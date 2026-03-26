@@ -4,6 +4,7 @@ import { z } from 'zod';
 import Switch from '@/elements/input/Switch.tsx';
 import TagsInput from '@/elements/input/TagsInput.tsx';
 import { serverScheduleStepUpdateSchema } from '@/lib/schemas/server/schedules.ts';
+import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import ScheduleDynamicParameterInput from '../ScheduleDynamicParameterInput.tsx';
 
 export default function StepCreateBackup({
@@ -11,22 +12,30 @@ export default function StepCreateBackup({
 }: {
   form: UseFormReturnType<z.infer<typeof serverScheduleStepUpdateSchema>>;
 }) {
+  const { t } = useTranslations();
+
   return (
     <Stack>
       <ScheduleDynamicParameterInput
-        label='Backup Name'
-        placeholder='Backup Name'
+        label={t('pages.server.schedules.steps.createBackup.form.backupName', {})}
+        placeholder={t('pages.server.schedules.steps.createBackup.form.backupName', {})}
         allowNull
         value={form.getInputProps('action.name').value}
         onChange={(v) => form.setFieldValue('action.name', v)}
       />
       <Group>
-        <Switch label='Run in Foreground' {...form.getInputProps('action.foreground', { type: 'checkbox' })} />
-        <Switch label='Ignore Failure' {...form.getInputProps('action.ignoreFailure', { type: 'checkbox' })} />
+        <Switch
+          label={t('pages.server.schedules.form.runInForeground', {})}
+          {...form.getInputProps('action.foreground', { type: 'checkbox' })}
+        />
+        <Switch
+          label={t('pages.server.schedules.form.ignoreFailure', {})}
+          {...form.getInputProps('action.ignoreFailure', { type: 'checkbox' })}
+        />
       </Group>
       <TagsInput
-        label='Ignored Files'
-        placeholder='Add files to ignore'
+        label={t('pages.server.schedules.steps.createBackup.form.ignoredFiles', {})}
+        placeholder={t('pages.server.schedules.steps.createBackup.form.ignoredFiles', {})}
         {...form.getInputProps('action.ignoredFiles')}
       />
     </Stack>
