@@ -4,7 +4,7 @@ import { serverAllocationSchema } from '@/lib/schemas/server/allocations.ts';
 import { transformKeysToSnakeCase } from '@/lib/transformers.ts';
 
 interface Data {
-  notes?: string;
+  notes?: string | null;
   primary?: boolean;
 }
 

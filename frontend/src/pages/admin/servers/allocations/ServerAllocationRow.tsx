@@ -1,4 +1,4 @@
-import { faPencil, faStar, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faStar, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import debounce from 'debounce';
 import { useCallback, useEffect, useState } from 'react';
@@ -112,7 +112,6 @@ export default function ServerAllocationRow({
 
       <ContextMenu
         items={[
-          { icon: faPencil, label: 'Edit', onClick: () => setOpenModal('edit'), color: 'gray' },
           { icon: faStar, label: 'Set Primary', hidden: allocation.isPrimary, onClick: doSetPrimary, color: 'gray' },
           {
             icon: faStar,
