@@ -27,4 +27,11 @@ window.addEventListener('vite:preloadError', (event) => {
   window.location.reload();
 });
 
-createRoot(document.getElementById('root')!).render(<App theme={window.extensionContext.getMantineTheme()} />);
+const root = document.getElementById('root');
+
+if (!root) {
+  document.body.innerHTML = 'Failed to load application: Root element not found (???)';
+  throw new Error('Root element not found');
+}
+
+createRoot(root).render(<App theme={window.extensionContext.getMantineTheme()} />);

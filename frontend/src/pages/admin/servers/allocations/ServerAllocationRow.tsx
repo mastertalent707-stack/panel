@@ -1,17 +1,15 @@
 import { faPencil, faStar, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Stack } from '@mantine/core';
-import { useState } from 'react';
+import debounce from 'debounce';
+import { useCallback, useEffect, useState } from 'react';
 import { z } from 'zod';
 import deleteServerAllocation from '@/api/admin/servers/allocations/deleteServerAllocation.ts';
 import updateServerAllocation from '@/api/admin/servers/allocations/updateServerAllocation.ts';
 import { httpErrorToHuman } from '@/api/axios.ts';
-import Button from '@/elements/Button.tsx';
 import Code from '@/elements/Code.tsx';
 import ContextMenu, { ContextMenuToggle } from '@/elements/ContextMenu.tsx';
-import TextInput from '@/elements/input/TextInput.tsx';
+import TextArea from '@/elements/input/TextArea.tsx';
 import ConfirmationModal from '@/elements/modals/ConfirmationModal.tsx';
-import { Modal, ModalFooter } from '@/elements/modals/Modal.tsx';
 import { TableData, TableRow } from '@/elements/Table.tsx';
 import Tooltip from '@/elements/Tooltip.tsx';
 import FormattedTimestamp from '@/elements/time/FormattedTimestamp.tsx';
@@ -31,27 +29,28 @@ export default function ServerAllocationRow({
   const { addToast } = useToast();
   const { serverAllocations, setServerAllocations, removeServerAllocation } = useAdminStore();
 
-  const [loading, setLoading] = useState(false);
-  const [openModal, setOpenModal] = useState<'edit' | 'remove' | null>(null);
-  const [allocationNote, setAllocationNote] = useState(allocation.notes ?? '');
+  const [openModal, setOpenModal] = useState<'remove' | null>(null);
+  const [notes, setNotes] = useState(allocation.notes ?? '');
 
-  const doEdit = () => {
-    setLoading(true);
+  useEffect(() => {
+    if (notes !== (allocation.notes ?? '')) {
+      setDebouncedNotes(notes);
+    }
+  }, [notes]);
 
-    updateServerAllocation(server.uuid, allocation.uuid, { notes: allocationNote })
-      .then(() => {
-        setServerAllocations({
-          ...serverAllocations,
-          data: serverAllocations.data.map((a) => (a.uuid === allocation.uuid ? { ...a, notes: allocationNote } : a)),
+  const setDebouncedNotes = useCallback(
+    debounce((notes: string) => {
+      updateServerAllocation(server.uuid, allocation.uuid, { notes: notes || null })
+        .then(() => {
+          addToast('Allocation updated.', 'success');
+          allocation.notes = notes;
+        })
+        .catch((msg) => {
+          addToast(httpErrorToHuman(msg), 'error');
         });
-        addToast('Allocation edited.', 'success');
-        setOpenModal(null);
-      })
-      .catch((msg) => {
-        addToast(httpErrorToHuman(msg), 'error');
-      })
-      .finally(() => setLoading(false));
-  };
+    }, 500),
+    [],
+  );
 
   const doSetPrimary = () => {
     updateServerAllocation(server.uuid, allocation.uuid, { primary: true })
@@ -100,27 +99,6 @@ export default function ServerAllocationRow({
 
   return (
     <>
-      <Modal title='Edit Server Allocation' onClose={() => setOpenModal(null)} opened={openModal === 'edit'}>
-        <Stack>
-          <TextInput
-            withAsterisk
-            label='Note'
-            placeholder='Note'
-            value={allocationNote}
-            onChange={(e) => setAllocationNote(e.target.value)}
-          />
-
-          <ModalFooter>
-            <Button onClick={doEdit} loading={loading}>
-              Edit
-            </Button>
-            <Button variant='default' onClick={() => setOpenModal(null)}>
-              Close
-            </Button>
-          </ModalFooter>
-        </Stack>
-      </Modal>
-
       <ConfirmationModal
         opened={openModal === 'remove'}
         onClose={() => setOpenModal(null)}
@@ -160,19 +138,23 @@ export default function ServerAllocationRow({
                 </Tooltip>
               )}
             </td>
-            <TableData>
-              <Code>{allocation.uuid}</Code>
-            </TableData>
+
             <TableData>
               <Code>{allocation.ip}</Code>
             </TableData>
+
             <TableData>
               <Code>{allocation.ipAlias ?? 'N/A'}</Code>
             </TableData>
+
             <TableData>
               <Code>{allocation.port}</Code>
             </TableData>
-            <TableData>{allocation.notes || 'N/A'}</TableData>
+
+            <TableData>
+              <TextArea rows={2} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder='Notes' />
+            </TableData>
+
             <TableData>
               <FormattedTimestamp timestamp={allocation.created} />
             </TableData>

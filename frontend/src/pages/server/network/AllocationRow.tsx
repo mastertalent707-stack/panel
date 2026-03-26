@@ -1,12 +1,14 @@
-import { faPencil, faStar, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faStar, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useState } from 'react';
+import debounce from 'debounce';
+import { useCallback, useEffect, useState } from 'react';
 import { z } from 'zod';
 import { httpErrorToHuman } from '@/api/axios.ts';
 import deleteAllocation from '@/api/server/allocations/deleteAllocation.ts';
 import updateAllocation from '@/api/server/allocations/updateAllocation.ts';
 import Code from '@/elements/Code.tsx';
 import ContextMenu, { ContextMenuToggle } from '@/elements/ContextMenu.tsx';
+import TextArea from '@/elements/input/TextArea.tsx';
 import ConfirmationModal from '@/elements/modals/ConfirmationModal.tsx';
 import { TableData, TableRow } from '@/elements/Table.tsx';
 import Tooltip from '@/elements/Tooltip.tsx';
@@ -16,15 +18,35 @@ import { useServerCan } from '@/plugins/usePermissions.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import { useServerStore } from '@/stores/server.ts';
-import AllocationEditModal from './modals/AllocationEditModal.tsx';
 
 export default function AllocationRow({ allocation }: { allocation: z.infer<typeof serverAllocationSchema> }) {
   const { t } = useTranslations();
   const { addToast } = useToast();
   const { server, allocations, removeAllocation, setAllocations, updateServer } = useServerStore();
 
-  const [openModal, setOpenModal] = useState<'edit' | 'remove' | null>(null);
+  const [openModal, setOpenModal] = useState<'remove' | null>(null);
+  const [notes, setNotes] = useState(allocation.notes ?? '');
   const canUpdate = useServerCan('allocations.update');
+
+  useEffect(() => {
+    if (notes !== (allocation.notes ?? '')) {
+      setDebouncedNotes(notes);
+    }
+  }, [notes]);
+
+  const setDebouncedNotes = useCallback(
+    debounce((notes: string) => {
+      updateAllocation(server.uuid, allocation.uuid, { notes: notes || null })
+        .then(() => {
+          addToast(t('pages.server.network.toast.updated', {}), 'success');
+          allocation.notes = notes;
+        })
+        .catch((msg) => {
+          addToast(httpErrorToHuman(msg), 'error');
+        });
+    }, 500),
+    [],
+  );
 
   const doSetPrimary = () => {
     updateAllocation(server.uuid, allocation.uuid, { primary: true })
@@ -75,8 +97,6 @@ export default function AllocationRow({ allocation }: { allocation: z.infer<type
 
   return (
     <>
-      <AllocationEditModal allocation={allocation} opened={openModal === 'edit'} onClose={() => setOpenModal(null)} />
-
       <ConfirmationModal
         opened={openModal === 'remove'}
         onClose={() => setOpenModal(null)}
@@ -92,19 +112,12 @@ export default function AllocationRow({ allocation }: { allocation: z.infer<type
       <ContextMenu
         items={[
           {
-            icon: faPencil,
-            label: t('common.button.edit', {}),
-            onClick: () => setOpenModal('edit'),
-            color: 'gray',
-            canAccess: useServerCan('allocations.update'),
-          },
-          {
             icon: faStar,
             label: t('pages.server.network.button.setPrimary', {}),
             hidden: allocation.isPrimary,
             onClick: doSetPrimary,
             color: 'gray',
-            canAccess: useServerCan('allocations.update'),
+            canAccess: canUpdate,
           },
           {
             icon: faStar,
@@ -112,7 +125,7 @@ export default function AllocationRow({ allocation }: { allocation: z.infer<type
             hidden: !allocation.isPrimary,
             onClick: doUnsetPrimary,
             color: 'red',
-            canAccess: useServerCan('allocations.update'),
+            canAccess: canUpdate,
           },
           {
             icon: faTrash,
@@ -127,12 +140,6 @@ export default function AllocationRow({ allocation }: { allocation: z.infer<type
       >
         {({ items, openMenu }) => (
           <TableRow
-            className={canUpdate ? 'cursor-pointer' : undefined}
-            onClick={() => {
-              if (canUpdate) {
-                setOpenModal('edit');
-              }
-            }}
             onContextMenu={(e) => {
               e.preventDefault();
               openMenu(e.pageX, e.pageY);
@@ -154,7 +161,15 @@ export default function AllocationRow({ allocation }: { allocation: z.infer<type
               <Code>{allocation.port}</Code>
             </TableData>
 
-            <TableData>{allocation.notes ?? t('common.na', {})}</TableData>
+            <TableData>
+              <TextArea
+                rows={2}
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                placeholder={t('pages.server.network.table.columns.notes', {})}
+                disabled={!canUpdate}
+              />
+            </TableData>
 
             <TableData>
               <FormattedTimestamp timestamp={allocation.created} />

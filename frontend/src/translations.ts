@@ -1467,6 +1467,13 @@ const baseTranslations = defineTranslations({
               variableStartsWith: 'Variable Starts With',
               variableEndsWith: 'Variable Ends With',
             },
+            scheduleComparator: {
+              smallerThan: 'Smaller than',
+              smallerThanOrEqual: 'Smaller than or equal to',
+              equal: 'Equal to',
+              greaterThanOrEqual: 'Greater than or equal to',
+              greaterThan: 'Greater than',
+            },
           },
           modal: {
             createSchedule: {

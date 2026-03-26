@@ -127,7 +127,7 @@ export default function SchedulePreConditionBuilder({ condition, onChange, depth
               }
               data={Object.entries(scheduleComparatorLabelMapping).map(([value, label]) => ({
                 value,
-                label,
+                label: label(),
               }))}
             />
             {condition.type === 'uptime' && (

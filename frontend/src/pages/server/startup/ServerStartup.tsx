@@ -44,7 +44,7 @@ export default function ServerStartup() {
         .catch((msg) => {
           addToast(httpErrorToHuman(msg), 'error');
         });
-    }, 1000),
+    }, 500),
     [],
   );
 

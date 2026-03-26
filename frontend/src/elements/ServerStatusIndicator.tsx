@@ -47,11 +47,6 @@ export default function ServerStatusIndicator() {
   const isOffline = state === 'offline';
 
   const buttonAction = isOffline ? 'start' : killable ? 'kill' : 'stop';
-  const buttonLabel = isOffline
-    ? 'common.enum.serverPowerAction.start'
-    : killable
-      ? 'common.enum.serverPowerAction.kill'
-      : 'common.enum.serverPowerAction.stop';
   const buttonColor = isOffline ? 'green' : 'red';
   const buttonIcon = isOffline ? faPlay : killable ? faSkull : faStop;
 
@@ -61,7 +56,7 @@ export default function ServerStatusIndicator() {
       <div className='flex justify-start items-center gap-3 pl-2.5'>
         <Group gap='xs'>
           <ServerCan action={['control.start', 'control.stop']} matchAny>
-            <Tooltip label={t(buttonLabel, {})}>
+            <Tooltip label={t(`common.enum.serverPowerAction.${buttonAction}`, {})}>
               <ActionIcon
                 size='lg'
                 radius='md'

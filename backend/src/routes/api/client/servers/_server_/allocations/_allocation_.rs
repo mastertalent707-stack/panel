@@ -105,9 +105,10 @@ mod patch {
 
     #[derive(ToSchema, Validate, Deserialize)]
     pub struct Payload {
-        #[garde(length(max = 1024))]
-        #[schema(max_length = 1024)]
-        notes: Option<compact_str::CompactString>,
+        #[garde(length(min = 1, max = 1024))]
+        #[schema(min_length = 1, max_length = 1024)]
+        #[serde(default, with = "::serde_with::rust::double_option")]
+        notes: Option<Option<compact_str::CompactString>>,
 
         #[garde(skip)]
         primary: Option<bool>,
@@ -149,7 +150,7 @@ mod patch {
 
         permissions.has_server_permission("allocations.update")?;
 
-        let allocation =
+        let mut allocation =
             match ServerAllocation::by_server_uuid_uuid(&state.database, server.uuid, allocation)
                 .await?
             {
@@ -163,22 +164,17 @@ mod patch {
 
         let mut transaction = state.database.write().begin().await?;
 
-        if let Some(notes) = &data.notes {
-            let notes = if notes.is_empty() {
-                None
-            } else {
-                Some(notes.as_str())
-            };
-
+        if let Some(notes) = data.notes {
             sqlx::query!(
                 "UPDATE server_allocations
                 SET notes = $1
                 WHERE server_allocations.uuid = $2",
-                notes,
+                notes.as_deref(),
                 allocation.uuid,
             )
             .execute(&mut *transaction)
             .await?;
+            allocation.notes = notes;
         }
         if let Some(primary) = data.primary {
             if server
@@ -242,7 +238,7 @@ mod patch {
                     "ip_alias": allocation.allocation.ip_alias,
                     "port": allocation.allocation.port,
 
-                    "notes": data.notes,
+                    "notes": allocation.notes,
                     "primary": data.primary,
                 }),
             )

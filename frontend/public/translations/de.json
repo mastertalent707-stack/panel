@@ -1472,6 +1472,13 @@
               "variableEquals": "Variable ist gleich",
               "variableStartsWith": "Variable beginnt mit",
               "variableEndsWith": "Variable endet mit"
+            },
+            "scheduleComparator": {
+              "smallerThan": "Kleiner als",
+              "smallerThanOrEqual": "Kleiner oder gleich",
+              "equal": "Gleich",
+              "greaterThanOrEqual": "Größer oder gleich",
+              "greaterThan": "Größer als"
             }
           },
           "modal": {

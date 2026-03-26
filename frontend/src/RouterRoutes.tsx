@@ -11,6 +11,7 @@ import OobeGuard from '@/routers/guards/OobeGuard.tsx';
 import ContentContainer from './elements/containers/ContentContainer.tsx';
 import ScreenBlock from './elements/ScreenBlock.tsx';
 import { useCurrentWindow } from './providers/CurrentWindowProvider.tsx';
+import { useTranslations } from './providers/TranslationProvider.tsx';
 import { useWindows } from './providers/WindowProvider.tsx';
 import globalRoutes from './routers/routes/globalRoutes.ts';
 import { AdminStoreContextProvider, createAdminStore } from './stores/admin.tsx';
@@ -44,6 +45,8 @@ function RelativePageListener() {
 }
 
 export default function RouterRoutes({ isNormal }: { isNormal: boolean }) {
+  const { t } = useTranslations();
+
   return (
     <RelativePageStoreContextProvider createStore={createRelativePageStore}>
       <AdminStoreContextProvider createStore={createAdminStore}>
@@ -85,8 +88,11 @@ export default function RouterRoutes({ isNormal }: { isNormal: boolean }) {
                   <Route
                     path='*'
                     element={
-                      <ContentContainer title='Not found'>
-                        <ScreenBlock title='404' content='Page not found' />
+                      <ContentContainer title={t('elements.screenBlock.notFound.title', {})}>
+                        <ScreenBlock
+                          title={t('elements.screenBlock.notFound.title', {})}
+                          content={t('elements.screenBlock.notFound.content', {})}
+                        />
                       </ContentContainer>
                     }
                   />

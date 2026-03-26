@@ -1,9 +1,12 @@
 import { Route, Routes } from 'react-router';
 import ContentContainer from '@/elements/containers/ContentContainer.tsx';
 import ScreenBlock from '@/elements/ScreenBlock.tsx';
+import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import authenticationRoutes from '@/routers/routes/authenticationRoutes.ts';
 
 export default function AuthenticationRouter() {
+  const { t } = useTranslations();
+
   return (
     <Routes>
       {[...authenticationRoutes, ...window.extensionContext.extensionRegistry.routes.authenticationRoutes]
@@ -14,8 +17,11 @@ export default function AuthenticationRouter() {
       <Route
         path='*'
         element={
-          <ContentContainer title='Not found'>
-            <ScreenBlock title='404' content='Page not found' />
+          <ContentContainer title={t('elements.screenBlock.notFound.title', {})}>
+            <ScreenBlock
+              title={t('elements.screenBlock.notFound.title', {})}
+              content={t('elements.screenBlock.notFound.content', {})}
+            />
           </ContentContainer>
         }
       />

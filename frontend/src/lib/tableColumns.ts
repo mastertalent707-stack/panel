@@ -40,7 +40,7 @@ export const serverTableColumns = ['ID', 'Status', 'Name', 'Node', 'Owner', 'All
 
 export const serverMountTableColumns = ['ID', 'Name', 'Source', 'Target', 'Added', ''];
 
-export const serverAllocationTableColumns = ['', 'ID', 'IP', 'IP Alias', 'Port', 'Notes', 'Created'];
+export const serverAllocationTableColumns = ['', 'IP', 'IP Alias', 'Port', 'Notes', 'Created'];
 
 export const userTableColumns = ['', 'ID', 'Username', 'Role', 'Created'];
 

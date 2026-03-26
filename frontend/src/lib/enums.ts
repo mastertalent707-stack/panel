@@ -185,12 +185,14 @@ export const scheduleConditionLabelMapping: Record<
     getTranslations().t('pages.server.schedules.enum.scheduleConditionType.variableEndsWith', {}),
 };
 
-export const scheduleComparatorLabelMapping: Record<z.infer<typeof serverScheduleComparator>, string> = {
-  smaller_than: 'Smaller Than',
-  smaller_than_or_equals: 'Smaller Than or Equals',
-  equal: 'Equals',
-  greater_than: 'Greater Than',
-  greater_than_or_equals: 'Greater Than or Equals',
+export const scheduleComparatorLabelMapping: Record<z.infer<typeof serverScheduleComparator>, () => string> = {
+  smaller_than: () => getTranslations().t('pages.server.schedules.enum.scheduleComparator.smallerThan', {}),
+  smaller_than_or_equals: () =>
+    getTranslations().t('pages.server.schedules.enum.scheduleComparator.smallerThanOrEqual', {}),
+  equal: () => getTranslations().t('pages.server.schedules.enum.scheduleComparator.equal', {}),
+  greater_than_or_equals: () =>
+    getTranslations().t('pages.server.schedules.enum.scheduleComparator.greaterThanOrEqual', {}),
+  greater_than: () => getTranslations().t('pages.server.schedules.enum.scheduleComparator.greaterThan', {}),
 };
 
 export const scheduleComparatorOperatorMapping: Record<z.infer<typeof serverScheduleComparator>, string> = {
