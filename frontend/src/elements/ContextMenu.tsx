@@ -213,7 +213,7 @@ const ContextMenu = memo(ContextMenuBase) as typeof ContextMenuBase;
 
 const ContextMenuToggle = memo(
   ({ openMenu, items }: { openMenu: (x: number, y: number) => void; items: ContextMenuItem[] }) => {
-    if (!items.some((item) => item.canAccess !== false)) {
+    if (!items.some((item) => !item.hidden && item.canAccess !== false)) {
       return <td></td>;
     }
 

@@ -15,6 +15,10 @@ export default function FileEditorSettings() {
     localStorage.setItem('file_editor_minimap', String(editorMinimap));
   }, [editorMinimap]);
 
+  useEffect(() => {
+    localStorage.setItem('file_editor_lineOverflow', String(editorLineOverflow));
+  }, [editorLineOverflow]);
+
   return (
     <Popover position='bottom' withArrow shadow='md'>
       <Popover.Target>

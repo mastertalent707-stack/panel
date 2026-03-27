@@ -10,6 +10,7 @@ import { bytesToString } from '@/lib/size.ts';
 import FileRowContextMenu from '@/pages/server/files/FileRowContextMenu.tsx';
 import { useServerCan } from '@/plugins/usePermissions.ts';
 import { useFileManager } from '@/providers/FileManagerProvider.tsx';
+import FileMassContextMenu from './FileMassContextMenu.tsx';
 import FileRowIcon from './FileRowIcon.tsx';
 
 interface FileRowProps {
@@ -76,69 +77,77 @@ const FileRow = forwardRef<HTMLTableRowElement, FileRowProps>(function FileRow(
   };
 
   return (
-    <FileRowContextMenu file={file}>
-      {({ items, openMenu }) => (
-        <TableRow
-          ref={ref}
-          className={
-            clickOnce &&
-            canOpenFile &&
-            (isEditableFile(file) ||
-              isViewableImage(file) ||
-              file.directory ||
-              (isViewableArchive(file) && browsingFastDirectory))
-              ? 'cursor-pointer select-none'
-              : 'select-none'
-          }
-          bg={getBgColor()}
-          onContextMenu={(e) => {
-            e.preventDefault();
-            openMenu(e.clientX, e.clientY);
-          }}
-          onClick={(e) => {
-            e.preventDefault();
-            if (clickOnce) {
-              handleOpen();
-            } else {
-              handleClick(e);
-            }
-          }}
-        >
-          {canOpenActionBar ? (
-            <td className='pl-4 relative cursor-pointer w-10 text-center py-2'>
-              <Checkbox
-                id={file.name}
-                checked={isSelected}
-                classNames={{ input: 'cursor-pointer!' }}
-                onChange={toggleSelected}
-                onClick={(e) => e.stopPropagation()}
-              />
-            </td>
-          ) : (
-            <td className='w-0'></td>
+    <FileMassContextMenu>
+      {({ openMassMenu }) => (
+        <FileRowContextMenu file={file}>
+          {({ items, openMenu }) => (
+            <TableRow
+              ref={ref}
+              className={
+                clickOnce &&
+                canOpenFile &&
+                (isEditableFile(file) ||
+                  isViewableImage(file) ||
+                  file.directory ||
+                  (isViewableArchive(file) && browsingFastDirectory))
+                  ? 'cursor-pointer select-none'
+                  : 'select-none'
+              }
+              bg={getBgColor()}
+              onContextMenu={(e) => {
+                e.preventDefault();
+                if (isSelected) {
+                  openMassMenu(e.pageX, e.pageY);
+                } else {
+                  openMenu(e.clientX, e.clientY);
+                }
+              }}
+              onClick={(e) => {
+                e.preventDefault();
+                if (clickOnce) {
+                  handleOpen();
+                } else {
+                  handleClick(e);
+                }
+              }}
+            >
+              {canOpenActionBar ? (
+                <td className='pl-4 relative cursor-pointer w-10 text-center py-2'>
+                  <Checkbox
+                    id={file.name}
+                    checked={isSelected}
+                    classNames={{ input: 'cursor-pointer!' }}
+                    onChange={toggleSelected}
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                </td>
+              ) : (
+                <td className='w-0'></td>
+              )}
+
+              <TableData>
+                <span className='flex items-center gap-4 leading-[100%]'>
+                  <FileRowIcon className='text-gray-400' file={file} />
+                  {file.name}
+                </span>
+              </TableData>
+
+              <TableData>
+                <span className='flex items-center gap-4 leading-[100%]'>
+                  {bytesToString(preferPhysicalSize ? file.sizePhysical : file.size)}
+                </span>
+              </TableData>
+
+              <TableData className='hidden md:table-cell'>
+                <FormattedTimestamp timestamp={file.modified} />
+              </TableData>
+
+              <ContextMenuToggle items={items} openMenu={openMenu} />
+            </TableRow>
           )}
-
-          <TableData>
-            <span className='flex items-center gap-4 leading-[100%]'>
-              <FileRowIcon className='text-gray-400' file={file} />
-              {file.name}
-            </span>
-          </TableData>
-
-          <TableData>
-            <span className='flex items-center gap-4 leading-[100%]'>
-              {bytesToString(preferPhysicalSize ? file.sizePhysical : file.size)}
-            </span>
-          </TableData>
-
-          <TableData className='hidden md:table-cell'>
-            <FormattedTimestamp timestamp={file.modified} />
-          </TableData>
-
-          <ContextMenuToggle items={items} openMenu={openMenu} />
-        </TableRow>
+        </FileRowContextMenu>
       )}
-    </FileRowContextMenu>
+    </FileMassContextMenu>
   );
 });
 

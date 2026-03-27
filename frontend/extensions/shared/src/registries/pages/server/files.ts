@@ -37,6 +37,7 @@ export class FilesRegistry implements Registry {
   public newFileContextMenu: ContextMenuRegistry = new ContextMenuRegistry();
   public fileContextMenu: ContextMenuRegistry<{ file: z.infer<typeof serverDirectoryEntrySchema> }> =
     new ContextMenuRegistry();
+  public fileMassContextMenu: ContextMenuRegistry = new ContextMenuRegistry();
 
   public fileIconHandlers: FileIconHandler[] = [];
 
