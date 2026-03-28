@@ -434,6 +434,17 @@ const baseTranslations = defineTranslations({
             create: 'Create & Continue',
           },
         },
+        nodeConfiguration: {
+          title: 'Node Configuration',
+          error: {
+            noNodes: 'Something went wrong. No nodes were found.',
+            connectionError: 'Something went wrong. Connection Error.',
+          },
+          successMessage: 'The connection to your node was successfully verified. You may now continue.',
+          button: {
+            continue: 'Continue',
+          },
+        },
         configuration: {
           title: 'Application Settings',
           form: {
@@ -474,6 +485,27 @@ const baseTranslations = defineTranslations({
             submit: 'Import',
           },
         },
+        server: {
+          title: 'Server',
+          egg: {
+            title: 'Egg',
+            description: "Let's get your first server up and running. What egg would you like to use?",
+            nestDescription:
+              'To start using this egg, you will need to create a nest, nests are collections of eggs. Give it a name:',
+          },
+          server: {
+            title: 'Server',
+            nestDescription:
+              'To start using this egg, you will need to create a nest, nests are collections of eggs. Give it a name:',
+          },
+          error: {
+            noNodes: 'Something went wrong. No nodes were found.',
+          },
+          button: {
+            submit: 'Import',
+            create: 'Create & Continue',
+          },
+        },
         finished: {
           title: 'Setup Complete!',
           subtitle: 'Your Calagopus panel is ready to use',
@@ -484,8 +516,13 @@ const baseTranslations = defineTranslations({
               title: 'System Configuration',
               subtitle: 'Panel settings and preferences configured',
             },
+            eggRepositories: {
+              title: 'Egg Repositories',
+              subtitle: '{count} repositories',
+            },
             location: 'Location',
             node: 'Node',
+            server: 'Server',
           },
           badge: {
             skipped: 'Skipped',

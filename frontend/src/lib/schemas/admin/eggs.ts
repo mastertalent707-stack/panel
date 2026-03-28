@@ -56,16 +56,18 @@ export const adminEggSchema = z.object({
   created: z.date(),
 });
 
-export const adminEggUpdateSchema = z.lazy(() => adminEggSchema
-  .omit({
-    uuid: true,
-    eggRepositoryEgg: true,
-    configScript: true,
-    created: true,
-  })
-  .extend({
-    eggRepositoryEggUuid: z.uuid().nullable(),
-  }));
+export const adminEggUpdateSchema = z.lazy(() =>
+  adminEggSchema
+    .omit({
+      uuid: true,
+      eggRepositoryEgg: true,
+      configScript: true,
+      created: true,
+    })
+    .extend({
+      eggRepositoryEggUuid: z.uuid().nullable(),
+    }),
+);
 
 export const adminEggVariableSchema = z.object({
   uuid: z.string(),
@@ -81,14 +83,16 @@ export const adminEggVariableSchema = z.object({
   created: z.date(),
 });
 
-export const adminEggVariableUpdateSchema = z.lazy(() => adminEggVariableSchema
-  .omit({
-    uuid: true,
-    isSecret: true,
-    created: true,
-  })
-  .extend({
-    secret: z.boolean(),
-  }));
+export const adminEggVariableUpdateSchema = z.lazy(() =>
+  adminEggVariableSchema
+    .omit({
+      uuid: true,
+      isSecret: true,
+      created: true,
+    })
+    .extend({
+      secret: z.boolean(),
+    }),
+);
 
 export const processConfigurationConfigParser = z.enum(['file', 'yaml', 'properties', 'ini', 'json', 'xml', 'toml']);

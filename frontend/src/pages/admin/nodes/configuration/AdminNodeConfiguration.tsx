@@ -11,6 +11,7 @@ import HljsCode from '@/elements/HljsCode.tsx';
 import NumberInput from '@/elements/input/NumberInput.tsx';
 import TextInput from '@/elements/input/TextInput.tsx';
 import { handleCopyToClipboard } from '@/lib/copy.ts';
+import { getNodeConfiguration, getNodeConfigurationCommand } from '@/lib/node.ts';
 import { adminNodeSchema } from '@/lib/schemas/admin/nodes.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';
 
@@ -20,36 +21,8 @@ export default function AdminNodeConfiguration({ node }: { node: z.infer<typeof 
   const [apiPort, setApiPort] = useState(parseInt(new URL(node.url).port || '8080'));
   const [sftpPort, setSftpPort] = useState(node.sftpPort);
 
-  const getNodeConfiguration = () => {
-    let origin = window.location.origin;
-    try {
-      origin = new URL(remote).origin;
-    } catch {
-      // ignore
-    }
-
-    return {
-      uuid: node.uuid,
-      token_id: node.tokenId,
-      token: node.token,
-      api: {
-        port: apiPort,
-        disable_openapi_docs: true,
-        upload_limit: 10240,
-      },
-      system: {
-        sftp: {
-          bind_port: sftpPort,
-        },
-      },
-      allowed_mounts: [],
-      remote: origin,
-    };
-  };
-
-  const getCommand = () => {
-    return `wings configure --join-data ${btoa(jsYaml.dump(getNodeConfiguration(), { condenseFlow: true, indent: 1, noArrayIndent: true }))}`;
-  };
+  const nodeConfiguration = getNodeConfiguration({ node, remote, apiPort, sftpPort });
+  const command = getNodeConfigurationCommand({ node, remote, apiPort, sftpPort });
 
   return (
     <AdminSubContentContainer title='Node Configuration' titleOrder={2}>
@@ -59,7 +32,7 @@ export default function AdminNodeConfiguration({ node }: { node: z.infer<typeof 
             languageName='yaml'
             language={() => import('highlight.js/lib/languages/yaml').then((mod) => mod.default)}
           >
-            {jsYaml.dump(getNodeConfiguration())}
+            {jsYaml.dump(nodeConfiguration)}
           </HljsCode>
 
           <div className='mt-2'>
@@ -68,10 +41,10 @@ export default function AdminNodeConfiguration({ node }: { node: z.infer<typeof 
             </p>
             <Group gap='xs' align='flex-start' wrap='nowrap' className='mt-2'>
               <Code block className='flex-1'>
-                {getCommand()}
+                {command}
               </Code>
               <Tooltip label='Copy command'>
-                <ActionIcon variant='subtle' onClick={handleCopyToClipboard(getCommand(), addToast)} size='lg'>
+                <ActionIcon variant='subtle' onClick={handleCopyToClipboard(command, addToast)} size='lg'>
                   <FontAwesomeIcon icon={faCopy} />
                 </ActionIcon>
               </Tooltip>

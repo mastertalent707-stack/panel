@@ -1,8 +1,9 @@
 import { z } from 'zod';
+import { adminServerFeatureLimitsSchema, adminServerLimitsSchema } from '@/lib/schemas/admin/servers.ts';
 import { nullableString } from '../transformers.ts';
 
 export const oobeStepKey = z
-  .enum(['register', 'configuration', 'location', 'node', 'repositories', 'server', 'finished'])
+  .enum(['register', 'configuration', 'repositories', 'location', 'node', 'nodeconfiguration', 'server', 'finished'])
   .nullable();
 
 export const oobeConfigurationSchema = z.object({
@@ -51,3 +52,19 @@ export const oobeRegister = z
     message: 'Passwords do not match',
     path: ['confirmPassword'],
   });
+
+export const oobeServerSchema = z.object({
+  nestName: z.string().min(3).max(255),
+  name: z.string().min(3).max(255),
+  limits: z.lazy(() =>
+    adminServerLimitsSchema.omit({
+      memoryOverhead: true,
+      ioWeight: true,
+    }),
+  ),
+  image: z.string().min(2).max(255),
+  startOnCompletion: z.boolean(),
+  featureLimits: z.lazy(() => adminServerFeatureLimitsSchema),
+  allocationUuid: z.uuid().nullable(),
+  allocationUuids: z.array(z.uuid()),
+});

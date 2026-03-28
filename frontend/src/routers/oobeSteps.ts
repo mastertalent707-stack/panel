@@ -6,6 +6,7 @@ import {
   faRocket,
   faServer,
   faUsers,
+  faWrench,
   IconDefinition,
 } from '@fortawesome/free-solid-svg-icons';
 import { ComponentType } from 'react';
@@ -16,16 +17,18 @@ import OobeFinished from '@/pages/oobe/OobeFinished.tsx';
 import OobeLocation from '@/pages/oobe/OobeLocation.tsx';
 import OobeLogin from '@/pages/oobe/OobeLogin.tsx';
 import OobeNode from '@/pages/oobe/OobeNode.tsx';
+import OobeNodeConfigure from '@/pages/oobe/OobeNodeConfigure.tsx';
 import OobeRegister from '@/pages/oobe/OobeRegister.tsx';
 import OobeRepositories from '@/pages/oobe/OobeRepositories.tsx';
+import OobeServer from '@/pages/oobe/OobeServer.tsx';
 import OobeWelcome from '@/pages/oobe/OobeWelcome.tsx';
 import { OobeComponentProps } from '@/routers/OobeRouter.tsx';
 
 export interface OobeStep {
   path: string;
   stepKey: z.infer<typeof oobeStepKey> | null;
-  label: string | null;
-  icon: IconDefinition | null;
+  label?: string | null;
+  icon?: IconDefinition | null;
   component: ComponentType<OobeComponentProps>;
   preAuth?: boolean;
   skipTo?: z.infer<typeof oobeStepKey>;
@@ -87,11 +90,19 @@ export const steps: OobeStep[] = [
     skipTo: 'finished',
   },
   {
+    path: '/nodeconfiguration',
+    stepKey: 'nodeconfiguration',
+    label: 'Node Configuration',
+    icon: faWrench,
+    component: OobeNodeConfigure,
+    skipTo: 'finished',
+  },
+  {
     path: '/server',
     stepKey: 'server',
     label: 'Server',
     icon: faServer,
-    component: OobeNode,
+    component: OobeServer,
     skipTo: 'finished',
   },
   {

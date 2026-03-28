@@ -2,6 +2,8 @@ import {
   faArrowRight,
   faCheckCircle,
   faCogs,
+  faComputer,
+  faDownload,
   faEarthAmerica,
   faServer,
   faUsers,
@@ -10,14 +12,18 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Group, Paper, Stack, Text, ThemeIcon, Title } from '@mantine/core';
 import { useNavigate } from 'react-router';
 import { z } from 'zod';
+import getEggRepositories from '@/api/admin/egg-repositories/getEggRepositories.ts';
 import getLocations from '@/api/admin/locations/getLocations.ts';
 import getNodes from '@/api/admin/nodes/getNodes.ts';
+import getServers from '@/api/admin/servers/getServers.ts';
 import updateOobeSettings from '@/api/admin/settings/updateOobeSettings.ts';
 import Badge from '@/elements/Badge.tsx';
 import Button from '@/elements/Button.tsx';
 import Divider from '@/elements/Divider.tsx';
+import { adminEggRepositorySchema } from '@/lib/schemas/admin/eggRepositories.ts';
 import { adminLocationSchema } from '@/lib/schemas/admin/locations.ts';
 import { adminNodeSchema } from '@/lib/schemas/admin/nodes.ts';
+import { adminServerSchema } from '@/lib/schemas/admin/servers.ts';
 import { useSearchableResource } from '@/plugins/useSearchableResource.ts';
 import { useAuth } from '@/providers/AuthProvider.tsx';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
@@ -29,11 +35,17 @@ export default function OobeFinished() {
   const { settings, setSettings } = useGlobalStore();
   const navigate = useNavigate();
 
+  const eggRepositories = useSearchableResource<z.infer<typeof adminEggRepositorySchema>>({
+    fetcher: () => getEggRepositories(1),
+  });
   const locations = useSearchableResource<z.infer<typeof adminLocationSchema>>({
     fetcher: () => getLocations(1),
   });
   const nodes = useSearchableResource<z.infer<typeof adminNodeSchema>>({
     fetcher: () => getNodes(1),
+  });
+  const servers = useSearchableResource<z.infer<typeof adminServerSchema>>({
+    fetcher: () => getServers(1),
   });
 
   const handleFinish = () => {
@@ -96,6 +108,31 @@ export default function OobeFinished() {
           <Divider />
 
           <Group gap='xs'>
+            <ThemeIcon size='sm' radius='xl' color='red' variant='light'>
+              <FontAwesomeIcon icon={faDownload} size='xs' />
+            </ThemeIcon>
+            <div className='flex-1'>
+              <Text size='sm' fw={500}>
+                {t('pages.oobe.finished.items.eggRepositories.title', {})}
+              </Text>
+              {eggRepositories.items.length > 0 && (
+                <Text size='xs' c='dimmed'>
+                  {t('pages.oobe.finished.items.eggRepositories.subtitle', {
+                    count: eggRepositories.items.length,
+                  })}
+                </Text>
+              )}
+            </div>
+            {eggRepositories.items.length < 1 && (
+              <Badge color='orange' size='sm'>
+                {t('pages.oobe.finished.badge.skipped', {})}
+              </Badge>
+            )}
+          </Group>
+
+          <Divider />
+
+          <Group gap='xs'>
             <ThemeIcon size='sm' radius='xl' color='cyan' variant='light'>
               <FontAwesomeIcon icon={faEarthAmerica} size='xs' />
             </ThemeIcon>
@@ -133,6 +170,29 @@ export default function OobeFinished() {
               )}
             </div>
             {nodes.items.length < 1 && (
+              <Badge color='orange' size='sm'>
+                {t('pages.oobe.finished.badge.skipped', {})}
+              </Badge>
+            )}
+          </Group>
+
+          <Divider />
+
+          <Group gap='xs'>
+            <ThemeIcon size='sm' radius='xl' color='green' variant='light'>
+              <FontAwesomeIcon icon={faComputer} size='xs' />
+            </ThemeIcon>
+            <div className='flex-1'>
+              <Text size='sm' fw={500}>
+                {t('pages.oobe.finished.items.server', {})}
+              </Text>
+              {servers.items.length > 0 && (
+                <Text size='xs' c='dimmed'>
+                  {servers.items[0].name}
+                </Text>
+              )}
+            </div>
+            {servers.items.length < 1 && (
               <Badge color='orange' size='sm'>
                 {t('pages.oobe.finished.badge.skipped', {})}
               </Badge>

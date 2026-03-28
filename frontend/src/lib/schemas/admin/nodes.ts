@@ -24,23 +24,27 @@ export const adminNodeSchema = z.object({
   created: z.date(),
 });
 
-export const adminNodeUpdateSchema = z.lazy(() => adminNodeSchema
-  .omit({
-    uuid: true,
-    location: true,
-    backupConfiguration: true,
-    tokenId: true,
-    token: true,
-    created: true,
-  })
-  .extend({
-    locationUuid: z.uuid(),
-    backupConfigurationUuid: z.uuid().nullable(),
-  }));
+export const adminNodeUpdateSchema = z.lazy(() =>
+  adminNodeSchema
+    .omit({
+      uuid: true,
+      location: true,
+      backupConfiguration: true,
+      tokenId: true,
+      token: true,
+      created: true,
+    })
+    .extend({
+      locationUuid: z.uuid(),
+      backupConfigurationUuid: z.uuid().nullable(),
+    }),
+);
 
-export const adminNodeServerBackupSchema = z.lazy(() => adminServerBackupSchema.extend({
-  node: adminNodeSchema,
-}));
+export const adminNodeServerBackupSchema = z.lazy(() =>
+  adminServerBackupSchema.extend({
+    node: adminNodeSchema,
+  }),
+);
 
 export const adminNodeAllocationSchema = z.object({
   uuid: z.string(),

@@ -11,15 +11,17 @@ export const adminLocationSchema = z.object({
   created: z.string(),
 });
 
-export const adminLocationUpdateSchema = z.lazy(() => adminLocationSchema
-  .omit({
-    uuid: true,
-    backupConfiguration: true,
-    created: true,
-  })
-  .extend({
-    backupConfigurationUuid: z.uuid().nullable(),
-  }));
+export const adminLocationUpdateSchema = z.lazy(() =>
+  adminLocationSchema
+    .omit({
+      uuid: true,
+      backupConfiguration: true,
+      created: true,
+    })
+    .extend({
+      backupConfigurationUuid: z.uuid().nullable(),
+    }),
+);
 
 export const adminLocationDatabaseHostSchema = z.object({
   databaseHost: databaseHostSchema,

@@ -74,28 +74,32 @@ const adminServerBaseOmit = adminServerSchema.omit({
   created: true,
 });
 
-export const adminServerCreateSchema = z.lazy(() => adminServerBaseOmit.extend({
-  startOnCompletion: z.boolean(),
-  skipInstaller: z.boolean(),
-  nodeUuid: z.uuid(),
-  ownerUuid: z.uuid(),
-  eggUuid: z.uuid(),
-  backupConfigurationUuid: z.uuid().nullable(),
-  allocationUuid: z.uuid().nullable(),
-  allocationUuids: z.array(z.uuid()),
-  variables: z.array(
-    z.object({
-      envVariable: z.string().min(1).max(255),
-      value: z.string().max(4096),
-    }),
-  ),
-}));
+export const adminServerCreateSchema = z.lazy(() =>
+  adminServerBaseOmit.extend({
+    startOnCompletion: z.boolean(),
+    skipInstaller: z.boolean(),
+    nodeUuid: z.uuid(),
+    ownerUuid: z.uuid(),
+    eggUuid: z.uuid(),
+    backupConfigurationUuid: z.uuid().nullable(),
+    allocationUuid: z.uuid().nullable(),
+    allocationUuids: z.array(z.uuid()),
+    variables: z.array(
+      z.object({
+        envVariable: z.string().min(1).max(255),
+        value: z.string().max(4096),
+      }),
+    ),
+  }),
+);
 
-export const adminServerUpdateSchema = z.lazy(() => adminServerBaseOmit.extend({
-  ownerUuid: z.uuid(),
-  eggUuid: z.uuid(),
-  backupConfigurationUuid: z.uuid().nullable(),
-}));
+export const adminServerUpdateSchema = z.lazy(() =>
+  adminServerBaseOmit.extend({
+    ownerUuid: z.uuid(),
+    eggUuid: z.uuid(),
+    backupConfigurationUuid: z.uuid().nullable(),
+  }),
+);
 
 export const adminServerBackupSchema = z.object({
   uuid: z.string(),

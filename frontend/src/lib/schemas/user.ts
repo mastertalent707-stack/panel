@@ -28,21 +28,23 @@ export const userSchema = z.object({
   created: z.date(),
 });
 
-export const fullUserSchema = z.lazy(() => userSchema.extend({
-  email: z.string(),
-  nameFirst: z.string(),
-  nameLast: z.string(),
-  role: roleSchema,
-  avatar: z.string().optional(),
-  totpEnabled: z.boolean(),
-  totpLastUsed: z.date().nullable(),
-  requireTwoFactor: z.boolean(),
-  toastPosition: userToastPosition,
-  startOnGroupedServers: z.boolean(),
-  hasPassword: z.boolean(),
-  admin: z.boolean(),
-  language: z.string(),
-}));
+export const fullUserSchema = z.lazy(() =>
+  userSchema.extend({
+    email: z.string(),
+    nameFirst: z.string(),
+    nameLast: z.string(),
+    role: roleSchema,
+    avatar: z.string().optional(),
+    totpEnabled: z.boolean(),
+    totpLastUsed: z.date().nullable(),
+    requireTwoFactor: z.boolean(),
+    toastPosition: userToastPosition,
+    startOnGroupedServers: z.boolean(),
+    hasPassword: z.boolean(),
+    admin: z.boolean(),
+    language: z.string(),
+  }),
+);
 
 export const userServerGroupSchema = z.object({
   uuid: z.string(),

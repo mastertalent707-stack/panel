@@ -21,11 +21,13 @@ export const adminDatabaseHostCreateSchema = adminDatabaseHostSchema.omit({
   created: true,
 });
 
-export const adminDatabaseHostUpdateSchema = z.lazy(() => adminDatabaseHostSchema
-  .omit({
-    uuid: true,
-    created: true,
-  })
-  .extend({
-    password: adminDatabaseHostSchema.shape.password.nullable(),
-  }));
+export const adminDatabaseHostUpdateSchema = z.lazy(() =>
+  adminDatabaseHostSchema
+    .omit({
+      uuid: true,
+      created: true,
+    })
+    .extend({
+      password: adminDatabaseHostSchema.shape.password.nullable(),
+    }),
+);

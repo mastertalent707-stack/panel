@@ -26,6 +26,8 @@ export const adminEggRepositoryEggSchema = z.object({
   }),
 });
 
-export const adminEggEggRepositoryEggSchema = z.lazy(() => adminEggRepositoryEggSchema.extend({
-  eggRepository: z.lazy(() => adminEggRepositorySchema),
-}));
+export const adminEggEggRepositoryEggSchema = z.lazy(() =>
+  adminEggRepositoryEggSchema.extend({
+    eggRepository: z.lazy(() => adminEggRepositorySchema),
+  }),
+);

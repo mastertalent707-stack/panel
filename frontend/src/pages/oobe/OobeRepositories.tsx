@@ -21,13 +21,13 @@ export default function OobeRepositories({ onNext, skipFrom }: OobeComponentProp
       gitRepository: 'https://github.com/pterodactyl/game-eggs',
     },
     {
-      name: t('pages.oobe.eggRepositories.repositories.pterodactylGame.title', {}),
-      description: t('pages.oobe.eggRepositories.repositories.pterodactylGame.description', {}),
+      name: t('pages.oobe.eggRepositories.repositories.pterodactylApplication.title', {}),
+      description: t('pages.oobe.eggRepositories.repositories.pterodactylApplication.description', {}),
       gitRepository: 'https://github.com/pterodactyl/application-eggs',
     },
     {
-      name: t('pages.oobe.eggRepositories.repositories.pterodactylGame.title', {}),
-      description: t('pages.oobe.eggRepositories.repositories.pterodactylGame.description', {}),
+      name: t('pages.oobe.eggRepositories.repositories.pterodactylGeneral.title', {}),
+      description: t('pages.oobe.eggRepositories.repositories.pterodactylGeneral.description', {}),
       gitRepository: 'https://github.com/pterodactyl/generic-eggs',
     },
   ];

@@ -9,6 +9,7 @@ interface UseSearchableResourceOptions<T> {
   deps?: unknown[];
   debounceMs?: number;
   canRequest?: boolean;
+  defaultLoadState?: boolean;
 }
 
 export function useSearchableResource<T>({
@@ -17,12 +18,13 @@ export function useSearchableResource<T>({
   deps = [],
   debounceMs = 150,
   canRequest = true,
+  defaultLoadState = false,
 }: UseSearchableResourceOptions<T>) {
   const { addToast } = useToast();
 
   const [items, setItems] = useState<T[]>([]);
   const [search, setSearch] = useState(defaultSearchValue);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(defaultLoadState);
 
   const fetchData = (searchValue: string) => {
     if (!canRequest) return;

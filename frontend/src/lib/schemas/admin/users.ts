@@ -16,25 +16,29 @@ export const adminUserSchema = z.object({
   created: z.date(),
 });
 
-export const adminFullUserSchema = z.lazy(() => adminUserSchema.extend({
-  avatar: z.string().optional(),
-  totpEnabled: z.boolean(),
-  totpLastUsed: z.date().nullable(),
-  requireTwoFactor: z.boolean(),
-  toastPosition: z.lazy(() => userToastPosition),
-  startOnGroupedServers: z.boolean(),
-  hasPassword: z.boolean(),
-}));
+export const adminFullUserSchema = z.lazy(() =>
+  adminUserSchema.extend({
+    avatar: z.string().optional(),
+    totpEnabled: z.boolean(),
+    totpLastUsed: z.date().nullable(),
+    requireTwoFactor: z.boolean(),
+    toastPosition: z.lazy(() => userToastPosition),
+    startOnGroupedServers: z.boolean(),
+    hasPassword: z.boolean(),
+  }),
+);
 
-export const adminUserUpdateSchema = z.lazy(() => adminUserSchema
-  .omit({
-    uuid: true,
-    role: true,
-    created: true,
-  })
-  .extend({
-    roleUuid: z.string().nullable(),
-  }));
+export const adminUserUpdateSchema = z.lazy(() =>
+  adminUserSchema
+    .omit({
+      uuid: true,
+      role: true,
+      created: true,
+    })
+    .extend({
+      roleUuid: z.string().nullable(),
+    }),
+);
 
 export const adminUserOAuthLinkSchema = z.object({
   uuid: z.string(),
