@@ -74,7 +74,7 @@ const adminServerBaseOmit = adminServerSchema.omit({
   created: true,
 });
 
-export const adminServerCreateSchema = adminServerBaseOmit.extend({
+export const adminServerCreateSchema = z.lazy(() => adminServerBaseOmit.extend({
   startOnCompletion: z.boolean(),
   skipInstaller: z.boolean(),
   nodeUuid: z.uuid(),
@@ -89,13 +89,13 @@ export const adminServerCreateSchema = adminServerBaseOmit.extend({
       value: z.string().max(4096),
     }),
   ),
-});
+}));
 
-export const adminServerUpdateSchema = adminServerBaseOmit.extend({
+export const adminServerUpdateSchema = z.lazy(() => adminServerBaseOmit.extend({
   ownerUuid: z.uuid(),
   eggUuid: z.uuid(),
   backupConfigurationUuid: z.uuid().nullable(),
-});
+}));
 
 export const adminServerBackupSchema = z.object({
   uuid: z.string(),

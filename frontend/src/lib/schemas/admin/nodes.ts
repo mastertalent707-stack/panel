@@ -24,7 +24,7 @@ export const adminNodeSchema = z.object({
   created: z.date(),
 });
 
-export const adminNodeUpdateSchema = adminNodeSchema
+export const adminNodeUpdateSchema = z.lazy(() => adminNodeSchema
   .omit({
     uuid: true,
     location: true,
@@ -36,15 +36,15 @@ export const adminNodeUpdateSchema = adminNodeSchema
   .extend({
     locationUuid: z.uuid(),
     backupConfigurationUuid: z.uuid().nullable(),
-  });
+  }));
 
-export const adminNodeServerBackupSchema = adminServerBackupSchema.extend({
+export const adminNodeServerBackupSchema = z.lazy(() => adminServerBackupSchema.extend({
   node: adminNodeSchema,
-});
+}));
 
 export const adminNodeAllocationSchema = z.object({
   uuid: z.string(),
-  server: adminServerSchema.nullable(),
+  server: z.lazy(() => adminServerSchema).nullable(),
   ip: z.string(),
   ipAlias: z.string().nullable(),
   port: z.number(),

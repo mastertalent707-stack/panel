@@ -28,7 +28,7 @@ export const userSchema = z.object({
   created: z.date(),
 });
 
-export const fullUserSchema = userSchema.extend({
+export const fullUserSchema = z.lazy(() => userSchema.extend({
   email: z.string(),
   nameFirst: z.string(),
   nameLast: z.string(),
@@ -42,7 +42,7 @@ export const fullUserSchema = userSchema.extend({
   hasPassword: z.boolean(),
   admin: z.boolean(),
   language: z.string(),
-});
+}));
 
 export const userServerGroupSchema = z.object({
   uuid: z.string(),

@@ -15,14 +15,14 @@ export const serverBackupSchema = z.object({
   created: z.date(),
 });
 
-export const serverBackupWithProgressSchema = serverBackupSchema.extend({
+export const serverBackupWithProgressSchema = z.lazy(() => serverBackupSchema.extend({
   progress: z
     .object({
       progress: z.number(),
       total: z.number(),
     })
     .optional(),
-});
+}));
 
 export const serverBackupCreateSchema = z.object({
   name: z.string().min(1).max(255),

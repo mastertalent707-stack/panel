@@ -20,9 +20,12 @@ export const adminEggRepositoryEggSchema = z.object({
   author: z.string(),
   name: z.string(),
   description: z.string().nullable(),
-  exportedEgg: z.object(),
+  exportedEgg: z.object({
+    startup: z.string().min(1).max(4096),
+    dockerImages: z.record(z.string(), z.string()),
+  }),
 });
 
-export const adminEggEggRepositoryEggSchema = adminEggRepositoryEggSchema.extend({
+export const adminEggEggRepositoryEggSchema = z.lazy(() => adminEggRepositoryEggSchema.extend({
   eggRepository: z.lazy(() => adminEggRepositorySchema),
-});
+}));
