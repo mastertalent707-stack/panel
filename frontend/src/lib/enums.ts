@@ -45,6 +45,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { z } from 'zod';
 import { adminBackupConfigurationSchema } from '@/lib/schemas/admin/backupConfigurations.ts';
+import { adminEggConfigurationDeploymentSchema } from '@/lib/schemas/admin/eggConfigurations.ts';
 import { processConfigurationConfigParser } from '@/lib/schemas/admin/eggs.ts';
 import { adminSettingsEmailSchema, adminSettingsStorageSchema } from '@/lib/schemas/admin/settings.ts';
 import { databaseType, streamingArchiveFormat } from '@/lib/schemas/generic.ts';
@@ -150,6 +151,48 @@ export const fingerprintAlgorithmLabelMapping: Record<z.infer<typeof fingerprint
   sha384: 'SHA-384',
   sha512: 'SHA-512',
   curseforge: 'CurseForge',
+};
+
+export const eggConfigurationDeploymentDefaultMapping: Record<
+  z.infer<typeof adminEggConfigurationDeploymentSchema>['mode']['type'],
+  z.infer<typeof adminEggConfigurationDeploymentSchema>['mode']
+> = {
+  random: {
+    type: 'random',
+  },
+  range: {
+    type: 'range',
+    startPort: 1024,
+    endPort: 65535,
+  },
+  add_primary: {
+    type: 'add_primary',
+    value: 0,
+  },
+  subtract_primary: {
+    type: 'subtract_primary',
+    value: 0,
+  },
+  multiply_primary: {
+    type: 'multiply_primary',
+    value: 1,
+  },
+  divide_primary: {
+    type: 'divide_primary',
+    value: 1,
+  },
+};
+
+export const eggConfigurationDeploymentTypeLabelMapping: Record<
+  z.infer<typeof adminEggConfigurationDeploymentSchema>['mode']['type'],
+  string
+> = {
+  random: 'Random',
+  range: 'Port Range',
+  add_primary: 'Add to Primary',
+  subtract_primary: 'Subtract from Primary',
+  multiply_primary: 'Multiply Primary',
+  divide_primary: 'Divide Primary',
 };
 
 export const schedulePreConditionLabelMapping: Record<
