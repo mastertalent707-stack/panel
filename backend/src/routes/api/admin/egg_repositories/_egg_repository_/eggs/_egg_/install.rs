@@ -107,7 +107,6 @@ mod post {
                     "config_startup": egg.config_startup,
                     "config_stop": egg.config_stop,
                     "config_script": egg.config_script,
-                    "config_allocations": egg.config_allocations,
 
                     "startup": egg.startup,
                     "force_outgoing_ip": egg.force_outgoing_ip,

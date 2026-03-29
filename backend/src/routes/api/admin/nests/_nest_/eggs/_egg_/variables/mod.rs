@@ -53,6 +53,8 @@ mod get {
 }
 
 mod post {
+    use std::collections::BTreeMap;
+
     use crate::routes::api::admin::nests::_nest_::{GetNest, eggs::_egg_::GetNestEgg};
     use axum::http::StatusCode;
     use garde::Validate;
@@ -77,6 +79,9 @@ mod post {
         #[garde(length(max = 1024))]
         #[schema(max_length = 1024)]
         description: Option<compact_str::CompactString>,
+        #[garde(custom(shared::models::nest_egg_variable::validate_description_translations))]
+        pub description_translations:
+            BTreeMap<compact_str::CompactString, compact_str::CompactString>,
         #[garde(skip)]
         order: i16,
 
@@ -134,6 +139,7 @@ mod post {
                 egg_uuid: egg.uuid,
                 name: data.name,
                 description: data.description,
+                description_translations: data.description_translations,
                 order: data.order,
                 env_variable: data.env_variable,
                 default_value: data.default_value,
@@ -164,6 +170,7 @@ mod post {
 
                     "name": egg_variable.name,
                     "description": egg_variable.description,
+                    "description_translations": egg_variable.description_translations,
                     "order": egg_variable.order,
 
                     "env_variable": egg_variable.env_variable,

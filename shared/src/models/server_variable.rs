@@ -115,6 +115,7 @@ impl ServerVariable {
         ApiServerVariable {
             name: self.variable.name,
             description: self.variable.description,
+            description_translations: self.variable.description_translations,
             env_variable: self.variable.env_variable,
             default_value: self.variable.default_value,
             value: self.value,
@@ -131,6 +132,7 @@ impl ServerVariable {
 pub struct ApiServerVariable {
     pub name: compact_str::CompactString,
     pub description: Option<compact_str::CompactString>,
+    pub description_translations: BTreeMap<compact_str::CompactString, compact_str::CompactString>,
 
     pub env_variable: compact_str::CompactString,
     pub default_value: Option<String>,

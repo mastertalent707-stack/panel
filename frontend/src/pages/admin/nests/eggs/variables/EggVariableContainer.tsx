@@ -10,15 +10,16 @@ import { httpErrorToHuman } from '@/api/axios.ts';
 import Button from '@/elements/Button.tsx';
 import Card from '@/elements/Card.tsx';
 import Code from '@/elements/Code.tsx';
+import LocalizedTextArea from '@/elements/input/LocalizedTextArea.tsx';
 import Switch from '@/elements/input/Switch.tsx';
 import TagsInput from '@/elements/input/TagsInput.tsx';
-import TextArea from '@/elements/input/TextArea.tsx';
 import TextInput from '@/elements/input/TextInput.tsx';
 import ConfirmationModal from '@/elements/modals/ConfirmationModal.tsx';
 import { adminEggSchema, adminEggVariableSchema, adminEggVariableUpdateSchema } from '@/lib/schemas/admin/eggs.ts';
 import { adminNestSchema } from '@/lib/schemas/admin/nests.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';
 import { useAdminStore } from '@/stores/admin.tsx';
+import { useGlobalStore } from '@/stores/global.ts';
 
 export default function EggVariableContainer({
   contextNest,
@@ -31,6 +32,7 @@ export default function EggVariableContainer({
 }) {
   const { eggVariables, setEggVariables, removeEggVariable } = useAdminStore();
   const { addToast } = useToast();
+  const { languages } = useGlobalStore();
 
   const [openModal, setOpenModal] = useState<'delete' | null>(null);
   const [loading, setLoading] = useState(false);
@@ -39,6 +41,7 @@ export default function EggVariableContainer({
     initialValues: {
       name: '',
       description: null,
+      descriptionTranslations: {},
       order: 0,
       envVariable: '',
       defaultValue: null,
@@ -56,6 +59,7 @@ export default function EggVariableContainer({
       form.setValues({
         name: contextVariable.name,
         description: contextVariable.description,
+        descriptionTranslations: contextVariable.descriptionTranslations,
         order: contextVariable.order,
         envVariable: contextVariable.envVariable,
         defaultValue: contextVariable.defaultValue,
@@ -144,11 +148,15 @@ export default function EggVariableContainer({
           <Stack>
             <TextInput withAsterisk label='Name' placeholder='Name' {...form.getInputProps('name')} />
 
-            <TextArea
+            <LocalizedTextArea
               label='Description'
               placeholder='Description'
               description='Supports Markdown formatting.'
-              {...form.getInputProps('description')}
+              value={form.values.description}
+              setValue={(value) => form.setFieldValue('description', value)}
+              valueTranslations={form.values.descriptionTranslations}
+              setValueTranslations={(translations) => form.setFieldValue('descriptionTranslations', translations)}
+              languages={languages}
             />
 
             <Group grow>

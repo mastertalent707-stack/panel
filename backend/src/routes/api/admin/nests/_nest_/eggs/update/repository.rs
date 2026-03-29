@@ -85,7 +85,6 @@ mod post {
                         "config_startup": nest_egg.config_startup,
                         "config_stop": nest_egg.config_stop,
                         "config_script": nest_egg.config_script,
-                        "config_allocations": nest_egg.config_allocations,
 
                         "startup": nest_egg.startup,
                         "force_outgoing_ip": nest_egg.force_outgoing_ip,

@@ -3,7 +3,6 @@ import {
   faFileDownload,
   faFileText,
   faMinus,
-  faNetworkWired,
   faPlay,
   faPlus,
   faRefresh,
@@ -34,7 +33,6 @@ import Code from '@/elements/Code.tsx';
 import ContextMenu, { ContextMenuProvider } from '@/elements/ContextMenu.tsx';
 import AdminContentContainer from '@/elements/containers/AdminContentContainer.tsx';
 import MultiKeyValueInput from '@/elements/input/MultiKeyValueInput.tsx';
-import NumberInput from '@/elements/input/NumberInput.tsx';
 import Select from '@/elements/input/Select.tsx';
 import Switch from '@/elements/input/Switch.tsx';
 import TagsInput from '@/elements/input/TagsInput.tsx';
@@ -84,14 +82,6 @@ export default function EggCreateOrUpdate({
         type: '',
         value: null,
       },
-      configAllocations: {
-        userSelfAssign: {
-          enabled: false,
-          requirePrimaryAllocation: false,
-          startPort: 0,
-          endPort: 0,
-        },
-      },
       startup: '',
       forceOutgoingIp: false,
       separatePort: false,
@@ -137,7 +127,6 @@ export default function EggCreateOrUpdate({
         configFiles: contextEgg.configFiles,
         configStartup: contextEgg.configStartup,
         configStop: contextEgg.configStop,
-        configAllocations: contextEgg.configAllocations,
         startup: contextEgg.startup,
         forceOutgoingIp: contextEgg.forceOutgoingIp,
         separatePort: contextEgg.separatePort,
@@ -404,43 +393,6 @@ export default function EggCreateOrUpdate({
                 />
               ) : null}
             </Group>
-          </TitleCard>
-
-          <TitleCard title='Allocation Configuration' icon={<FontAwesomeIcon icon={faNetworkWired} size='sm' />}>
-            <Stack>
-              <Group grow>
-                <Switch
-                  label='User Self Assign'
-                  description='Allow users to create their own allocations from a specified port range.'
-                  key={form.key('configAllocations.userSelfAssign.enabled')}
-                  {...form.getInputProps('configAllocations.userSelfAssign.enabled', { type: 'checkbox' })}
-                />
-
-                <Switch
-                  label='Require Primary Allocation'
-                  description='Whether users must always have a primary allocation.'
-                  key={form.key('configAllocations.userSelfAssign.requirePrimaryAllocation')}
-                  {...form.getInputProps('configAllocations.userSelfAssign.requirePrimaryAllocation', {
-                    type: 'checkbox',
-                  })}
-                />
-              </Group>
-
-              <Group grow>
-                <NumberInput
-                  label='Automatic Allocation Start'
-                  placeholder='Automatic Allocation Start'
-                  key={form.key('configAllocations.userSelfAssign.startPort')}
-                  {...form.getInputProps('configAllocations.userSelfAssign.startPort')}
-                />
-                <NumberInput
-                  label='Automatic Allocation End'
-                  placeholder='Automatic Allocation End'
-                  key={form.key('configAllocations.userSelfAssign.endPort')}
-                  {...form.getInputProps('configAllocations.userSelfAssign.endPort')}
-                />
-              </Group>
-            </Stack>
           </TitleCard>
 
           <TitleCard title='Config Files Configuration' icon={<FontAwesomeIcon icon={faFileText} size='sm' />}>

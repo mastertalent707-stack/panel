@@ -11,6 +11,32 @@ use std::{
 };
 use utoipa::ToSchema;
 
+pub fn validate_description_translations(
+    description_translations: &BTreeMap<compact_str::CompactString, compact_str::CompactString>,
+    _context: &(),
+) -> Result<(), garde::Error> {
+    if description_translations.len() > 512 {
+        return Err(garde::Error::new("cannot have more than 512 entries"));
+    }
+
+    for (lang, translation) in description_translations {
+        if lang.len() < 2 || lang.len() > 15 {
+            return Err(garde::Error::new(format!(
+                "language code '{}' must be between 2 and 15 characters",
+                lang
+            )));
+        }
+        if translation.is_empty() || translation.len() > 1024 {
+            return Err(garde::Error::new(format!(
+                "translation for language '{}' must be between 1 and 1024 characters",
+                lang
+            )));
+        }
+    }
+
+    Ok(())
+}
+
 #[derive(ToSchema, Validate, Serialize, Deserialize, Clone)]
 pub struct ExportedNestEggVariable {
     #[garde(length(chars, min = 1, max = 255))]
@@ -19,6 +45,9 @@ pub struct ExportedNestEggVariable {
     #[garde(length(max = 1024))]
     #[schema(max_length = 1024)]
     pub description: Option<compact_str::CompactString>,
+    #[garde(custom(validate_description_translations))]
+    #[serde(default)]
+    pub description_translations: BTreeMap<compact_str::CompactString, compact_str::CompactString>,
     #[garde(skip)]
     #[serde(default, alias = "sort")]
     pub order: i16,
@@ -55,6 +84,7 @@ pub struct NestEggVariable {
 
     pub name: compact_str::CompactString,
     pub description: Option<compact_str::CompactString>,
+    pub description_translations: BTreeMap<compact_str::CompactString, compact_str::CompactString>,
     pub order: i16,
 
     pub env_variable: compact_str::CompactString,
@@ -86,6 +116,10 @@ impl BaseModel for NestEggVariable {
             (
                 "nest_egg_variables.description",
                 compact_str::format_compact!("{prefix}description"),
+            ),
+            (
+                "nest_egg_variables.description_translations",
+                compact_str::format_compact!("{prefix}description_translations"),
             ),
             (
                 "nest_egg_variables.order_",
@@ -131,6 +165,9 @@ impl BaseModel for NestEggVariable {
             name: row.try_get(compact_str::format_compact!("{prefix}name").as_str())?,
             description: row
                 .try_get(compact_str::format_compact!("{prefix}description").as_str())?,
+            description_translations: serde_json::from_value(row.try_get(
+                compact_str::format_compact!("{prefix}description_translations").as_str(),
+            )?)?,
             order: row.try_get(compact_str::format_compact!("{prefix}order").as_str())?,
             env_variable: row
                 .try_get(compact_str::format_compact!("{prefix}env_variable").as_str())?,
@@ -196,6 +233,7 @@ impl NestEggVariable {
         ExportedNestEggVariable {
             name: self.name,
             description: self.description,
+            description_translations: self.description_translations,
             order: self.order,
             env_variable: self.env_variable,
             default_value: self.default_value,
@@ -212,6 +250,7 @@ impl NestEggVariable {
             uuid: self.uuid,
             name: self.name,
             description: self.description,
+            description_translations: self.description_translations,
             order: self.order,
             env_variable: self.env_variable,
             default_value: self.default_value,
@@ -232,10 +271,11 @@ pub struct CreateNestEggVariableOptions {
     #[garde(length(chars, min = 3, max = 255))]
     #[schema(min_length = 3, max_length = 255)]
     pub name: compact_str::CompactString,
-
     #[garde(length(chars, min = 1, max = 1024))]
     #[schema(min_length = 1, max_length = 1024)]
     pub description: Option<compact_str::CompactString>,
+    #[garde(custom(validate_description_translations))]
+    pub description_translations: BTreeMap<compact_str::CompactString, compact_str::CompactString>,
 
     #[garde(skip)]
     pub order: i16,
@@ -288,6 +328,10 @@ impl CreatableModel for NestEggVariable {
             .set("egg_uuid", options.egg_uuid)
             .set("name", &options.name)
             .set("description", &options.description)
+            .set(
+                "description_translations",
+                serde_json::to_value(&options.description_translations)?,
+            )
             .set("order_", options.order)
             .set("env_variable", &options.env_variable)
             .set("default_value", &options.default_value)
@@ -313,7 +357,6 @@ pub struct UpdateNestEggVariableOptions {
     #[garde(length(chars, min = 3, max = 255))]
     #[schema(min_length = 3, max_length = 255)]
     pub name: Option<compact_str::CompactString>,
-
     #[garde(length(chars, min = 1, max = 1024))]
     #[schema(min_length = 1, max_length = 1024)]
     #[serde(
@@ -322,6 +365,9 @@ pub struct UpdateNestEggVariableOptions {
         with = "::serde_with::rust::double_option"
     )]
     pub description: Option<Option<compact_str::CompactString>>,
+    #[garde(inner(custom(validate_description_translations)))]
+    pub description_translations:
+        Option<BTreeMap<compact_str::CompactString, compact_str::CompactString>>,
 
     #[garde(skip)]
     pub order: Option<i16>,
@@ -387,6 +433,14 @@ impl UpdatableModel for NestEggVariable {
                 "description",
                 options.description.as_ref().map(|d| d.as_ref()),
             )
+            .set(
+                "description_translations",
+                options
+                    .description_translations
+                    .as_ref()
+                    .map(serde_json::to_value)
+                    .transpose()?,
+            )
             .set("order_", options.order)
             .set("env_variable", options.env_variable.as_ref())
             .set(
@@ -406,6 +460,9 @@ impl UpdatableModel for NestEggVariable {
         }
         if let Some(description) = options.description {
             self.description = description;
+        }
+        if let Some(description_translations) = options.description_translations {
+            self.description_translations = description_translations;
         }
         if let Some(order) = options.order {
             self.order = order;
@@ -479,6 +536,7 @@ pub struct AdminApiNestEggVariable {
 
     pub name: compact_str::CompactString,
     pub description: Option<compact_str::CompactString>,
+    pub description_translations: BTreeMap<compact_str::CompactString, compact_str::CompactString>,
     pub order: i16,
 
     pub env_variable: compact_str::CompactString,

@@ -1,0 +1,1 @@
+ALTER TABLE "nest_egg_configurations" RENAME TO "egg_configurations";

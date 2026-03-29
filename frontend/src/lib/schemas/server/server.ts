@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { adminServerFeatureLimitsSchema, adminServerLimitsSchema } from '@/lib/schemas/admin/servers.ts';
 import { serverAllocationSchema } from '@/lib/schemas/server/allocations.ts';
+import { eggConfigurationRouteItemSchema } from '../generic.ts';
 
 export const serverStatus = z.enum(['installing', 'install_failed', 'restoring_backup']);
 
@@ -23,11 +24,18 @@ export const serverEggSchema = z.object({
   created: z.date(),
 });
 
+export const serverEggConfigurationSchema = z.object({
+  allocationSelfAssignEnabled: z.boolean(),
+  allocationSelfAssignRequirePrimary: z.boolean(),
+  routeOrder: z.array(eggConfigurationRouteItemSchema).nullable(),
+});
+
 export const serverSchema = z.object({
   uuid: z.string(),
   uuidShort: z.string(),
   allocation: z.lazy(() => serverAllocationSchema).nullable(),
   egg: z.lazy(() => serverEggSchema),
+  eggConfiguration: z.lazy(() => serverEggConfigurationSchema).nullable(),
   status: serverStatus.nullable(),
   isSuspended: z.boolean(),
   isOwner: z.boolean(),

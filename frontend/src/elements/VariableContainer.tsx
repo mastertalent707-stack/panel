@@ -30,7 +30,9 @@ export default function VariableContainer({
   value,
   setValue,
 }: Props) {
-  const { t } = useTranslations();
+  const { t, language } = useTranslations();
+
+  const description = variable.descriptionTranslations?.[language] || variable.description;
 
   return (
     <TitleCard title={variable.name} icon={<FontAwesomeIcon icon={faCog} />}>
@@ -120,7 +122,7 @@ export default function VariableContainer({
               }
             />
           )}
-          <p className='text-gray-400 text-sm mt-4'>{variable.description?.md()}</p>
+          <p className='text-gray-400 text-sm mt-4'>{description?.md()}</p>
         </div>
         {!variable.isEditable ? <Badge className='min-w-fit ml-4'>{t('common.readOnly', {})}</Badge> : null}
       </div>

@@ -1648,7 +1648,10 @@ impl Server {
         user: &super::user::User,
     ) -> Result<ApiServer, anyhow::Error> {
         let allocation_uuid = self.allocation.as_ref().map(|a| a.uuid);
-        let node = self.node.fetch_cached(database).await?;
+        let (node, egg_configuration) = tokio::try_join!(
+            self.node.fetch_cached(database),
+            self.egg.configuration(database)
+        )?;
 
         let feature_limits = ApiServerFeatureLimits::init_hooks(&self, database).await?;
         let feature_limits = finish_extendible!(
@@ -1667,6 +1670,7 @@ impl Server {
             uuid_short: compact_str::format_compact!("{:08x}", self.uuid_short),
             allocation: self.allocation.map(|a| a.into_api_object(allocation_uuid)),
             egg: self.egg.into_api_object(),
+            egg_configuration: egg_configuration.into_api_object(),
             permissions: if user.admin {
                 vec!["*".into()]
             } else {
@@ -1682,7 +1686,7 @@ impl Server {
                 node.public_url
                     .unwrap_or(node.url)
                     .host_str()
-                    .unwrap()
+                    .unwrap_or("unknown.sftp.host")
                     .into()
             }),
             sftp_port: node.sftp_port,
@@ -2434,6 +2438,7 @@ pub struct ApiServer {
     pub uuid_short: compact_str::CompactString,
     pub allocation: Option<super::server_allocation::ApiServerAllocation>,
     pub egg: super::nest_egg::ApiNestEgg,
+    pub egg_configuration: super::egg_configuration::ApiEggConfiguration,
 
     pub status: Option<ServerStatus>,
 

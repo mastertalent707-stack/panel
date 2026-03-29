@@ -31,6 +31,21 @@ export const apiPermissionsSchema = z.object({
   adminPermissions: permissionMapSchema,
 });
 
+export const eggConfigurationRouteItemSchema = z.discriminatedUnion('type', [
+  z.object({ type: z.literal('route'), path: z.string() }),
+  z.object({
+    type: z.literal('divider'),
+    name: z.string().nullable(),
+    nameTranslations: z.record(z.string(), z.string()),
+  }),
+  z.object({
+    type: z.literal('redirect'),
+    name: z.string(),
+    nameTranslations: z.record(z.string(), z.string()),
+    destination: z.string(),
+  }),
+]);
+
 export const streamingArchiveFormat = z.enum([
   'tar',
   'tar_gz',

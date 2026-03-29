@@ -19,6 +19,7 @@ use utoipa::ToSchema;
 pub mod admin_activity;
 pub mod backup_configuration;
 pub mod database_host;
+pub mod egg_configuration;
 pub mod egg_repository;
 pub mod egg_repository_egg;
 pub mod location;

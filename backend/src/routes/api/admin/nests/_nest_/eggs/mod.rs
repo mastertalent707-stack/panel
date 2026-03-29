@@ -126,9 +126,6 @@ mod post {
         #[garde(skip)]
         #[schema(inline)]
         config_script: shared::models::nest_egg::NestEggConfigScript,
-        #[schema(inline)]
-        #[garde(custom(shared::models::nest_egg::validate_config_allocations))]
-        config_allocations: shared::models::nest_egg::NestEggConfigAllocations,
 
         #[garde(length(chars, min = 1, max = 4096))]
         #[schema(min_length = 1, max_length = 4096)]
@@ -187,7 +184,6 @@ mod post {
             config_startup: data.config_startup,
             config_stop: data.config_stop,
             config_script: data.config_script,
-            config_allocations: data.config_allocations,
             startup: data.startup,
             force_outgoing_ip: data.force_outgoing_ip,
             separate_port: data.separate_port,
@@ -222,7 +218,6 @@ mod post {
                     "config_startup": egg.config_startup,
                     "config_stop": egg.config_stop,
                     "config_script": egg.config_script,
-                    "config_allocations": egg.config_allocations,
 
                     "startup": egg.startup,
                     "force_outgoing_ip": egg.force_outgoing_ip,

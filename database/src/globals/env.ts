@@ -1,27 +1,27 @@
-import { filesystem } from "@rjweb/utils"
-import { z } from "zod"
+import { filesystem } from '@rjweb/utils';
+import { z } from 'zod';
 
-let env: Record<string, string | undefined>
+let env: Record<string, string | undefined>;
 try {
-	env = filesystem.env('../.env', { async: false })
+  env = filesystem.env('../.env', { async: false });
 } catch {
-	try {
-		env = filesystem.env('../../.env', { async: false })
-	} catch {
-		try {
-			env = filesystem.env('../../../.env', { async: false })
-		} catch {
-			env = process.env
-		}
-	}
+  try {
+    env = filesystem.env('../../.env', { async: false });
+  } catch {
+    try {
+      env = filesystem.env('../../../.env', { async: false });
+    } catch {
+      env = process.env;
+    }
+  }
 }
 
 const infos = z.object({
-	DATABASE_URL: z.string(),
+  DATABASE_URL: z.string(),
 
-	LOG_DIRECTORY: z.string().optional(),
-})
+  LOG_DIRECTORY: z.string().optional(),
+});
 
-export type Environment = z.infer<typeof infos>
+export type Environment = z.infer<typeof infos>;
 
-export default infos.parse(env)
+export default infos.parse(env);

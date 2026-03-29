@@ -126,7 +126,12 @@ mod post {
     ) -> ApiResponseResult {
         permissions.has_server_permission("allocations.create")?;
 
-        if !server.egg.config_allocations.user_self_assign.enabled {
+        let egg_configuration = server.egg.configuration(&state.database).await?;
+
+        if !egg_configuration
+            .config_allocations
+            .is_some_and(|config| config.user_self_assign.enabled)
+        {
             return ApiResponse::error("self-assigning allocations is not enabled for this server")
                 .with_status(StatusCode::EXPECTATION_FAILED)
                 .ok();

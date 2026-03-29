@@ -1,6 +1,7 @@
 import {
   faBriefcase,
   faBuilding,
+  faCogs,
   faCrow,
   faDatabase,
   faDownload,
@@ -21,6 +22,7 @@ import AdminActivity from '@/pages/admin/activity/AdminActivity.tsx';
 import AdminAssets from '@/pages/admin/assets/AdminAssets.tsx';
 import AdminBackupConfigurations from '@/pages/admin/backupConfigurations/AdminBackupConfigurations.tsx';
 import AdminDatabaseHosts from '@/pages/admin/databaseHosts/AdminDatabaseHosts.tsx';
+import AdminEggConfigurations from '@/pages/admin/eggConfigurations/AdminEggConfigurations.tsx';
 import AdminEggRepositories from '@/pages/admin/eggRepositories/AdminEggRepositories.tsx';
 import AdminExtensions from '@/pages/admin/extensions/AdminExtensions.tsx';
 import AdminExtensionsExtension from '@/pages/admin/extensions/extension/AdminExtensionsExtension.tsx';
@@ -104,6 +106,13 @@ const routes: AdminRouteDefinition[] = [
     path: '/nests/*',
     element: AdminNests,
     permission: ['nests.*'],
+  },
+  {
+    name: 'Egg Configurations',
+    icon: faCogs,
+    path: '/egg-configurations/*',
+    element: AdminEggConfigurations,
+    permission: ['egg-configurations.*'],
   },
   {
     name: 'Egg Repositories',

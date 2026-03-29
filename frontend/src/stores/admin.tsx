@@ -15,6 +15,7 @@ import { createRolesSlice, RolesSlice } from '@/stores/slices/admin/roles.ts';
 import { createServersSlice, ServersSlice } from '@/stores/slices/admin/servers.ts';
 import { createSettingsSlice, SettingsSlice } from '@/stores/slices/admin/settings.ts';
 import { createUsersSlice, UsersSlice } from '@/stores/slices/admin/users.ts';
+import { createEggConfigurationsSlice, EggConfigurationsSlice } from './slices/admin/eggConfigurations.ts';
 import { createEggRepositoriesSlice, EggRepositoriesSlice } from './slices/admin/eggRepositories.ts';
 
 export interface AdminStore
@@ -24,6 +25,7 @@ export interface AdminStore
     EggsSlice,
     LocationsSlice,
     NestsSlice,
+    EggConfigurationsSlice,
     EggRepositoriesSlice,
     SettingsSlice,
     UsersSlice,
@@ -42,6 +44,7 @@ export const createAdminStore = () =>
     ...createEggsSlice(...a),
     ...createLocationsSlice(...a),
     ...createNestsSlice(...a),
+    ...createEggConfigurationsSlice(...a),
     ...createEggRepositoriesSlice(...a),
     ...createSettingsSlice(...a),
     ...createUsersSlice(...a),

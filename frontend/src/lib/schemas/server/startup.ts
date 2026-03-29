@@ -3,6 +3,7 @@ import { z } from 'zod';
 export const serverVariableSchema = z.object({
   name: z.string(),
   description: z.string().nullable(),
+  descriptionTranslations: z.record(z.string(), z.string()),
   envVariable: z.string(),
   defaultValue: z.string().nullable(),
   value: z.string(),

@@ -201,16 +201,12 @@ export default function ServerCreate() {
         confirm='Create Anyway'
         onConfirmed={() => doCreateOrUpdate(false)}
       >
-        You are creating a server without assigning any primary allocation while this egg requires users to assign a
-        primary allocation. Are you sure you want to continue?
+        You are creating a server without assigning any primary allocation. Are you sure you want to continue?
       </ConfirmationModal>
 
       <form
         onSubmit={form.onSubmit((values) =>
-          !values.allocationUuid &&
-          eggs.items.find((e) => e.uuid === values.eggUuid)?.configAllocations.userSelfAssign.requirePrimaryAllocation
-            ? setOpenModal('confirm-no-allocation')
-            : doCreateOrUpdate(false),
+          !values.allocationUuid ? setOpenModal('confirm-no-allocation') : doCreateOrUpdate(false),
         )}
       >
         <Stack mt='16'>

@@ -50,6 +50,7 @@ export default function AdminEggVariables({
       uuid: '',
       name: '',
       description: null,
+      descriptionTranslations: {},
       order: Number.isFinite(Math.max(...eggVariables.map((s) => s.order)))
         ? Math.max(...eggVariables.map((s) => s.order)) + 1
         : 1,

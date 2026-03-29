@@ -104,16 +104,22 @@ mod post {
                 (false, 0)
             };
 
+            let egg_configuration = server.egg.configuration(&state.database).await?;
+
             let node_allocations = NodeAllocation::get_random(
                 &state.database,
                 destination_node.uuid,
-                if data.allocation_respect_egg_port_range {
-                    server.egg.config_allocations.user_self_assign.start_port
+                if data.allocation_respect_egg_port_range
+                    && let Some(config_allocations) = &egg_configuration.config_allocations
+                {
+                    config_allocations.user_self_assign.start_port
                 } else {
                     1
                 },
-                if data.allocation_respect_egg_port_range {
-                    server.egg.config_allocations.user_self_assign.end_port
+                if data.allocation_respect_egg_port_range
+                    && let Some(config_allocations) = &egg_configuration.config_allocations
+                {
+                    config_allocations.user_self_assign.end_port
                 } else {
                     u16::MAX
                 },

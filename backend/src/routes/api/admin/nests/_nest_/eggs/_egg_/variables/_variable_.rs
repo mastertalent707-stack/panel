@@ -160,6 +160,7 @@ mod patch {
 
                     "name": egg_variable.name,
                     "description": egg_variable.description,
+                    "description_translations": egg_variable.description_translations,
                     "order": egg_variable.order,
 
                     "env_variable": egg_variable.env_variable,

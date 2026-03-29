@@ -7,6 +7,7 @@ import {
   index,
   inet,
   integer,
+  json,
   jsonb,
   PgColumn,
   pgEnum,
@@ -47,11 +48,7 @@ export const bytea = customType<{
 
 export const databaseTypeEnum = pgEnum('database_type', ['MYSQL', 'POSTGRES']);
 export const serverStatusEnum = pgEnum('server_status', ['INSTALLING', 'INSTALL_FAILED', 'RESTORING_BACKUP']);
-export const serverAutoStartBehaviorEnum = pgEnum('server_auto_start_behavior', [
-  'ALWAYS',
-  'UNLESS_STOPPED',
-  'NEVER',
-]);
+export const serverAutoStartBehaviorEnum = pgEnum('server_auto_start_behavior', ['ALWAYS', 'UNLESS_STOPPED', 'NEVER']);
 export const backupDiskEnum = pgEnum('backup_disk', ['LOCAL', 'S3', 'DDUP_BAK', 'BTRFS', 'ZFS', 'RESTIC']);
 export const userToastPositionEnum = pgEnum('user_toast_position', [
   'TOP_LEFT',
@@ -61,13 +58,13 @@ export const userToastPositionEnum = pgEnum('user_toast_position', [
   'BOTTOM_CENTER',
   'BOTTOM_RIGHT',
 ]);
- 
+
 // Tables
 export const settingsTable = pgTable('settings', {
   key: varchar({ length: 255 }).primaryKey().notNull(),
   value: text().notNull(),
 });
- 
+
 export const usersTable = pgTable(
   'users',
   {
@@ -95,7 +92,7 @@ export const usersTable = pgTable(
     uniqueIndex('users_email_idx').on(sql`lower(${cols.email})`),
   ],
 );
- 
+
 export const adminActivitiesTable = pgTable(
   'admin_activities',
   {
@@ -114,7 +111,7 @@ export const adminActivitiesTable = pgTable(
     index('admin_activities_user_uuid_event_idx').on(cols.user_uuid, cols.event),
   ],
 );
- 
+
 export const userActivitiesTable = pgTable(
   'user_activities',
   {
@@ -134,7 +131,7 @@ export const userActivitiesTable = pgTable(
     index('user_activities_user_uuid_event_idx').on(cols.user_uuid, cols.event),
   ],
 );
- 
+
 export const userSessionsTable = pgTable(
   'user_sessions',
   {
@@ -154,7 +151,7 @@ export const userSessionsTable = pgTable(
     uniqueIndex('user_sessions_key_idx').on(cols.key),
   ],
 );
- 
+
 export const userRecoveryCodesTable = pgTable(
   'user_recovery_codes',
   {
@@ -169,7 +166,7 @@ export const userRecoveryCodesTable = pgTable(
     index('user_recovery_codes_user_uuid_idx').on(cols.user_uuid),
   ],
 );
- 
+
 export const userPasswordResetsTable = pgTable(
   'user_password_resets',
   {
@@ -185,7 +182,7 @@ export const userPasswordResetsTable = pgTable(
     uniqueIndex('user_password_resets_token_idx').on(cols.token),
   ],
 );
- 
+
 export const userSecurityKeysTable = pgTable(
   'user_security_keys',
   {
@@ -206,7 +203,7 @@ export const userSecurityKeysTable = pgTable(
     uniqueIndex('user_security_keys_user_uuid_credential_id_idx').on(cols.user_uuid, cols.credential_id),
   ],
 );
- 
+
 export const userSshKeysTable = pgTable(
   'user_ssh_keys',
   {
@@ -225,7 +222,7 @@ export const userSshKeysTable = pgTable(
     uniqueIndex('user_ssh_keys_user_uuid_fingerprint_idx').on(cols.user_uuid, cols.fingerprint),
   ],
 );
- 
+
 export const userApiKeysTable = pgTable(
   'user_api_keys',
   {
@@ -251,7 +248,7 @@ export const userApiKeysTable = pgTable(
     uniqueIndex('user_api_keys_key_idx').on(cols.key),
   ],
 );
- 
+
 export const userOauthLinksTable = pgTable(
   'user_oauth_links',
   {
@@ -273,7 +270,7 @@ export const userOauthLinksTable = pgTable(
     uniqueIndex('user_oauth_links_oauth_provider_uuid_identifier_idx').on(cols.oauth_provider_uuid, cols.identifier),
   ],
 );
- 
+
 export const userCommandSnippetsTable = pgTable(
   'user_command_snippets',
   {
@@ -291,7 +288,7 @@ export const userCommandSnippetsTable = pgTable(
     uniqueIndex('command_snippets_user_uuid_name_idx').on(cols.user_uuid, cols.name),
   ],
 );
- 
+
 export const userServerGroupsTable = pgTable(
   'user_server_groups',
   {
@@ -306,7 +303,7 @@ export const userServerGroupsTable = pgTable(
   },
   (cols) => [index('server_groups_user_uuid_idx').on(cols.user_uuid)],
 );
- 
+
 export const rolesTable = pgTable(
   'roles',
   {
@@ -320,7 +317,7 @@ export const rolesTable = pgTable(
   },
   (cols) => [uniqueIndex('roles_name_idx').on(cols.name)],
 );
- 
+
 export const oauthProvidersTable = pgTable(
   'oauth_providers',
   {
@@ -347,7 +344,7 @@ export const oauthProvidersTable = pgTable(
   },
   (cols) => [uniqueIndex('oauth_providers_name_idx').on(cols.name)],
 );
- 
+
 export const mountsTable = pgTable(
   'mounts',
   {
@@ -365,7 +362,7 @@ export const mountsTable = pgTable(
     uniqueIndex('mounts_source_target_idx').on(cols.source, cols.target),
   ],
 );
- 
+
 export const backupConfigurationsTable = pgTable(
   'backup_configurations',
   {
@@ -379,7 +376,7 @@ export const backupConfigurationsTable = pgTable(
   },
   (cols) => [uniqueIndex('backup_configurations_name_idx').on(cols.name)],
 );
- 
+
 export const locationsTable = pgTable(
   'locations',
   {
@@ -394,7 +391,7 @@ export const locationsTable = pgTable(
     uniqueIndex('locations_name_idx').on(cols.name),
   ],
 );
- 
+
 export const locationDatabaseHostsTable = pgTable(
   'location_database_hosts',
   {
@@ -412,7 +409,7 @@ export const locationDatabaseHostsTable = pgTable(
     index('location_database_hosts_database_host_uuid_idx').on(cols.database_host_uuid),
   ],
 );
- 
+
 export const nodesTable = pgTable(
   'nodes',
   {
@@ -444,7 +441,7 @@ export const nodesTable = pgTable(
     uniqueIndex('nodes_token_idx').on(cols.token),
   ],
 );
- 
+
 export const nodeMountsTable = pgTable(
   'node_mounts',
   {
@@ -462,7 +459,7 @@ export const nodeMountsTable = pgTable(
     index('node_mounts_mount_uuid_idx').on(cols.mount_uuid),
   ],
 );
- 
+
 export const nodeAllocationsTable = pgTable(
   'node_allocations',
   {
@@ -480,7 +477,7 @@ export const nodeAllocationsTable = pgTable(
     uniqueIndex('allocations_node_uuid_ip_port_idx').on(cols.node_uuid, sql`host(${cols.ip})`, cols.port),
   ],
 );
- 
+
 export const eggRepositoriesTable = pgTable(
   'egg_repositories',
   {
@@ -496,7 +493,7 @@ export const eggRepositoriesTable = pgTable(
     uniqueIndex('egg_repositories_git_repository_idx').on(cols.git_repository),
   ],
 );
- 
+
 export const eggRepositoriesEggsTable = pgTable(
   'egg_repository_eggs',
   {
@@ -508,14 +505,32 @@ export const eggRepositoriesEggsTable = pgTable(
     name: varchar({ length: 255 * UTF8_MAX_SCALAR_SIZE }).notNull(),
     description: text(),
     author: varchar({ length: 255 * UTF8_MAX_SCALAR_SIZE }).notNull(),
-    exported_egg: jsonb().notNull(),
+    exported_egg: json().notNull(),
   },
   (cols) => [
     index('egg_repository_eggs_egg_repository_uuid_idx').on(cols.egg_repository_uuid),
     uniqueIndex('egg_repository_eggs_egg_repository_uuid_path_idx').on(cols.egg_repository_uuid, cols.path),
   ],
 );
- 
+
+export const eggConfigurationsTable = pgTable(
+  'egg_configurations',
+  {
+    uuid: uuid().default(sql`gen_random_uuid()`).primaryKey().notNull(),
+    name: varchar({ length: 255 * UTF8_MAX_SCALAR_SIZE }).notNull(),
+    description: text(),
+    order_: smallint().default(0).notNull(),
+    eggs: uuid().array().default([]).notNull(),
+    config_allocations: jsonb(),
+    config_routes: jsonb(),
+    created: timestamp().defaultNow().notNull(),
+  },
+  (cols) => [
+    uniqueIndex('egg_configurations_name_idx').on(cols.name),
+    index('egg_configurations_eggs_idx').on(cols.eggs),
+  ],
+);
+
 export const nestsTable = pgTable(
   'nests',
   {
@@ -527,7 +542,7 @@ export const nestsTable = pgTable(
   },
   (cols) => [uniqueIndex('nests_name_idx').on(cols.name)],
 );
- 
+
 export const nestEggsTable = pgTable(
   'nest_eggs',
   {
@@ -543,12 +558,11 @@ export const nestEggsTable = pgTable(
     config_startup: jsonb().notNull(),
     config_stop: jsonb().notNull(),
     config_script: jsonb().notNull(),
-    config_allocations: jsonb().default({}).notNull(),
     startup: text().notNull(),
     force_outgoing_ip: boolean().default(false).notNull(),
     separate_port: boolean().default(false).notNull(),
     features: text().array().notNull(),
-    docker_images: text().notNull(),
+    docker_images: json().notNull(),
     file_denylist: text().array().notNull(),
     created: timestamp().defaultNow().notNull(),
   },
@@ -558,7 +572,7 @@ export const nestEggsTable = pgTable(
     uniqueIndex('eggs_nest_uuid_name_idx').on(cols.nest_uuid, cols.name),
   ],
 );
- 
+
 export const nestEggMountsTable = pgTable(
   'nest_egg_mounts',
   {
@@ -576,7 +590,7 @@ export const nestEggMountsTable = pgTable(
     index('egg_mounts_mount_uuid_idx').on(cols.mount_uuid),
   ],
 );
- 
+
 export const nestEggVariablesTable = pgTable(
   'nest_egg_variables',
   {
@@ -586,6 +600,7 @@ export const nestEggVariablesTable = pgTable(
       .notNull(),
     name: varchar({ length: 255 * UTF8_MAX_SCALAR_SIZE }).notNull(),
     description: text(),
+    description_translations: jsonb().default({}).notNull(),
     order_: smallint().default(0).notNull(),
     env_variable: varchar({ length: 255 * UTF8_MAX_SCALAR_SIZE }).notNull(),
     default_value: text(),
@@ -601,7 +616,7 @@ export const nestEggVariablesTable = pgTable(
     uniqueIndex('egg_variables_egg_uuid_env_variable_idx').on(cols.egg_uuid, cols.env_variable),
   ],
 );
- 
+
 export const databaseHostsTable = pgTable(
   'database_hosts',
   {
@@ -623,7 +638,7 @@ export const databaseHostsTable = pgTable(
     uniqueIndex('database_hosts_host_port_idx').on(cols.host, cols.port),
   ],
 );
- 
+
 export const serversTable = pgTable(
   'servers',
   {
@@ -679,7 +694,7 @@ export const serversTable = pgTable(
     uniqueIndex('servers_uuid_short_idx').on(cols.uuid_short),
   ],
 );
- 
+
 export const serverAllocationsTable = pgTable(
   'server_allocations',
   {
@@ -698,7 +713,7 @@ export const serverAllocationsTable = pgTable(
     uniqueIndex('server_allocations_allocation_uuid_idx').on(cols.allocation_uuid),
   ],
 );
- 
+
 export const serverSubusersTable = pgTable(
   'server_subusers',
   {
@@ -718,7 +733,7 @@ export const serverSubusersTable = pgTable(
     index('server_subusers_user_uuid_idx').on(cols.user_uuid),
   ],
 );
- 
+
 export const serverActivitiesTable = pgTable(
   'server_activities',
   {
@@ -742,7 +757,7 @@ export const serverActivitiesTable = pgTable(
     index('server_activities_user_uuid_event_idx').on(cols.user_uuid, cols.event),
   ],
 );
- 
+
 export const serverVariablesTable = pgTable(
   'server_variables',
   {
@@ -761,7 +776,7 @@ export const serverVariablesTable = pgTable(
     index('server_variables_variable_uuid_idx').on(cols.variable_uuid),
   ],
 );
- 
+
 export const serverMountsTable = pgTable(
   'server_mounts',
   {
@@ -779,7 +794,7 @@ export const serverMountsTable = pgTable(
     index('server_mounts_mount_uuid_idx').on(cols.mount_uuid),
   ],
 );
- 
+
 export const serverBackupsTable = pgTable(
   'server_backups',
   {
@@ -813,7 +828,7 @@ export const serverBackupsTable = pgTable(
     uniqueIndex('server_backups_uuid_idx').on(cols.uuid),
   ],
 );
- 
+
 export const serverDatabasesTable = pgTable(
   'server_databases',
   {
@@ -836,7 +851,7 @@ export const serverDatabasesTable = pgTable(
     uniqueIndex('server_databases_server_uuid_database_idx').on(cols.server_uuid, cols.name),
   ],
 );
- 
+
 export const serverSchedulesTable = pgTable(
   'server_schedules',
   {
@@ -858,7 +873,7 @@ export const serverSchedulesTable = pgTable(
     uniqueIndex('server_schedules_server_uuid_name_idx').on(cols.server_uuid, cols.name),
   ],
 );
- 
+
 export const serverScheduleStepsTable = pgTable(
   'server_schedule_steps',
   {
@@ -873,4 +888,3 @@ export const serverScheduleStepsTable = pgTable(
   },
   (cols) => [index('server_schedule_steps_schedule_uuid_idx').on(cols.schedule_uuid)],
 );
- 

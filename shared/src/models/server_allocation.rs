@@ -1,4 +1,5 @@
 use crate::prelude::*;
+use axum::http::StatusCode;
 use serde::{Deserialize, Serialize};
 use sqlx::{Row, postgres::PgRow};
 use std::{
@@ -84,6 +85,18 @@ impl ServerAllocation {
         database: &crate::database::Database,
         server: &super::server::Server,
     ) -> Result<uuid::Uuid, crate::database::DatabaseError> {
+        let egg_configuration = server.egg.configuration(database).await?;
+
+        let Some(config_allocations) = egg_configuration.config_allocations else {
+            return Err(anyhow::Error::new(
+                crate::response::DisplayError::new(
+                    "no egg allocation configuration found, cannot auto-assign allocation",
+                )
+                .with_status(StatusCode::EXPECTATION_FAILED),
+            )
+            .into());
+        };
+
         let row = sqlx::query(
             r#"
             INSERT INTO server_allocations (server_uuid, allocation_uuid)
@@ -104,8 +117,8 @@ impl ServerAllocation {
         .bind(server.uuid)
         .bind(server.node.uuid)
         .bind(server.allocation.as_ref().map(|a| a.allocation.ip))
-        .bind(server.egg.config_allocations.user_self_assign.start_port as i32)
-        .bind(server.egg.config_allocations.user_self_assign.end_port as i32)
+        .bind(config_allocations.user_self_assign.start_port as i32)
+        .bind(config_allocations.user_self_assign.end_port as i32)
         .fetch_one(database.write())
         .await?;
 

@@ -39,14 +39,6 @@ export const adminEggSchema = z.object({
     type: z.string(),
     value: z.preprocess(nullableString, z.string().nullable()),
   }),
-  configAllocations: z.object({
-    userSelfAssign: z.object({
-      enabled: z.boolean(),
-      requirePrimaryAllocation: z.boolean(),
-      startPort: z.number().min(1024).max(65535),
-      endPort: z.number().min(1024).max(65535),
-    }),
-  }),
   startup: z.string().min(1).max(4096),
   forceOutgoingIp: z.boolean(),
   separatePort: z.boolean(),
@@ -73,6 +65,7 @@ export const adminEggVariableSchema = z.object({
   uuid: z.string(),
   name: z.string().min(3).max(255),
   description: z.preprocess(nullableString, z.string().max(1024).nullable()),
+  descriptionTranslations: z.record(z.string(), z.string().min(1).max(1024)),
   order: z.number(),
   envVariable: z.string().min(1).max(255),
   defaultValue: z.preprocess(nullableString, z.string().max(1024).nullable()),

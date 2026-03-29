@@ -1,5 +1,5 @@
 import { faArrowUpRightFromSquare, faGraduationCap, faServer } from '@fortawesome/free-solid-svg-icons';
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useEffect, useMemo, useState } from 'react';
 import { NavLink, Route, Routes, useParams } from 'react-router';
 import { httpErrorToHuman } from '@/api/axios.ts';
 import getEggCommandSnippets from '@/api/me/servers/eggs/getEggCommandSnippets.ts';
@@ -27,7 +27,7 @@ import { useServerStore } from '@/stores/server.ts';
 import ServerStateGuard from './guards/ServerStateGuard.tsx';
 
 export default function ServerRouter({ isNormal }: { isNormal: boolean }) {
-  const { t } = useTranslations();
+  const { t, language } = useTranslations();
   const { settings } = useGlobalStore();
   const { user } = useAuth();
   const { addToast } = useToast();
@@ -39,6 +39,46 @@ export default function ServerRouter({ isNormal }: { isNormal: boolean }) {
   const resetState = useServerStore((state) => state.reset);
   const setServer = useServerStore((state) => state.setServer);
   const setCommandSnippets = useServerStore((state) => state.setCommandSnippets);
+
+  const allServerRoutes = useMemo(
+    () => [...serverRoutes, ...window.extensionContext.extensionRegistry.routes.serverRoutes],
+    [],
+  );
+
+  const sidebarItems = useMemo(() => {
+    const routeOrder = server.eggConfiguration?.routeOrder;
+
+    if (!routeOrder) {
+      return allServerRoutes
+        .filter((route) => !!route.name && (!route.filter || route.filter()))
+        .map((route) => ({
+          type: 'route' as const,
+          route,
+        }));
+    }
+
+    return routeOrder
+      .map((item) => {
+        if (item.type === 'route') {
+          const route = allServerRoutes.find((r) => r.path === item.path);
+          if (!route || !route.name || (route.filter && !route.filter())) return null;
+          return { type: 'route' as const, route };
+        }
+
+        if (item.type === 'divider') {
+          const label = (language !== 'en' && item.nameTranslations[language]) || item.name || undefined;
+          return { type: 'divider' as const, label };
+        }
+
+        if (item.type === 'redirect') {
+          const name = (language !== 'en' && item.nameTranslations[language]) || item.name;
+          return { type: 'redirect' as const, name, destination: item.destination };
+        }
+
+        return null;
+      })
+      .filter(Boolean);
+  }, [server.eggConfiguration?.routeOrder, allServerRoutes, language]);
 
   useEffect(() => {
     return () => {
@@ -101,16 +141,35 @@ export default function ServerRouter({ isNormal }: { isNormal: boolean }) {
 
           <Sidebar.Divider />
 
-          {[...serverRoutes, ...window.extensionContext.extensionRegistry.routes.serverRoutes]
-            .filter((route) => !!route.name && (!route.filter || route.filter()))
-            .map((route) =>
-              route.permission ? (
+          {sidebarItems.map((item, index) => {
+            if (!item) return null;
+
+            if (item.type === 'divider') {
+              return <Sidebar.Divider key={`divider-${index}`} label={item.label} />;
+            }
+
+            if (item.type === 'redirect') {
+              return (
+                <Sidebar.Link
+                  key={`redirect-${index}`}
+                  to={item.destination}
+                  icon={faArrowUpRightFromSquare}
+                  name={item.name}
+                />
+              );
+            }
+
+            if (item.type === 'route') {
+              const { route } = item;
+              const name = typeof route.name === 'function' ? route.name() : route.name!;
+
+              return route.permission ? (
                 <ServerCan key={route.path} action={route.permission} matchAny>
                   <Sidebar.Link
                     to={to(route.path, `/server/${params.id}`)}
                     end={route.exact}
                     icon={route.icon}
-                    name={typeof route.name === 'function' ? route.name() : route.name}
+                    name={name}
                   />
                 </ServerCan>
               ) : (
@@ -119,10 +178,14 @@ export default function ServerRouter({ isNormal }: { isNormal: boolean }) {
                   to={to(route.path, `/server/${params.id}`)}
                   end={route.exact}
                   icon={route.icon}
-                  name={typeof route.name === 'function' ? route.name() : route.name}
+                  name={name}
                 />
-              ),
-            )}
+              );
+            }
+
+            return null;
+          })}
+
           <div className='mt-auto pt-4'>
             <ServerSwitcher isServer className='mb-2' />
             <Sidebar.Footer />
@@ -147,7 +210,7 @@ export default function ServerRouter({ isNormal }: { isNormal: boolean }) {
               <Suspense fallback={<Spinner.Centered />}>
                 <Routes>
                   <Route element={<ServerStateGuard />}>
-                    {[...serverRoutes, ...window.extensionContext.extensionRegistry.routes.serverRoutes]
+                    {allServerRoutes
                       .filter((route) => !route.filter || route.filter())
                       .map(({ path, element: Element, permission }) => (
                         <Route key={path} element={<ServerPermissionGuard permission={permission ?? []} />}>

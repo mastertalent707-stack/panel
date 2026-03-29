@@ -56,11 +56,11 @@ mod delete {
                 }
             };
 
-        if server
-            .egg
+        let egg_configuration = server.egg.configuration(&state.database).await?;
+
+        if egg_configuration
             .config_allocations
-            .user_self_assign
-            .require_primary_allocation
+            .is_none_or(|config| config.user_self_assign.require_primary_allocation)
             && server
                 .0
                 .allocation
@@ -183,11 +183,11 @@ mod patch {
                 .is_some_and(|a| a.uuid == allocation.uuid)
             {
                 if !primary {
-                    if server
-                        .egg
+                    let egg_configuration = server.egg.configuration(&state.database).await?;
+
+                    if egg_configuration
                         .config_allocations
-                        .user_self_assign
-                        .require_primary_allocation
+                        .is_none_or(|config| config.user_self_assign.require_primary_allocation)
                     {
                         transaction.rollback().await?;
 

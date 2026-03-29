@@ -726,10 +726,6 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                                             },
                                         }
                                     });
-                            let config_allocations =
-                                shared::models::nest_egg::NestEggConfigAllocations {
-                                    user_self_assign: Default::default(),
-                                };
 
                             if config_startup.done.is_empty() {
                                 config_startup.done.push("".into());
@@ -740,9 +736,9 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                                 INSERT INTO nest_eggs (
                                     uuid, nest_uuid, author, name, description, features, docker_images,
                                     file_denylist, config_files, config_startup, config_stop,
-                                    config_script, config_allocations, startup, force_outgoing_ip, created
+                                    config_script, startup, force_outgoing_ip, created
                                 )
-                                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
+                                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
                                 ON CONFLICT DO NOTHING
                                 "#,
                             )
@@ -758,7 +754,6 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                             .bind(serde_json::to_value(config_startup)?)
                             .bind(serde_json::to_value(config_stop)?)
                             .bind(serde_json::to_value(config_script)?)
-                            .bind(serde_json::to_value(config_allocations)?)
                             .bind(startup)
                             .bind(force_outgoing_ip)
                             .bind(created)

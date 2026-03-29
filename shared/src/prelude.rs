@@ -27,6 +27,40 @@ pub trait IteratorExt<R, E>: Iterator<Item = Result<R, E>> {
 
         Ok(vec)
     }
+
+    fn try_collect_vecdeque(self) -> Result<std::collections::VecDeque<R>, E>
+    where
+        Self: Sized,
+    {
+        let mut deque = std::collections::VecDeque::new();
+
+        let (hint_min, hint_max) = self.size_hint();
+        if let Some(hint_max) = hint_max
+            && hint_min == hint_max
+        {
+            deque.reserve_exact(hint_max);
+        }
+
+        for item in self {
+            deque.push_back(item?);
+        }
+
+        Ok(deque)
+    }
+
+    fn try_collect_set(self) -> Result<std::collections::HashSet<R>, E>
+    where
+        Self: Sized,
+        R: std::hash::Hash + Eq,
+    {
+        let mut set = std::collections::HashSet::new();
+
+        for item in self {
+            set.insert(item?);
+        }
+
+        Ok(set)
+    }
 }
 
 impl<R, E, T: Iterator<Item = Result<R, E>>> IteratorExt<R, E> for T {}
