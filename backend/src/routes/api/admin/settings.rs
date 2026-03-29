@@ -112,7 +112,8 @@ mod put {
     #[derive(ToSchema, Validate, Deserialize)]
     pub struct Payload {
         #[garde(skip)]
-        oobe_step: Option<compact_str::CompactString>,
+        #[serde(default, with = "::serde_with::rust::double_option")]
+        oobe_step: Option<Option<compact_str::CompactString>>,
 
         #[garde(dive)]
         storage_driver: Option<shared::settings::StorageDriver>,
@@ -158,13 +159,7 @@ mod put {
         let mut settings = state.settings.get_mut().await?;
 
         if let Some(oobe_step) = data.oobe_step {
-            if oobe_step.is_empty() {
-                if settings.oobe_step.is_some() {
-                    settings.oobe_step = None;
-                }
-            } else {
-                settings.oobe_step = Some(oobe_step);
-            }
+            settings.oobe_step = oobe_step;
         }
         if let Some(storage_driver) = data.storage_driver {
             settings.storage_driver = storage_driver;
