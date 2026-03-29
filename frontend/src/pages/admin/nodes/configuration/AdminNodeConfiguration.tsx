@@ -1,15 +1,17 @@
 import { faCopy } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ActionIcon, Group, Stack, Title, Tooltip } from '@mantine/core';
+import { Group, Stack, Title } from '@mantine/core';
 import jsYaml from 'js-yaml';
 import { useState } from 'react';
 import { z } from 'zod';
+import ActionIcon from '@/elements/ActionIcon.tsx';
 import Card from '@/elements/Card.tsx';
 import Code from '@/elements/Code.tsx';
 import AdminSubContentContainer from '@/elements/containers/AdminSubContentContainer.tsx';
 import HljsCode from '@/elements/HljsCode.tsx';
 import NumberInput from '@/elements/input/NumberInput.tsx';
 import TextInput from '@/elements/input/TextInput.tsx';
+import Tooltip from '@/elements/Tooltip.tsx';
 import { handleCopyToClipboard } from '@/lib/copy.ts';
 import { getNodeConfiguration, getNodeConfigurationCommand } from '@/lib/node.ts';
 import { adminNodeSchema } from '@/lib/schemas/admin/nodes.ts';

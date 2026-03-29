@@ -1,8 +1,8 @@
 import { faX, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ActionIcon } from '@mantine/core';
 import { FC, ReactNode, startTransition, useCallback, useMemo, useRef, useState } from 'react';
 import { Rnd } from 'react-rnd';
+import ActionIcon from '@/elements/ActionIcon.tsx';
 import TitleCard from '@/elements/TitleCard.tsx';
 import { CurrentWindowProvider } from '@/providers/CurrentWindowProvider.tsx';
 import { WindowContext } from '@/providers/contexts/windowContext.ts';

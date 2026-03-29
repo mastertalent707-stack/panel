@@ -8,9 +8,10 @@ import {
   IconDefinition,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ActionIcon, Menu } from '@mantine/core';
+import { Menu } from '@mantine/core';
 import { ReactNode, useEffect, useState } from 'react';
 import { MemoryRouter, NavLink, useNavigate } from 'react-router';
+import ActionIcon from '@/elements/ActionIcon.tsx';
 import Button from '@/elements/Button.tsx';
 import Card from '@/elements/Card.tsx';
 import CloseButton from '@/elements/CloseButton.tsx';

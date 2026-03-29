@@ -1,7 +1,7 @@
 import { faCog, faReply } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ActionIcon } from '@mantine/core';
 import { z } from 'zod';
+import ActionIcon from '@/elements/ActionIcon.tsx';
 import Badge from '@/elements/Badge.tsx';
 import NumberInput from '@/elements/input/NumberInput.tsx';
 import PasswordInput from '@/elements/input/PasswordInput.tsx';

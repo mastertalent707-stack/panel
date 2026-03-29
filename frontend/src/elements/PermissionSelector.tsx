@@ -1,8 +1,9 @@
 import { faChevronDown, faChevronUp, faX } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ActionIcon, Checkbox, Group, Input, Stack, Title } from '@mantine/core';
+import { Checkbox, Group, Input, Stack, Title } from '@mantine/core';
 import { useCallback, useMemo, useState } from 'react';
 import { z } from 'zod';
+import ActionIcon from '@/elements/ActionIcon.tsx';
 import Button from '@/elements/Button.tsx';
 import Card from '@/elements/Card.tsx';
 import { permissionCategoryIconMapping } from '@/lib/enums.ts';

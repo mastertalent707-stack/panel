@@ -1,6 +1,6 @@
 import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ActionIcon, ModalProps, Stack, Title } from '@mantine/core';
+import { ModalProps, Stack, Title } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { zod4Resolver } from 'mantine-form-zod-resolver';
 import { useEffect, useState } from 'react';
@@ -8,6 +8,7 @@ import { z } from 'zod';
 import { httpErrorToHuman } from '@/api/axios.ts';
 import createSchedule from '@/api/server/schedules/createSchedule.ts';
 import updateSchedule from '@/api/server/schedules/updateSchedule.ts';
+import ActionIcon from '@/elements/ActionIcon.tsx';
 import Button from '@/elements/Button.tsx';
 import Divider from '@/elements/Divider.tsx';
 import Select from '@/elements/input/Select.tsx';

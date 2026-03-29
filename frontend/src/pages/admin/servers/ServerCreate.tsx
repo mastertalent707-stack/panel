@@ -9,7 +9,7 @@ import {
   faWrench,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ActionIcon, Group, Stack } from '@mantine/core';
+import { Group, Stack } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { zod4Resolver } from 'mantine-form-zod-resolver';
 import { useEffect, useState } from 'react';
@@ -24,6 +24,7 @@ import getNodes from '@/api/admin/nodes/getNodes.ts';
 import createServer from '@/api/admin/servers/createServer.ts';
 import getUsers from '@/api/admin/users/getUsers.ts';
 import { getEmptyPaginationSet, httpErrorToHuman } from '@/api/axios.ts';
+import ActionIcon from '@/elements/ActionIcon.tsx';
 import Alert from '@/elements/Alert.tsx';
 import Button from '@/elements/Button.tsx';
 import { AdminCan } from '@/elements/Can.tsx';

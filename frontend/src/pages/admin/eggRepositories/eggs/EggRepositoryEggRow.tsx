@@ -1,8 +1,8 @@
 import { faDownload } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ActionIcon } from '@mantine/core';
 import { forwardRef, memo, useState } from 'react';
 import { z } from 'zod';
+import ActionIcon from '@/elements/ActionIcon.tsx';
 import { AdminCan } from '@/elements/Can.tsx';
 import Code from '@/elements/Code.tsx';
 import Checkbox from '@/elements/input/Checkbox.tsx';

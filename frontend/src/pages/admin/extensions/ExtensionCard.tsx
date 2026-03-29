@@ -1,9 +1,10 @@
 import { faPuzzlePiece, faTrash, faWrench } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ActionIcon, Group, Title } from '@mantine/core';
+import { Group, Title } from '@mantine/core';
 import { Link } from 'react-router';
 import { Extension } from 'shared';
 import { z } from 'zod';
+import ActionIcon from '@/elements/ActionIcon.tsx';
 import Badge from '@/elements/Badge.tsx';
 import Button from '@/elements/Button.tsx';
 import ConditionalTooltip from '@/elements/ConditionalTooltip.tsx';

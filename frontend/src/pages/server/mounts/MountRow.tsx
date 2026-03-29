@@ -1,11 +1,12 @@
 import { faCheck, faMinus, faPlus, faX } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ActionIcon, Group } from '@mantine/core';
+import { Group } from '@mantine/core';
 import { useState } from 'react';
 import { z } from 'zod';
 import { httpErrorToHuman } from '@/api/axios.ts';
 import attachMount from '@/api/server/mounts/attachMount.ts';
 import detachMount from '@/api/server/mounts/detachMount.ts';
+import ActionIcon from '@/elements/ActionIcon.tsx';
 import Code from '@/elements/Code.tsx';
 import ConfirmationModal from '@/elements/modals/ConfirmationModal.tsx';
 import { TableData, TableRow } from '@/elements/Table.tsx';

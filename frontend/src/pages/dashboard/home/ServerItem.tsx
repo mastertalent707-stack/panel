@@ -11,10 +11,10 @@ import {
   faTriangleExclamation,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ActionIcon } from '@mantine/core';
 import { useState } from 'react';
 import { NavLink } from 'react-router';
 import { z } from 'zod';
+import ActionIcon from '@/elements/ActionIcon.tsx';
 import Card from '@/elements/Card.tsx';
 import CopyOnClick from '@/elements/CopyOnClick.tsx';
 import Divider from '@/elements/Divider.tsx';

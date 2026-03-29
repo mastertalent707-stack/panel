@@ -1,9 +1,11 @@
 import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ActionIcon, Group, Select, Stack, Text } from '@mantine/core';
+import { Group, Stack, Text } from '@mantine/core';
 import { z } from 'zod';
+import ActionIcon from '@/elements/ActionIcon.tsx';
 import Button from '@/elements/Button.tsx';
 import NumberInput from '@/elements/input/NumberInput.tsx';
+import Select from '@/elements/input/Select.tsx';
 import SizeInput from '@/elements/input/SizeInput.tsx';
 import TextInput from '@/elements/input/TextInput.tsx';
 import {

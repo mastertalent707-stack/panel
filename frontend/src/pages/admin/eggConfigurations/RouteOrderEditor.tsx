@@ -1,13 +1,16 @@
 import { faArrowUpRightFromSquare, faGripVertical, faMinus, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ActionIcon, Box, Divider, Group, Paper, Select, Stack, Text } from '@mantine/core';
+import { Box, Group, Paper, Stack, Text } from '@mantine/core';
 import { ComponentProps, useCallback, useMemo, useRef, useState } from 'react';
 import { ServerRouteDefinition } from 'shared';
 import { z } from 'zod';
+import ActionIcon from '@/elements/ActionIcon.tsx';
 import Badge from '@/elements/Badge.tsx';
 import Button from '@/elements/Button.tsx';
+import Divider from '@/elements/Divider.tsx';
 import { DndContainer, DndItem, SortableItem } from '@/elements/DragAndDrop.tsx';
 import LocalizedTextInput from '@/elements/input/LocalizedTextInput.tsx';
+import Select from '@/elements/input/Select.tsx';
 import TextInput from '@/elements/input/TextInput.tsx';
 import Tooltip from '@/elements/Tooltip.tsx';
 import { eggConfigurationRouteItemSchema } from '@/lib/schemas/generic.ts';
@@ -115,7 +118,7 @@ export default function RouteOrderEditor({
     emit(items.map((i) => i.item));
   };
 
-  const renderItem = (entry: DndRouteEntry, dragHandleProps?: ComponentProps<'div'>) => {
+  const renderItem = (entry: DndRouteEntry, dragHandleProps?: ComponentProps<'button'>) => {
     const { item, index } = entry;
 
     if (item.type === 'route') {
@@ -130,7 +133,6 @@ export default function RouteOrderEditor({
                 size='sm'
                 variant='subtle'
                 color='gray'
-                component='div'
                 style={{ cursor: 'grab', flexShrink: 0 }}
                 {...dragHandleProps}
               >
@@ -177,7 +179,6 @@ export default function RouteOrderEditor({
                 size='sm'
                 variant='subtle'
                 color='gray'
-                component='div'
                 style={{ cursor: 'grab', flexShrink: 0 }}
                 {...dragHandleProps}
               >
@@ -238,7 +239,6 @@ export default function RouteOrderEditor({
                   size='sm'
                   variant='subtle'
                   color='gray'
-                  component='div'
                   style={{ cursor: 'grab', flexShrink: 0 }}
                   {...dragHandleProps}
                 >
@@ -326,7 +326,9 @@ export default function RouteOrderEditor({
                 <SortableItem
                   key={item.id}
                   id={item.id}
-                  renderItem={({ dragHandleProps }) => renderItem(item, dragHandleProps)}
+                  renderItem={({ dragHandleProps }) =>
+                    renderItem(item, dragHandleProps as unknown as ComponentProps<'button'>)
+                  }
                 />
               ))}
             </Stack>

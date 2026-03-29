@@ -1,10 +1,11 @@
 import { faPlay, faRefresh, faSkull, faStop, faTowerBroadcast } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ActionIcon, Group } from '@mantine/core';
+import { Group } from '@mantine/core';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { z } from 'zod';
+import ActionIcon from '@/elements/ActionIcon.tsx';
 import { ServerCan } from '@/elements/Can.tsx';
 import ConfirmationModal from '@/elements/modals/ConfirmationModal.tsx';
 import Tooltip from '@/elements/Tooltip.tsx';

@@ -10,7 +10,7 @@ import {
   faUpload,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ActionIcon, Group, Stack } from '@mantine/core';
+import { Group, Stack } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import jsYaml from 'js-yaml';
 import { zod4Resolver } from 'mantine-form-zod-resolver';
@@ -26,6 +26,7 @@ import updateEgg from '@/api/admin/nests/eggs/updateEgg.ts';
 import updateEggUsingImport from '@/api/admin/nests/eggs/updateEggUsingImport.ts';
 import updateEggUsingRepository from '@/api/admin/nests/eggs/updateEggUsingRepository.ts';
 import { getEmptyPaginationSet, httpErrorToHuman } from '@/api/axios.ts';
+import ActionIcon from '@/elements/ActionIcon.tsx';
 import Button from '@/elements/Button.tsx';
 import { AdminCan } from '@/elements/Can.tsx';
 import Card from '@/elements/Card.tsx';

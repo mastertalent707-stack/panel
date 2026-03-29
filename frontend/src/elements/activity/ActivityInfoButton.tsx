@@ -1,8 +1,8 @@
 import { faInfo } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ActionIcon } from '@mantine/core';
 import { useMemo, useState } from 'react';
 import { z } from 'zod';
+import ActionIcon from '@/elements/ActionIcon.tsx';
 import { activitySchema } from '@/lib/schemas/activity.ts';
 import { serverActivitySchema } from '@/lib/schemas/server/activity.ts';
 import { userActivitySchema } from '@/lib/schemas/user/activity.ts';

@@ -8,7 +8,7 @@ import {
   faServer,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ActionIcon, ComboboxItem, OptionsFilter } from '@mantine/core';
+import { ComboboxItem, OptionsFilter } from '@mantine/core';
 import { FitAddon } from '@xterm/addon-fit';
 import { SearchAddon } from '@xterm/addon-search';
 import { Unicode11Addon } from '@xterm/addon-unicode11';
@@ -18,6 +18,7 @@ import { ITerminalInitOnlyOptions, ITerminalOptions, Terminal as XTerm } from '@
 import classNames from 'classnames';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import getServer from '@/api/server/getServer.ts';
+import ActionIcon from '@/elements/ActionIcon.tsx';
 import Button from '@/elements/Button.tsx';
 import Card from '@/elements/Card.tsx';
 import Autocomplete from '@/elements/input/Autocomplete.tsx';

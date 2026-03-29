@@ -1,8 +1,9 @@
 import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ActionIcon, Stack, Title } from '@mantine/core';
+import { Stack, Title } from '@mantine/core';
 import { UseFormReturnType } from '@mantine/form';
 import { z } from 'zod';
+import ActionIcon from '@/elements/ActionIcon.tsx';
 import Button from '@/elements/Button.tsx';
 import TextInput from '@/elements/input/TextInput.tsx';
 import { serverScheduleStepMatchRegexSchema, serverScheduleStepUpdateSchema } from '@/lib/schemas/server/schedules.ts';

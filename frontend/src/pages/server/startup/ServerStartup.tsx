@@ -1,6 +1,6 @@
 import { faImage, faPlay, faReply } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ActionIcon, Group, Title } from '@mantine/core';
+import { Group, Title } from '@mantine/core';
 import debounce from 'debounce';
 import { useCallback, useEffect, useState } from 'react';
 import { httpErrorToHuman } from '@/api/axios.ts';
@@ -8,6 +8,7 @@ import getVariables from '@/api/server/startup/getVariables.ts';
 import updateCommand from '@/api/server/startup/updateCommand.ts';
 import updateDockerImage from '@/api/server/startup/updateDockerImage.ts';
 import updateVariables from '@/api/server/startup/updateVariables.ts';
+import ActionIcon from '@/elements/ActionIcon.tsx';
 import Button from '@/elements/Button.tsx';
 import ServerContentContainer from '@/elements/containers/ServerContentContainer.tsx';
 import Select from '@/elements/input/Select.tsx';
