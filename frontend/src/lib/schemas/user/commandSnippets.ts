@@ -8,7 +8,9 @@ export const userCommandSnippetSchema = z.object({
   created: z.date(),
 });
 
-export const userCommandSnippetUpdateSchema = userCommandSnippetSchema.omit({
-  uuid: true,
-  created: true,
-});
+export const userCommandSnippetUpdateSchema = z.lazy(() =>
+  userCommandSnippetSchema.omit({
+    uuid: true,
+    created: true,
+  }),
+);

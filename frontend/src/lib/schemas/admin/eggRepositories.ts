@@ -9,10 +9,12 @@ export const adminEggRepositorySchema = z.object({
   created: z.date(),
 });
 
-export const adminEggRepositoryUpdateSchema = adminEggRepositorySchema.omit({
-  uuid: true,
-  created: true,
-});
+export const adminEggRepositoryUpdateSchema = z.lazy(() =>
+  adminEggRepositorySchema.omit({
+    uuid: true,
+    created: true,
+  }),
+);
 
 export const adminEggRepositoryEggSchema = z.object({
   uuid: z.string(),

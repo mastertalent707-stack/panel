@@ -13,9 +13,11 @@ export const userApiKeySchema = z.object({
   created: z.date(),
 });
 
-export const userApiKeyUpdateSchema = userApiKeySchema.omit({
-  uuid: true,
-  keyStart: true,
-  lastUsed: true,
-  created: true,
-});
+export const userApiKeyUpdateSchema = z.lazy(() =>
+  userApiKeySchema.omit({
+    uuid: true,
+    keyStart: true,
+    lastUsed: true,
+    created: true,
+  }),
+);

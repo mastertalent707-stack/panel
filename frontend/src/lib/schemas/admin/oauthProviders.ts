@@ -25,10 +25,12 @@ export const adminOAuthProviderSchema = z.object({
   created: z.date(),
 });
 
-export const adminOAuthProviderUpdateSchema = adminOAuthProviderSchema.omit({
-  uuid: true,
-  created: true,
-});
+export const adminOAuthProviderUpdateSchema = z.lazy(() =>
+  adminOAuthProviderSchema.omit({
+    uuid: true,
+    created: true,
+  }),
+);
 
 export const adminOAuthUserLinkSchema = z.object({
   uuid: z.string(),

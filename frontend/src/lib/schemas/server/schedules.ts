@@ -217,12 +217,14 @@ export const serverScheduleSchema = z.object({
   created: z.date(),
 });
 
-export const serverScheduleUpdateSchema = serverScheduleSchema.omit({
-  uuid: true,
-  lastRun: true,
-  lastFailure: true,
-  created: true,
-});
+export const serverScheduleUpdateSchema = z.lazy(() =>
+  serverScheduleSchema.omit({
+    uuid: true,
+    lastRun: true,
+    lastFailure: true,
+    created: true,
+  }),
+);
 
 export const serverScheduleStepSleepSchema = z.object({
   type: z.literal('sleep'),
@@ -382,11 +384,13 @@ export const serverScheduleStepSchema = z.object({
   created: z.date(),
 });
 
-export const serverScheduleStepUpdateSchema = serverScheduleStepSchema.omit({
-  uuid: true,
-  error: true,
-  created: true,
-});
+export const serverScheduleStepUpdateSchema = z.lazy(() =>
+  serverScheduleStepSchema.omit({
+    uuid: true,
+    error: true,
+    created: true,
+  }),
+);
 
 export const serverScheduleStatusSchema = z.object({
   running: z.boolean(),

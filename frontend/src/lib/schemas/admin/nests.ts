@@ -9,7 +9,9 @@ export const adminNestSchema = z.object({
   created: z.date(),
 });
 
-export const adminNestUpdateSchema = adminNestSchema.omit({
-  uuid: true,
-  created: true,
-});
+export const adminNestUpdateSchema = z.lazy(() =>
+  adminNestSchema.omit({
+    uuid: true,
+    created: true,
+  }),
+);

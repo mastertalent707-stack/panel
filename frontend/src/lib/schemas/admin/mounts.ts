@@ -12,7 +12,9 @@ export const adminMountSchema = z.object({
   created: z.date(),
 });
 
-export const adminMountUpdateSchema = adminMountSchema.omit({
-  uuid: true,
-  created: true,
-});
+export const adminMountUpdateSchema = z.lazy(() =>
+  adminMountSchema.omit({
+    uuid: true,
+    created: true,
+  }),
+);

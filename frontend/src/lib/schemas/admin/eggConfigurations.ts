@@ -26,7 +26,9 @@ export const adminEggConfigurationSchema = z.object({
   created: z.date(),
 });
 
-export const adminEggConfigurationUpdateSchema = adminEggConfigurationSchema.omit({
-  uuid: true,
-  created: true,
-});
+export const adminEggConfigurationUpdateSchema = z.lazy(() =>
+  adminEggConfigurationSchema.omit({
+    uuid: true,
+    created: true,
+  }),
+);

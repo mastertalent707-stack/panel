@@ -1,5 +1,8 @@
+import { z } from 'zod';
 import { activitySchema } from '@/lib/schemas/activity.ts';
 
-export const userActivitySchema = activitySchema.omit({
-  user: true,
-});
+export const userActivitySchema = z.lazy(() =>
+  activitySchema.omit({
+    user: true,
+  }),
+);

@@ -16,10 +16,12 @@ export const adminDatabaseHostSchema = z.object({
   created: z.date(),
 });
 
-export const adminDatabaseHostCreateSchema = adminDatabaseHostSchema.omit({
-  uuid: true,
-  created: true,
-});
+export const adminDatabaseHostCreateSchema = z.lazy(() =>
+  adminDatabaseHostSchema.omit({
+    uuid: true,
+    created: true,
+  }),
+);
 
 export const adminDatabaseHostUpdateSchema = z.lazy(() =>
   adminDatabaseHostSchema

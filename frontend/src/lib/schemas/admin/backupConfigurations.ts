@@ -32,7 +32,9 @@ export const adminBackupConfigurationSchema = z.object({
   created: z.date(),
 });
 
-export const adminBackupConfigurationUpdateSchema = adminBackupConfigurationSchema.omit({
-  uuid: true,
-  created: true,
-});
+export const adminBackupConfigurationUpdateSchema = z.lazy(() =>
+  adminBackupConfigurationSchema.omit({
+    uuid: true,
+    created: true,
+  }),
+);
