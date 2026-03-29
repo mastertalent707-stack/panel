@@ -39,9 +39,9 @@ export default function ServersTransferModal({
 
   const [openModal, setOpenModal] = useState<'confirm' | null>(null);
   const [selectedNodeUuid, setSelectedNodeUuid] = useState<string | null>(null);
-  const [allocationUuidRandom, setAllocationUuidRandom] = useState(true);
-  const [allocationUuidsRandom, setAllocationUuidsRandom] = useState(true);
-  const [allocationRespectEggPortRange, setAllocationRespectEggPortRange] = useState(true);
+  const [allocationMode, setAllocationMode] = useState<
+    'none' | 'random_primary' | 'random_all' | 'egg_config_deployment' | 'egg_config_self_assign_range'
+  >('random_all');
   const [transferBackups, setTransferBackups] = useState(false);
   const [deleteSourceBackups, setDeleteSourceBackups] = useState(false);
   const [archiveFormat, setArchiveFormat] = useState<z.infer<typeof archiveFormatEnum>>('tar_lz4');
@@ -61,9 +61,7 @@ export default function ServersTransferModal({
     await postTransfers(contextNode.uuid, {
       servers: servers.keys(),
       nodeUuid: selectedNodeUuid!,
-      allocationUuidRandom,
-      allocationUuidsRandom,
-      allocationRespectEggPortRange,
+      allocationMode,
       transferBackups,
       deleteSourceBackups,
       archiveFormat,
@@ -114,25 +112,42 @@ export default function ServersTransferModal({
             loading={nodes.loading}
           />
 
-          <Switch
-            label='Randomize allocation'
-            description='Whether to get a new, random primary allocation for the server on the destination node. If disabled, the primary allocation will be removed.'
-            checked={allocationUuidRandom}
-            onChange={(e) => setAllocationUuidRandom(e.target.checked)}
-          />
-
-          <Switch
-            label='Randomize additional allocations'
-            description='Whether to get new, random additional allocations for the server on the destination node. If disabled, the additional allocations will be removed.'
-            checked={allocationUuidsRandom}
-            onChange={(e) => setAllocationUuidsRandom(e.target.checked)}
-          />
-
-          <Switch
-            label='Respect Egg port range'
-            description='Whether to only assign new allocations on the destination node that fit within the Eggs defined port range. If disabled, any allocation on the destination node can be assigned to the server.'
-            checked={allocationRespectEggPortRange}
-            onChange={(e) => setAllocationRespectEggPortRange(e.target.checked)}
+          <Select
+            withAsterisk
+            label='Allocation Mode'
+            value={allocationMode}
+            onChange={(value) =>
+              setAllocationMode(
+                value as
+                  | 'none'
+                  | 'random_primary'
+                  | 'random_all'
+                  | 'egg_config_deployment'
+                  | 'egg_config_self_assign_range',
+              )
+            }
+            data={[
+              {
+                value: 'none',
+                label:
+                  'None (scrap all allocations, server will not be automatically assigned new allocations on the destination node)',
+              },
+              { value: 'random_primary', label: 'Randomize primary allocation (removes additional allocations)' },
+              {
+                value: 'random_all',
+                label: 'Randomize all allocations (recommended to avoid incompatibility issues with destination node)',
+              },
+              {
+                value: 'egg_config_deployment',
+                label:
+                  'Assign allocations based on Egg deployment configuration (only works if the Egg has a deployment configuration and the destination node has compatible allocations)',
+              },
+              {
+                value: 'egg_config_self_assign_range',
+                label:
+                  'Self-assign new allocations based on Egg port range (only works if the Egg has a port range and the destination node has compatible allocations)',
+              },
+            ]}
           />
 
           <Switch

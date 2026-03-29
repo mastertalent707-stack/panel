@@ -6,9 +6,7 @@ import { transformKeysToSnakeCase } from '@/lib/transformers.ts';
 interface Data {
   servers: string[];
   nodeUuid: string;
-  allocationUuidRandom: boolean;
-  allocationUuidsRandom: boolean;
-  allocationRespectEggPortRange: boolean;
+  allocationMode: 'none' | 'random_primary' | 'random_all' | 'egg_config_deployment' | 'egg_config_self_assign_range';
   transferBackups: boolean;
   deleteSourceBackups: boolean;
   archiveFormat: z.infer<typeof archiveFormat>;

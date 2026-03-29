@@ -18,17 +18,25 @@ mod post {
         },
         response::{ApiResponse, ApiResponseResult},
     };
-    use std::collections::HashSet;
+    use std::collections::{HashMap, HashSet};
     use utoipa::ToSchema;
+
+    #[derive(ToSchema, Deserialize, Clone, Copy)]
+    #[serde(rename_all = "snake_case")]
+    pub enum MassTransferAllocationMode {
+        None,
+        RandomPrimary,
+        RandomAll,
+        EggConfigDeployment,
+        EggConfigSelfAssignRange,
+    }
 
     #[derive(ToSchema, Deserialize)]
     pub struct Payload {
         servers: HashSet<uuid::Uuid>,
         node_uuid: uuid::Uuid,
 
-        allocation_uuid_random: bool,
-        allocation_uuids_random: bool,
-        allocation_respect_egg_port_range: bool,
+        allocation_mode: MassTransferAllocationMode,
 
         transfer_backups: bool,
         delete_source_backups: bool,
@@ -90,51 +98,97 @@ mod post {
                 Vec::new()
             };
 
-            let (needs_primary, required_allocation_count) = if data.allocation_uuids_random {
-                let count =
-                    ServerAllocation::count_by_server_uuid(&state.database, server.uuid).await;
-                if data.allocation_uuid_random {
-                    (true, count)
-                } else {
-                    (false, count.saturating_sub(1))
-                }
-            } else if data.allocation_uuid_random && server.allocation.is_some() {
-                (true, 1)
-            } else {
-                (false, 0)
-            };
-
-            let egg_configuration = server.egg.configuration(&state.database).await?;
-
-            let node_allocations = NodeAllocation::get_random(
-                &state.database,
-                destination_node.uuid,
-                if data.allocation_respect_egg_port_range
-                    && let Some(config_allocations) = &egg_configuration.config_allocations
-                {
-                    config_allocations.user_self_assign.start_port
-                } else {
-                    1
-                },
-                if data.allocation_respect_egg_port_range
-                    && let Some(config_allocations) = &egg_configuration.config_allocations
-                {
-                    config_allocations.user_self_assign.end_port
-                } else {
-                    u16::MAX
-                },
-                required_allocation_count,
-            )
-            .await?;
+            let has_primary = server.allocation.is_some();
+            let total_allocations =
+                ServerAllocation::count_by_server_uuid(&state.database, server.uuid).await;
 
             let mut allocation_uuid = None;
             let mut allocation_uuids = Vec::new();
 
-            for (i, node_allocation_uuid) in node_allocations.into_iter().enumerate() {
-                if needs_primary && i == 0 {
-                    allocation_uuid = Some(node_allocation_uuid);
-                } else {
-                    allocation_uuids.push(node_allocation_uuid);
+            match data.allocation_mode {
+                MassTransferAllocationMode::None => {}
+                MassTransferAllocationMode::EggConfigDeployment => {
+                    let egg_configuration = server.egg.configuration(&state.database).await?;
+
+                    if let Some(allocations) = &egg_configuration.config_allocations {
+                        let mut deployment_variables = HashMap::new();
+
+                        let (deployment_allocation_uuid, deployment_allocation_uuids) =
+                            match NodeAllocation::get_from_deployment(
+                                &state.database,
+                                &allocations.deployment,
+                                destination_node.uuid,
+                                &mut deployment_variables,
+                            )
+                            .await
+                            {
+                                Ok(allocations) => allocations,
+                                Err(err) => {
+                                    tracing::error!(
+                                        "failed to get allocations for server transfer using egg configuration deployment mode: {:?}",
+                                        err
+                                    );
+                                    return Err(shared::response::DisplayError::new("failed to get allocations for server transfer using egg configuration deployment mode").into());
+                                }
+                            };
+
+                        allocation_uuid = deployment_allocation_uuid;
+                        allocation_uuids = deployment_allocation_uuids;
+                    } else {
+                        return Err(shared::response::DisplayError::new("egg configuration does not have any configured allocations for deployment").into());
+                    }
+                }
+                mode => {
+                    let required_allocation_count = match mode {
+                        MassTransferAllocationMode::RandomPrimary => {
+                            if has_primary {
+                                1
+                            } else {
+                                0
+                            }
+                        }
+                        MassTransferAllocationMode::RandomAll
+                        | MassTransferAllocationMode::EggConfigSelfAssignRange => total_allocations,
+                        _ => unreachable!(),
+                    };
+
+                    if required_allocation_count > 0 {
+                        let (start_port, end_port) =
+                            if let MassTransferAllocationMode::EggConfigSelfAssignRange = mode {
+                                let egg_configuration =
+                                    server.egg.configuration(&state.database).await?;
+
+                                if let Some(config_allocations) =
+                                    &egg_configuration.config_allocations
+                                {
+                                    (
+                                        config_allocations.user_self_assign.start_port,
+                                        config_allocations.user_self_assign.end_port,
+                                    )
+                                } else {
+                                    (1, u16::MAX)
+                                }
+                            } else {
+                                (1, u16::MAX)
+                            };
+
+                        let node_allocations = NodeAllocation::get_random(
+                            &state.database,
+                            destination_node.uuid,
+                            start_port,
+                            end_port,
+                            required_allocation_count,
+                        )
+                        .await?;
+
+                        for (i, node_allocation_uuid) in node_allocations.into_iter().enumerate() {
+                            if has_primary && i == 0 {
+                                allocation_uuid = Some(node_allocation_uuid);
+                            } else {
+                                allocation_uuids.push(node_allocation_uuid);
+                            }
+                        }
+                    }
                 }
             }
 

@@ -12,7 +12,7 @@ export const adminBackupConfigurationS3Schema = z.object({
   secretKey: z.string(),
   bucket: z.string(),
   region: z.string(),
-  endpoint: z.url(),
+  endpoint: z.httpUrl(),
   pathStyle: z.boolean(),
   partSize: z.number().min(0),
 });

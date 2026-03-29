@@ -324,7 +324,7 @@ impl Node {
             FROM nodes
             JOIN locations ON locations.uuid = nodes.location_uuid
             LEFT JOIN server_usage u ON nodes.uuid = u.node_uuid
-            WHERE nodes.location_uuid = ANY($1)
+            WHERE nodes.location_uuid = ANY($1) AND nodes.deployment_enabled
             AND $4 OR (COALESCE(u.used_memory, 0) + $2 <= nodes.memory AND COALESCE(u.used_disk, 0) + $3 <= nodes.disk)
             ORDER BY
                 (
