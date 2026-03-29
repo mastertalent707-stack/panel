@@ -51,11 +51,73 @@ impl EggConfigAllocationsUserSelfAssign {
     }
 }
 
+#[derive(ToSchema, Validate, Serialize, Deserialize, Clone)]
+#[serde(tag = "type", rename_all = "snake_case")]
+pub enum EggConfigAllocationDeploymentAdditionalAllocationMode {
+    Random,
+    Range {
+        #[garde(range(min = 1024, max = 65535))]
+        start_port: u16,
+        #[garde(range(min = 1024, max = 65535))]
+        end_port: u16,
+    },
+    AddPrimary {
+        #[garde(skip)]
+        value: u16,
+    },
+    SubtractPrimary {
+        #[garde(skip)]
+        value: u16,
+    },
+    MultiplyPrimary {
+        #[garde(skip)]
+        value: f64,
+    },
+    DividePrimary {
+        #[garde(skip)]
+        value: f64,
+    },
+}
+
+#[derive(ToSchema, Validate, Serialize, Deserialize, Clone)]
+pub struct EggConfigAllocationDeploymentAdditionalAllocation {
+    #[schema(inline)]
+    #[garde(dive)]
+    pub mode: EggConfigAllocationDeploymentAdditionalAllocationMode,
+    #[garde(length(chars, min = 1, max = 255))]
+    pub assign_to_variable: Option<compact_str::CompactString>,
+}
+
+#[derive(ToSchema, Validate, Serialize, Deserialize, Clone)]
+pub struct EggConfigAllocationDeploymentPrimaryAllocation {
+    #[garde(range(min = 1024, max = 65535))]
+    pub start_port: u16,
+    #[garde(range(min = 1024, max = 65535))]
+    pub end_port: u16,
+
+    #[garde(length(chars, min = 1, max = 255))]
+    pub assign_to_variable: Option<compact_str::CompactString>,
+}
+
+#[derive(ToSchema, Validate, Serialize, Deserialize, Default, Clone)]
+pub struct EggConfigAllocationsDeployment {
+    #[garde(skip)]
+    pub dedicated: bool,
+
+    #[schema(inline)]
+    #[garde(dive)]
+    pub primary: Option<EggConfigAllocationDeploymentPrimaryAllocation>,
+    #[schema(inline)]
+    #[garde(dive)]
+    pub additional: Vec<EggConfigAllocationDeploymentAdditionalAllocation>,
+}
+
 #[derive(ToSchema, Serialize, Deserialize, Default, Clone)]
 pub struct EggConfigAllocations {
-    #[schema(inline)]
     #[serde(default)]
     pub user_self_assign: EggConfigAllocationsUserSelfAssign,
+    #[serde(default)]
+    pub deployment: EggConfigAllocationsDeployment,
 }
 
 #[derive(ToSchema, Serialize, Deserialize, Clone)]

@@ -1,80 +1,6 @@
 use super::State;
 use utoipa_axum::{router::OpenApiRouter, routes};
 
-mod _server_;
-mod deploy;
-mod external;
-
-mod get {
-    use axum::{extract::Query, http::StatusCode};
-    use serde::Serialize;
-    use shared::{
-        ApiError, GetState,
-        models::{
-            Pagination, PaginationParamsWithSearch, server::Server, user::GetPermissionManager,
-        },
-        response::{ApiResponse, ApiResponseResult},
-    };
-    use utoipa::ToSchema;
-
-    #[derive(ToSchema, Serialize)]
-    struct Response {
-        #[schema(inline)]
-        servers: Pagination<shared::models::server::AdminApiServer>,
-    }
-
-    #[utoipa::path(get, path = "/", responses(
-        (status = OK, body = inline(Response)),
-    ), params(
-        (
-            "page" = i64, Query,
-            description = "The page number",
-            example = "1",
-        ),
-        (
-            "per_page" = i64, Query,
-            description = "The number of items per page",
-            example = "10",
-        ),
-        (
-            "search" = Option<String>, Query,
-            description = "Search term for items",
-        ),
-    ))]
-    pub async fn route(
-        state: GetState,
-        permissions: GetPermissionManager,
-        Query(params): Query<PaginationParamsWithSearch>,
-    ) -> ApiResponseResult {
-        if let Err(errors) = shared::utils::validate_data(&params) {
-            return ApiResponse::new_serialized(ApiError::new_strings_value(errors))
-                .with_status(StatusCode::BAD_REQUEST)
-                .ok();
-        }
-
-        permissions.has_admin_permission("servers.read")?;
-
-        let servers = Server::all_with_pagination(
-            &state.database,
-            params.page,
-            params.per_page,
-            params.search.as_deref(),
-        )
-        .await?;
-
-        let storage_url_retriever = state.storage.retrieve_urls().await?;
-
-        ApiResponse::new_serialized(Response {
-            servers: servers
-                .try_async_map(|server| {
-                    server.into_admin_api_object(&state.database, &storage_url_retriever)
-                })
-                .await?,
-        })
-        .ok()
-    }
-}
-
 mod post {
     use axum::http::StatusCode;
     use garde::Validate;
@@ -83,7 +9,8 @@ mod post {
         ApiError, GetState,
         models::{
             CreatableModel, admin_activity::GetAdminActivityLogger,
-            nest_egg_variable::NestEggVariable, server::Server, user::GetPermissionManager,
+            nest_egg_variable::NestEggVariable, node::Node, node_allocation::NodeAllocation,
+            server::Server, user::GetPermissionManager,
         },
         response::{ApiResponse, ApiResponseResult},
     };
@@ -100,10 +27,24 @@ mod post {
         value: String,
     }
 
+    #[derive(ToSchema, Validate, Serialize, Deserialize)]
+    pub struct PayloadDeployment {
+        #[garde(skip)]
+        location_uuids: Vec<uuid::Uuid>,
+
+        #[garde(skip)]
+        allow_overallocation: bool,
+
+        #[garde(dive)]
+        allocations: Option<shared::models::egg_configuration::EggConfigAllocationsDeployment>,
+    }
+
     #[derive(ToSchema, Validate, Deserialize)]
     pub struct Payload {
-        #[garde(skip)]
-        node_uuid: uuid::Uuid,
+        #[garde(dive)]
+        #[schema(inline)]
+        deployment: PayloadDeployment,
+
         #[garde(skip)]
         owner_uuid: uuid::Uuid,
         #[garde(skip)]
@@ -114,7 +55,7 @@ mod post {
         #[garde(skip)]
         allocation_uuid: Option<uuid::Uuid>,
         #[garde(skip)]
-        allocation_uuids: Vec<uuid::Uuid>,
+        allocation_uuids: Option<Vec<uuid::Uuid>>,
 
         #[garde(skip)]
         start_on_completion: bool,
@@ -221,6 +162,72 @@ mod post {
                 .ok();
         }
 
+        let nodes = Node::by_location_uuids_most_eligible(
+            &state.database,
+            &data.deployment.location_uuids,
+            data.limits,
+            data.deployment.allow_overallocation,
+        )
+        .await?;
+
+        let mut allocation_configuration = None;
+        if let Some(allocations) = data.deployment.allocations {
+            allocation_configuration = Some(allocations);
+        } else {
+            let egg_configuration =
+                shared::models::egg_configuration::EggConfiguration::merged_by_egg_uuid(
+                    &state.database,
+                    data.egg_uuid,
+                )
+                .await?;
+
+            if let Some(allocations) = egg_configuration.config_allocations {
+                allocation_configuration = Some(allocations.deployment);
+            }
+        }
+
+        let mut deployment_variables = HashMap::new();
+
+        let mut allocation_uuid = data.allocation_uuid;
+        let mut allocation_uuids = data.allocation_uuids;
+
+        let mut node_uuid = None;
+        if (allocation_uuid.is_none() || allocation_uuids.is_none())
+            && let Some(allocations) = &allocation_configuration
+        {
+            for node in nodes {
+                let (deployment_allocation_uuid, deployment_allocation_uuids) =
+                    match NodeAllocation::get_from_deployment(
+                        &state.database,
+                        allocations,
+                        node.uuid,
+                        &mut deployment_variables,
+                    )
+                    .await
+                    {
+                        Ok(result) => result,
+                        Err(_) => continue,
+                    };
+
+                if allocation_uuid.is_none() {
+                    allocation_uuid = deployment_allocation_uuid;
+                }
+                if allocation_uuids.is_none() {
+                    allocation_uuids = Some(deployment_allocation_uuids);
+                }
+
+                node_uuid = Some(node.uuid);
+            }
+        } else {
+            node_uuid = nodes.into_iter().next().map(|n| n.uuid);
+        }
+
+        let Some(node_uuid) = node_uuid else {
+            return ApiResponse::error("no eligible node found for server deployment")
+                .with_status(StatusCode::BAD_REQUEST)
+                .ok();
+        };
+
         let mut server_variables = HashMap::new();
         server_variables.reserve(variables.len());
 
@@ -236,13 +243,28 @@ mod post {
             server_variables.insert(variable_uuid, data_variable.value.clone().into());
         }
 
+        for (deployment_variable, deployment_value) in deployment_variables {
+            let variable_uuid = match variables
+                .iter()
+                .find(|v| v.env_variable == deployment_variable)
+                .map(|v| v.uuid)
+            {
+                Some(uuid) => uuid,
+                None => continue,
+            };
+
+            server_variables.insert(variable_uuid, deployment_value);
+        }
+
+        let allocation_uuids = allocation_uuids.unwrap_or_default();
+
         let options = shared::models::server::CreateServerOptions {
-            node_uuid: data.node_uuid,
+            node_uuid,
             owner_uuid: data.owner_uuid,
             egg_uuid: data.egg_uuid,
             backup_configuration_uuid: data.backup_configuration_uuid,
-            allocation_uuid: data.allocation_uuid,
-            allocation_uuids: data.allocation_uuids.clone(),
+            allocation_uuid,
+            allocation_uuids: allocation_uuids.clone(),
             start_on_completion: data.start_on_completion,
             skip_installer: data.skip_installer,
             external_id: data.external_id,
@@ -275,12 +297,12 @@ mod post {
                 "server:create",
                 serde_json::json!({
                     "uuid": server.uuid,
-                    "node_uuid": server.node.uuid,
+                    "node_uuid": node_uuid,
                     "owner_uuid": server.owner.uuid,
                     "egg_uuid": server.egg.uuid,
 
-                    "allocation_uuid": data.allocation_uuid,
-                    "allocation_uuids": data.allocation_uuids,
+                    "allocation_uuid": allocation_uuid,
+                    "allocation_uuids": allocation_uuids,
                     "external_id": server.external_id,
 
                     "start_on_completion": data.start_on_completion,
@@ -314,10 +336,6 @@ mod post {
 
 pub fn router(state: &State) -> OpenApiRouter<State> {
     OpenApiRouter::new()
-        .routes(routes!(get::route))
         .routes(routes!(post::route))
-        .nest("/{server}", _server_::router(state))
-        .nest("/external", external::router(state))
-        .nest("/deploy", deploy::router(state))
         .with_state(state.clone())
 }

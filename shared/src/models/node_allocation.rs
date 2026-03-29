@@ -1,7 +1,8 @@
 use crate::{prelude::*, storage::StorageUrlRetriever};
+use compact_str::ToCompactString;
 use serde::{Deserialize, Serialize};
 use sqlx::{Row, postgres::PgRow};
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, HashMap};
 use utoipa::ToSchema;
 
 #[derive(Serialize, Deserialize, Clone)]
@@ -140,6 +141,376 @@ impl NodeAllocation {
             .into_iter()
             .map(|row| row.get::<uuid::Uuid, _>("uuid"))
             .collect())
+    }
+
+    pub async fn get_random_ip(
+        database: &crate::database::Database,
+        node_uuid: uuid::Uuid,
+        ip: &sqlx::types::ipnetwork::IpNetwork,
+        start_port: u16,
+        end_port: u16,
+        amount: i64,
+    ) -> Result<Vec<uuid::Uuid>, crate::database::DatabaseError> {
+        let rows = sqlx::query(
+            r#"
+            SELECT node_allocations.uuid
+            FROM node_allocations
+            LEFT JOIN server_allocations ON server_allocations.allocation_uuid = node_allocations.uuid
+            WHERE
+                node_allocations.node_uuid = $1
+                AND node_allocations.ip = $2
+                AND node_allocations.port BETWEEN $3 AND $4
+                AND server_allocations.uuid IS NULL
+            ORDER BY RANDOM()
+            LIMIT $5
+            "#,
+        )
+        .bind(node_uuid)
+        .bind(ip)
+        .bind(start_port as i32)
+        .bind(end_port as i32)
+        .bind(amount)
+        .fetch_all(database.write())
+        .await?;
+
+        if rows.len() != amount as usize {
+            return Err(anyhow::anyhow!(
+                "only found {} available allocations on this IP",
+                rows.len()
+            )
+            .into());
+        }
+
+        Ok(rows
+            .into_iter()
+            .map(|row| row.get::<uuid::Uuid, _>("uuid"))
+            .collect())
+    }
+
+    pub async fn get_random_dedicated(
+        database: &crate::database::Database,
+        node_uuid: uuid::Uuid,
+        start_port: u16,
+        end_port: u16,
+        amount: i64,
+    ) -> Result<Vec<uuid::Uuid>, crate::database::DatabaseError> {
+        let rows = sqlx::query(
+            r#"
+            WITH eligible_ips AS (
+                SELECT node_allocations.ip
+                FROM node_allocations
+                LEFT JOIN server_allocations ON server_allocations.allocation_uuid = node_allocations.uuid
+                WHERE node_allocations.node_uuid = $1
+                GROUP BY node_allocations.ip
+                HAVING 
+                    COUNT(server_allocations.uuid) = 0
+                    AND SUM(CASE WHEN node_allocations.port BETWEEN $2 AND $3 THEN 1 ELSE 0 END) >= $4
+            ),
+            random_ip AS (
+                SELECT ip FROM eligible_ips ORDER BY RANDOM() LIMIT 1
+            )
+            SELECT node_allocations.uuid
+            FROM node_allocations
+            WHERE
+                node_allocations.node_uuid = $1
+                AND node_allocations.port BETWEEN $2 AND $3
+                AND node_allocations.ip = (SELECT ip FROM random_ip)
+            ORDER BY RANDOM()
+            LIMIT $4
+            "#,
+        )
+        .bind(node_uuid)
+        .bind(start_port as i32)
+        .bind(end_port as i32)
+        .bind(amount)
+        .fetch_all(database.write())
+        .await?;
+
+        if rows.len() != amount as usize {
+            return Err(anyhow::anyhow!(
+                "only found {} available dedicated allocations",
+                rows.len()
+            )
+            .into());
+        }
+
+        Ok(rows
+            .into_iter()
+            .map(|row| row.get::<uuid::Uuid, _>("uuid"))
+            .collect())
+    }
+
+    pub async fn by_node_uuid_ip_port(
+        database: &crate::database::Database,
+        node_uuid: uuid::Uuid,
+        ip: &sqlx::types::ipnetwork::IpNetwork,
+        port: i32,
+    ) -> Result<Option<Self>, crate::database::DatabaseError> {
+        let row = sqlx::query(&format!(
+            r#"
+            SELECT {}
+            FROM node_allocations
+            WHERE node_allocations.node_uuid = $1 AND node_allocations.ip = $2 AND node_allocations.port = $3
+            "#,
+            Self::columns_sql(None)
+        ))
+        .bind(node_uuid)
+        .bind(ip)
+        .bind(port)
+        .fetch_optional(database.read())
+        .await?;
+
+        row.try_map(|row| Self::map(None, &row))
+    }
+
+    pub async fn get_from_deployment<'a>(
+        database: &crate::database::Database,
+        deployment: &'a super::egg_configuration::EggConfigAllocationsDeployment,
+        node_uuid: uuid::Uuid,
+        variables: &mut HashMap<&'a str, compact_str::CompactString>,
+    ) -> Result<(Option<uuid::Uuid>, Vec<uuid::Uuid>), crate::database::DatabaseError> {
+        let mut primary = None;
+        let mut additional = Vec::new();
+
+        if let Some(primary_allocation) = &deployment.primary {
+            let random = if deployment.dedicated {
+                Self::get_random_dedicated(
+                    database,
+                    node_uuid,
+                    primary_allocation.start_port,
+                    primary_allocation.end_port,
+                    1,
+                )
+                .await?
+            } else {
+                Self::get_random(
+                    database,
+                    node_uuid,
+                    primary_allocation.start_port,
+                    primary_allocation.end_port,
+                    1,
+                )
+                .await?
+            };
+
+            let Some(allocation) = random.into_iter().next() else {
+                return Err(anyhow::anyhow!("no available primary allocation found").into());
+            };
+            let allocation = match Self::by_node_uuid_uuid(database, node_uuid, allocation).await? {
+                Some(allocation) => allocation,
+                None => {
+                    return Err(anyhow::anyhow!("allocated primary allocation not found").into());
+                }
+            };
+
+            if let Some(variable_name) = &primary_allocation.assign_to_variable {
+                variables.insert(variable_name, allocation.port.to_compact_string());
+            }
+
+            primary = Some(allocation);
+        }
+
+        macro_rules! is_unused {
+            ($uuid:expr) => {
+                !primary.as_ref().is_some_and(|p| p.uuid == $uuid)
+                    || additional.iter().any(|a| a == &$uuid)
+            };
+        }
+
+        macro_rules! get_random {
+            ($start_port:expr, $end_port:expr) => {
+                if let Some(primary) = &primary {
+                    Self::get_random_ip(database, node_uuid, &primary.ip, $start_port, $end_port, 1)
+                        .await?
+                } else {
+                    Self::get_random(database, node_uuid, $start_port, $end_port, 1).await?
+                }
+            };
+        }
+
+        const MAX_ITER: usize = 100;
+
+        for additional_allocation in &deployment.additional {
+            match additional_allocation.mode {
+                super::egg_configuration::EggConfigAllocationDeploymentAdditionalAllocationMode::Random => {
+                    let mut found_allocation = None;
+                    for _ in 0..MAX_ITER {
+                        let random = get_random!(
+                            1,
+                            u16::MAX
+                        );
+
+                        if let Some(allocation) = random.into_iter().next() {
+                            if is_unused!(allocation) {
+                                found_allocation = Some(allocation);
+                                break;
+                            }
+                        } else {
+                            return Err(anyhow::anyhow!("no available additional allocation found").into());
+                        }
+                    }
+
+                    let Some(allocation) = found_allocation else {
+                        return Err(anyhow::anyhow!("no available additional allocation found").into());
+                    };
+                    additional.push(allocation);
+
+                    if let Some(variable_name) = &additional_allocation.assign_to_variable {
+                        let allocation = match Self::by_node_uuid_uuid(database, node_uuid, allocation).await? {
+                            Some(allocation) => allocation,
+                            None => {
+                                return Err(
+                                    anyhow::anyhow!("allocated additional allocation not found").into()
+                                );
+                            }
+                        };
+
+                        variables.insert(variable_name, allocation.port.to_compact_string());
+                    }
+                },
+                super::egg_configuration::EggConfigAllocationDeploymentAdditionalAllocationMode::Range {
+                    start_port,
+                    end_port,
+                } => {
+                    let mut found_allocation = None;
+                    for _ in 0..MAX_ITER {
+                        let random = get_random!(
+                            start_port,
+                            end_port
+                        );
+
+                        if let Some(allocation) = random.into_iter().next() {
+                            if is_unused!(allocation) {
+                                found_allocation = Some(allocation);
+                                break;
+                            }
+                        } else {
+                            return Err(anyhow::anyhow!("no available additional allocation found").into());
+                        }
+                    }
+
+                    let Some(allocation) = found_allocation else {
+                        return Err(anyhow::anyhow!("no available additional allocation found").into());
+                    };
+                    additional.push(allocation);
+
+                    if let Some(variable_name) = &additional_allocation.assign_to_variable {
+                        let allocation = match Self::by_node_uuid_uuid(database, node_uuid, allocation).await? {
+                            Some(allocation) => allocation,
+                            None => {
+                                return Err(
+                                    anyhow::anyhow!("allocated additional allocation not found").into()
+                                );
+                            }
+                        };
+
+                        variables.insert(variable_name, allocation.port.to_compact_string());
+                    }
+                }
+                super::egg_configuration::EggConfigAllocationDeploymentAdditionalAllocationMode::AddPrimary { value } => {
+                    let primary = match &primary {
+                        Some(primary) => primary,
+                        None => {
+                            return Err(anyhow::anyhow!("primary allocation is required for `add_primary` mode").into());
+                        }
+                    };
+
+                    let allocation_port = primary.port + value as i32;
+
+                    let allocation = match Self::by_node_uuid_ip_port(database, node_uuid, &primary.ip, allocation_port).await? {
+                        Some(allocation) => allocation,
+                        None => {
+                            return Err(anyhow::anyhow!("allocated additional allocation not found").into());
+                        }
+                    };
+                    if !is_unused!(allocation.uuid) {
+                        return Err(anyhow::anyhow!("allocated additional allocation is already in use").into());
+                    }
+                    additional.push(allocation.uuid);
+
+                    if let Some(variable_name) = &additional_allocation.assign_to_variable {
+                        variables.insert(variable_name, allocation.port.to_compact_string());
+                    }
+                }
+                super::egg_configuration::EggConfigAllocationDeploymentAdditionalAllocationMode::SubtractPrimary { value } => {
+                    let primary = match &primary {
+                        Some(primary) => primary,
+                        None => {
+                            return Err(anyhow::anyhow!("primary allocation is required for `subtract_primary` mode").into());
+                        }
+                    };
+
+                    let allocation_port = primary.port - value as i32;
+
+                    let allocation = match Self::by_node_uuid_ip_port(database, node_uuid, &primary.ip, allocation_port).await? {
+                        Some(allocation) => allocation,
+                        None => {
+                            return Err(anyhow::anyhow!("allocated additional allocation not found").into());
+                        }
+                    };
+                    if !is_unused!(allocation.uuid) {
+                        return Err(anyhow::anyhow!("allocated additional allocation is already in use").into());
+                    }
+                    additional.push(allocation.uuid);
+
+                    if let Some(variable_name) = &additional_allocation.assign_to_variable {
+                        variables.insert(variable_name, allocation.port.to_compact_string());
+                    }
+                }
+                super::egg_configuration::EggConfigAllocationDeploymentAdditionalAllocationMode::MultiplyPrimary { value } => {
+                    let primary = match &primary {
+                        Some(primary) => primary,
+                        None => {
+                            return Err(anyhow::anyhow!("primary allocation is required for `multiply_primary` mode").into());
+                        }
+                    };
+
+                    let allocation_port = (primary.port as f64 * value) as i32;
+
+                    let allocation = match Self::by_node_uuid_ip_port(database, node_uuid, &primary.ip, allocation_port).await? {
+                        Some(allocation) => allocation,
+                        None => {
+                            return Err(anyhow::anyhow!("allocated additional allocation not found").into());
+                        }
+                    };
+                    if !is_unused!(allocation.uuid) {
+                        return Err(anyhow::anyhow!("allocated additional allocation is already in use").into());
+                    }
+                    additional.push(allocation.uuid);
+
+                    if let Some(variable_name) = &additional_allocation.assign_to_variable {
+                        variables.insert(variable_name, allocation.port.to_compact_string());
+                    }
+                }
+                super::egg_configuration::EggConfigAllocationDeploymentAdditionalAllocationMode::DividePrimary { value } => {
+                    let primary = match &primary {
+                        Some(primary) => primary,
+                        None => {
+                            return Err(anyhow::anyhow!("primary allocation is required for `divide_primary` mode").into());
+                        }
+                    };
+
+                    let allocation_port = (primary.port as f64 / value) as i32;
+
+                    let allocation = match Self::by_node_uuid_ip_port(database, node_uuid, &primary.ip, allocation_port).await? {
+                        Some(allocation) => allocation,
+                        None => {
+                            return Err(anyhow::anyhow!("allocated additional allocation not found").into());
+                        }
+                    };
+                    if !is_unused!(allocation.uuid) {
+                        return Err(anyhow::anyhow!("allocated additional allocation is already in use").into());
+                    }
+                    additional.push(allocation.uuid);
+
+                    if let Some(variable_name) = &additional_allocation.assign_to_variable {
+                        variables.insert(variable_name, allocation.port.to_compact_string());
+                    }
+                }
+            }
+        }
+
+        Ok((primary.map(|p| p.uuid), additional))
     }
 
     pub async fn by_node_uuid_uuid(

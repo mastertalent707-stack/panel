@@ -304,6 +304,52 @@ impl Node {
         })
     }
 
+    pub async fn by_location_uuids_most_eligible(
+        database: &crate::database::Database,
+        location_uuids: &[uuid::Uuid],
+        limits: super::server::AdminApiServerLimits,
+        allow_overallocation: bool,
+    ) -> Result<Vec<Self>, crate::database::DatabaseError> {
+        let rows = sqlx::query(&format!(
+            r#"
+            WITH server_usage AS (
+                SELECT
+                    node_uuid,
+                    COALESCE(SUM(memory), 0)::BIGINT AS used_memory,
+                    COALESCE(SUM(disk), 0)::BIGINT AS used_disk
+                FROM servers
+                GROUP BY node_uuid
+            )
+            SELECT {}
+            FROM nodes
+            JOIN locations ON locations.uuid = nodes.location_uuid
+            LEFT JOIN server_usage u ON nodes.uuid = u.node_uuid
+            WHERE nodes.location_uuid = ANY($1)
+            AND $4 OR (COALESCE(u.used_memory, 0) + $2 <= nodes.memory AND COALESCE(u.used_disk, 0) + $3 <= nodes.disk)
+            ORDER BY
+                (
+                    GREATEST(COALESCE(u.used_memory, 0) + $2 - nodes.memory, 0) + 
+                    GREATEST(COALESCE(u.used_disk, 0) + $3 - nodes.disk, 0)
+                ),
+                GREATEST(
+                    (COALESCE(u.used_memory, 0) + $2)::FLOAT / NULLIF(nodes.memory, 0), 
+                    (COALESCE(u.used_disk, 0) + $3)::FLOAT / NULLIF(nodes.disk, 0)
+                )
+            "#,
+            Self::columns_sql(None),
+        ))
+        .bind(location_uuids)
+        .bind(limits.memory)
+        .bind(limits.disk)
+        .bind(allow_overallocation)
+        .fetch_all(database.read())
+        .await?;
+
+        rows.into_iter()
+            .map(|row| Self::map(None, &row))
+            .try_collect_vec()
+    }
+
     pub async fn count_by_location_uuid(
         database: &crate::database::Database,
         location_uuid: uuid::Uuid,
