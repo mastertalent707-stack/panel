@@ -266,7 +266,6 @@ export default function AdminExtensions() {
                 <Button
                   color='red'
                   leftSection={<FontAwesomeIcon icon={faRefresh} />}
-                  disabled={!extensionStatus.pendingExtensions.length && !extensionStatus.removedExtensions.length}
                   loading={extensionStatus.isBuilding}
                   onClick={handleRebuild}
                 >

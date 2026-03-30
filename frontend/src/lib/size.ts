@@ -52,7 +52,7 @@ export function bytesToString(bytes: number, decimals = 2, shortBytes = false): 
   return unit === 'B'
     ? shortBytes
       ? `${value} ${getTranslations().t('common.unit.bytes.bytes', {})}`
-      : getTranslations().tItem('byte', 0)
+      : getTranslations().tItem('byte', value)
     : `${value} ${mapUnitToLocale(unit)}`;
 }
 
