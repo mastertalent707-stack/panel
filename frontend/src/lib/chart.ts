@@ -45,7 +45,7 @@ const defaultOptions: ChartOptions<'line'> = {
   },
   elements: {
     point: { radius: 0 },
-    line: { tension: 0.4 },
+    line: { tension: 0.4, cubicInterpolationMode: 'monotone' },
   },
   layout: { padding: 0 },
 };
