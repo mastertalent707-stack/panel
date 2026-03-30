@@ -77,7 +77,7 @@ export default function MountCreateOrUpdate({ contextMount }: { contextMount?: z
         Are you sure you want to delete <Code>{form.getValues().name}</Code>?
       </ConfirmationModal>
 
-      <form onSubmit={form.onSubmit(() => doCreateOrUpdate(false))}>
+      <form onSubmit={form.onSubmit(() => doCreateOrUpdate(false, ['admin', 'mounts']))}>
         <Stack mt='xs'>
           <Group grow align='start'>
             <TextInput

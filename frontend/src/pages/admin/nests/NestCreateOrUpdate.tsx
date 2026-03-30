@@ -70,7 +70,7 @@ export default function NestCreateOrUpdate({ contextNest }: { contextNest?: z.in
         Are you sure you want to delete <Code>{form.getValues().name}</Code>?
       </ConfirmationModal>
 
-      <form onSubmit={form.onSubmit(() => doCreateOrUpdate(false))}>
+      <form onSubmit={form.onSubmit(() => doCreateOrUpdate(false, ['admin', 'nests']))}>
         <Stack mt='xs'>
           <Group grow>
             <TextInput

@@ -124,7 +124,7 @@ export default function UserCreateOrUpdate({ contextUser }: { contextUser?: z.in
         Are you sure you want to remove the two factor of <Code>{form.getValues().username}</Code>?
       </ConfirmationModal>
 
-      <form onSubmit={form.onSubmit(() => doCreateOrUpdate(false))}>
+      <form onSubmit={form.onSubmit(() => doCreateOrUpdate(false, ['admin', 'users']))}>
         <Stack mt='xs'>
           <Group grow>
             <TextInput

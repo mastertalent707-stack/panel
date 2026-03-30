@@ -1,43 +1,31 @@
 import { faCodeCommit, faCog, faComputer, faFolderTree, faTerminal } from '@fortawesome/free-solid-svg-icons';
 import { Title } from '@mantine/core';
-import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router';
 import { z } from 'zod';
 import getEgg from '@/api/admin/nests/eggs/getEgg.ts';
-import { httpErrorToHuman } from '@/api/axios.ts';
 import Spinner from '@/elements/Spinner.tsx';
 import SubNavigation from '@/elements/SubNavigation.tsx';
-import { adminEggSchema } from '@/lib/schemas/admin/eggs.ts';
 import { adminNestSchema } from '@/lib/schemas/admin/nests.ts';
 import EggCreateOrUpdate from '@/pages/admin/nests/eggs/EggCreateOrUpdate.tsx';
 import AdminEggMounts from '@/pages/admin/nests/eggs/mounts/AdminEggMounts.tsx';
 import AdminEggVariables from '@/pages/admin/nests/eggs/variables/AdminEggVariables.tsx';
-import { useToast } from '@/providers/ToastProvider.tsx';
 import EggInstallationScriptContainer from './installationScript/EggInstallationScriptContainer.tsx';
 import AdminEggServers from './servers/AdminEggServers.tsx';
 
 export default function EggView({ contextNest }: { contextNest: z.infer<typeof adminNestSchema> }) {
   const params = useParams<'eggId'>();
-  const { addToast } = useToast();
-  const [egg, setEgg] = useState<z.infer<typeof adminEggSchema> | null>(null);
 
-  useEffect(() => {
-    if (params.eggId) {
-      getEgg(contextNest.uuid, params.eggId)
-        .then((egg) => {
-          setEgg(egg);
-        })
-        .catch((msg) => {
-          addToast(httpErrorToHuman(msg), 'error');
-        });
-    }
-  }, [params.eggId]);
+  const { data: egg, isLoading } = useQuery({
+    queryKey: ['admin', 'eggs', { uuid: params.eggId }],
+    queryFn: () => getEgg(contextNest.uuid, params.eggId!),
+  });
 
-  return !contextNest || !egg ? (
+  return !contextNest || isLoading || !egg ? (
     <Spinner.Centered />
   ) : (
     <>
-      <Title order={2}>{egg?.name}</Title>
+      <Title order={2}>{egg.name}</Title>
 
       <SubNavigation
         baseUrl={`/admin/nests/${contextNest.uuid}/eggs/${params.eggId}`}

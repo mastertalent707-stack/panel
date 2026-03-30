@@ -1,4 +1,5 @@
 import { UseFormReturnType } from '@mantine/form';
+import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { httpErrorToHuman } from '@/api/axios.ts';
@@ -22,26 +23,38 @@ interface UseResourceFormOptions<T, U extends HasUuid, CArgs = unknown, UArgs = 
 interface UseResourceFormReturn {
   loading: boolean;
   setLoading: (loading: boolean) => void;
-  doCreateOrUpdate: (stay: boolean) => void;
+  doCreateOrUpdate: (stay: boolean, bustCacheKey?: string[]) => void;
   doDelete: () => void;
 }
 
 export const useResourceForm = <T, U extends HasUuid, CArgs = unknown, UArgs = unknown, DArgs = unknown>(
   options: UseResourceFormOptions<T, U, CArgs, UArgs, DArgs>,
 ): UseResourceFormReturn => {
+  const queryClient = useQueryClient();
   const { addToast } = useToast();
   const navigate = useNavigate();
   const { form, createFn, updateFn, deleteFn, doUpdate, toResetOnStay = [], basePath, resourceName } = options;
 
   const [loading, setLoading] = useState(false);
 
-  const doCreateOrUpdate = (stay: boolean, args?: CArgs | UArgs) => {
+  const doCreateOrUpdate = (stay: boolean, bustCacheKey?: string[], args?: CArgs | UArgs) => {
     setLoading(true);
+
+    const doBustCache = () => {
+      if (!bustCacheKey) return;
+
+      queryClient
+        .invalidateQueries({
+          queryKey: bustCacheKey,
+        })
+        .catch((e) => console.error(e));
+    };
 
     if (doUpdate && updateFn) {
       updateFn(args as UArgs)
         .then(() => {
           addToast(`${resourceName} updated.`, 'success');
+          doBustCache();
         })
         .catch((msg) => addToast(httpErrorToHuman(msg), 'error'))
         .finally(() => setLoading(false));
@@ -49,6 +62,7 @@ export const useResourceForm = <T, U extends HasUuid, CArgs = unknown, UArgs = u
       createFn(args as CArgs)
         .then((result: U) => {
           addToast(`${resourceName} created.`, 'success');
+          doBustCache();
           if (stay) {
             toResetOnStay.forEach((field) => form.resetField(field));
           } else if (result?.uuid) {

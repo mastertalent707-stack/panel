@@ -95,7 +95,7 @@ export default function EggRepositoryCreateOrUpdate({
         Are you sure you want to delete <Code>{form.getValues().name}</Code>?
       </ConfirmationModal>
 
-      <form onSubmit={form.onSubmit(() => doCreateOrUpdate(false))}>
+      <form onSubmit={form.onSubmit(() => doCreateOrUpdate(false, ['admin', 'eggRepositories']))}>
         <Stack mt='xs'>
           <Group grow>
             <TextInput

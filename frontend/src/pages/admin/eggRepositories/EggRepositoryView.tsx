@@ -1,35 +1,22 @@
 import { faCog, faEgg } from '@fortawesome/free-solid-svg-icons';
-import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router';
-import { z } from 'zod';
 import getEggRepository from '@/api/admin/egg-repositories/getEggRepository.ts';
-import { httpErrorToHuman } from '@/api/axios.ts';
 import AdminContentContainer from '@/elements/containers/AdminContentContainer.tsx';
 import Spinner from '@/elements/Spinner.tsx';
 import SubNavigation from '@/elements/SubNavigation.tsx';
-import { adminEggRepositorySchema } from '@/lib/schemas/admin/eggRepositories.ts';
-import { useToast } from '@/providers/ToastProvider.tsx';
 import EggRepositoryCreateOrUpdate from './EggRepositoryCreateOrUpdate.tsx';
 import EggRepositoryEggs from './eggs/EggRepositoryEggs.tsx';
 
 export default function EggRepositoryView() {
   const params = useParams<'eggRepositoryId'>();
-  const { addToast } = useToast();
-  const [eggRepository, setEggRepository] = useState<z.infer<typeof adminEggRepositorySchema> | null>(null);
 
-  useEffect(() => {
-    if (params.eggRepositoryId) {
-      getEggRepository(params.eggRepositoryId)
-        .then((eggRepository) => {
-          setEggRepository(eggRepository);
-        })
-        .catch((msg) => {
-          addToast(httpErrorToHuman(msg), 'error');
-        });
-    }
-  }, [params.eggRepositoryId]);
+  const { data: eggRepository, isLoading } = useQuery({
+    queryKey: ['admin', 'eggRepositories', { uuid: params.eggRepositoryId }],
+    queryFn: () => getEggRepository(params.eggRepositoryId!),
+  });
 
-  return !eggRepository ? (
+  return isLoading || !eggRepository ? (
     <Spinner.Centered />
   ) : (
     <AdminContentContainer title={eggRepository.name}>

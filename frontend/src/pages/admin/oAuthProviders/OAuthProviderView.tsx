@@ -1,35 +1,22 @@
 import { faCog, faUsers } from '@fortawesome/free-solid-svg-icons';
-import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router';
-import { z } from 'zod';
 import getOAuthProvider from '@/api/admin/oauth-providers/getOAuthProvider.ts';
-import { httpErrorToHuman } from '@/api/axios.ts';
 import AdminContentContainer from '@/elements/containers/AdminContentContainer.tsx';
 import Spinner from '@/elements/Spinner.tsx';
 import SubNavigation from '@/elements/SubNavigation.tsx';
-import { adminOAuthProviderSchema } from '@/lib/schemas/admin/oauthProviders.ts';
 import AdminOAuthProviderUsers from '@/pages/admin/oAuthProviders/users/AdminOAuthProviderUsers.tsx';
-import { useToast } from '@/providers/ToastProvider.tsx';
 import OAuthProviderCreateOrUpdate from './OAuthProviderCreateOrUpdate.tsx';
 
 export default function OAuthProviderView() {
   const params = useParams<'id'>();
-  const { addToast } = useToast();
-  const [oauthProvider, setOAuthProvider] = useState<z.infer<typeof adminOAuthProviderSchema> | null>(null);
 
-  useEffect(() => {
-    if (params.id) {
-      getOAuthProvider(params.id)
-        .then((oauthProvider) => {
-          setOAuthProvider(oauthProvider);
-        })
-        .catch((msg) => {
-          addToast(httpErrorToHuman(msg), 'error');
-        });
-    }
-  }, [params.id]);
+  const { data: oauthProvider, isLoading } = useQuery({
+    queryKey: ['admin', 'oauthProviders', { uuid: params.id }],
+    queryFn: () => getOAuthProvider(params.id!),
+  });
 
-  return !oauthProvider ? (
+  return isLoading || !oauthProvider ? (
     <Spinner.Centered />
   ) : (
     <AdminContentContainer title={oauthProvider.name}>

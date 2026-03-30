@@ -7,41 +7,28 @@ import {
   faNetworkWired,
   faWrench,
 } from '@fortawesome/free-solid-svg-icons';
-import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router';
-import { z } from 'zod';
 import getServer from '@/api/admin/servers/getServer.ts';
-import { httpErrorToHuman } from '@/api/axios.ts';
 import AdminContentContainer from '@/elements/containers/AdminContentContainer.tsx';
 import Spinner from '@/elements/Spinner.tsx';
 import SubNavigation from '@/elements/SubNavigation.tsx';
-import { adminServerSchema } from '@/lib/schemas/admin/servers.ts';
 import AdminServerAllocations from '@/pages/admin/servers/allocations/AdminServerAllocations.tsx';
 import AdminServerLogs from '@/pages/admin/servers/logs/AdminServerLogs.tsx';
 import AdminServerManagement from '@/pages/admin/servers/management/AdminServerManagement.tsx';
 import AdminServerMounts from '@/pages/admin/servers/mounts/AdminServerMounts.tsx';
 import ServerUpdate from '@/pages/admin/servers/ServerUpdate.tsx';
 import AdminServerVariables from '@/pages/admin/servers/variables/AdminServerVariables.tsx';
-import { useToast } from '@/providers/ToastProvider.tsx';
 
 export default function ServerView() {
   const params = useParams<'id'>();
-  const { addToast } = useToast();
-  const [server, setServer] = useState<z.infer<typeof adminServerSchema> | null>(null);
 
-  useEffect(() => {
-    if (params.id) {
-      getServer(params.id)
-        .then((server) => {
-          setServer(server);
-        })
-        .catch((msg) => {
-          addToast(httpErrorToHuman(msg), 'error');
-        });
-    }
-  }, [params.id]);
+  const { data: server, isLoading } = useQuery({
+    queryKey: ['admin', 'servers', { uuid: params.id }],
+    queryFn: () => getServer(params.id!),
+  });
 
-  return !server ? (
+  return isLoading || !server ? (
     <Spinner.Centered />
   ) : (
     <AdminContentContainer title={server.name}>

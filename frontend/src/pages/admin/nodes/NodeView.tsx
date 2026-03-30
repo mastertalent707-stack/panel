@@ -9,16 +9,12 @@ import {
   faNetworkWired,
   faPenRuler,
 } from '@fortawesome/free-solid-svg-icons';
-import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router';
-import { z } from 'zod';
 import getNode from '@/api/admin/nodes/getNode.ts';
-import { httpErrorToHuman } from '@/api/axios.ts';
 import AdminContentContainer from '@/elements/containers/AdminContentContainer.tsx';
 import Spinner from '@/elements/Spinner.tsx';
 import SubNavigation from '@/elements/SubNavigation.tsx';
-import { adminNodeSchema } from '@/lib/schemas/admin/nodes.ts';
-import { useToast } from '@/providers/ToastProvider.tsx';
 import AdminNodeAllocations from './allocations/AdminNodeAllocations.tsx';
 import AdminNodeBackups from './backups/AdminNodeBackups.tsx';
 import AdminNodeConfiguration from './configuration/AdminNodeConfiguration.tsx';
@@ -31,22 +27,13 @@ import AdminNodeTransfers from './transfers/AdminNodeTransfers.tsx';
 
 export default function NodeView() {
   const params = useParams<'id'>();
-  const { addToast } = useToast();
-  const [node, setNode] = useState<z.infer<typeof adminNodeSchema> | null>(null);
 
-  useEffect(() => {
-    if (params.id) {
-      getNode(params.id)
-        .then((node) => {
-          setNode(node);
-        })
-        .catch((msg) => {
-          addToast(httpErrorToHuman(msg), 'error');
-        });
-    }
-  }, [params.id]);
+  const { data: node, isLoading } = useQuery({
+    queryKey: ['admin', 'nodes', { uuid: params.id }],
+    queryFn: () => getNode(params.id!),
+  });
 
-  return !node ? (
+  return isLoading || !node ? (
     <Spinner.Centered />
   ) : (
     <AdminContentContainer title={node.name}>

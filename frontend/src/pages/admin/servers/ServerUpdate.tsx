@@ -31,7 +31,6 @@ import SizeInput from '@/elements/input/SizeInput.tsx';
 import Switch from '@/elements/input/Switch.tsx';
 import TextArea from '@/elements/input/TextArea.tsx';
 import TextInput from '@/elements/input/TextInput.tsx';
-// import TextInput from '@/elements/input/TextInput.tsx';
 import TitleCard from '@/elements/TitleCard.tsx';
 import Tooltip from '@/elements/Tooltip.tsx';
 import { adminBackupConfigurationSchema } from '@/lib/schemas/admin/backupConfigurations.ts';
@@ -170,7 +169,7 @@ export default function ServerUpdate({ contextServer }: { contextServer: z.infer
 
   return (
     <AdminSubContentContainer title='Update Server' titleOrder={2}>
-      <form onSubmit={form.onSubmit(() => doCreateOrUpdate(false))}>
+      <form onSubmit={form.onSubmit(() => doCreateOrUpdate(false, ['admin', 'servers']))}>
         <Stack>
           {contextServer.isSuspended && (
             <Alert title='Server Suspended' color='orange' icon={<FontAwesomeIcon icon={faCircleInfo} />}>
