@@ -94,8 +94,6 @@ pub async fn process_table<T, Fut: Future<Output = Result<T, anyhow::Error>>>(
     compute: impl Fn(Vec<sqlx::mysql::MySqlRow>) -> Fut,
     page_size: usize,
 ) -> Result<Vec<T>, anyhow::Error> {
-    tracing::info!(table, "starting processing");
-
     let total: i64 = sqlx::query_scalar(&format!(
         "SELECT COUNT(*) FROM `{table}` {}",
         if let Some(where_clause) = sql_where {
@@ -108,8 +106,6 @@ pub async fn process_table<T, Fut: Future<Output = Result<T, anyhow::Error>>>(
     .await
     .context("failed to count total rows for table")?;
 
-    tracing::info!(table, total, "total rows to process");
-
     let query = format!(
         "SELECT * FROM `{table}` {}",
         if let Some(where_clause) = sql_where {
@@ -120,18 +116,11 @@ pub async fn process_table<T, Fut: Future<Output = Result<T, anyhow::Error>>>(
     );
     let mut query_rows = sqlx::query(&query).fetch(source_database);
 
-    let mut offset: usize = 0;
+    let mut processed_rows: usize = 0;
     let mut results = Vec::new();
     let mut rows = Vec::new();
 
     loop {
-        let progress = if total > 0 {
-            format!("{:.2}%", (offset as f64 / total as f64) * 100.0)
-        } else {
-            "100%".to_string()
-        };
-        tracing::info!(table, offset, total, progress, "processing");
-
         rows.reserve_exact(page_size);
         while let Some(row) = query_rows.next().await {
             rows.push(row?);
@@ -146,15 +135,41 @@ pub async fn process_table<T, Fut: Future<Output = Result<T, anyhow::Error>>>(
         }
 
         let batch = std::mem::take(&mut rows);
+        let batch_len = batch.len();
         let result = compute(batch).await?;
 
         if std::mem::size_of::<T>() > 0 {
             results.push(result);
         }
 
-        offset += page_size;
+        processed_rows += batch_len;
+
+        let percent = if total > 0 {
+            (processed_rows as f64 / total as f64) * 100.0
+        } else {
+            100.0
+        };
+
+        let bar_width = 40;
+        let filled = if total > 0 {
+            (processed_rows as f64 / total as f64 * bar_width as f64).round() as usize
+        } else {
+            bar_width
+        };
+        let empty = bar_width.saturating_sub(filled);
+
+        tracing::info!(
+            "\x1b[2K{} [{}{}] {:.2}% ({}/{})",
+            table,
+            "=".repeat(filled),
+            " ".repeat(empty),
+            percent,
+            processed_rows,
+            total
+        );
     }
 
+    tracing::info!("");
     results.shrink_to_fit();
 
     Ok(results)

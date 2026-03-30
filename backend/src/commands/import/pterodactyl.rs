@@ -11,6 +11,14 @@ use std::{
     sync::Arc,
 };
 
+#[inline]
+fn collect_mappings(mappings: Vec<HashMap<u32, uuid::Uuid>>) -> HashMap<u32, uuid::Uuid> {
+    mappings
+        .into_iter()
+        .flatten()
+        .collect::<HashMap<u32, uuid::Uuid>>()
+}
+
 #[derive(Args)]
 pub struct PterodactylArgs {
     #[arg(
@@ -305,7 +313,7 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                 )
                 .await
                 {
-                    Ok(user_mappings) => Arc::new(user_mappings),
+                    Ok(mappings) => Arc::new(collect_mappings(mappings)),
                     Err(err) => {
                         tracing::error!("failed to process users table: {:?}", err);
                         return Ok(1);
@@ -328,15 +336,16 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                                 let public_key: &str = row.try_get("public_key")?;
                                 let created: chrono::DateTime<chrono::Utc> = row.try_get("created_at")?;
 
-                                let user_uuid = match user_mappings.iter().find(|m| m.contains_key(&user_id)) {
-                                    Some(user_uuid) => user_uuid.get(&user_id).unwrap(),
+                                let user_uuid = match user_mappings.get(&user_id) {
+                                    Some(uuid) => uuid,
                                     None => return Ok(()),
                                 };
 
                                 let base64_data = public_key
                                     .replace("-----BEGIN PUBLIC KEY-----", "")
                                     .replace("-----END PUBLIC KEY-----", "")
-                                    .replace("\r\n", "");
+                                    .replace("\r\n", "")
+                                    .replace("\n", "");
                                 let base64_data = BASE64_ENGINE.decode(base64_data)?;
 
                                 let pkey = openssl::pkey::PKey::public_key_from_der(&base64_data)?;
@@ -379,7 +388,7 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                                         .fingerprint(russh::keys::HashAlg::Sha256)
                                         .to_string(),
                                 )
-                                .bind(public_key.to_bytes().unwrap())
+                                .bind(public_key.to_bytes().unwrap_or_default())
                                 .bind(created)
                                 .execute(database.write())
                                 .await?;
@@ -399,55 +408,6 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                     tracing::error!("failed to process ssh keys table: {:?}", err);
                     return Ok(1);
                 }
-                /*if let Err(err) = process_table(
-                    &source_database,
-                    "api_keys",
-                    Some("user_id IS NOT NULL AND key_type = 1"),
-                    async |rows| {
-                        for row in rows {
-                            let id: u32 = row.try_get("id")?;
-                            let user_id: u32 = row.try_get("user_id")?;
-                            let name = format!("imported-{}", id);
-                            let token: &str = row.try_get("token")?;
-                            let last_used: Option<chrono::DateTime<chrono::Utc>> = row.try_get("last_used_at")?;
-                            let created: chrono::DateTime<chrono::Utc> = row.try_get("created_at")?;
-
-                            let user_uuid = match user_mappings.iter().find(|m| m.contains_key(&user_id)) {
-                                Some(user_uuid) => user_uuid.get(&user_id).unwrap(),
-                                None => continue,
-                            };
-
-                            let token = match decrypt_laravel_value(token, &source_app_key) {
-                                Ok(token) => token,
-                                Err(_) => continue,
-                            };
-
-                            println!("importing api key for user {}", token);
-
-                            sqlx::query(
-                                r#"
-                                INSERT INTO user_api_keys (user_uuid, name, key_start, key, last_used, created)
-                                VALUES ($1, $2, $3, crypt($4, gen_salt('xdes', 321)), $5, $6)
-                                ON CONFLICT DO NOTHING
-                                "#,
-                            )
-                            .bind(user_uuid)
-                            .bind(name)
-                            .bind(last_used)
-                            .bind(created)
-                            .execute(database.write())
-                            .await?;
-                        }
-
-                        Ok(())
-                    },
-                    100,
-                )
-                .await
-                {
-                    tracing::error!("failed to process table: {:?}", err);
-                    return Ok(1);
-                }*/
 
                 let backup_configuration_uuid: uuid::Uuid = {
                     let row = sqlx::query(
@@ -512,12 +472,13 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                 )
                 .await
                 {
-                    Ok(location_mappings) => Arc::new(location_mappings),
+                    Ok(mappings) => Arc::new(collect_mappings(mappings)),
                     Err(err) => {
                         tracing::error!("failed to process locations table: {:?}", err);
                         return Ok(1);
                     }
                 };
+
                 let node_mappings = match process_table(
                     &source_database,
                     "nodes",
@@ -551,8 +512,8 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                                 let daemon_sftp: u16 = row.try_get("daemonSFTP")?;
                                 let created: chrono::DateTime<chrono::Utc> = row.try_get("created_at")?;
 
-                                let location_uuid = match location_mappings.iter().find(|m| m.contains_key(&location_id)) {
-                                    Some(location_uuid) => location_uuid.get(&location_id).unwrap(),
+                                let location_uuid = match location_mappings.get(&location_id) {
+                                    Some(uuid) => uuid,
                                     None => return Ok(()),
                                 };
 
@@ -584,7 +545,7 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                                 .bind(memory as i64)
                                 .bind(disk as i64)
                                 .bind(token_id)
-                                .bind(database.encrypt(token).await.unwrap())
+                                .bind(database.encrypt(token).await.unwrap_or_default())
                                 .bind(created)
                                 .execute(database.write())
                                 .await?;
@@ -601,12 +562,13 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                 )
                 .await
                 {
-                    Ok(node_mappings) => node_mappings,
+                    Ok(mappings) => Arc::new(collect_mappings(mappings)),
                     Err(err) => {
                         tracing::error!("failed to process nodes table: {:?}", err);
                         return Ok(1);
                     }
                 };
+
                 drop(location_mappings);
 
                 let nest_mappings = match process_table(
@@ -625,11 +587,12 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                             let created: chrono::DateTime<chrono::Utc> =
                                 row.try_get("created_at")?;
 
-                            sqlx::query(
+                            let row = sqlx::query(
                                 r#"
                                 INSERT INTO nests (uuid, author, name, description, created)
                                 VALUES ($1, $2, $3, $4, $5)
-                                ON CONFLICT DO NOTHING
+                                ON CONFLICT (name) DO UPDATE SET description = EXCLUDED.description
+                                RETURNING uuid
                                 "#,
                             )
                             .bind(uuid.as_uuid())
@@ -637,10 +600,10 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                             .bind(name)
                             .bind(description)
                             .bind(created)
-                            .execute(database.write())
+                            .fetch_one(database.write())
                             .await?;
 
-                            mapping.insert(id, *uuid.as_uuid());
+                            mapping.insert(id, row.get("uuid"));
                         }
 
                         Ok(mapping)
@@ -649,12 +612,17 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                 )
                 .await
                 {
-                    Ok(nest_mappings) => nest_mappings,
+                    Ok(mappings) => Arc::new(mappings.into_iter().flatten().collect::<HashMap<
+                        u32,
+                        uuid::Uuid,
+                    >>(
+                    )),
                     Err(err) => {
                         tracing::error!("failed to process nests table: {:?}", err);
                         return Ok(1);
                     }
                 };
+
                 let egg_mappings = match process_table(
                     &source_database,
                     "eggs",
@@ -688,11 +656,10 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                             let created: chrono::DateTime<chrono::Utc> =
                                 row.try_get("created_at")?;
 
-                            let nest_uuid =
-                                match nest_mappings.iter().find(|m| m.contains_key(&nest_id)) {
-                                    Some(nest_uuid) => nest_uuid.get(&nest_id).unwrap(),
-                                    None => continue,
-                                };
+                            let nest_uuid = match nest_mappings.get(&nest_id) {
+                                Some(uuid) => uuid,
+                                None => continue,
+                            };
 
                             let features: Vec<String> = serde_json::from_value(
                                 features.unwrap_or_else(|| serde_json::Value::Array(vec![])),
@@ -769,13 +736,15 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                 )
                 .await
                 {
-                    Ok(egg_mappings) => egg_mappings,
+                    Ok(mappings) => Arc::new(collect_mappings(mappings)),
                     Err(err) => {
                         tracing::error!("failed to process eggs table: {:?}", err);
                         return Ok(1);
                     }
                 };
+
                 drop(nest_mappings);
+
                 let egg_variable_mappings = match process_table(
                     &source_database,
                     "egg_variables",
@@ -795,8 +764,8 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                             let rules: &str = row.try_get("rules")?;
                             let created: chrono::DateTime<chrono::Utc> = row.try_get("created_at")?;
 
-                            let egg_uuid = match egg_mappings.iter().find(|m| m.contains_key(&egg_id)) {
-                                Some(egg_uuid) => egg_uuid.get(&egg_id).unwrap(),
+                            let egg_uuid = match egg_mappings.get(&egg_id) {
+                                Some(uuid) => uuid,
                                 None => continue,
                             };
 
@@ -835,7 +804,7 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                 )
                 .await
                 {
-                    Ok(egg_variable_mappings) => egg_variable_mappings,
+                    Ok(mappings) => Arc::new(collect_mappings(mappings)),
                     Err(err) => {
                         tracing::error!("failed to process egg_variables table: {:?}", err);
                         return Ok(1);
@@ -876,7 +845,7 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                             .bind(host)
                             .bind(port as i32)
                             .bind(username)
-                            .bind(database.encrypt(password).await.unwrap())
+                            .bind(database.encrypt(password).await.unwrap_or_default())
                             .bind(created)
                             .fetch_one(database.write())
                             .await?;
@@ -890,9 +859,9 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                 )
                 .await
                 {
-                    Ok(nest_mappings) => nest_mappings,
+                    Ok(mappings) => Arc::new(collect_mappings(mappings)),
                     Err(err) => {
-                        tracing::error!("failed to process nests table: {:?}", err);
+                        tracing::error!("failed to process database hosts table: {:?}", err);
                         return Ok(1);
                     }
                 };
@@ -936,18 +905,18 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                                 let backup_limit: u32 = row.try_get("backup_limit")?;
                                 let created: chrono::DateTime<chrono::Utc> = row.try_get("created_at")?;
 
-                                let node_uuid = match node_mappings.iter().find(|m| m.contains_key(&node_id)) {
-                                    Some(node_uuid) => node_uuid.get(&node_id).unwrap(),
+                                let node_uuid = match node_mappings.get(&node_id) {
+                                    Some(uuid) => uuid,
                                     None => return Ok(()),
                                 };
 
-                                let owner_uuid = match user_mappings.iter().find(|m| m.contains_key(&owner_id)) {
-                                    Some(owner_uuid) => owner_uuid.get(&owner_id).unwrap(),
+                                let owner_uuid = match user_mappings.get(&owner_id) {
+                                    Some(uuid) => uuid,
                                     None => return Ok(()),
                                 };
 
-                                let egg_uuid = match egg_mappings.iter().find(|m| m.contains_key(&egg_id)) {
-                                    Some(egg_uuid) => egg_uuid.get(&egg_id).unwrap(),
+                                let egg_uuid = match egg_mappings.get(&egg_id) {
+                                    Some(uuid) => uuid,
                                     None => return Ok(()),
                                 };
 
@@ -1010,12 +979,13 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                 )
                 .await
                 {
-                    Ok(nest_mappings) => nest_mappings,
+                    Ok(mappings) => Arc::new(mappings.into_iter().flatten().collect::<HashMap<u32, (uuid::Uuid, u32)>>()),
                     Err(err) => {
                         tracing::error!("failed to process servers table: {:?}", err);
                         return Ok(1);
                     }
                 };
+
                 if let Err(err) = process_table(
                     &source_database,
                     "databases",
@@ -1036,13 +1006,13 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                                 let password: &str = row.try_get("password")?;
                                 let created: chrono::DateTime<chrono::Utc> = row.try_get("created_at")?;
 
-                                let server_uuid = match server_mappings.iter().find(|m| m.contains_key(&server_id)) {
-                                    Some(server_uuid) => server_uuid.get(&server_id).unwrap().0,
+                                let server_uuid = match server_mappings.get(&server_id) {
+                                    Some((uuid, _)) => uuid,
                                     None => return Ok(()),
                                 };
 
-                                let database_host_uuid = match database_host_mappings.iter().find(|m| m.contains_key(&database_host_id)) {
-                                    Some(database_host_uuid) => database_host_uuid.get(&database_host_id).unwrap(),
+                                let database_host_uuid = match database_host_mappings.get(&database_host_id) {
+                                    Some(uuid) => uuid,
                                     None => return Ok(()),
                                 };
 
@@ -1062,7 +1032,7 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                                 .bind(database_host_uuid)
                                 .bind(database_name)
                                 .bind(username)
-                                .bind(database.encrypt(password).await.unwrap())
+                                .bind(database.encrypt(password).await.unwrap_or_default())
                                 .bind(created)
                                 .execute(database.write())
                                 .await?;
@@ -1082,6 +1052,7 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                     tracing::error!("failed to process databases table: {:?}", err);
                     return Ok(1);
                 }
+
                 if let Err(err) = process_table(
                     &source_database,
                     "server_variables",
@@ -1094,17 +1065,13 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                             let created: Option<chrono::DateTime<chrono::Utc>> =
                                 row.try_get("created_at")?;
 
-                            let server_uuid =
-                                match server_mappings.iter().find(|m| m.contains_key(&server_id)) {
-                                    Some(server_uuid) => server_uuid.get(&server_id).unwrap().0,
-                                    None => continue,
-                                };
+                            let server_uuid = match server_mappings.get(&server_id) {
+                                Some((uuid, _)) => uuid,
+                                None => continue,
+                            };
 
-                            let variable_uuid = match egg_variable_mappings
-                                .iter()
-                                .find(|m| m.contains_key(&variable_id))
-                            {
-                                Some(variable_uuid) => variable_uuid.get(&variable_id).unwrap(),
+                            let variable_uuid = match egg_variable_mappings.get(&variable_id) {
+                                Some(uuid) => uuid,
                                 None => continue,
                             };
 
@@ -1129,9 +1096,10 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                 )
                 .await
                 {
-                    tracing::error!("failed to process databases table: {:?}", err);
+                    tracing::error!("failed to process server variables table: {:?}", err);
                     return Ok(1);
                 }
+
                 if let Err(err) = process_table(
                     &source_database,
                     "backups",
@@ -1156,8 +1124,8 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                                 let created: chrono::DateTime<chrono::Utc> = row.try_get("created_at")?;
                                 let deleted: Option<chrono::DateTime<chrono::Utc>> = row.try_get("deleted_at")?;
 
-                                let server_uuid = match server_mappings.iter().find(|m| m.contains_key(&server_id)) {
-                                    Some(server_uuid) => server_uuid.get(&server_id).unwrap().0,
+                                let server_uuid = match server_mappings.get(&server_id) {
+                                    Some((uuid, _)) => uuid,
                                     None => return Ok(()),
                                 };
 
@@ -1214,6 +1182,7 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                     tracing::error!("failed to process backups table: {:?}", err);
                     return Ok(1);
                 }
+
                 if let Err(err) = process_table(
                     &source_database,
                     "subusers",
@@ -1231,14 +1200,13 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                                 let permissions: serde_json::Value = row.try_get("permissions")?;
                                 let created: chrono::DateTime<chrono::Utc> = row.try_get("created_at")?;
 
-                                let user_uuid = match user_mappings.iter().find(|m| m.contains_key(&user_id)) {
-                                    Some(user_uuid) => user_uuid.get(&user_id).unwrap(),
+                                let user_uuid = match user_mappings.get(&user_id) {
+                                    Some(uuid) => uuid,
                                     None => return Ok(()),
                                 };
 
-                                let server_uuid = match server_mappings.iter().find(|m| m.contains_key(&server_id))
-                                {
-                                    Some(server_uuid) => server_uuid.get(&server_id).unwrap().0,
+                                let server_uuid = match server_mappings.get(&server_id) {
+                                    Some((uuid, _)) => uuid,
                                     None => return Ok(()),
                                 };
 
@@ -1324,6 +1292,7 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                     tracing::error!("failed to process subusers table: {:?}", err);
                     return Ok(1);
                 }
+
                 drop(user_mappings);
 
                 let mount_mappings = match process_table(
@@ -1369,12 +1338,13 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                 )
                 .await
                 {
-                    Ok(mount_mappings) => mount_mappings,
+                    Ok(mappings) => Arc::new(collect_mappings(mappings)),
                     Err(err) => {
                         tracing::error!("failed to process mounts table: {:?}", err);
                         return Ok(1);
                     }
                 };
+
                 if let Err(err) = process_table(
                     &source_database,
                     "egg_mount",
@@ -1384,17 +1354,15 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                             let egg_id: u32 = row.try_get("egg_id")?;
                             let mount_id: u32 = row.try_get("mount_id")?;
 
-                            let egg_uuid =
-                                match egg_mappings.iter().find(|m| m.contains_key(&egg_id)) {
-                                    Some(egg_uuid) => egg_uuid.get(&egg_id).unwrap(),
-                                    None => continue,
-                                };
+                            let egg_uuid = match egg_mappings.get(&egg_id) {
+                                Some(uuid) => uuid,
+                                None => continue,
+                            };
 
-                            let mount_uuid =
-                                match mount_mappings.iter().find(|m| m.contains_key(&mount_id)) {
-                                    Some(mount_uuid) => mount_uuid.get(&mount_id).unwrap(),
-                                    None => continue,
-                                };
+                            let mount_uuid = match mount_mappings.get(&mount_id) {
+                                Some(uuid) => uuid,
+                                None => continue,
+                            };
 
                             sqlx::query(
                                 r#"
@@ -1418,6 +1386,7 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                     tracing::error!("failed to process egg mounts table: {:?}", err);
                     return Ok(1);
                 }
+
                 if let Err(err) = process_table(
                     &source_database,
                     "mount_node",
@@ -1427,17 +1396,15 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                             let node_id: u32 = row.try_get("node_id")?;
                             let mount_id: u32 = row.try_get("mount_id")?;
 
-                            let node_uuid =
-                                match node_mappings.iter().find(|m| m.contains_key(&node_id)) {
-                                    Some(node_uuid) => node_uuid.get(&node_id).unwrap(),
-                                    None => continue,
-                                };
+                            let node_uuid = match node_mappings.get(&node_id) {
+                                Some(uuid) => uuid,
+                                None => continue,
+                            };
 
-                            let mount_uuid =
-                                match mount_mappings.iter().find(|m| m.contains_key(&mount_id)) {
-                                    Some(mount_uuid) => mount_uuid.get(&mount_id).unwrap(),
-                                    None => continue,
-                                };
+                            let mount_uuid = match mount_mappings.get(&mount_id) {
+                                Some(uuid) => uuid,
+                                None => continue,
+                            };
 
                             sqlx::query(
                                 r#"
@@ -1461,6 +1428,7 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                     tracing::error!("failed to process node mounts table: {:?}", err);
                     return Ok(1);
                 }
+
                 if let Err(err) = process_table(
                     &source_database,
                     "mount_server",
@@ -1470,17 +1438,15 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                             let server_id: u32 = row.try_get("server_id")?;
                             let mount_id: u32 = row.try_get("mount_id")?;
 
-                            let server_uuid =
-                                match server_mappings.iter().find(|m| m.contains_key(&server_id)) {
-                                    Some(server_uuid) => server_uuid.get(&server_id).unwrap().0,
-                                    None => continue,
-                                };
+                            let server_uuid = match server_mappings.get(&server_id) {
+                                Some((uuid, _)) => uuid,
+                                None => continue,
+                            };
 
-                            let mount_uuid =
-                                match mount_mappings.iter().find(|m| m.contains_key(&mount_id)) {
-                                    Some(mount_uuid) => mount_uuid.get(&mount_id).unwrap(),
-                                    None => continue,
-                                };
+                            let mount_uuid = match mount_mappings.get(&mount_id) {
+                                Some(uuid) => uuid,
+                                None => continue,
+                            };
 
                             sqlx::query(
                                 r#"
@@ -1504,6 +1470,7 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                     tracing::error!("failed to process server mounts table: {:?}", err);
                     return Ok(1);
                 }
+
                 drop(mount_mappings);
 
                 let schedule_mappings = match process_table(
@@ -1527,8 +1494,8 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                             let last_run: Option<chrono::DateTime<chrono::Utc>> = row.try_get("last_run_at")?;
                             let created: chrono::DateTime<chrono::Utc> = row.try_get("created_at")?;
 
-                            let server_uuid = match server_mappings.iter().find(|m| m.contains_key(&server_id)) {
-                                Some(server_uuid) => server_uuid.get(&server_id).unwrap().0,
+                            let server_uuid = match server_mappings.get(&server_id) {
+                                Some((uuid, _)) => uuid,
                                 None => continue,
                             };
 
@@ -1582,12 +1549,13 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                 )
                 .await
                 {
-                    Ok(schedule_mappings) => schedule_mappings,
+                    Ok(mappings) => Arc::new(collect_mappings(mappings)),
                     Err(err) => {
                         tracing::error!("failed to process schedules table: {:?}", err);
                         return Ok(1);
                     }
                 };
+
                 if let Err(err) = process_table(
                     &source_database,
                     "tasks",
@@ -1603,11 +1571,8 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                             let created: chrono::DateTime<chrono::Utc> =
                                 row.try_get("created_at")?;
 
-                            let schedule_uuid = match schedule_mappings
-                                .iter()
-                                .find(|m| m.contains_key(&schedule_id))
-                            {
-                                Some(schedule_uuid) => schedule_uuid.get(&schedule_id).unwrap(),
+                            let schedule_uuid = match schedule_mappings.get(&schedule_id) {
+                                Some(uuid) => uuid,
                                 None => continue,
                             };
 
@@ -1666,7 +1631,7 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                                 .bind(schedule_uuid)
                                 .bind(serde_json::to_value(action)?)
                                 .bind(sequence_id as i16)
-                                .bind(created + chrono::Duration::milliseconds(i as i64))
+                                .bind(created + chrono::Duration::try_milliseconds(i as i64).unwrap_or_default())
                                 .execute(database.write())
                                 .await?;
                             }
@@ -1681,6 +1646,7 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                     tracing::error!("failed to process schedule tasks table: {:?}", err);
                     return Ok(1);
                 }
+
                 drop(schedule_mappings);
 
                 if let Err(err) = process_table(
@@ -1702,16 +1668,13 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                             };
                             let created: Option<chrono::DateTime<chrono::Utc>> = row.try_get("created_at")?;
 
-                            let node_uuid = match node_mappings.iter().find(|m| m.contains_key(&node_id)) {
-                                Some(node_uuid) => node_uuid.get(&node_id).unwrap(),
+                            let node_uuid = match node_mappings.get(&node_id) {
+                                Some(uuid) => uuid,
                                 None => continue,
                             };
 
                             let server_uuid = if let Some(server_id) = server_id {
-                                match server_mappings.iter().find(|m| m.contains_key(&server_id)) {
-                                    Some(server_uuid) => server_uuid.get(&server_id),
-                                    None => continue,
-                                }
+                                server_mappings.get(&server_id)
                             } else {
                                 None
                             };
@@ -1736,7 +1699,7 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                             .fetch_one(database.write())
                             .await?;
 
-                            if let Some((server_uuid, allocation_id)) = server_uuid {
+                            if let Some(&(server_uuid, allocation_id)) = server_uuid {
                                 let row = sqlx::query(
                                     r#"
                                     INSERT INTO server_allocations (server_uuid, allocation_uuid, notes, created)
@@ -1752,7 +1715,7 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                                 .fetch_one(database.write())
                                 .await?;
 
-                                if id == *allocation_id {
+                                if id == allocation_id {
                                     sqlx::query(
                                         r#"
                                         UPDATE servers
