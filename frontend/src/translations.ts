@@ -2030,6 +2030,7 @@ const baseTranslations = defineTranslations({
             dockerImageUpdated: 'Docker image updated.',
             variablesUpdated: 'Variables updated.',
           },
+          noVariables: 'No startup variables found for this server.',
         },
         mounts: {
           title: 'Mounts',

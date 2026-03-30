@@ -13,6 +13,7 @@ import Button from '@/elements/Button.tsx';
 import ServerContentContainer from '@/elements/containers/ServerContentContainer.tsx';
 import Select from '@/elements/input/Select.tsx';
 import TextArea from '@/elements/input/TextArea.tsx';
+import Spinner from '@/elements/Spinner.tsx';
 import TitleCard from '@/elements/TitleCard.tsx';
 import Tooltip from '@/elements/Tooltip.tsx';
 import VariableContainer from '@/elements/VariableContainer.tsx';
@@ -34,6 +35,7 @@ export default function ServerStartup() {
   const [dockerImage, setDockerImage] = useState(server.image);
   const [values, setValues] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
+  const [variablesLoading, setVariablesLoading] = useState(true);
 
   const setDebouncedCommand = useCallback(
     debounce((command: string) => {
@@ -52,6 +54,7 @@ export default function ServerStartup() {
   useEffect(() => {
     getVariables(server.uuid).then((data) => {
       setVariables(data);
+      setVariablesLoading(false);
     });
   }, []);
 
@@ -171,6 +174,11 @@ export default function ServerStartup() {
       </Group>
 
       <div className='grid grid-cols-1 xl:grid-cols-2 gap-4 mt-4'>
+        {variablesLoading ? (
+          <Spinner.Centered className='col-span-full' />
+        ) : variables.length === 0 ? (
+          <p className='text-gray-400 col-span-full'>{t('pages.server.startup.noVariables', {})}</p>
+        ) : null}
         {variables.map((variable) => (
           <VariableContainer
             key={variable.envVariable}
