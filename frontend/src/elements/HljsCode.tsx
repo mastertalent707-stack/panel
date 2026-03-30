@@ -29,9 +29,9 @@ export default forwardRef<HTMLPreElement, HljsCodeProps>(function HljsCode(
 
   useEffect(() => {
     if (!registeredLanguages.has(languageName)) {
-      registeredLanguages.add(languageName);
       language().then((lang) => {
         hljs.registerLanguage(languageName, lang);
+        registeredLanguages.add(languageName);
         setLanguageLoaded(true);
       });
     }

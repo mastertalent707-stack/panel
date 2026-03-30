@@ -695,7 +695,7 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                                 config_startup.done.push("".into());
                             }
 
-                            sqlx::query(
+                            let row = sqlx::query(
                                 r#"
                                 INSERT INTO nest_eggs (
                                     uuid, nest_uuid, author, name, description, features, docker_images,
@@ -703,7 +703,8 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                                     config_script, startup, force_outgoing_ip, created
                                 )
                                 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
-                                ON CONFLICT DO NOTHING
+                                ON CONFLICT (nest_uuid, name) DO UPDATE SET description = EXCLUDED.description
+                                RETURNING uuid
                                 "#,
                             )
                             .bind(uuid.as_uuid())
@@ -721,10 +722,10 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                             .bind(startup)
                             .bind(force_outgoing_ip)
                             .bind(created)
-                            .execute(database.write())
+                            .fetch_one(database.write())
                             .await?;
 
-                            mapping.insert(id, *uuid.as_uuid());
+                            mapping.insert(id, row.get("uuid"));
                         }
 
                         Ok(mapping)
