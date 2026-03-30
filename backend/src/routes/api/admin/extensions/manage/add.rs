@@ -44,6 +44,21 @@ mod put {
         ))
         .await?;
 
+        if !distr
+            .metadata_toml
+            .panel_version
+            .matches(&shared::VERSION.parse()?)
+        {
+            let _ = shared::heavy::remove_extension(&distr.metadata_toml.package_name).await;
+
+            return ApiResponse::error(format!(
+                "extension requires panel version {} but the current panel version is incompatible",
+                distr.metadata_toml.panel_version
+            ))
+            .with_status(StatusCode::BAD_REQUEST)
+            .ok();
+        }
+
         ApiResponse::new_serialized(Response {
             extension: shared::extensions::PendingExtension {
                 package_name: distr.metadata_toml.package_name.to_compact_string(),
