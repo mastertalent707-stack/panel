@@ -33,7 +33,6 @@ import {
   adminEggConfigurationUpdateSchema,
   EggConfigurationDeployment,
 } from '@/lib/schemas/admin/eggConfigurations.ts';
-import { adminEggSchema } from '@/lib/schemas/admin/eggs.ts';
 import { eggConfigurationRouteItemSchema } from '@/lib/schemas/generic.ts';
 import { useResourceForm } from '@/plugins/useResourceForm.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';
@@ -141,7 +140,7 @@ export default function EggConfigurationCreateOrUpdate({
   const { languages } = useGlobalStore();
 
   const [openModal, setOpenModal] = useState<'delete' | null>(null);
-  const [eggs, setEggs] = useState<z.infer<typeof adminEggSchema>[]>([]);
+  const [eggs, setEggs] = useState<{ group: string; items: { label: string; value: string }[] }[]>([]);
   const [defaultRoutes, setDefaultRoutes] = useState<{
     order: z.infer<typeof eggConfigurationRouteItemSchema>[];
     entries: ServerRouteDefinition[];
@@ -195,11 +194,15 @@ export default function EggConfigurationCreateOrUpdate({
   useEffect(() => {
     getAllEggs()
       .then((eggs) => {
-        const eggsArray: z.infer<typeof adminEggSchema>[] = [];
-        for (const nestEggs of Object.values(eggs)) {
-          eggsArray.push(...nestEggs);
-        }
-        setEggs(eggsArray);
+        setEggs(
+          eggs.map((v) => ({
+            group: v.nest.name,
+            items: v.eggs.map((e) => ({
+              label: e.name,
+              value: e.uuid,
+            })),
+          })),
+        );
       })
       .catch((msg) => addToast(httpErrorToHuman(msg), 'error'));
   }, []);
@@ -295,7 +298,7 @@ export default function EggConfigurationCreateOrUpdate({
             <MultiSelect
               label='Eggs'
               placeholder='Select Eggs'
-              data={eggs.map((egg) => ({ label: egg.name, value: egg.uuid }))}
+              data={eggs}
               searchable
               loading={!eggs.length}
               {...form.getInputProps('eggs')}

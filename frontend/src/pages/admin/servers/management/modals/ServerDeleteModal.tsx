@@ -1,4 +1,4 @@
-import { ModalProps, Stack, Text } from "@mantine/core";
+import { ModalProps, Stack, Text } from '@mantine/core';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { z } from 'zod';
@@ -45,7 +45,9 @@ export default function ServerDeleteModal({
     <>
       <Modal title='Confirm Server Deletion' onClose={onClose} opened={opened}>
         <Stack>
-          <Text size='sm'>You are about to delete <span className='font-bold'>{server.name}</span>. Are you sure?</Text>
+          <Text size='sm'>
+            You are about to delete <span className='font-bold'>{server.name}</span>. Are you sure?
+          </Text>
 
           <Switch
             label='Do you want to forcefully delete this server?'
