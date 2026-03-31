@@ -13,7 +13,6 @@ import { FitAddon } from '@xterm/addon-fit';
 import { SearchAddon } from '@xterm/addon-search';
 import { Unicode11Addon } from '@xterm/addon-unicode11';
 import { WebLinksAddon } from '@xterm/addon-web-links';
-import { WebglAddon } from '@xterm/addon-webgl';
 import { ITerminalInitOnlyOptions, ITerminalOptions, Terminal as XTerm } from '@xterm/xterm';
 import classNames from 'classnames';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -146,7 +145,6 @@ export default function Terminal() {
     term.loadAddon(fitAddon);
     term.loadAddon(searchAddon);
     term.loadAddon(new WebLinksAddon());
-    term.loadAddon(new WebglAddon());
     term.loadAddon(new Unicode11Addon());
 
     term.unicode.activeVersion = '11';
