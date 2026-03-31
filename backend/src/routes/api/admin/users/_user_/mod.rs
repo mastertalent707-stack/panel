@@ -17,6 +17,7 @@ use std::ops::{Deref, DerefMut};
 use utoipa_axum::{router::OpenApiRouter, routes};
 
 mod activity;
+mod email;
 mod oauth_links;
 mod servers;
 mod two_factor;
@@ -257,6 +258,7 @@ pub fn router(state: &State) -> OpenApiRouter<State> {
         .nest("/servers", servers::router(state))
         .nest("/activity", activity::router(state))
         .nest("/oauth-links", oauth_links::router(state))
+        .nest("/email", email::router(state))
         .route_layer(axum::middleware::from_fn_with_state(state.clone(), auth))
         .with_state(state.clone())
 }

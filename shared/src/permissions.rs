@@ -251,6 +251,7 @@ pub(crate) static BASE_ADMIN_PERMISSIONS: LazyLock<IndexMap<&'static str, Permis
                             "Allows removing two-factor authentication from users.",
                         ),
                         ("delete", "Allows deleting users."),
+                        ("email", "Allows sending email actions to users, such as password resets."),
                         ("activity", "Allows viewing a user's activity log."),
                         (
                             "oauth-links",

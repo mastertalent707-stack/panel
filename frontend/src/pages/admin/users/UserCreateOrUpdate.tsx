@@ -6,6 +6,7 @@ import getRoles from '@/api/admin/roles/getRoles.ts';
 import createUser from '@/api/admin/users/createUser.ts';
 import deleteUser from '@/api/admin/users/deleteUser.ts';
 import disableUserTwoFactor from '@/api/admin/users/disableUserTwoFactor.ts';
+import sendPasswordResetEmail from '@/api/admin/users/email/sendPasswordResetEmail.ts';
 import updateUser from '@/api/admin/users/updateUser.ts';
 import { httpErrorToHuman } from '@/api/axios.ts';
 import Button from '@/elements/Button.tsx';
@@ -31,7 +32,9 @@ export default function UserCreateOrUpdate({ contextUser }: { contextUser?: z.in
   const { addToast } = useToast();
   const canReadRoles = useAdminCan('roles.read');
 
-  const [openModal, setOpenModal] = useState<'delete' | 'disable_two_factor' | null>(null);
+  const [openModal, setOpenModal] = useState<'delete' | 'disable_two_factor' | 'send_password_reset_email' | null>(
+    null,
+  );
 
   const form = useForm<z.infer<typeof adminUserUpdateSchema>>({
     initialValues: {
@@ -99,6 +102,22 @@ export default function UserCreateOrUpdate({ contextUser }: { contextUser?: z.in
       });
   };
 
+  const doSendPasswordResetEmail = async () => {
+    if (!contextUser) {
+      return;
+    }
+
+    await sendPasswordResetEmail(contextUser.uuid)
+      .then(() => {
+        addToast('Password reset email sent.', 'success');
+
+        setOpenModal(null);
+      })
+      .catch((msg) => {
+        addToast(httpErrorToHuman(msg), 'error');
+      });
+  };
+
   return (
     <AdminContentContainer
       title={`${contextUser ? 'Update' : 'Create'} User`}
@@ -122,6 +141,15 @@ export default function UserCreateOrUpdate({ contextUser }: { contextUser?: z.in
         onConfirmed={doDisableTwoFactor}
       >
         Are you sure you want to remove the two factor of <Code>{form.getValues().username}</Code>?
+      </ConfirmationModal>
+      <ConfirmationModal
+        opened={openModal === 'send_password_reset_email'}
+        onClose={() => setOpenModal(null)}
+        title='Send Password Reset Email'
+        confirm='Send'
+        onConfirmed={doSendPasswordResetEmail}
+      >
+        Are you sure you want to send a password reset email to <Code>{form.getValues().email}</Code>?
       </ConfirmationModal>
 
       <form onSubmit={form.onSubmit(() => doCreateOrUpdate(false, ['admin', 'users']))}>
@@ -228,6 +256,16 @@ export default function UserCreateOrUpdate({ contextUser }: { contextUser?: z.in
                   disabled={!contextUser.totpEnabled}
                 >
                   Disable Two Factor
+                </Button>
+              </AdminCan>
+              <AdminCan action='users.email'>
+                <Button
+                  color='blue'
+                  variant='outline'
+                  onClick={() => setOpenModal('send_password_reset_email')}
+                  loading={loading}
+                >
+                  Send Password Reset Email
                 </Button>
               </AdminCan>
               <AdminCan action='users.impersonate'>
