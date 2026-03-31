@@ -1,8 +1,7 @@
-import { ChangeEvent, startTransition, useEffect, useRef, useState } from 'react';
+import { startTransition, useEffect, useRef, useState } from 'react';
 import { closestUnit, formatUnitBytes, mapUnitToLocale, mbToBytes, UNITS, unitToBytes } from '@/lib/size.ts';
-import Select from './Select.tsx';
-import TextInput from './TextInput.tsx';
 import NumberInput from './NumberInput.tsx';
+import Select from './Select.tsx';
 
 interface SizeInputProps {
   label?: string;
