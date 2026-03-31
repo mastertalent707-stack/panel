@@ -2,6 +2,7 @@ import { ChangeEvent, startTransition, useEffect, useRef, useState } from 'react
 import { closestUnit, formatUnitBytes, mapUnitToLocale, mbToBytes, UNITS, unitToBytes } from '@/lib/size.ts';
 import Select from './Select.tsx';
 import TextInput from './TextInput.tsx';
+import NumberInput from './NumberInput.tsx';
 
 interface SizeInputProps {
   label?: string;
@@ -62,8 +63,8 @@ export default function SizeInput({ mode, min, value, onChange, ...rest }: SizeI
     });
   };
 
-  const handleValueChange = (v: ChangeEvent<HTMLInputElement>) => {
-    const newValue = parseInt(v.target.value, 10);
+  const handleValueChange = (v: { valueOf: () => string | number }) => {
+    const newValue = Number(v.valueOf());
     if (Number.isNaN(newValue)) return;
 
     setDisplayValue(newValue);
@@ -79,9 +80,8 @@ export default function SizeInput({ mode, min, value, onChange, ...rest }: SizeI
   };
 
   return (
-    <TextInput
+    <NumberInput
       {...rest}
-      type='number'
       min={min}
       value={displayValue}
       onChange={handleValueChange}
