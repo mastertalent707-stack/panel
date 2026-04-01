@@ -65,7 +65,6 @@ export function useBlocker(when: boolean, ignoreQueryChanges: boolean = false): 
 
   const reset = useCallback(() => {
     txRef.current = null;
-    unblockRef.current = null;
     setState('idle');
   }, []);
 
