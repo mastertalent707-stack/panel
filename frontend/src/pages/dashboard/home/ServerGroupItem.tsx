@@ -156,7 +156,7 @@ export default function ServerGroupItem({
               )}
             />
             <span className='font-medium text-white truncate'>{serverGroup.name}</span>
-            <Badge size='sm' variant='light' color='gray' className='shrink-0'>
+            <Badge variant='light' color='gray'>
               {tItem('server', serverCount)}
             </Badge>
           </button>

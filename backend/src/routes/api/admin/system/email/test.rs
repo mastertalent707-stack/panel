@@ -3,7 +3,6 @@ use utoipa_axum::{router::OpenApiRouter, routes};
 
 mod post {
     use axum::http::StatusCode;
-    use compact_str::ToCompactString;
     use garde::Validate;
     use serde::{Deserialize, Serialize};
     use shared::{
@@ -17,7 +16,7 @@ mod post {
     pub struct Payload {
         #[garde(email, length(max = 255))]
         #[schema(format = "email", max_length = 255)]
-        email: String,
+        email: compact_str::CompactString,
     }
 
     #[derive(ToSchema, Serialize)]
@@ -40,18 +39,25 @@ mod post {
 
         permissions.has_admin_permission("settings.read")?;
 
-        let settings = state.settings.get().await?;
+        let subject = state
+            .settings
+            .get_as(|s| format!("{} - Email Connection Test", s.app.name))
+            .await?;
 
-        state
+        if let Err(err) = state
             .mail
-            .send(
-                data.email.to_compact_string(),
-                format!("{} - Email Connection Test", settings.app.name).into(),
+            .send_foreground(
+                data.email.clone(),
+                subject.into(),
                 shared::mail::MAIL_CONNECTION_TEST,
                 minijinja::context! {},
             )
-            .await;
-        drop(settings);
+            .await
+        {
+            return ApiResponse::error(format!("failed to send test email: {err}"))
+                .with_status(StatusCode::INTERNAL_SERVER_ERROR)
+                .ok();
+        }
 
         activity_logger
             .log(

@@ -39,10 +39,18 @@ mod put {
 
         permissions.has_admin_permission("extensions.manage")?;
 
-        let distr = shared::heavy::write_extension(&mut tokio_util::io::StreamReader::new(
+        let distr = match shared::heavy::write_extension(&mut tokio_util::io::StreamReader::new(
             body.into_data_stream().map_err(std::io::Error::other),
         ))
-        .await?;
+        .await
+        {
+            Ok(distr) => distr,
+            Err(err) => {
+                return ApiResponse::error(format!("failed to process extension archive: {err}"))
+                    .with_status(StatusCode::BAD_REQUEST)
+                    .ok();
+            }
+        };
 
         if !distr
             .metadata_toml

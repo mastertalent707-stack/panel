@@ -115,6 +115,86 @@ impl Mail {
         Ok((settings, transport))
     }
 
+    pub async fn send_foreground(
+        &self,
+        destination: compact_str::CompactString,
+        subject: compact_str::CompactString,
+        body: impl AsRef<str>,
+        context: minijinja::Value,
+    ) -> Result<(), anyhow::Error> {
+        let (settings, transport) = self.get_transport().await?;
+
+        let mut environment = minijinja::Environment::new();
+        environment.set_auto_escape_callback(|_| minijinja::AutoEscape::Html);
+        environment.add_global("settings", minijinja::Value::from_serialize(&*settings));
+        drop(settings);
+
+        let rendered_body = environment.render_str(body.as_ref(), context)?;
+
+        match transport {
+            Transport::None => {}
+            Transport::Smtp {
+                transport,
+                from_address,
+                from_name,
+            } => {
+                transport
+                    .send(
+                        lettre::message::Message::builder()
+                            .subject(subject)
+                            .to(lettre::message::Mailbox::new(None, destination.parse()?))
+                            .from(lettre::message::Mailbox::new(
+                                from_name.map(String::from),
+                                from_address.parse()?,
+                            ))
+                            .header(lettre::message::header::ContentType::TEXT_HTML)
+                            .body(rendered_body)?,
+                    )
+                    .await?;
+            }
+            Transport::Sendmail {
+                transport,
+                from_address,
+                from_name,
+            } => {
+                transport
+                    .send(
+                        lettre::message::Message::builder()
+                            .subject(subject)
+                            .to(lettre::message::Mailbox::new(None, destination.parse()?))
+                            .from(lettre::message::Mailbox::new(
+                                from_name.map(String::from),
+                                from_address.parse()?,
+                            ))
+                            .header(lettre::message::header::ContentType::TEXT_HTML)
+                            .body(rendered_body)?,
+                    )
+                    .await?;
+            }
+            Transport::Filesystem {
+                transport,
+                from_address,
+                from_name,
+            } => {
+                transport
+                    .send(
+                        lettre::message::Message::builder()
+                            .subject(subject)
+                            .to(lettre::message::Mailbox::new(None, destination.parse()?))
+                            .from(lettre::message::Mailbox::new(
+                                from_name.map(String::from),
+                                from_address.parse()?,
+                            ))
+                            .header(lettre::message::header::ContentType::TEXT_HTML)
+                            .body(rendered_body)?,
+                    )
+                    .await?;
+            }
+        };
+
+        Ok(())
+    }
+
     pub async fn send(
         &self,
         destination: compact_str::CompactString,
