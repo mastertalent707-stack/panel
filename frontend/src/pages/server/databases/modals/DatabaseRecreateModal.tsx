@@ -2,7 +2,7 @@ import { ModalProps, Stack, Text } from '@mantine/core';
 import { useState } from 'react';
 import { z } from 'zod';
 import { httpErrorToHuman } from '@/api/axios.ts';
-import deleteDatabase from '@/api/server/databases/deleteDatabase.ts';
+import recreateDatabase from '@/api/server/databases/recreateDatabase.ts';
 import Button from '@/elements/Button.tsx';
 import TextInput from '@/elements/input/TextInput.tsx';
 import { Modal, ModalFooter } from '@/elements/modals/Modal.tsx';
@@ -15,23 +15,21 @@ type Props = ModalProps & {
   database: z.infer<typeof serverDatabaseSchema>;
 };
 
-export default function DatabaseDeleteModal({ database, opened, onClose }: Props) {
+export default function DatabaseRecreateModal({ database, opened, onClose }: Props) {
   const { t } = useTranslations();
   const { addToast } = useToast();
   const server = useServerStore((state) => state.server);
-  const { removeDatabase } = useServerStore();
 
   const [enteredName, setEnteredName] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const doDelete = () => {
+  const doRecreate = () => {
     setLoading(true);
 
-    deleteDatabase(server.uuid, database.uuid)
+    recreateDatabase(server.uuid, database.uuid)
       .then(() => {
-        addToast(t('pages.server.databases.modal.deleteDatabase.toast.deleted', {}), 'success');
+        addToast(t('pages.server.databases.modal.recreateDatabase.toast.recreated', {}), 'success');
         onClose();
-        removeDatabase(database);
       })
       .catch((error) => {
         console.error(error);
@@ -41,9 +39,9 @@ export default function DatabaseDeleteModal({ database, opened, onClose }: Props
   };
 
   return (
-    <Modal title={t('pages.server.databases.modal.deleteDatabase.title', {})} onClose={onClose} opened={opened}>
+    <Modal title={t('pages.server.databases.modal.recreateDatabase.title', {})} onClose={onClose} opened={opened}>
       <Stack>
-        <Text>{t('pages.server.databases.modal.deleteDatabase.content', { name: database.name }).md()}</Text>
+        <Text>{t('pages.server.databases.modal.recreateDatabase.content', { name: database.name }).md()}</Text>
 
         <TextInput
           withAsterisk
@@ -54,8 +52,8 @@ export default function DatabaseDeleteModal({ database, opened, onClose }: Props
         />
 
         <ModalFooter>
-          <Button color='red' onClick={doDelete} loading={loading} disabled={database.name !== enteredName}>
-            {t('common.button.delete', {})}
+          <Button color='red' onClick={doRecreate} loading={loading} disabled={database.name !== enteredName}>
+            {t('pages.server.databases.button.recreate', {})}
           </Button>
           <Button variant='default' onClick={onClose}>
             {t('common.button.close', {})}

@@ -251,7 +251,10 @@ pub(crate) static BASE_ADMIN_PERMISSIONS: LazyLock<IndexMap<&'static str, Permis
                             "Allows removing two-factor authentication from users.",
                         ),
                         ("delete", "Allows deleting users."),
-                        ("email", "Allows sending email actions to users, such as password resets."),
+                        (
+                            "email",
+                            "Allows sending email actions to users, such as password resets.",
+                        ),
                         ("activity", "Allows viewing a user's activity log."),
                         (
                             "oauth-links",
@@ -621,6 +624,10 @@ pub(crate) static BASE_SERVER_PERMISSIONS: LazyLock<IndexMap<&'static str, Permi
                         (
                             "update",
                             "Allows rotating the password on a database instance. Users without the read-password permission will not see the updated password.",
+                        ),
+                        (
+                            "recreate",
+                            "Allows deleting and recreating a database, in the process wiping all data.",
                         ),
                         (
                             "delete",

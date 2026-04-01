@@ -339,6 +339,54 @@ impl ServerDatabase {
         }
     }
 
+    pub async fn recreate(
+        &self,
+        database: &crate::database::Database,
+    ) -> Result<(), anyhow::Error> {
+        let run_recreate = async || {
+            match self.database_host.get_connection(database).await? {
+                crate::models::database_host::DatabasePool::Mysql(pool) => {
+                    sqlx::query(&format!("DROP DATABASE IF EXISTS `{}`", self.name))
+                        .execute(pool.as_ref())
+                        .await?;
+                    sqlx::query(&format!("CREATE DATABASE `{}` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;", self.name))
+                        .execute(pool.as_ref())
+                        .await?;
+                }
+                crate::models::database_host::DatabasePool::Postgres(pool) => {
+                    sqlx::query(&format!("DROP DATABASE IF EXISTS \"{}\"", self.name))
+                        .execute(pool.as_ref())
+                        .await?;
+                    sqlx::query(&format!(
+                        "CREATE DATABASE \"{}\" WITH OWNER \"{}\" ENCODING 'UTF8'",
+                        self.name, self.username
+                    ))
+                    .execute(pool.as_ref())
+                    .await?;
+                }
+            }
+
+            Ok::<(), anyhow::Error>(())
+        };
+
+        if let Err(err) = run_recreate().await {
+            if err
+                .downcast_ref::<sqlx::Error>()
+                .and_then(|e| e.as_database_error())
+                .is_some_and(|e| e.message().contains("is being accessed"))
+            {
+                return Err(crate::response::DisplayError::new(
+                    "this database is being accessed, unable to recreate.",
+                )
+                .into());
+            }
+
+            return Err(err);
+        }
+
+        Ok(())
+    }
+
     #[inline]
     pub async fn into_admin_api_object(
         self,

@@ -1,4 +1,4 @@
-import { faEye, faLock, faLockOpen, faPencil, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faLock, faLockOpen, faPencil, faRefresh, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useState } from 'react';
 import { z } from 'zod';
@@ -17,10 +17,11 @@ import { useServerStore } from '@/stores/server.ts';
 import DatabaseDeleteModal from './modals/DatabaseDeleteModal.tsx';
 import DatabaseDetailsModal from './modals/DatabaseDetailsModal.tsx';
 import DatabaseEditModal from './modals/DatabaseEditModal.tsx';
+import DatabaseRecreateModal from './modals/DatabaseRecreateModal.tsx';
 
 export default function DatabaseRow({ database }: { database: z.infer<typeof serverDatabaseSchema> }) {
   const { t } = useTranslations();
-  const [openModal, setOpenModal] = useState<'edit' | 'details' | 'delete' | null>(null);
+  const [openModal, setOpenModal] = useState<'edit' | 'details' | 'recreate' | 'delete' | null>(null);
   const [size, setSize] = useState(0);
   const [sizeLoading, setSizeLoading] = useState(true);
   const server = useServerStore((state) => state.server);
@@ -36,6 +37,7 @@ export default function DatabaseRow({ database }: { database: z.infer<typeof ser
     <>
       <DatabaseEditModal database={database} opened={openModal === 'edit'} onClose={() => setOpenModal(null)} />
       <DatabaseDetailsModal database={database} opened={openModal === 'details'} onClose={() => setOpenModal(null)} />
+      <DatabaseRecreateModal database={database} opened={openModal === 'recreate'} onClose={() => setOpenModal(null)} />
       <DatabaseDeleteModal database={database} opened={openModal === 'delete'} onClose={() => setOpenModal(null)} />
 
       <ContextMenu
@@ -53,6 +55,14 @@ export default function DatabaseRow({ database }: { database: z.infer<typeof ser
             onClick: () => setOpenModal('details'),
             color: 'gray',
             canAccess: useServerCan('databases.read'),
+          },
+          {
+            icon: faRefresh,
+            label: t('pages.server.databases.button.recreate', {}),
+            disabled: database.isLocked,
+            onClick: () => setOpenModal('recreate'),
+            color: 'red',
+            canAccess: useServerCan('databases.recreate'),
           },
           {
             icon: faTrash,

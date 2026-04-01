@@ -47,8 +47,8 @@ export default function DatabaseDetailsModal({ database, opened, onClose }: Prop
     <Modal title={t('pages.server.databases.modal.databaseDetails.title', {})} onClose={onClose} opened={opened}>
       <Stack>
         <TextInput
-          label={t('pages.server.databases.modal.createDatabase.form.databaseName', {})}
-          placeholder={t('pages.server.databases.modal.createDatabase.form.databaseName', {})}
+          label={t('pages.server.databases.form.databaseName', {})}
+          placeholder={t('pages.server.databases.form.databaseName', {})}
           value={database.name}
           readOnly
         />

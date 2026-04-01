@@ -1405,7 +1405,11 @@ const baseTranslations = defineTranslations({
           },
           button: {
             details: 'Details',
+            recreate: 'Recreate',
             rotatePassword: 'Rotate Password',
+          },
+          form: {
+            databaseName: 'Database Name',
           },
           modal: {
             createDatabase: {
@@ -1414,7 +1418,6 @@ const baseTranslations = defineTranslations({
                 created: 'Database created.',
               },
               form: {
-                databaseName: 'Database Name',
                 databaseHost: 'Database Host',
                 noHostsFound: 'No hosts found',
               },
@@ -1435,6 +1438,14 @@ const baseTranslations = defineTranslations({
               },
               form: {
                 jdbcConnectionString: 'JDBC Connection String',
+              },
+            },
+            recreateDatabase: {
+              title: 'Confirm Database Recreation',
+              content:
+                'Recreating a database will permanently delete all data in the **{name}** database and create a new one with the same connection details.',
+              toast: {
+                recreated: 'Database recreated.',
               },
             },
             deleteDatabase: {

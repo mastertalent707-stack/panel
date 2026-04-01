@@ -1,5 +1,5 @@
 use super::State;
-use utoipa_axum::{router::OpenApiRouter};
+use utoipa_axum::router::OpenApiRouter;
 
 mod reset_password;
 
