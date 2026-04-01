@@ -1995,7 +1995,7 @@
           "title": "Netwerk",
           "subtitle": "{current} van {max} maximale allocatieen toegewezen.",
           "tooltip": {
-            "limitReached": "Deze server is beperkt tot {max} allocatieen.",
+            "limitReached": "Deze server is beperkt tot {max} allocaties.",
             "primary": "Primair"
           },
           "table": {
