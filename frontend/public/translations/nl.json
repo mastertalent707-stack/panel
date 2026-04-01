@@ -1,0 +1,2143 @@
+{
+  "items": {
+    "byte": {
+      "zero": "{count} Bytes",
+      "one": "{count} Byte",
+      "two": "{count} Bytes",
+      "few": "{count} Bytes",
+      "many": "{count} Bytes",
+      "other": "{count} Bytes"
+    },
+    "user": {
+      "zero": "{count} Gebruikers",
+      "one": "{count} Gebruiker",
+      "two": "{count} Gebruikers",
+      "few": "{count} Gebruikers",
+      "many": "{count} Gebruikers",
+      "other": "{count} Gebruikers"
+    },
+    "file": {
+      "zero": "{count} Bestanden",
+      "one": "{count} Bestand",
+      "two": "{count} Bestanden",
+      "few": "{count} Bestanden",
+      "many": "{count} Bestanden",
+      "other": "{count} Bestanden"
+    },
+    "server": {
+      "zero": "{count} Servers",
+      "one": "{count} Server",
+      "two": "{count} Servers",
+      "few": "{count} Servers",
+      "many": "{count} Servers",
+      "other": "{count} Servers"
+    },
+    "sshKey": {
+      "zero": "{count} SSH-sleutels",
+      "one": "{count} SSH-sleutel",
+      "two": "{count} SSH-sleutels",
+      "few": "{count} SSH-sleutels",
+      "many": "{count} SSH-sleutels",
+      "other": "{count} SSH-sleutels"
+    }
+  },
+  "translations": {
+    "common": {
+      "button": {
+        "create": "Aanmaken",
+        "add": "Toevoegen",
+        "save": "Opslaan",
+        "saveAndStay": "Opslaan & Blijven",
+        "edit": "Bewerken",
+        "delete": "Verwijderen",
+        "remove": "Verwijderen",
+        "enable": "Inschakelen",
+        "disable": "Uitschakelen",
+        "update": "Bijwerken",
+        "close": "Sluiten",
+        "cancel": "Annuleren",
+        "continue": "Doorgaan",
+        "skip": "Overslaan",
+        "okay": "Oké",
+        "back": "Terug",
+        "next": "Volgende",
+        "install": "Installeren",
+        "selectAll": "Alles selecteren",
+        "deselectAll": "Alles deselecteren",
+        "restore": "Herstellen",
+        "download": "Downloaden",
+        "downloadAs": "Downloaden als {format}",
+        "export": "Exporteren",
+        "exportAs": "Exporteren als {format}"
+      },
+      "alert": {
+        "error": "Fout",
+        "warning": "Waarschuwing",
+        "success": "Geslaagd",
+        "clockOffset": "Uw systeemklok wijkt meer dan 5 seconden af van de server. Dit kan problemen veroorzaken met wachtwoordsleutel- en tweestapsverificatie. Synchroniseer uw klok als er problemen optreden. Huidige afwijking: {offset} seconde(n)."
+      },
+      "divider": {
+        "or": "OF"
+      },
+      "input": {
+        "search": "Zoeken..."
+      },
+      "tooltip": {
+        "resetToDefault": "Herstellen naar standaard",
+        "edit": "Bewerken",
+        "delete": "Verwijderen"
+      },
+      "form": {
+        "name": "Naam",
+        "description": "Beschrijving",
+        "password": "Wachtwoord",
+        "host": "Host",
+        "username": "Gebruikersnaam",
+        "server": "Server",
+        "truncateDirectory": "Wilt u alle bestanden van deze server verwijderen voordat u deze actie uitvoert? Dit kan niet ongedaan worden gemaakt."
+      },
+      "table": {
+        "pagination": {
+          "results": "{start} tot {end} van {total} resultaten weergegeven.",
+          "empty": "Er zijn geen items gevonden, ze lijken zich te verstoppen."
+        },
+        "columns": {
+          "name": "Naam",
+          "description": "Beschrijving",
+          "username": "Gebruikersnaam",
+          "size": "Grootte",
+          "lastUsed": "Laatst gebruikt",
+          "created": "Aangemaakt",
+          "actor": "Uitvoerder",
+          "event": "Gebeurtenis",
+          "ip": "IP",
+          "when": "Wanneer",
+          "command": "Opdracht"
+        }
+      },
+      "badge": {
+        "active": "Actief",
+        "inactive": "Inactief",
+        "enabled": "Ingeschakeld",
+        "disabled": "Uitgeschakeld",
+        "successful": "Geslaagd",
+        "failed": "Mislukt"
+      },
+      "server": {
+        "noAllocation": "Geen toewijzing",
+        "state": {
+          "suspended": "Opgeschort",
+          "transferring": "Server wordt overgedragen",
+          "nodeMaintenance": "Node is in onderhoud",
+          "restoringBackup": "Back-up herstellen",
+          "installing": "Installeren",
+          "installFailed": "Installatie mislukt"
+        }
+      },
+      "enum": {
+        "userToastPosition": {
+          "topLeft": "Linksboven",
+          "topCenter": "Midden boven",
+          "topRight": "Rechtsboven",
+          "bottomLeft": "Linksonder",
+          "bottomCenter": "Midden onder",
+          "bottomRight": "Rechtsonder"
+        },
+        "serverState": {
+          "unknown": "Onbekend",
+          "offline": "Offline",
+          "running": "Actief",
+          "starting": "Starten",
+          "stopping": "Stoppen"
+        },
+        "serverPowerAction": {
+          "start": "Starten",
+          "stop": "Stoppen",
+          "restart": "Herstarten",
+          "kill": "Forceer stop"
+        },
+        "serverBackupStatus": {
+          "starting": "Bezig",
+          "finished": "Voltooid",
+          "failed": "Mislukt"
+        },
+        "connectionStatus": {
+          "connected": "Verbonden",
+          "offline": "Offline"
+        },
+        "serverAutoStartBehavior": {
+          "always": "Altijd",
+          "unlessStopped": "Tenzij gestopt",
+          "never": "Nooit"
+        },
+        "bulkActionServerAction": {
+          "started": "Gestart",
+          "stopped": "Gestopt",
+          "restarted": "Herstart",
+          "killed": "Geforceerd gestopt"
+        }
+      },
+      "unit": {
+        "bytes": {
+          "bytes": "B",
+          "kibibytes": "KiB",
+          "mebibytes": "MiB",
+          "gibibytes": "GiB",
+          "tebibytes": "TiB",
+          "pebibytes": "PiB"
+        }
+      },
+      "unlimited": "Onbeperkt",
+      "readOnly": "Alleen-lezen",
+      "na": "N.v.t.",
+      "never": "Nooit",
+      "yes": "Ja",
+      "no": "Nee",
+      "web": "Web",
+      "api": "API",
+      "system": "Systeem",
+      "schedule": "Planning",
+      "impersonatedBy": "Nagebootst door {username}"
+    },
+    "elements": {
+      "errorBoundary": {
+        "message": "Er is een fout opgetreden bij het weergeven van deze pagina. Probeer de pagina te vernieuwen.",
+        "hideDetails": "Details verbergen",
+        "showDetails": "Details weergeven",
+        "errorMessage": "Foutmelding:",
+        "stackTrace": "Stack-tracering:",
+        "componentStack": "Componentstack:"
+      },
+      "copyOnClick": {
+        "toast": {
+          "copied": "Gekopieerd naar klembord.",
+          "failed": "Kopiëren naar klembord mislukt.",
+          "copyManual": "Kopiëren naar klembord: Ctrl+C of Command+C, Enter"
+        }
+      },
+      "estimatedTimeArrival": {
+        "tooltip": {
+          "estimating": "Voltooiingstijd berekenen...",
+          "estimated": "Geschatte voltooiingstijd: {time}"
+        },
+        "calculating": "ETA: Berekenen...",
+        "calculated": "ETA: {time}"
+      },
+      "container": {
+        "alert": {
+          "impersonating": "U bootst momenteel een gebruiker na. Houd er rekening mee dat uw acties gevolgen kunnen hebben voor het account van de nagebootste gebruiker. Klik op de knop \"Stop met nabootsen\" linksonder om de nagebootsmodus te verlaten."
+        }
+      },
+      "sidebar": {
+        "button": {
+          "logout": "Uitloggen",
+          "stopImpersonating": "Stop met nabootsen",
+          "openInVirtualWindow": "Openen in virtueel venster",
+          "openInPopup": "Openen in pop-up",
+          "openInNewTab": "Openen in nieuw tabblad"
+        }
+      },
+      "permissionSelector": {
+        "selectedPermissions": "Geselecteerde rechten ({count})",
+        "noPermissions": "Geen rechten geselecteerd."
+      },
+      "selectInput": {
+        "noResults": "Geen resultaten gevonden."
+      },
+      "can": {
+        "tooltip": {
+          "cantSave": "U heeft geen toestemming om op te slaan.",
+          "cantDelete": "U heeft geen toestemming om te verwijderen."
+        }
+      },
+      "activityInfoButton": {
+        "modal": {
+          "info": {
+            "title": "Activiteitsdetails"
+          }
+        }
+      },
+      "screenBlock": {
+        "permissionDenied": {
+          "title": "Toegang geweigerd",
+          "content": "U heeft geen toestemming om deze pagina te bekijken."
+        },
+        "notFound": {
+          "title": "Niet gevonden",
+          "content": "De pagina die u zoekt kon niet worden gevonden."
+        },
+        "serverConflict": {
+          "title": "Conflicterende serverstatus",
+          "contentSuspended": "Deze server is opgeschort en kan niet worden geopend.",
+          "contentNodeMaintenance": "De node van deze server is momenteel in onderhoud en kan niet worden geopend.",
+          "contentTransferring": "Deze server wordt momenteel overgedragen en kan pas worden geopend na voltooiing.",
+          "contentInstallFailed": "De installatie van deze server is mislukt en kan pas worden geopend na bevestiging.",
+          "contentInstalling": "Deze server wordt momenteel geïnstalleerd en kan pas worden geopend na voltooiing.",
+          "contentRestoringBackup": "Deze server herstelt momenteel een back-up en kan pas worden geopend na voltooiing.",
+          "button": {
+            "viewInstallLogs": "Installatielogboeken bekijken",
+            "acknowledgeFailure": "Mislukking bevestigen"
+          },
+          "modal": {
+            "acknowledgeFailure": {
+              "title": "Installatiefout bevestigen",
+              "content": "Door deze installatiefout te bevestigen, geeft u aan dat u op de hoogte bent van de mislukte installatie en de nodige stappen heeft ondernomen om het probleem op te lossen. Hiermee herkrijgt u de controle over de server."
+            }
+          }
+        }
+      },
+      "scheduleDynamicInput": {
+        "enterVariable": "Voer de naam in van de variabele die geëvalueerd moet worden.",
+        "enterData": "Voer de te verzenden gegevens in.",
+        "inputType": "Invoertype",
+        "dataType": "Te verzenden gegevenstype",
+        "selectType": "Selecteer type",
+        "none": "Geen",
+        "rawString": "Onbewerkte tekst",
+        "variable": "Variabele"
+      },
+      "serverWebsocket": {
+        "error": {
+          "connectionFailed": "Verbinden na meerdere pogingen mislukt. Vernieuw de pagina.",
+          "connectionClosed": "Verbinding met server verbroken. Opnieuw verbinden...",
+          "connectionRetry": "Verbinding verbroken. Opnieuw proberen (poging {attempt})...",
+          "authFailed": "Authenticatie mislukt. Bezig met vernieuwen van gegevens... ({error})",
+          "authRefreshFailed": "Vernieuwen van gegevens mislukt. Vernieuw de pagina en probeer opnieuw.",
+          "permissionRevoked": "Verbinding verbroken: uw toegang tot deze server is ingetrokken.",
+          "tokenRefreshLoop": "Authenticatielus gedetecteerd. Vernieuw de pagina en probeer opnieuw."
+        },
+        "banner": {
+          "retrying": "Opnieuw proberen over {countdown}..."
+        },
+        "listener": {
+          "toast": {
+            "backupCompleted": "Back-up succesvol voltooid.",
+            "backupFailed": "Back-up mislukt.",
+            "backupRestoreCompleted": "Back-up herstel succesvol voltooid.",
+            "installCompleted": "Serverinstallatie succesvol voltooid.",
+            "installFailed": "Serverinstallatie mislukt.",
+            "operations": {
+              "compressing": {
+                "completed": "{files} gecomprimeerd naar `{path}` in {time}.",
+                "failed": "Comprimeren van {files} naar `{path}` mislukt:\n{error}"
+              },
+              "decompressing": {
+                "completed": "`{path}` gedecomprimeerd naar `{destination}` in {time}.",
+                "failed": "Decomprimeren van `{path}` naar `{destination}` mislukt:\n{error}"
+              },
+              "pulling": {
+                "completed": "`{destination}` opgehaald in {time}.",
+                "failed": "Ophalen van `{destination}` mislukt:\n{error}"
+              },
+              "copying": {
+                "completed": "`{path}` gekopieerd naar `{destination}` in {time}.",
+                "failed": "Kopiëren van `{path}` naar `{destination}` mislukt:\n{error}"
+              },
+              "copyingMany": {
+                "completed": "{files} gekopieerd in {time}.",
+                "failed": "Kopiëren van {files} mislukt:\n{error}"
+              },
+              "copyingRemote": {
+                "completedFrom": "{files} van externe server gekopieerd in {time}.",
+                "completedTo": "{files} naar externe server gekopieerd in {time}.",
+                "failedFrom": "Kopiëren van {files} van externe server mislukt:\n{error}",
+                "failedTo": "Kopiëren van {files} naar externe server mislukt:\n{error}"
+              }
+            }
+          }
+        }
+      },
+      "fileUpload": {
+        "toast": {
+          "uploading": "Uploaden van {files} gestart...",
+          "cancelledFile": "Uploaden van `{file}` succesvol geannuleerd.",
+          "cancelledFolder": "Uploaden van map `{folder}` ({files}) succesvol geannuleerd."
+        }
+      }
+    },
+    "pages": {
+      "oobe": {
+        "welcome": {
+          "title": "Welkom bij Calagopus",
+          "subtitle": "Laten we uw gameservermanagementsysteem instellen!",
+          "wizardIntro": "Deze installatiewizard begeleidt u door:",
+          "steps": {
+            "account": "Uw beheerdersaccount aanmaken",
+            "settings": "Essentiële systeeminstellingen configureren",
+            "location": "Uw serverlocatie instellen",
+            "node": "Uw eerste node toevoegen",
+            "server": "Uw eerste gameserver deployen"
+          },
+          "button": {
+            "start": "Aan de slag"
+          }
+        },
+        "register": {
+          "title": "Beheerdersaccount aanmaken",
+          "alert": {
+            "title": "Beveiligingsmelding",
+            "description": "Kies een sterk wachtwoord. Dit account heeft volledige beheerderstoegang tot alle servers en instellingen."
+          },
+          "form": {
+            "username": "Gebruikersnaam",
+            "usernamePlaceholder": "beheerder",
+            "email": "E-mailadres",
+            "emailPlaceholder": "beheerder@voorbeeld.nl",
+            "firstName": "Voornaam",
+            "firstNamePlaceholder": "Alan",
+            "lastName": "Achternaam",
+            "lastNamePlaceholder": "Turing",
+            "password": "Wachtwoord",
+            "passwordPlaceholder": "Voer een sterk wachtwoord in",
+            "confirmPassword": "Wachtwoord bevestigen",
+            "confirmPasswordPlaceholder": "Voer uw wachtwoord opnieuw in"
+          },
+          "button": {
+            "create": "Account aanmaken & doorgaan"
+          }
+        },
+        "login": {
+          "title": "Opnieuw inloggen",
+          "alert": "U bent uitgelogd tijdens het installatieproces. Log opnieuw in om verder te gaan waar u gebleven was.",
+          "form": {
+            "username": "Gebruikersnaam",
+            "usernamePlaceholder": "beheerder",
+            "password": "Wachtwoord",
+            "passwordPlaceholder": "Voer een sterk wachtwoord in"
+          },
+          "button": {
+            "login": "Inloggen & doorgaan"
+          }
+        },
+        "location": {
+          "title": "Locatieconfiguratie",
+          "form": {
+            "locationName": "Locatienaam",
+            "locationNamePlaceholder": "Mijn thuis",
+            "backupName": "Naam back-upconfiguratie",
+            "backupNamePlaceholder": "Unicorn Cloud",
+            "backupDisk": "Back-upschijf",
+            "backupDiskPlaceholder": "Back-upschijf"
+          },
+          "button": {
+            "create": "Aanmaken & doorgaan"
+          }
+        },
+        "node": {
+          "title": "Nodeconfiguratie",
+          "allocationsTitle": "Toewijzingsconfiguratie",
+          "form": {
+            "name": "Naam",
+            "namePlaceholder": "Mijn server",
+            "url": "URL",
+            "urlPlaceholder": "URL",
+            "urlDescription": "gebruikt voor interne communicatie met de node",
+            "publicUrl": "Openbare URL",
+            "publicUrlPlaceholder": "URL",
+            "publicUrlDescription": "gebruikt voor websocket/downloads",
+            "sftpHost": "SFTP-host",
+            "sftpHostPlaceholder": "SFTP-host",
+            "sftpPort": "SFTP-poort",
+            "sftpPortPlaceholder": "SFTP-poort",
+            "memory": "Geheugen",
+            "disk": "Schijf",
+            "ip": "IP",
+            "portRanges": "Poortbereiken",
+            "portRangesPlaceholder": "Poortbereiken (bijv. 3000-4000)"
+          },
+          "error": {
+            "noLocations": "Er is iets misgegaan. Geen locaties gevonden."
+          },
+          "button": {
+            "create": "Aanmaken & doorgaan"
+          }
+        },
+        "nodeConfiguration": {
+          "title": "Nodeconfiguratie",
+          "error": {
+            "noNodes": "Er is iets misgegaan. Geen nodes gevonden.",
+            "connectionError": "Er is iets misgegaan. Verbindingsfout."
+          },
+          "successMessage": "De verbinding met uw node is succesvol geverifieerd. U kunt nu doorgaan.",
+          "configurationDescription": "Plaats dit in het configuratiebestand op `{file}` of voer het volgende uit:",
+          "button": {
+            "verify": "Verbinding verifiëren"
+          }
+        },
+        "configuration": {
+          "title": "Applicatie-instellingen",
+          "form": {
+            "applicationName": "Applicatienaam",
+            "applicationNamePlaceholder": "Calagopus",
+            "language": "Taal",
+            "languagePlaceholder": "Taal",
+            "applicationUrl": "Applicatie-URL",
+            "applicationUrlPlaceholder": "https://calagop.us",
+            "telemetry": "Telemetrie inschakelen",
+            "telemetryDescription": "Sta Calagopus toe beperkte en anonieme gebruiksgegevens te verzamelen om de applicatie te verbeteren.",
+            "registration": "Registratie inschakelen",
+            "registrationDescription": "Sta nieuwe gebruikers toe een eigen account te registreren."
+          },
+          "button": {
+            "submit": "Instellingen opslaan & doorgaan"
+          }
+        },
+        "eggRepositories": {
+          "title": "Egg-opslagplaatsen",
+          "description": "Dit zijn de bronopslagplaatsen van uw eggs. U kunt deze opslagplaatsen op elk moment wijzigen.",
+          "repositories": {
+            "pterodactylGame": {
+              "title": "Pterodactyl Game Eggs",
+              "description": "Eggs voor games zoals Minecraft, Terraria en nog veel meer."
+            },
+            "pterodactylApplication": {
+              "title": "Pterodactyl Applicatie-Eggs",
+              "description": "Eggs voor applicaties zoals Grafana, Meilisearch en diverse databases."
+            },
+            "pterodactylGeneral": {
+              "title": "Pterodactyl Generieke Eggs",
+              "description": "Eggs voor generieke applicatie-runtimes zoals Node JS, Java en Rust."
+            }
+          },
+          "button": {
+            "submit": "Importeren"
+          }
+        },
+        "server": {
+          "title": "Server",
+          "egg": {
+            "title": "Egg",
+            "description": "Laten we uw eerste server instellen. Welke egg wilt u gebruiken?",
+            "nestDescription": "Om deze egg te gebruiken, moet u een nest aanmaken. Nests zijn verzamelingen van eggs. Geef het een naam:"
+          },
+          "server": {
+            "title": "Server",
+            "nestDescription": "Om deze egg te gebruiken, moet u een nest aanmaken. Nests zijn verzamelingen van eggs. Geef het een naam:"
+          },
+          "error": {
+            "noNodes": "Er is iets misgegaan. Geen nodes gevonden."
+          },
+          "button": {
+            "submit": "Importeren",
+            "create": "Aanmaken & doorgaan"
+          }
+        },
+        "finished": {
+          "title": "Installatie voltooid!",
+          "subtitle": "Uw Calagopus-panel is klaar voor gebruik",
+          "setupTitle": "Wat we hebben ingesteld",
+          "items": {
+            "account": "Beheerdersaccount",
+            "configuration": {
+              "title": "Systeemconfiguratie",
+              "subtitle": "Panelinstellingen en voorkeuren geconfigureerd"
+            },
+            "eggRepositories": {
+              "title": "Egg-opslagplaatsen",
+              "subtitle": "{count} opslagplaatsen"
+            },
+            "location": "Locatie",
+            "node": "Node",
+            "server": "Server"
+          },
+          "badge": {
+            "skipped": "Overgeslagen"
+          },
+          "button": "Naar dashboard"
+        }
+      },
+      "auth": {
+        "button": {
+          "login": "Inloggen",
+          "loginWith": "Inloggen met {name}"
+        },
+        "login": {
+          "error": {
+            "usernameRequired": "Voer een gebruikersnaam in"
+          },
+          "passkey": {
+            "error": {
+              "notSupported": "Uw browser ondersteunt geen wachtwoordsleutels.",
+              "unexpected": "Er is een onverwachte fout opgetreden bij het gebruik van uw wachtwoordsleutel.",
+              "cancelled": "Wachtwoordsleutelaanvraag geannuleerd.",
+              "dismissed": "U heeft het wachtwoordsleutelprompt gesloten of niet beantwoord. De gebruikte sleutel is mogelijk ook niet geregistreerd.",
+              "invalidState": "Deze wachtwoordsleutel is niet beschikbaar of al geregistreerd.",
+              "notSupportedType": "Uw browser of apparaat ondersteunt dit type wachtwoordsleutel niet.",
+              "securityError": "Wachtwoordsleutels kunnen alleen worden gebruikt via HTTPS en met een geldig domein.",
+              "authenticatorError": "Er is iets misgegaan met de authenticator.",
+              "constraintError": "De authenticator kon niet voldoen aan de vereiste beperkingen."
+            }
+          },
+          "step": {
+            "username": {
+              "title": "Inloggen",
+              "subtitle": "Voer uw gebruikersnaam in om door te gaan",
+              "form": {
+                "usernamePlaceholder": "Voer uw gebruikersnaam in"
+              },
+              "link": {
+                "forgotPassword": "Wachtwoord vergeten",
+                "notRegistered": "Nog niet geregistreerd?",
+                "createAccount": "Account aanmaken"
+              },
+              "button": {
+                "oauthLogin": "OAuth-inloggen"
+              }
+            },
+            "passkey": {
+              "title": "Authenticeren met wachtwoordsleutel",
+              "subtitle": "Er is een wachtwoordsleutel gevonden voor {username}",
+              "button": {
+                "usePasskey": "Wachtwoordsleutel gebruiken",
+                "usePassword": "Wachtwoord gebruiken"
+              }
+            },
+            "password": {
+              "title": "Wachtwoord invoeren",
+              "subtitle": "Voer uw wachtwoord in voor {username}",
+              "form": {
+                "passwordPlaceholder": "Voer uw wachtwoord in"
+              },
+              "button": {
+                "signIn": "Inloggen",
+                "forgotPassword": "Wachtwoord vergeten"
+              }
+            },
+            "totp": {
+              "title": "Tweestapsverificatie",
+              "welcomeBack": "Welkom terug {username}!",
+              "enterCode": "Voer de 6-cijferige code in van uw authenticator-app",
+              "button": {
+                "verify": "Code verifiëren",
+                "useRecoveryCode": "Herstelcode gebruiken",
+                "useTotp": "TOTP gebruiken"
+              }
+            },
+            "totpRecovery": {
+              "subtitle": "Voer een herstelcode in",
+              "form": {
+                "label": "Herstelcode",
+                "placeholder": "Voer een herstelcode in"
+              }
+            }
+          }
+        },
+        "register": {
+          "title": "Registreren",
+          "subtitle": "Voer uw gegevens in om te registreren",
+          "form": {
+            "email": "E-mail",
+            "firstName": "Voornaam",
+            "lastName": "Achternaam"
+          },
+          "button": {
+            "register": "Registreren"
+          }
+        },
+        "forgotPassword": {
+          "title": "Wachtwoord vergeten",
+          "subtitle": "Voer uw e-mailadres in om instructies te ontvangen voor het opnieuw instellen van uw wachtwoord",
+          "form": {
+            "email": "E-mail"
+          },
+          "button": {
+            "request": "Wachtwoordreset aanvragen"
+          },
+          "success": "Er is een e-mail naar u verzonden met instructies voor het opnieuw instellen van uw wachtwoord."
+        },
+        "resetPassword": {
+          "title": "Wachtwoord opnieuw instellen",
+          "subtitle": "Voer uw nieuwe wachtwoord in",
+          "form": {
+            "confirmPassword": "Wachtwoord bevestigen"
+          },
+          "button": {
+            "reset": "Wachtwoord opnieuw instellen"
+          },
+          "toast": {
+            "success": "Wachtwoord opnieuw ingesteld."
+          }
+        },
+        "oauth": {
+          "title": "Authenticeren met OAuth",
+          "subtitle": "Kies een van de onderstaande aanbieders om in te loggen"
+        }
+      },
+      "account": {
+        "home": {
+          "title": "Servers",
+          "tooltip": {
+            "removeFromGroup": "Uit groep verwijderen",
+            "addToGroup": "Aan groep toevoegen",
+            "addServerToGroup": "Server aan groep toevoegen",
+            "groupActions": "Groepsacties",
+            "noGroups": "Geen groepen beschikbaar om server aan toe te voegen",
+            "noGroup": "Deze server behoort niet tot een groep"
+          },
+          "tabs": {
+            "groupedServers": {
+              "title": "Gegroepeerde servers",
+              "page": {
+                "button": {
+                  "createGroup": "Groep aanmaken"
+                },
+                "modal": {
+                  "createServerGroup": {
+                    "title": "Servergroep aanmaken",
+                    "toast": {
+                      "created": "Servergroep aangemaakt."
+                    }
+                  },
+                  "editServerGroup": {
+                    "title": "Servergroep bewerken",
+                    "toast": {
+                      "updated": "Servergroep bijgewerkt."
+                    }
+                  },
+                  "deleteServerGroup": {
+                    "title": "Verwijderen van servergroep bevestigen",
+                    "content": "Weet u zeker dat u **{group}** wilt verwijderen van uw account?",
+                    "toast": {
+                      "deleted": "Servergroep verwijderd."
+                    }
+                  },
+                  "addServerToGroup": {
+                    "title": "Server toevoegen aan {group}",
+                    "noServers": "Alle servers zijn al in deze groep.",
+                    "toast": {
+                      "added": "Server toegevoegd aan groep."
+                    }
+                  }
+                },
+                "noGroups": "Geen groepen gevonden. Tijd om er een aan te maken?"
+              }
+            },
+            "allServers": {
+              "title": "Alle servers",
+              "page": {
+                "input": {
+                  "showOtherUsersServers": "Servers van andere gebruikers weergeven"
+                },
+                "modal": {
+                  "addToServerGroup": {
+                    "title": "{server} toevoegen aan servergroep",
+                    "form": {
+                      "serverGroup": "Servergroep"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "bulkActions": {
+            "selectionMode": "Selectiemodus",
+            "select": "Server selecteren",
+            "deselect": "Server deselecteren",
+            "success": "{servers} succesvol {action}.",
+            "partial": "{successfulServers} succesvol {action}. {failedServers} mislukt.",
+            "groupActions": "Groepsacties"
+          },
+          "noServers": "Geen servers gevonden. Tijd om er een toe te voegen?"
+        },
+        "admin": {
+          "title": "Beheerder"
+        },
+        "account": {
+          "title": "Account",
+          "alert": {
+            "requireTwoFactor": {
+              "title": "Tweestapsverificatie vereist",
+              "description": "Tweestapsverificatie is vereist voor uw account. Stel het hieronder in om het panel te blijven gebruiken."
+            }
+          },
+          "containers": {
+            "password": {
+              "title": "Wachtwoord",
+              "toast": {
+                "updated": "Wachtwoord succesvol bijgewerkt."
+              },
+              "form": {
+                "currentPassword": "Huidig wachtwoord",
+                "newPassword": "Nieuw wachtwoord",
+                "confirmNewPassword": "Nieuw wachtwoord bevestigen"
+              }
+            },
+            "email": {
+              "title": "E-mail",
+              "toast": {
+                "updated": "E-mailadres succesvol bijgewerkt."
+              },
+              "form": {
+                "newEmail": "Nieuw e-mailadres",
+                "currentPassword": "Huidig wachtwoord"
+              }
+            },
+            "twoFactor": {
+              "title": "Tweestapsverificatie",
+              "toast": {
+                "disabled": "Tweestapsverificatie succesvol uitgeschakeld.",
+                "enabled": "Tweestapsverificatie succesvol ingeschakeld. Kopieer uw herstelcodes."
+              },
+              "modal": {
+                "disableTwoFactor": {
+                  "title": "Tweestapsverificatie uitschakelen",
+                  "description": "Het uitschakelen van tweestapsverificatie maakt uw account minder veilig.",
+                  "form": {
+                    "code": "Authenticatiecode"
+                  }
+                },
+                "setupTwoFactor": {
+                  "title": "Tweestapsverificatie instellen",
+                  "description": "Bescherm uw account tegen ongeautoriseerde toegang. U wordt gevraagd om een verificatiecode bij elke aanmelding.",
+                  "descriptionQR": "Scan de bovenstaande QR-code met uw tweestapsverificatie-app naar keuze. Voer vervolgens de gegenereerde 6-cijferige code in het onderstaande veld in.",
+                  "form": {
+                    "code": "Authenticatiecode"
+                  }
+                },
+                "recoveryCodes": {
+                  "title": "Herstelcodes",
+                  "description": "Hieronder staan uw herstelcodes. Bewaar deze op een veilige plek. Als u geen toegang meer heeft tot uw authenticatieapparaat, kunt u deze codes gebruiken om toegang tot uw account te herkrijgen."
+                }
+              },
+              "button": {
+                "disableTwoFactor": "Tweestapsverificatie uitschakelen",
+                "setupTwoFactor": "Tweestapsverificatie instellen"
+              },
+              "twoFactorEnabled": "Tweestapsverificatie is momenteel ingeschakeld.",
+              "twoFactorDisabled": "Tweestapsverificatie is momenteel niet ingeschakeld op uw account. Klik op de onderstaande knop om het in te stellen.",
+              "twoFactorLastUsed": "Laatst gebruikt: {timestamp}"
+            },
+            "account": {
+              "title": "Accountgegevens",
+              "toast": {
+                "updated": "Accountgegevens succesvol bijgewerkt."
+              },
+              "form": {
+                "nameFirst": "Voornaam",
+                "nameLast": "Achternaam",
+                "username": "Gebruikersnaam",
+                "language": "Taal",
+                "toastPosition": "Meldingspositie",
+                "startOnGroupedServers": "Starten op de pagina Gegroepeerde servers"
+              }
+            },
+            "avatar": {
+              "title": "Avatar",
+              "toast": {
+                "updated": "Avatar succesvol bijgewerkt.",
+                "removed": "Avatar succesvol verwijderd."
+              },
+              "form": {
+                "avatar": "Avatar"
+              }
+            }
+          }
+        },
+        "securityKeys": {
+          "title": "Beveiligingssleutels",
+          "table": {
+            "columns": {
+              "credentialId": "Referentie-ID"
+            }
+          },
+          "tooltip": {
+            "secureContextRequired": "Een beveiligde context (HTTPS) is vereist om beveiligingssleutels te gebruiken."
+          },
+          "modal": {
+            "createSecurityKey": {
+              "title": "Beveiligingssleutel aanmaken",
+              "toast": {
+                "created": "Beveiligingssleutel succesvol aangemaakt.",
+                "aborted": "Aanmaken van beveiligingssleutel afgebroken."
+              }
+            },
+            "editSecurityKey": {
+              "title": "Beveiligingssleutel bewerken",
+              "toast": {
+                "updated": "Beveiligingssleutel succesvol bijgewerkt."
+              }
+            },
+            "deleteSecurityKey": {
+              "title": "Verwijderen van beveiligingssleutel bevestigen",
+              "content": "Weet u zeker dat u **{key}** wilt verwijderen van uw account?",
+              "toast": {
+                "deleted": "Beveiligingssleutel succesvol verwijderd."
+              }
+            }
+          }
+        },
+        "sessions": {
+          "title": "Sessies",
+          "table": {
+            "columns": {
+              "ip": "IP",
+              "thisDevice": "Dit apparaat?",
+              "userAgent": "Gebruikersagent"
+            }
+          },
+          "modal": {
+            "deleteSession": {
+              "title": "Verwijderen van sessie bevestigen",
+              "content": "Weet u zeker dat u de sessie **{ip}** wilt verwijderen van uw account?",
+              "toast": {
+                "deleted": "Sessie verwijderd."
+              }
+            }
+          }
+        },
+        "shortcuts": {
+          "title": "Sneltoetsen",
+          "description": "Gebruik deze sneltoetsen om efficiënter door het panel te navigeren.",
+          "detectedMac": "macOS gedetecteerd",
+          "detectedWindows": "Windows/Linux gedetecteerd",
+          "fileManager": {
+            "title": "Bestandsbeheer",
+            "selectAll": "Alle bestanden selecteren",
+            "cutFiles": "Geselecteerde bestanden knippen",
+            "copyFiles": "Geselecteerde bestanden kopiëren",
+            "duplicateFile": "Geselecteerd bestand dupliceren",
+            "pasteFiles": "Bestanden plakken",
+            "searchFiles": "Bestanden zoeken",
+            "moveUpDirectory": "Een map omhoog",
+            "moveUpSelection": "Selectie omhoog verplaatsen",
+            "moveDownSelection": "Selectie omlaag verplaatsen",
+            "renameFile": "Bestand hernoemen",
+            "deselectAll": "Alle bestanden deselecteren",
+            "deleteFiles": "Geselecteerde bestanden verwijderen"
+          },
+          "table": {
+            "title": "Tabelnavigatie",
+            "previousPage": "Vorige pagina",
+            "nextPage": "Volgende pagina",
+            "firstPage": "Eerste pagina",
+            "lastPage": "Laatste pagina"
+          },
+          "console": {
+            "title": "Serverconsole",
+            "searchContent": "Zoeken in console-uitvoer",
+            "previousCommand": "Vorige opdracht in geschiedenis",
+            "nextCommand": "Volgende opdracht in geschiedenis"
+          },
+          "serverList": {
+            "title": "Serverlijst",
+            "selectServer": "Houd S ingedrukt en klik om server te selecteren/deselecteren"
+          }
+        },
+        "sshKeys": {
+          "title": "SSH-sleutels",
+          "button": {
+            "import": "Importeren"
+          },
+          "table": {
+            "columns": {
+              "fingerprint": "Vingerafdruk"
+            }
+          },
+          "modal": {
+            "createSshKey": {
+              "title": "SSH-sleutel aanmaken",
+              "toast": {
+                "created": "SSH-sleutel aangemaakt."
+              },
+              "button": {
+                "uploadKeyFile": "Sleutelbestand uploaden"
+              },
+              "form": {
+                "publicKey": "Publieke sleutel"
+              }
+            },
+            "editSshKey": {
+              "title": "SSH-sleutel bewerken",
+              "toast": {
+                "updated": "SSH-sleutel bijgewerkt."
+              }
+            },
+            "importSshKeys": {
+              "title": "SSH-sleutels importeren",
+              "toast": {
+                "created": "{sshKeys} aangemaakt."
+              },
+              "form": {
+                "provider": "Aanbieder",
+                "username": "Gebruikersnaam"
+              }
+            },
+            "deleteSshKey": {
+              "title": "Verwijderen van SSH-sleutel bevestigen",
+              "content": "Weet u zeker dat u **{name}** wilt verwijderen van uw account?",
+              "toast": {
+                "removed": "SSH-sleutel verwijderd."
+              }
+            }
+          }
+        },
+        "commandSnippets": {
+          "title": "Opdrachtfragmenten",
+          "table": {
+            "columns": {
+              "eggs": "Eggs"
+            }
+          },
+          "form": {
+            "eggs": "Eggs",
+            "command": "Opdracht"
+          },
+          "modal": {
+            "createCommandSnippet": {
+              "title": "Opdrachtfragment aanmaken",
+              "toast": {
+                "created": "Opdrachtfragment aangemaakt."
+              }
+            },
+            "editCommandSnippet": {
+              "title": "Opdrachtfragment bewerken",
+              "toast": {
+                "updated": "Opdrachtfragment bijgewerkt."
+              }
+            },
+            "deleteCommandSnippet": {
+              "title": "Verwijderen van opdrachtfragment bevestigen",
+              "content": "Weet u zeker dat u **{name}** wilt verwijderen van uw account?",
+              "toast": {
+                "removed": "Opdrachtfragment verwijderd."
+              }
+            }
+          }
+        },
+        "oauthLinks": {
+          "title": "OAuth-koppelingen",
+          "button": {
+            "connect": "Verbinden",
+            "connectTo": "Verbinden met {provider}"
+          },
+          "table": {
+            "columns": {
+              "providerName": "Aanbiedernaam",
+              "identifier": "Identificatie"
+            }
+          },
+          "modal": {
+            "deleteOAuthLink": {
+              "title": "Verwijderen van OAuth-koppeling bevestigen",
+              "content": "Weet u zeker dat u de **{provider}**-verbinding wilt verwijderen van uw account?",
+              "toast": {
+                "removed": "OAuth-koppeling verwijderd."
+              }
+            }
+          }
+        },
+        "apiKeys": {
+          "title": "API-sleutels",
+          "button": {
+            "apiDocumentation": "API-documentatie"
+          },
+          "table": {
+            "columns": {
+              "key": "Sleutel",
+              "permissions": "Gebruiker / Server / Beheerdersrechten",
+              "expires": "Verloopt"
+            }
+          },
+          "modal": {
+            "createApiKey": {
+              "title": "API-sleutel aanmaken",
+              "toast": {
+                "created": "API-sleutel aangemaakt."
+              }
+            },
+            "updateApiKey": {
+              "title": "API-sleutel bijwerken",
+              "toast": {
+                "updated": "API-sleutel bijgewerkt."
+              }
+            },
+            "deleteApiKey": {
+              "title": "Verwijderen van API-sleutel bevestigen",
+              "content": "Weet u zeker dat u **{name}** wilt verwijderen van uw account?",
+              "toast": {
+                "removed": "API-sleutel verwijderd."
+              }
+            }
+          },
+          "form": {
+            "allowedIps": "Toegestane IP-adressen",
+            "allowedIpsPlaceholder": "bijv. 192.168.1.1, 2001:db8::1",
+            "userPermissions": "Gebruikersrechten",
+            "serverPermissions": "Serverrechten",
+            "adminPermissions": "Beheerdersrechten"
+          }
+        },
+        "activity": {
+          "title": "Activiteit"
+        }
+      },
+      "admin": {},
+      "server": {
+        "viewAdmin": {
+          "title": "Bekijk als beheerder"
+        },
+        "console": {
+          "title": "Console",
+          "input": {
+            "placeholder": "Typ een opdracht...",
+            "ariaLabel": "Console-opdrachtinvoer."
+          },
+          "toast": {
+            "installCancelled": "Serverinstallatie geannuleerd."
+          },
+          "modal": {
+            "sshDetails": {
+              "title": "SSH-gegevens",
+              "form": {
+                "protocol": "Protocol",
+                "port": "Poort",
+                "host": "Host",
+                "username": "Gebruikersnaam",
+                "password": "Wachtwoord",
+                "yourPassword": "Uw configuratiepanelwachtwoord",
+                "command": "SSH-opdracht"
+              },
+              "launch": "Starten"
+            }
+          },
+          "notification": {
+            "nodeMaintenance": "Uw server bevindt zich op een node die momenteel in onderhoud is.",
+            "transferring": "Uw server wordt momenteel overgedragen naar een andere node.",
+            "restoringBackup": "Uw server herstelt momenteel een back-up. Een moment geduld...",
+            "installing": "Uw server wordt momenteel geïnstalleerd. Een moment geduld..."
+          },
+          "message": {
+            "serverMarkedAs": "Server gemarkeerd als {state}...",
+            "installFailed": "Installatie mislukt.",
+            "installCompleted": "Installatie succesvol voltooid.",
+            "transferFailed": "Overdracht mislukt.",
+            "transferCompleted": "Overdracht succesvol voltooid. Opnieuw verbinden met server...",
+            "pullingImage": "Uw server haalt momenteel zijn Docker-image op. Een moment geduld...",
+            "pulling": "Ophalen",
+            "extracting": "Uitpakken",
+            "layer": "Laag"
+          },
+          "tooltip": {
+            "search": "Zoeken",
+            "sshDetails": "SSH-gegevens",
+            "commandHistory": "Opdrachtgeschiedenis",
+            "decreaseFontSize": "Lettergrootte verkleinen",
+            "increaseFontSize": "Lettergrootte vergroten"
+          },
+          "drawer": {
+            "commandHistory": {
+              "title": "Opdrachtgeschiedenis",
+              "detailTitle": "Opdrachtdetails",
+              "noCommands": "Geen opdrachten gevonden.",
+              "copyButton": "Opdracht kopiëren",
+              "sendButton": "Opdracht verzenden",
+              "commandSent": "Opdracht succesvol verzonden."
+            }
+          },
+          "feature": {
+            "eula": {
+              "title": "Akkoord met Minecraft EULA",
+              "content": "De Minecraft-server vereist dat u akkoord gaat met de [Minecraft Eindgebruikerslicentieovereenkomst](https://minecraft.net/eula) voordat deze kan starten.",
+              "contentDetails": "Door op \"EULA accepteren\" te klikken, gaat u akkoord met de Minecraft EULA en wordt het bestand **eula.txt** bijgewerkt naar **eula=true**.",
+              "toast": {
+                "accepted": "EULA succesvol geaccepteerd."
+              },
+              "button": {
+                "accept": "EULA accepteren"
+              }
+            }
+          },
+          "details": {
+            "address": "Adres",
+            "port": "Poort",
+            "uptime": "Uptime",
+            "cpuLoad": "CPU-belasting",
+            "memoryLoad": "Geheugenbelasting",
+            "diskUsage": "Schijfgebruik",
+            "networkIn": "Netwerk (in)",
+            "networkOut": "Netwerk (uit)",
+            "normalizeCpuLoad": "CPU-belasting normaliseren (verschoven naar max. 100%)"
+          },
+          "power": {
+            "modal": {
+              "forceStop": {
+                "title": "Proces geforceerd stoppen",
+                "content": "Het geforceerd stoppen van een server kan leiden tot gegevensbeschadiging."
+              }
+            }
+          },
+          "stats": {
+            "cpuLoad": "CPU-belasting",
+            "memoryLoad": "Geheugenbelasting",
+            "network": "Netwerk",
+            "inbound": "Inkomend",
+            "outbound": "Uitgaand"
+          },
+          "socketConnected": "Verbonden ({ping}ms ping)",
+          "socketDisconnected": "Verbinding verbroken"
+        },
+        "files": {
+          "title": "Bestanden",
+          "titleEditorViewing": "{file} bekijken",
+          "titleEditorEditing": "{file} bewerken",
+          "titleEditorNew": "Nieuw bestand",
+          "table": {
+            "columns": {
+              "modified": "Gewijzigd"
+            }
+          },
+          "button": {
+            "new": "Nieuw",
+            "sftpDetails": "SFTP-gegevens",
+            "openInNewWindow": "Openen in nieuw venster",
+            "details": "Details",
+            "rename": "Hernoemen",
+            "copy": "Kopiëren",
+            "move": "Verplaatsen",
+            "fingerprint": "Vingerafdruk",
+            "permissions": "Rechten",
+            "unarchive": "Uitpakken",
+            "archive": "Archiveren",
+            "more": "Meer",
+            "remoteCopy": "Op afstand kopiëren",
+            "search": "Zoeken",
+            "exitBackup": "Back-up verlaten",
+            "fileFromEditor": "Bestand vanuit editor",
+            "directory": "Map",
+            "fileFromPull": "Bestand ophalen",
+            "fileFromUpload": "Bestand uploaden",
+            "directoryFromUpload": "Map uploaden"
+          },
+          "actionBar": {
+            "copyHere": "{files} hier kopiëren",
+            "moveHere": "{files} hier verplaatsen"
+          },
+          "searchBanner": {
+            "resultsTitle": "Zoekresultaten ({files} gevonden)",
+            "query": "Zoekopdracht:",
+            "excluded": "Uitgesloten:",
+            "content": "Inhoud:",
+            "size": "Grootte:",
+            "min": "Min:",
+            "max": "Max:"
+          },
+          "operations": {
+            "uploadingFolder": "Map uploaden: {folder} ({files})",
+            "waiting": "Wachten: ",
+            "uploading": "Uploaden: ",
+            "compressing": "{files} comprimeren vanuit {path}",
+            "decompressing": "{path} decomprimeren",
+            "pulling": "{destination} ophalen",
+            "copying": "{path} kopiëren naar {destination}",
+            "copyingMany": "{files} kopiëren",
+            "receivingRemote": "{files} ontvangen van externe server",
+            "sendingRemote": "{files} verzenden naar externe server"
+          },
+          "dropzone": {
+            "title": "Bestanden hier neerzetten om te uploaden",
+            "subtitle": "Loslaten om te beginnen met uploaden"
+          },
+          "settings": {
+            "clickOnce": "Eén keer klikken om bestand of map te openen",
+            "preferPhysicalSize": "Fysieke grootte weergeven in plaats van logische grootte",
+            "editorMinimap": "Bestandsminimap weergeven",
+            "editorLineOverflow": "Regeloverloop inpakken",
+            "imageViewerSmoothing": "Afbeelding vloeiend maken (anti-aliasing)"
+          },
+          "toast": {
+            "operationCancelled": "Bewerking geannuleerd",
+            "copyingStarted": "{files} begint met kopiëren.",
+            "filesCouldNotBeMoved": "Bestanden konden niet worden verplaatst.",
+            "filesMoved": "{files} verplaatst.",
+            "downloadStarted": "Download gestart.",
+            "filesDeleted": "Bestanden zijn verwijderd.",
+            "archiveCreationStarted": "Aanmaken van archief gestart.",
+            "fileCopyingStarted": "Kopiëren van bestand gestart.",
+            "fileInfoRetrieved": "Bestandsinformatie succesvol opgehaald.",
+            "filePullingStarted": "Ophalen van bestand gestart.",
+            "fileRenamed": "Bestand is hernoemd.",
+            "fileCouldNotBeRenamed": "Bestand kon niet worden hernoemd.",
+            "permissionsUpdated": "Rechten zijn bijgewerkt.",
+            "fileSaved": "Bestand is opgeslagen."
+          },
+          "modal": {
+            "activeUploads": {
+              "title": "Actieve uploads",
+              "content": "Weet u zeker dat u deze pagina wilt verlaten? U heeft {files} actieve bestandsuploads. Als u de pagina verlaat, worden de uploads afgebroken.",
+              "button": {
+                "leave": "Pagina verlaten"
+              }
+            },
+            "unsavedChanges": {
+              "title": "Niet-opgeslagen wijzigingen",
+              "content": "U heeft niet-opgeslagen wijzigingen in de bestandseditor. Weet u zeker dat u deze pagina wilt verlaten? Als u de pagina verlaat, gaan uw wijzigingen verloren.",
+              "button": {
+                "leave": "Pagina verlaten"
+              }
+            },
+            "createArchive": {
+              "title": "Archief aanmaken",
+              "form": {
+                "archiveName": "Archiefnaam",
+                "format": "Formaat"
+              },
+              "createdAs": "Dit archief wordt aangemaakt als "
+            },
+            "createDirectory": {
+              "title": "Map aanmaken",
+              "form": {
+                "directoryName": "Mapnaam"
+              },
+              "createdAs": "Deze map wordt aangemaakt als "
+            },
+            "copyFile": {
+              "title": "Bestand kopiëren",
+              "form": {
+                "fileName": "Bestandsnaam"
+              },
+              "createdAs": "Dit bestand wordt aangemaakt als "
+            },
+            "copyRemote": {
+              "title": "Bestanden op afstand kopiëren",
+              "form": {
+                "server": "Server",
+                "destination": "Bestemming"
+              },
+              "createdAs": "Deze bestanden worden aangemaakt op de externe server onder "
+            },
+            "fileFingerprints": {
+              "title": "Bestandsvingerafdruk",
+              "form": {
+                "algorithm": "Algoritme",
+                "fingerprint": "Vingerafdruk"
+              },
+              "button": {
+                "calculate": "Vingerafdruk berekenen"
+              }
+            },
+            "deleteFile": {
+              "title": "Bestand verwijderen",
+              "singleFileWarning": "U kunt de inhoud van {file} niet herstellen nadat het is verwijderd.",
+              "multipleFilesWarning": "U kunt de inhoud van de volgende bestanden niet herstellen nadat ze zijn verwijderd."
+            },
+            "createFile": {
+              "title": "Bestand aanmaken",
+              "form": {
+                "fileName": "Bestandsnaam"
+              }
+            },
+            "details": {
+              "title": "Bestandsdetails",
+              "path": "Pad",
+              "mode": "Modus",
+              "logicalSize": "Logische grootte",
+              "physicalSize": "Fysieke grootte",
+              "mimeType": "MIME-type",
+              "lastModifiedAt": "Laatst gewijzigd op",
+              "createdAt": "Aangemaakt op"
+            },
+            "filePermissions": {
+              "title": "Bestandsrechten",
+              "symbolic": "Symbolisch:",
+              "octal": "Octaal:",
+              "owner": "Eigenaar",
+              "group": "Groep",
+              "other": "Overig",
+              "breakdown": "Rechtenopbouw",
+              "readPermission": "Leesrecht (4)",
+              "writePermission": "Schrijfrecht (2)",
+              "executePermission": "Uitvoerrecht (1)"
+            },
+            "renameFile": {
+              "title": "Bestand hernoemen",
+              "form": {
+                "fileName": "Bestandsnaam"
+              }
+            },
+            "searchFiles": {
+              "title": "Bestanden zoeken",
+              "placeholder": "Zoek naar bestanden...",
+              "advancedFilters": "Geavanceerde filters",
+              "pathPatterns": "Padpatronen",
+              "include": "Opnemen",
+              "exclude": "Uitsluiten",
+              "caseInsensitive": "Hoofdletterongevoelig",
+              "fileContent": "Bestandsinhoud",
+              "searchText": "Zoektekst",
+              "maxFileSize": "Maximale bestandsgrootte",
+              "includeOversized": "Te grote bestanden opnemen",
+              "includeOversizedDescription": "Bestanden opnemen die aan andere filters voldoen maar te groot zijn om te doorzoeken",
+              "fileSize": "Bestandsgrootte",
+              "minimum": "Minimum",
+              "maximum": "Maximum"
+            },
+            "pullFile": {
+              "title": "Bestand ophalen",
+              "form": {
+                "fileUrl": "Bestands-URL",
+                "query": "Zoekopdracht",
+                "fileName": "Bestandsnaam"
+              },
+              "createdAs": "Dit bestand wordt aangemaakt als ",
+              "pull": "Ophalen"
+            },
+            "sftpDetails": {
+              "title": "SFTP-gegevens",
+              "form": {
+                "protocol": "Protocol",
+                "port": "Poort",
+                "host": "Host",
+                "username": "Gebruikersnaam",
+                "password": "Wachtwoord",
+                "yourPassword": "Uw configuratiepanelwachtwoord"
+              },
+              "launch": "Starten"
+            }
+          }
+        },
+        "databases": {
+          "title": "Databases",
+          "subtitle": "{current} van {max} maximale databases aangemaakt.",
+          "tooltip": {
+            "limitReached": "Deze server is beperkt tot {max} databases."
+          },
+          "table": {
+            "columns": {
+              "type": "Type",
+              "address": "Adres",
+              "locked": "Vergrendeld?"
+            }
+          },
+          "button": {
+            "details": "Details",
+            "recreate": "Opnieuw aanmaken",
+            "rotatePassword": "Wachtwoord roteren"
+          },
+          "form": {
+            "databaseName": "Databasenaam"
+          },
+          "modal": {
+            "createDatabase": {
+              "title": "Database aanmaken",
+              "toast": {
+                "created": "Database aangemaakt."
+              },
+              "form": {
+                "databaseHost": "Databasehost",
+                "noHostsFound": "Geen hosts gevonden"
+              }
+            },
+            "editDatabase": {
+              "title": "Database bewerken",
+              "toast": {
+                "updated": "Database bijgewerkt."
+              },
+              "form": {
+                "locked": "Vergrendeld"
+              }
+            },
+            "databaseDetails": {
+              "title": "Databaseverbindingsgegevens",
+              "toast": {
+                "passwordRotated": "Wachtwoord is geroteerd."
+              },
+              "form": {
+                "jdbcConnectionString": "JDBC-verbindingsreeks"
+              }
+            },
+            "recreateDatabase": {
+              "title": "Opnieuw aanmaken van database bevestigen",
+              "content": "Het opnieuw aanmaken van een database verwijdert alle gegevens in de **{name}** database permanent en maakt een nieuwe aan met dezelfde verbindingsgegevens.",
+              "toast": {
+                "recreated": "Database opnieuw aangemaakt."
+              }
+            },
+            "deleteDatabase": {
+              "title": "Verwijderen van database bevestigen",
+              "content": "Het verwijderen van een database is permanent en kan niet ongedaan worden gemaakt. Dit verwijdert de **{name}** database en alle bijbehorende gegevens permanent.",
+              "toast": {
+                "deleted": "Database verwijderd."
+              }
+            }
+          }
+        },
+        "schedules": {
+          "title": "Planningen",
+          "subtitle": "{current} van {max} maximale planningen aangemaakt.",
+          "dropzone": {
+            "title": "Bestanden hier neerzetten om te importeren als planningen",
+            "subtitle": "Loslaten om te beginnen met importeren"
+          },
+          "tooltip": {
+            "limitReached": "Deze server is beperkt tot {max} planningen."
+          },
+          "table": {
+            "columns": {
+              "lastRun": "Laatste uitvoering",
+              "lastFailure": "Laatste mislukking",
+              "status": "Status"
+            }
+          },
+          "button": {
+            "import": "Importeren",
+            "trigger": "Activeren",
+            "triggerWithCondition": "Activeren (conditie niet overslaan)",
+            "triggerSkipCondition": "Activeren (conditie overslaan)",
+            "addTrigger": "Trigger toevoegen",
+            "addCondition": "Conditie toevoegen",
+            "addStep": "Stap toevoegen",
+            "createFirstStep": "Eerste stap aanmaken",
+            "addOutput": "Uitvoer toevoegen",
+            "addFile": "Bestand toevoegen",
+            "exitEditor": "Editor verlaten"
+          },
+          "toast": {
+            "imported": "Planning geïmporteerd.",
+            "created": "Planning aangemaakt.",
+            "updated": "Planning bijgewerkt.",
+            "deleted": "Planning verwijderd.",
+            "triggered": "Planning geactiveerd.",
+            "exported": "Planning geëxporteerd.",
+            "parseError": "Verwerken van planning mislukt: {error}",
+            "step": {
+              "created": "Planningsstap aangemaakt.",
+              "updated": "Planningsstap bijgewerkt.",
+              "deleted": "Planningsstap verwijderd."
+            }
+          },
+          "enum": {
+            "schedulePreConditionType": {
+              "none": "Geen",
+              "and": "EN (Alle moeten waar zijn)",
+              "or": "OF (Minstens één moet waar zijn)",
+              "not": "NIET (Mag niet waar zijn)",
+              "serverState": "Serverstatus",
+              "uptime": "Uptime",
+              "cpuUsage": "CPU-gebruik",
+              "memoryUsage": "Geheugengebruik",
+              "diskUsage": "Schijfgebruik",
+              "fileExists": "Bestand bestaat"
+            },
+            "scheduleConditionType": {
+              "none": "Geen",
+              "and": "EN (Alle moeten waar zijn)",
+              "or": "OF (Minstens één moet waar zijn)",
+              "not": "NIET (Mag niet waar zijn)",
+              "variableExists": "Variabele bestaat",
+              "variableContains": "Variabele bevat",
+              "variableEquals": "Variabele is gelijk aan",
+              "variableStartsWith": "Variabele begint met",
+              "variableEndsWith": "Variabele eindigt met"
+            },
+            "scheduleComparator": {
+              "smallerThan": "Kleiner dan",
+              "smallerThanOrEqual": "Kleiner dan of gelijk aan",
+              "equal": "Gelijk aan",
+              "greaterThanOrEqual": "Groter dan of gelijk aan",
+              "greaterThan": "Groter dan"
+            }
+          },
+          "modal": {
+            "createSchedule": {
+              "title": "Planning aanmaken"
+            },
+            "updateSchedule": {
+              "title": "Planning bijwerken"
+            },
+            "deleteSchedule": {
+              "title": "Verwijderen van planning bevestigen",
+              "content": "Weet u zeker dat u {name} wilt verwijderen van deze server?"
+            },
+            "createStep": {
+              "title": "Planningsstap aanmaken"
+            },
+            "editStep": {
+              "title": "Planningsstap bewerken"
+            },
+            "deleteStep": {
+              "title": "Verwijderen van planningsstap bevestigen",
+              "content": "Weet u zeker dat u deze planningsstap wilt verwijderen?"
+            }
+          },
+          "view": {
+            "badge": {
+              "running": "Actief"
+            },
+            "tooltip": {
+              "cannotTrigger": "Kan een uitgeschakelde planning niet activeren"
+            },
+            "tabs": {
+              "actions": "Acties",
+              "conditions": "Condities",
+              "triggers": "Triggers"
+            },
+            "sections": {
+              "actions": "Planningsacties",
+              "preConditions": "Planningsvoorwaarden",
+              "triggers": "Planningstriggers"
+            },
+            "alert": {
+              "noActions": "Geen acties geconfigureerd voor deze planning",
+              "noTriggers": "Geen triggers geconfigureerd voor deze planning"
+            }
+          },
+          "form": {
+            "scheduleName": "Planningsnaam",
+            "enabled": "Ingeschakeld",
+            "triggersList": "Triggers",
+            "triggerNumber": "Trigger {number}",
+            "actionType": "Actietype",
+            "conditionType": "Conditietype",
+            "serverState": "Serverstatus",
+            "comparator": "Vergelijker",
+            "rootPath": "Hoofdpad",
+            "outputInto": "Uitvoer naar",
+            "caseInsensitive": "Hoofdletterongevoelig",
+            "ignoreFailure": "Mislukking negeren",
+            "runInForeground": "Op voorgrond uitvoeren"
+          },
+          "condition": {
+            "variable": "Variabele",
+            "equals": "Is gelijk aan",
+            "contains": "Bevat",
+            "startsWith": "Begint met",
+            "endsWith": "Eindigt met",
+            "allMustBeTrue": "Alle condities moeten waar zijn:",
+            "anyMustBeTrue": "Minstens één conditie moet waar zijn:",
+            "mustNotBeTrue": "Conditie mag niet waar zijn:"
+          },
+          "preCondition": {
+            "valueSeconds": "Waarde (seconden)",
+            "valuePercent": "Waarde (%)",
+            "value": "Waarde",
+            "filePath": "Bestandspad"
+          },
+          "triggers": {
+            "cron": {
+              "title": "Cron",
+              "form": {
+                "cronSchedule": "Cron-planning"
+              },
+              "card": {
+                "content": "Op cron-interval `{schedule}`, volgende uitvoering is {timestamp} - laatste uitvoering was {lastTimestamp}."
+              }
+            },
+            "powerAction": {
+              "title": "Stroomactie",
+              "form": {
+                "powerAction": "Stroomactie"
+              },
+              "card": {
+                "content": "Wanneer stroomactie `{action}` wordt gevraagd."
+              }
+            },
+            "serverState": {
+              "title": "Serverstatus",
+              "card": {
+                "content": "Wanneer serverstatus `{state}` wordt bereikt."
+              }
+            },
+            "backupStatus": {
+              "title": "Back-upstatus",
+              "form": {
+                "backupStatus": "Back-upstatus"
+              },
+              "card": {
+                "content": "Wanneer back-up status `{status}` bereikt."
+              }
+            },
+            "consoleLine": {
+              "title": "Consoleregel",
+              "form": {
+                "lineContains": "Regel bevat"
+              },
+              "card": {
+                "content": "Wanneer console-uitvoer een regel bereikt die `{contains}` bevat"
+              }
+            },
+            "crash": {
+              "title": "Crash",
+              "card": {
+                "content": "Wanneer de server crasht."
+              }
+            }
+          },
+          "renderer": {
+            "noActionSelected": "Selecteer een actietype om te configureren",
+            "noActionDetails": "Actiedetails niet beschikbaar",
+            "ignoreFailure": "Mislukking negeren: {value}",
+            "foreground": "Voorgrond: {value}"
+          },
+          "steps": {
+            "empty": {
+              "title": "Geen stappen geconfigureerd",
+              "description": "Deze planning heeft nog geen stappen. Voeg acties toe om aan de slag te gaan."
+            },
+            "sleep": {
+              "title": "Wachten",
+              "form": {
+                "duration": "Duur (milliseconden)"
+              },
+              "renderer": {
+                "compact": "Wacht {duration}ms"
+              }
+            },
+            "ensure": {
+              "title": "Verzekeren",
+              "renderer": {
+                "compact": "Verzeker dat een conditie overeenkomt"
+              }
+            },
+            "format": {
+              "title": "Opmaken",
+              "form": {
+                "formatString": "Opmaaktekenreeks",
+                "formatStringDescription": "De opmaaktekenreeks, kan variabelen bevatten door ze te omsluiten met {wrapper}"
+              },
+              "renderer": {
+                "compact": "Maak een tekenreeks op in {outputInto}"
+              }
+            },
+            "matchRegex": {
+              "title": "Regex vergelijken",
+              "form": {
+                "input": "Invoer",
+                "regex": "Regex",
+                "outputs": "Uitvoeren",
+                "outputNumber": "Uitvoer {number}"
+              },
+              "renderer": {
+                "compact": "Vergelijk {input} met regex {regex}"
+              }
+            },
+            "waitForConsoleLine": {
+              "title": "Wachten op consoleregel",
+              "form": {
+                "lineContains": "Regel bevat",
+                "timeout": "Time-out (milliseconden)"
+              },
+              "renderer": {
+                "compact": "Wacht {timeout} op consoleregel met {contains}",
+                "detail": {
+                  "lineContains": "Regel moet bevatten: {contains}",
+                  "caseInsensitive": "Hoofdletterongevoelig: {value}",
+                  "timeout": "Time-out: {timeout}"
+                }
+              }
+            },
+            "sendCommand": {
+              "title": "Opdracht verzenden",
+              "form": {
+                "command": "Opdracht"
+              },
+              "renderer": {
+                "compact": "Voer {command} uit",
+                "detail": {
+                  "command": "Opdracht: {command}"
+                }
+              }
+            },
+            "sendPower": {
+              "title": "Stroomsignaal verzenden",
+              "form": {
+                "powerAction": "Stroomactie"
+              },
+              "renderer": {
+                "compact": "Voer {action} uit",
+                "detail": {
+                  "powerAction": "Stroomactie: {action}"
+                }
+              }
+            },
+            "createBackup": {
+              "title": "Back-up aanmaken",
+              "form": {
+                "backupName": "Back-upnaam",
+                "ignoredFiles": "Genegeerde bestanden"
+              },
+              "renderer": {
+                "compact": "Maak {name} aan",
+                "detail": {
+                  "backupName": "Back-upnaam: {name}",
+                  "ignoredFiles": "Genegeerde bestanden: {files}"
+                }
+              }
+            },
+            "createDirectory": {
+              "title": "Map aanmaken",
+              "form": {
+                "directoryName": "Mapnaam"
+              },
+              "renderer": {
+                "compact": "Maak {name} aan in {root}",
+                "detail": {
+                  "directory": "Map: {name}",
+                  "root": "Hoofdmap: {root}"
+                }
+              }
+            },
+            "writeFile": {
+              "title": "Bestand schrijven",
+              "form": {
+                "filePath": "Bestandspad",
+                "content": "Inhoud",
+                "appendToFile": "Toevoegen aan bestand"
+              },
+              "renderer": {
+                "compact": "Schrijf naar {file}",
+                "detail": {
+                  "file": "Bestand: {file}",
+                  "append": "Toevoegen: {value}"
+                }
+              }
+            },
+            "copyFile": {
+              "title": "Bestand kopiëren",
+              "form": {
+                "sourceFile": "Bronbestand",
+                "destination": "Bestemming"
+              },
+              "renderer": {
+                "compact": "Kopieer {file} naar {destination}",
+                "detail": {
+                  "from": "Van: {file}",
+                  "to": "Naar: {destination}"
+                }
+              }
+            },
+            "deleteFiles": {
+              "title": "Bestanden verwijderen",
+              "form": {
+                "filesToDelete": "Te verwijderen bestanden"
+              },
+              "renderer": {
+                "compact": "Verwijder {files}",
+                "detail": {
+                  "root": "Hoofdmap: {root}",
+                  "files": "Bestanden: {files}"
+                }
+              }
+            },
+            "renameFiles": {
+              "title": "Bestanden hernoemen",
+              "form": {
+                "files": "Bestanden",
+                "from": "van",
+                "to": "naar"
+              },
+              "renderer": {
+                "compact": "Hernoem {files}",
+                "detail": {
+                  "root": "Hoofdmap: {root}",
+                  "files": "Bestanden: {files}"
+                }
+              }
+            },
+            "compressFiles": {
+              "title": "Bestanden comprimeren",
+              "form": {
+                "filesToCompress": "Te comprimeren bestanden",
+                "archiveFormat": "Archiefformaat",
+                "archiveName": "Archiefnaam"
+              },
+              "renderer": {
+                "compact": "Comprimeer {files} in {root} naar {name}",
+                "detail": {
+                  "output": "Uitvoer: {name}",
+                  "root": "Hoofdmap: {root}",
+                  "format": "Formaat: {format}",
+                  "files": "Bestanden: {files}"
+                }
+              }
+            },
+            "decompressFile": {
+              "title": "Bestand decomprimeren",
+              "form": {
+                "file": "Bestand"
+              },
+              "renderer": {
+                "compact": "Decomprimeer {file} naar {root}",
+                "detail": {
+                  "file": "Bestand: {file}",
+                  "root": "Hoofdmap: {root}"
+                }
+              }
+            },
+            "updateStartupVariable": {
+              "title": "Opstartvariabele bijwerken",
+              "form": {
+                "envVariable": "Omgevingsvariabele",
+                "value": "Waarde"
+              },
+              "renderer": {
+                "compact": "Stel {variable} in op {value}",
+                "detail": {
+                  "variable": "Variabele: {variable}",
+                  "value": "Waarde: {value}"
+                }
+              }
+            },
+            "updateStartupCommand": {
+              "title": "Opstartcommando bijwerken",
+              "form": {
+                "startupCommand": "Opstartcommando"
+              },
+              "renderer": {
+                "compact": "Stel in op {command}",
+                "detail": {
+                  "command": "Opdracht: {command}"
+                }
+              }
+            },
+            "updateStartupDockerImage": {
+              "title": "Docker-image bijwerken",
+              "form": {
+                "dockerImage": "Docker-image"
+              },
+              "renderer": {
+                "compact": "Stel in op {image}",
+                "detail": {
+                  "image": "Image: {image}"
+                }
+              }
+            }
+          }
+        },
+        "subusers": {
+          "title": "Subgebruikers",
+          "table": {
+            "columns": {
+              "twoFactorEnabled": "2FA ingeschakeld",
+              "permissions": "Rechten",
+              "ignoredFiles": "Genegeerde bestanden"
+            }
+          },
+          "modal": {
+            "createSubuser": {
+              "title": "Subgebruiker aanmaken",
+              "toast": {
+                "created": "Subgebruiker aangemaakt."
+              },
+              "form": {
+                "email": "E-mail",
+                "emailPlaceholder": "Voer het e-mailadres in waaronder deze subgebruiker moet worden opgeslagen.",
+                "permissions": "Rechten",
+                "ignoredFiles": "Genegeerde bestanden"
+              }
+            },
+            "updateSubuser": {
+              "title": "Subgebruiker bijwerken",
+              "toast": {
+                "updated": "Subgebruiker bijgewerkt."
+              }
+            },
+            "removeSubuser": {
+              "title": "Verwijderen van subgebruiker bevestigen",
+              "content": "Weet u zeker dat u **{username}** wilt verwijderen van deze server?",
+              "toast": {
+                "removed": "Subgebruiker verwijderd."
+              }
+            }
+          }
+        },
+        "backups": {
+          "title": "Back-ups",
+          "subtitle": "{current} van {max} maximale back-ups aangemaakt.",
+          "tooltip": {
+            "limitReached": "Deze server is beperkt tot {max} back-ups."
+          },
+          "table": {
+            "columns": {
+              "checksum": "Controlesom",
+              "files": "Bestanden",
+              "locked": "Vergrendeld?"
+            }
+          },
+          "button": {
+            "browse": "Bladeren"
+          },
+          "toast": {
+            "downloadStarted": "Download gestart.",
+            "restoringBackup": "Back-up herstellen..."
+          },
+          "modal": {
+            "createBackup": {
+              "title": "Back-up aanmaken",
+              "toast": {
+                "created": "Back-up aangemaakt."
+              },
+              "form": {
+                "ignoredFiles": "Genegeerde bestanden"
+              }
+            },
+            "editBackup": {
+              "title": "Back-up bewerken",
+              "toast": {
+                "updated": "Back-up bijgewerkt."
+              },
+              "form": {
+                "locked": "Vergrendeld"
+              }
+            },
+            "restoreBackup": {
+              "title": "Back-up herstellen"
+            },
+            "deleteBackup": {
+              "title": "Verwijderen van back-up bevestigen",
+              "content": "Weet u zeker dat u **{name}** wilt verwijderen van deze server?",
+              "toast": {
+                "deleted": "Back-up verwijderd."
+              }
+            }
+          }
+        },
+        "network": {
+          "title": "Netwerk",
+          "subtitle": "{current} van {max} maximale toewijzingen toegewezen.",
+          "tooltip": {
+            "limitReached": "Deze server is beperkt tot {max} toewijzingen.",
+            "primary": "Primair"
+          },
+          "table": {
+            "columns": {
+              "hostname": "Hostnaam",
+              "port": "Poort",
+              "notes": "Notities"
+            }
+          },
+          "button": {
+            "setPrimary": "Instellen als primair",
+            "unsetPrimary": "Primair verwijderen"
+          },
+          "toast": {
+            "created": "Toewijzing aangemaakt.",
+            "updated": "Toewijzing bijgewerkt.",
+            "removed": "Toewijzing verwijderd.",
+            "setPrimary": "Toewijzing ingesteld als primair.",
+            "unsetPrimary": "Primaire instelling van toewijzing verwijderd."
+          },
+          "modal": {
+            "editAllocation": {
+              "title": "Toewijzing bewerken",
+              "form": {
+                "notes": "Notities"
+              }
+            },
+            "removeAllocation": {
+              "title": "Verwijderen van toewijzing bevestigen",
+              "content": "Weet u zeker dat u **{allocation}** wilt verwijderen van deze server?"
+            }
+          }
+        },
+        "startup": {
+          "title": "Opstarten",
+          "form": {
+            "startupCommand": "Opstartcommando",
+            "dockerImage": "Docker-image"
+          },
+          "variables": "Variabelen",
+          "dockerImageDescription": "De Docker-image die wordt gebruikt om deze server te draaien. Dit kan worden gewijzigd om een andere image te gebruiken.",
+          "dockerImageDescriptionCustom": "De Docker-image die wordt gebruikt om deze server te draaien. Dit is ingesteld door een beheerder en kan niet worden gewijzigd.",
+          "toast": {
+            "startupCommandUpdated": "Opstartcommando bijgewerkt.",
+            "dockerImageUpdated": "Docker-image bijgewerkt.",
+            "variablesUpdated": "Variabelen bijgewerkt."
+          },
+          "noVariables": "Geen opstartvarabelen gevonden voor deze server."
+        },
+        "mounts": {
+          "title": "Koppelingen",
+          "table": {
+            "columns": {
+              "target": "Doel",
+              "mounted": "Gekoppeld",
+              "readOnly": "Alleen-lezen"
+            }
+          },
+          "modal": {
+            "attachMount": {
+              "title": "Koppeling toevoegen",
+              "content": "Wilt u **{name}** koppelen aan `{target}`?",
+              "confirm": "Koppelen",
+              "toast": {
+                "attached": "{name} is gekoppeld aan uw server."
+              }
+            },
+            "detachMount": {
+              "title": "Koppeling verwijderen",
+              "content": "Wilt u **{name}** loskoppelen van `{target}`?",
+              "confirm": "Loskoppelen",
+              "toast": {
+                "detached": "{name} is verwijderd van uw server."
+              }
+            }
+          }
+        },
+        "settings": {
+          "title": "Instellingen",
+          "debugInformation": {
+            "title": "Foutopsporingsinformatie",
+            "form": {
+              "nodeName": "Node (UUID)",
+              "locationName": "Locatie (UUID)",
+              "serverUuid": "Server-UUID"
+            }
+          },
+          "rename": {
+            "title": "Server hernoemen",
+            "form": {
+              "serverName": "Servernaam"
+            },
+            "toast": {
+              "renamed": "Server hernoemd."
+            }
+          },
+          "timezone": {
+            "title": "Tijdzone",
+            "form": {
+              "timezone": "Tijdzone",
+              "system": "Systeem"
+            },
+            "toast": {
+              "updated": "Servertijdzone bijgewerkt."
+            }
+          },
+          "autokill": {
+            "title": "Automatisch beëindigen",
+            "form": {
+              "enabled": "Ingeschakeld",
+              "secondsUntilAutoKill": "Seconden tot automatisch beëindigen"
+            },
+            "toast": {
+              "updated": "Automatisch beëindigen van server bijgewerkt."
+            }
+          },
+          "autostart": {
+            "title": "Automatisch starten",
+            "form": {
+              "behavior": "Gedrag"
+            },
+            "toast": {
+              "updated": "Gedrag voor automatisch starten van server bijgewerkt."
+            }
+          },
+          "reinstall": {
+            "title": "Server opnieuw installeren",
+            "button": "Server opnieuw installeren",
+            "content": "Het opnieuw installeren van uw server stopt de server en voert het installatiescript opnieuw uit. **Sommige bestanden kunnen tijdens dit proces worden verwijderd of gewijzigd. Maak een back-up van uw gegevens voordat u doorgaat.**",
+            "modal": {
+              "title": "Server opnieuw installeren",
+              "button": "Opnieuw installeren",
+              "toast": {
+                "reinstalling": "Server wordt opnieuw geïnstalleerd..."
+              }
+            }
+          }
+        },
+        "activity": {
+          "title": "Activiteit"
+        }
+      }
+    }
+  }
+}
