@@ -235,6 +235,5 @@ const ContextMenuToggle = memo(
 
 ContextMenuToggle.displayName = 'ContextMenuToggle';
 
-// biome-ignore lint/style/useComponentExportOnlyModules: This is a component
 export default ContextMenu;
 export { ContextMenuToggle };

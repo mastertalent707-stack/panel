@@ -1,7 +1,8 @@
 import { Title } from '@mantine/core';
+import { makeComponentHookable } from 'shared';
 import Card from './Card.tsx';
 
-export default function ScreenBlock({ title, content }: { title: string; content: string }) {
+function ScreenBlock({ title, content }: { title: string; content: string }) {
   return (
     <>
       <div className='flex items-center justify-center'>
@@ -13,3 +14,5 @@ export default function ScreenBlock({ title, content }: { title: string; content
     </>
   );
 }
+
+export default makeComponentHookable(ScreenBlock);

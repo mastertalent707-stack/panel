@@ -1,5 +1,6 @@
 import { TextInput as MantineTextInput, TextInputProps } from '@mantine/core';
 import { forwardRef } from 'react';
+import { makeComponentHookable } from 'shared';
 
 const TextInput = forwardRef<HTMLInputElement, TextInputProps>(({ className, ...rest }, ref) => {
   return (
@@ -12,4 +13,4 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(({ className, ...
   );
 });
 
-export default TextInput;
+export default makeComponentHookable(TextInput);

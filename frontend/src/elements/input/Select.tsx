@@ -1,5 +1,6 @@
 import { Select as MantineSelect, SelectProps } from '@mantine/core';
 import { forwardRef } from 'react';
+import { makeComponentHookable } from 'shared';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
 
 const Select = forwardRef<HTMLInputElement, SelectProps>(({ className, allowDeselect = false, ...rest }, ref) => {
@@ -17,4 +18,4 @@ const Select = forwardRef<HTMLInputElement, SelectProps>(({ className, allowDese
   );
 });
 
-export default Select;
+export default makeComponentHookable(Select);

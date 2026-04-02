@@ -1,5 +1,6 @@
 import { CodeProps, Code as MantineCode } from '@mantine/core';
 import { forwardRef } from 'react';
+import { makeComponentHookable } from 'shared';
 
 const Code = forwardRef<HTMLPreElement, CodeProps>(({ children, className, ...rest }, ref) => {
   return (
@@ -9,4 +10,4 @@ const Code = forwardRef<HTMLPreElement, CodeProps>(({ children, className, ...re
   );
 });
 
-export default Code;
+export default makeComponentHookable(Code);

@@ -1,5 +1,6 @@
 import { DefaultMantineColor, ModalProps } from '@mantine/core';
 import { MouseEvent as ReactMouseEvent, ReactNode, useCallback, useState } from 'react';
+import { makeComponentHookable } from 'shared';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import Button from '../Button.tsx';
 import { Modal, ModalFooter } from './Modal.tsx';
@@ -11,13 +12,7 @@ type ConfirmationProps = Omit<ModalProps, 'children'> & {
   children: ReactNode;
 };
 
-export default function ConfirmationModal({
-  confirm,
-  confirmColor = 'red',
-  onConfirmed,
-  children,
-  ...props
-}: ConfirmationProps) {
+function ConfirmationModal({ confirm, confirmColor = 'red', onConfirmed, children, ...props }: ConfirmationProps) {
   const { t } = useTranslations();
 
   const [loading, setLoading] = useState(false);
@@ -50,3 +45,5 @@ export default function ConfirmationModal({
     </Modal>
   );
 }
+
+export default makeComponentHookable(ConfirmationModal);

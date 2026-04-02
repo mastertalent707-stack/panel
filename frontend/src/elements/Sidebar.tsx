@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Menu } from '@mantine/core';
 import { ReactNode, useEffect, useState } from 'react';
 import { MemoryRouter, NavLink, useNavigate } from 'react-router';
+import { makeComponentHookable } from 'shared';
 import ActionIcon from '@/elements/ActionIcon.tsx';
 import Button from '@/elements/Button.tsx';
 import Card from '@/elements/Card.tsx';
@@ -206,8 +207,8 @@ function Footer() {
   );
 }
 
-Sidebar.Link = Link;
-Sidebar.Divider = Divider;
-Sidebar.Footer = Footer;
-
-export default Sidebar;
+export default makeComponentHookable(Sidebar, {
+  Link: makeComponentHookable(Link),
+  Divider: makeComponentHookable(Divider),
+  Footer: makeComponentHookable(Footer),
+});

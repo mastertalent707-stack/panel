@@ -1,5 +1,6 @@
 import { Box, Select, Textarea, type TextareaProps } from '@mantine/core';
 import { useCallback, useMemo, useState } from 'react';
+import { makeComponentHookable } from 'shared';
 import { getTranslations } from '@/providers/TranslationProvider.tsx';
 
 interface LocalizedTextAreaProps extends Omit<TextareaProps, 'value' | 'onChange'> {
@@ -102,4 +103,4 @@ function LocalizedTextArea({
   );
 }
 
-export default LocalizedTextArea;
+export default makeComponentHookable(LocalizedTextArea);

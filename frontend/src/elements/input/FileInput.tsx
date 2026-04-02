@@ -1,5 +1,6 @@
 import { FileInputProps, FileInput as MantineFileInput } from '@mantine/core';
 import { forwardRef } from 'react';
+import { makeComponentHookable } from 'shared';
 
 const FileInput = forwardRef<HTMLButtonElement, FileInputProps>(({ className, ...rest }, ref) => {
   return (
@@ -12,4 +13,4 @@ const FileInput = forwardRef<HTMLButtonElement, FileInputProps>(({ className, ..
   );
 });
 
-export default FileInput;
+export default makeComponentHookable(FileInput);

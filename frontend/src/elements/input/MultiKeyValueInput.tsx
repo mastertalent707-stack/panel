@@ -2,6 +2,7 @@ import { faCheck, faGripVertical, faPencil, faTrash, faXmark } from '@fortawesom
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ActionIcon, Badge, Button, Group, Input, Stack, Text, TextInput } from '@mantine/core';
 import { ComponentProps, startTransition, useEffect, useRef, useState } from 'react';
+import { makeComponentHookable } from 'shared';
 import { DndContainer, DndItem, SortableItem } from '@/elements/DragAndDrop.tsx';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import Card from '../Card.tsx';
@@ -24,7 +25,7 @@ interface DndKeyValue extends DndItem {
   value: string;
 }
 
-export default function MultiKeyValueInput({
+function MultiKeyValueInput({
   label,
   withAsterisk,
   allowReordering = true,
@@ -278,3 +279,5 @@ export default function MultiKeyValueInput({
     </Stack>
   );
 }
+
+export default makeComponentHookable(MultiKeyValueInput);

@@ -1,5 +1,6 @@
 import { AutocompleteProps, Autocomplete as MantineAutocomplete } from '@mantine/core';
 import { forwardRef } from 'react';
+import { makeComponentHookable } from 'shared';
 
 const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(({ className, ...rest }, ref) => {
   return (
@@ -12,4 +13,4 @@ const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(({ classNam
   );
 });
 
-export default Autocomplete;
+export default makeComponentHookable(Autocomplete);

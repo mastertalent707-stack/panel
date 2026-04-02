@@ -71,7 +71,7 @@
         "useArrayLiterals": "error",
         "useAsConstAssertion": "error",
         "useConsistentCurlyBraces": "warn",
-        "useComponentExportOnlyModules": "warn"
+        "useComponentExportOnlyModules": "off"
       },
       "suspicious": {
         "noAsyncPromiseExecutor": "error",

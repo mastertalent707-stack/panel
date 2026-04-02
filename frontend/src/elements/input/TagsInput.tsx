@@ -1,5 +1,6 @@
 import { TagsInput as MantineTagsInput, TagsInputProps } from '@mantine/core';
 import { forwardRef } from 'react';
+import { makeComponentHookable } from 'shared';
 
 const TagsInput = forwardRef<HTMLInputElement, TagsInputProps>(({ className, ...rest }, ref) => {
   return (
@@ -12,4 +13,4 @@ const TagsInput = forwardRef<HTMLInputElement, TagsInputProps>(({ className, ...
   );
 });
 
-export default TagsInput;
+export default makeComponentHookable(TagsInput);

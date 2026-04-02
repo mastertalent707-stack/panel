@@ -1,16 +1,16 @@
-import { CodeProps, Code as MantineCode } from '@mantine/core';
 import hljs from 'highlight.js/lib/core';
 import { forwardRef, useCallback, useEffect, useState } from 'react';
 import 'highlight.js/styles/a11y-dark.min.css';
 import { LanguageFn } from 'highlight.js';
 import Spinner from '@/elements/Spinner.tsx';
+import Code from './Code.tsx';
 
 const registeredLanguages = new Set<string>();
 
-type HljsCodeProps = CodeProps & {
+interface HljsCodeProps extends React.ComponentProps<typeof Code> {
   languageName: string;
   language: () => Promise<LanguageFn>;
-};
+}
 
 export default forwardRef<HTMLPreElement, HljsCodeProps>(function HljsCode(
   { children, languageName, language, ...props }: HljsCodeProps,
@@ -40,7 +40,7 @@ export default forwardRef<HTMLPreElement, HljsCodeProps>(function HljsCode(
   return !languageLoaded ? (
     <Spinner.Centered />
   ) : (
-    <MantineCode
+    <Code
       block
       ref={ref}
       dangerouslySetInnerHTML={{

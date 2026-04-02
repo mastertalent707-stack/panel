@@ -1,6 +1,7 @@
 import { Button as MantineButton, ButtonProps as MantineButtonProps } from '@mantine/core';
 import classNames from 'classnames';
 import { forwardRef, MouseEvent as ReactMouseEvent } from 'react';
+import { makeComponentHookable } from 'shared';
 
 export interface ButtonProps extends Omit<MantineButtonProps, 'onClick'> {
   type?: 'button' | 'submit' | 'reset';
@@ -30,4 +31,4 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   },
 );
 
-export default Button;
+export default makeComponentHookable(Button);

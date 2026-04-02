@@ -1,6 +1,7 @@
 import { Tooltip as MantineTooltip, TooltipProps } from '@mantine/core';
 import classNames from 'classnames';
 import { forwardRef } from 'react';
+import { makeComponentHookable } from 'shared';
 
 const Tooltip = forwardRef<HTMLDivElement, TooltipProps & { innerClassName?: string }>(
   ({ children, className, innerClassName, ...rest }, ref) => {
@@ -12,4 +13,4 @@ const Tooltip = forwardRef<HTMLDivElement, TooltipProps & { innerClassName?: str
   },
 );
 
-export default Tooltip;
+export default makeComponentHookable(Tooltip);

@@ -1,8 +1,9 @@
 import { faHourglassEnd, faHourglassHalf, faHourglassStart } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useState } from 'react';
+import { makeComponentHookable } from 'shared';
 
-export default function AnimatedHourglass() {
+function AnimatedHourglass() {
   const [stage, setStage] = useState(0);
   const [rotation, setRotation] = useState(0);
   const [flipped, setFlipped] = useState(false);
@@ -58,3 +59,5 @@ export default function AnimatedHourglass() {
     </div>
   );
 }
+
+export default makeComponentHookable(AnimatedHourglass);

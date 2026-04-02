@@ -1,6 +1,7 @@
 import { Card as MantineCard, CardProps as MantineCardProps } from '@mantine/core';
 import classNames from 'classnames';
 import { ComponentProps, forwardRef } from 'react';
+import { makeComponentHookable } from 'shared';
 
 export interface CardProps extends MantineCardProps {
   hoverable?: boolean;
@@ -31,4 +32,4 @@ const Card = forwardRef<HTMLDivElement, CardProps & ComponentProps<'div'>>(
   },
 );
 
-export default Card;
+export default makeComponentHookable(Card);

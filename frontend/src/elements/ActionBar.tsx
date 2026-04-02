@@ -1,8 +1,9 @@
 import { AnimatePresence, motion } from 'motion/react';
 import { createPortal } from 'react-dom';
+import { makeComponentHookable } from 'shared';
 import Card from './Card.tsx';
 
-export default function ActionBar({ opened = false, children }: { opened?: boolean; children: React.ReactNode }) {
+function ActionBar({ opened = false, children }: { opened?: boolean; children: React.ReactNode }) {
   return createPortal(
     <AnimatePresence>
       {opened && (
@@ -22,3 +23,5 @@ export default function ActionBar({ opened = false, children }: { opened?: boole
     document.body,
   );
 }
+
+export default makeComponentHookable(ActionBar);

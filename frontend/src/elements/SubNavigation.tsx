@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Tabs } from '@mantine/core';
 import { ReactNode } from 'react';
 import { NavLink, Route, Routes, useLocation } from 'react-router';
+import { makeComponentHookable } from 'shared';
 import { to } from '@/lib/routes.ts';
 import { useAdminPermissions, useCan } from '@/plugins/usePermissions.ts';
 import AdminPermissionGuard from '@/routers/guards/AdminPermissionGuard.tsx';
@@ -48,7 +49,7 @@ function SubNavigationItem({ baseUrl, item }: { baseUrl: string; item: ItemProp 
   );
 }
 
-export default function SubNavigation({ baseUrl, items }: Props) {
+function SubNavigation({ baseUrl, items }: Props) {
   const location = useLocation();
   const activeItem =
     items
@@ -92,3 +93,5 @@ export default function SubNavigation({ baseUrl, items }: Props) {
     </>
   );
 }
+
+export default makeComponentHookable(SubNavigation);

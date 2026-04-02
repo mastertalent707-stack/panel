@@ -1,5 +1,6 @@
 import { DrawerProps, Drawer as MantineDrawer } from '@mantine/core';
 import { forwardRef } from 'react';
+import { makeComponentHookable } from 'shared';
 
 const Drawer = forwardRef<HTMLDivElement, DrawerProps>(({ children, className, ...rest }, ref) => {
   return (
@@ -17,4 +18,4 @@ const Drawer = forwardRef<HTMLDivElement, DrawerProps>(({ children, className, .
   );
 });
 
-export default Drawer;
+export default makeComponentHookable(Drawer);

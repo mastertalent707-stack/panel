@@ -1,5 +1,6 @@
 import { Switch as MantineSwitch, SwitchProps } from '@mantine/core';
 import { forwardRef } from 'react';
+import { makeComponentHookable } from 'shared';
 
 const Switch = forwardRef<HTMLInputElement, SwitchProps>(({ className, description, ...rest }, ref) => {
   return (
@@ -10,4 +11,4 @@ const Switch = forwardRef<HTMLInputElement, SwitchProps>(({ className, descripti
   );
 });
 
-export default Switch;
+export default makeComponentHookable(Switch);

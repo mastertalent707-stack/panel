@@ -1,8 +1,9 @@
-import { TooltipProps as MantineTooltipProps, Tooltip } from '@mantine/core';
 import classNames from 'classnames';
-import { forwardRef } from 'react';
+import React, { forwardRef } from 'react';
+import { makeComponentHookable } from 'shared';
+import Tooltip from './Tooltip.tsx';
 
-export interface TooltipProps extends MantineTooltipProps {
+export interface TooltipProps extends React.ComponentProps<typeof Tooltip> {
   enabled: boolean;
   innerClassName?: string;
 }
@@ -10,8 +11,8 @@ export interface TooltipProps extends MantineTooltipProps {
 const ConditionalTooltip = forwardRef<HTMLDivElement, TooltipProps>(
   ({ children, className, innerClassName, enabled, ...rest }, ref) => {
     return enabled ? (
-      <Tooltip ref={ref} className={className} {...rest}>
-        <div className={innerClassName}>{children}</div>
+      <Tooltip ref={ref} className={className} innerClassName={innerClassName} {...rest}>
+        {children}
       </Tooltip>
     ) : (
       <div className={classNames(className, innerClassName)}>{children}</div>
@@ -19,4 +20,4 @@ const ConditionalTooltip = forwardRef<HTMLDivElement, TooltipProps>(
   },
 );
 
-export default ConditionalTooltip;
+export default makeComponentHookable(ConditionalTooltip);

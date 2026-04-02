@@ -1,13 +1,14 @@
 import { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Box } from '@mantine/core';
+import { makeComponentHookable } from 'shared';
 
 interface KbdKeyProps {
   children: React.ReactNode;
   icon?: IconDefinition;
 }
 
-export default function KbdKey({ children, icon }: KbdKeyProps) {
+function KbdKey({ children, icon }: KbdKeyProps) {
   return (
     <Box
       style={{
@@ -32,3 +33,5 @@ export default function KbdKey({ children, icon }: KbdKeyProps) {
     </Box>
   );
 }
+
+export default makeComponentHookable(KbdKey);

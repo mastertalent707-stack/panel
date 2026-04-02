@@ -1,5 +1,6 @@
 import { NumberInput as MantineNumberInput, NumberInputProps } from '@mantine/core';
 import { forwardRef } from 'react';
+import { makeComponentHookable } from 'shared';
 
 const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(({ className, ...rest }, ref) => {
   return (
@@ -12,4 +13,4 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(({ className,
   );
 });
 
-export default NumberInput;
+export default makeComponentHookable(NumberInput);

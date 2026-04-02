@@ -1,6 +1,7 @@
 import { Box, Group, Title } from '@mantine/core';
 import classNames from 'classnames';
 import type { ReactNode } from 'react';
+import { makeComponentHookable } from 'shared';
 import Card from './Card.tsx';
 
 export interface TitleCardProps {
@@ -15,7 +16,7 @@ export interface TitleCardProps {
   rightSection?: ReactNode;
 }
 
-export default function TitleCard({
+function TitleCard({
   title,
   icon,
   children,
@@ -60,3 +61,5 @@ export default function TitleCard({
     </Card>
   );
 }
+
+export default makeComponentHookable(TitleCard);

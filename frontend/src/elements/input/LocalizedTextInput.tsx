@@ -1,5 +1,6 @@
 import { Box, Select, TextInput, type TextInputProps } from '@mantine/core';
 import { useCallback, useMemo, useState } from 'react';
+import { makeComponentHookable } from 'shared';
 import { getTranslations } from '@/providers/TranslationProvider.tsx';
 
 interface LocalizedTextInputProps extends Omit<TextInputProps, 'value' | 'onChange'> {
@@ -102,4 +103,4 @@ function LocalizedTextInput({
   );
 }
 
-export default LocalizedTextInput;
+export default makeComponentHookable(LocalizedTextInput);

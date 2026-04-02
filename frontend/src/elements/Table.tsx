@@ -17,20 +17,20 @@ import Spinner from '@/elements/Spinner.tsx';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
 
 interface TableHeaderProps {
-  name?: string;
+  name?: string | (() => string);
   rightSection?: ReactNode;
   onClick?: () => void;
 }
 
 export const TableHeader = ({ name, rightSection, onClick }: TableHeaderProps) => {
-  if (!name) {
+  if (!name || (typeof name === 'function' && !name())) {
     return <Table.Th className='py-2' />;
   }
 
   return (
     <Table.Th className='font-normal!' onClick={onClick}>
       <div className='flex flex-row items-center gap-2'>
-        <p>{name}</p> {rightSection}
+        <p>{typeof name === 'function' ? name() : name}</p> {rightSection}
       </div>
     </Table.Th>
   );
@@ -144,7 +144,7 @@ export const NoItems = () => {
 };
 
 interface TableProps {
-  columns: string[] | TableHeaderProps[];
+  columns: (string | (() => string))[] | TableHeaderProps[];
   loading?: boolean;
   pagination?: Pagination<unknown>;
   onPageSelect?: (page: number) => void;
@@ -166,7 +166,14 @@ export default ({ columns, loading, pagination, onPageSelect, allowSelect = true
       >
         <TableHead>
           {columns.map((column, index) => (
-            <TableHeader key={`column-${index}`} {...(typeof column === 'string' ? { name: column } : column)} />
+            <TableHeader
+              key={`column-${index}`}
+              {...(typeof column === 'string'
+                ? { name: column }
+                : typeof column === 'function'
+                  ? { name: column() }
+                  : column)}
+            />
           ))}
         </TableHead>
         <Table.Tbody>

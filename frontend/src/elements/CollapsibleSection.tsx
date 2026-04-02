@@ -1,18 +1,21 @@
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Box, Collapse, Text, UnstyledButton } from '@mantine/core';
+import { makeComponentHookable } from 'shared';
 
 interface CollapsibleSectionProps {
   icon: React.ReactNode;
   title: string;
+  className?: string;
   enabled: boolean;
   onToggle: (enabled: boolean) => void;
   children: React.ReactNode;
 }
 
-export default function CollapsibleSection({ icon, title, enabled, onToggle, children }: CollapsibleSectionProps) {
+function CollapsibleSection({ icon, title, className, enabled, onToggle, children }: CollapsibleSectionProps) {
   return (
     <Box
+      className={className}
       style={{
         background: enabled ? 'var(--mantine-color-dark-6)' : 'transparent',
         border: `1px solid ${enabled ? 'var(--mantine-color-dark-4)' : 'var(--mantine-color-dark-5)'}`,
@@ -67,3 +70,5 @@ export default function CollapsibleSection({ icon, title, enabled, onToggle, chi
     </Box>
   );
 }
+
+export default makeComponentHookable(CollapsibleSection);

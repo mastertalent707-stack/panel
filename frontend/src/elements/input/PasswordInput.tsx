@@ -1,5 +1,6 @@
 import { PasswordInput as MantinePasswordInput, PasswordInputProps } from '@mantine/core';
 import { forwardRef } from 'react';
+import { makeComponentHookable } from 'shared';
 
 const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(({ className, ...rest }, ref) => {
   return (
@@ -12,4 +13,4 @@ const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(({ classN
   );
 });
 
-export default PasswordInput;
+export default makeComponentHookable(PasswordInput);

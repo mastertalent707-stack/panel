@@ -1,5 +1,6 @@
 import { MultiSelect as MantineMultiSelect, MultiSelectProps } from '@mantine/core';
 import { forwardRef } from 'react';
+import { makeComponentHookable } from 'shared';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
 
 const MultiSelect = forwardRef<HTMLInputElement, MultiSelectProps>(({ className, ...rest }, ref) => {
@@ -16,4 +17,4 @@ const MultiSelect = forwardRef<HTMLInputElement, MultiSelectProps>(({ className,
   );
 });
 
-export default MultiSelect;
+export default makeComponentHookable(MultiSelect);

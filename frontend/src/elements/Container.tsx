@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { makeComponentHookable } from 'shared';
 import { useAuth } from '@/providers/AuthProvider.tsx';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import { useGlobalStore } from '@/stores/global.ts';
@@ -10,7 +11,7 @@ interface LayoutProps {
   isNormal: boolean;
 }
 
-export default function Container({ children, isNormal }: LayoutProps) {
+function Container({ children, isNormal }: LayoutProps) {
   const { t } = useTranslations();
   const { impersonating } = useAuth();
   const { settings } = useGlobalStore();
@@ -45,3 +46,5 @@ export default function Container({ children, isNormal }: LayoutProps) {
     </div>
   );
 }
+
+export default makeComponentHookable(Container);

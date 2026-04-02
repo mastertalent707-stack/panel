@@ -1,7 +1,8 @@
 import { ReactNode } from 'react';
+import { makeComponentHookable } from 'shared';
 import Card from './Card.tsx';
 
-export default function ChartBlock({
+function ChartBlock({
   icon,
   title,
   legend,
@@ -24,3 +25,5 @@ export default function ChartBlock({
     </Card>
   );
 }
+
+export default makeComponentHookable(ChartBlock);

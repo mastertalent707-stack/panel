@@ -1,8 +1,9 @@
 import { Progress as MantineProgress, ProgressRootProps } from '@mantine/core';
 import classNames from 'classnames';
+import { makeComponentHookable } from 'shared';
 import AnimatedHourglass from './AnimatedHourglass.tsx';
 
-export default function Progress({
+function Progress({
   value,
   className,
   hourglass = true,
@@ -24,3 +25,5 @@ export default function Progress({
     </div>
   );
 }
+
+export default makeComponentHookable(Progress);

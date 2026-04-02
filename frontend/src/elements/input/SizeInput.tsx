@@ -1,4 +1,5 @@
 import { startTransition, useEffect, useRef, useState } from 'react';
+import { makeComponentHookable } from 'shared';
 import { closestUnit, formatUnitBytes, mapUnitToLocale, mbToBytes, UNITS, unitToBytes } from '@/lib/size.ts';
 import NumberInput from './NumberInput.tsx';
 import Select from './Select.tsx';
@@ -13,7 +14,7 @@ interface SizeInputProps {
   onChange: (value: number) => void;
 }
 
-export default function SizeInput({ mode, min, value, onChange, ...rest }: SizeInputProps) {
+function SizeInput({ mode, min, value, onChange, ...rest }: SizeInputProps) {
   const isSpecialValue = value === -1;
   const bytes = isSpecialValue ? -1 : mode === 'b' ? value : mbToBytes(value);
 
@@ -110,3 +111,5 @@ export default function SizeInput({ mode, min, value, onChange, ...rest }: SizeI
     />
   );
 }
+
+export default makeComponentHookable(SizeInput);
