@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { nullableString } from '@/lib/transformers.ts';
 
-export const serverSettingssReinstallSchema = z.object({
+export const serverSettingsReinstallSchema = z.object({
   truncateDirectory: z.boolean(),
 });
 

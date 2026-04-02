@@ -9,7 +9,7 @@ import installServer from '@/api/server/settings/installServer.ts';
 import Button from '@/elements/Button.tsx';
 import Switch from '@/elements/input/Switch.tsx';
 import { Modal, ModalFooter } from '@/elements/modals/Modal.tsx';
-import { serverSettingssReinstallSchema } from '@/lib/schemas/server/settings.ts';
+import { serverSettingsReinstallSchema } from '@/lib/schemas/server/settings.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import { useServerStore } from '@/stores/server.ts';
@@ -22,12 +22,12 @@ export default function SettingsReinstallModal({ opened, onClose }: ModalProps) 
 
   const [loading, setLoading] = useState(false);
 
-  const form = useForm<z.infer<typeof serverSettingssReinstallSchema>>({
+  const form = useForm<z.infer<typeof serverSettingsReinstallSchema>>({
     initialValues: {
       truncateDirectory: false,
     },
     validateInputOnBlur: true,
-    validate: zod4Resolver(serverSettingssReinstallSchema),
+    validate: zod4Resolver(serverSettingsReinstallSchema),
   });
 
   const doReinstall = () => {

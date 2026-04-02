@@ -75,7 +75,7 @@ export default function BackupConfigurationCreateOrUpdate({
     form,
     createFn: () =>
       createBackupConfiguration({
-        ...adminBackupConfigurationSchema.parse(form.getValues()),
+        ...adminBackupConfigurationUpdateSchema.parse(form.getValues()),
         backupConfigs: {
           s3: backupConfigS3Form.isDirty()
             ? adminBackupConfigurationS3Schema.parse(backupConfigS3Form.getValues())
@@ -88,7 +88,7 @@ export default function BackupConfigurationCreateOrUpdate({
     updateFn: contextBackupConfiguration
       ? () =>
           updateBackupConfiguration(contextBackupConfiguration.uuid, {
-            ...adminBackupConfigurationSchema.parse(form.getValues()),
+            ...adminBackupConfigurationUpdateSchema.parse(form.getValues()),
             backupConfigs: {
               s3: backupConfigS3Form.isDirty()
                 ? adminBackupConfigurationS3Schema.parse(backupConfigS3Form.getValues())
