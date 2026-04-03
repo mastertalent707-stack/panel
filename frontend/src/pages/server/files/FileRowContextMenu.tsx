@@ -21,7 +21,7 @@ import decompressFile from '@/api/server/files/decompressFile.ts';
 import downloadFiles from '@/api/server/files/downloadFiles.ts';
 import ContextMenu, { ContextMenuItem } from '@/elements/ContextMenu.tsx';
 import { streamingArchiveFormatLabelMapping } from '@/lib/enums.ts';
-import { isArchiveType, isEditableFile, isViewableArchive, isViewableImage } from '@/lib/files.ts';
+import { isArchiveType, isOpenableFile, isViewableArchive, isViewableImage } from '@/lib/files.ts';
 import { streamingArchiveFormat } from '@/lib/schemas/generic.ts';
 import { serverDirectoryEntrySchema } from '@/lib/schemas/server/files.ts';
 import { useServerCan } from '@/plugins/usePermissions.ts';
@@ -72,7 +72,7 @@ export default function FileRowContextMenu({ file, children }: FileRowContextMen
           label: t('pages.server.files.button.openInNewWindow', {}),
           hidden:
             !matchMedia('(pointer: fine)').matches ||
-            !(isEditableFile(file) || isViewableImage(file) || file.directory),
+            !(isOpenableFile(file) || isViewableImage(file) || file.directory),
           onClick: () =>
             addWindow(
               file.file ? faFile : faFolder,

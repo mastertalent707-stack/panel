@@ -1,10 +1,11 @@
-import { forwardRef, memo, useRef } from 'react';
+import { forwardRef, memo, useMemo, useRef } from 'react';
+import { FileOpenMode } from 'shared/src/registries/pages/server/files.ts';
 import { z } from 'zod';
 import { ContextMenuToggle } from '@/elements/ContextMenu.tsx';
 import Checkbox from '@/elements/input/Checkbox.tsx';
 import { TableData, TableRow } from '@/elements/Table.tsx';
 import FormattedTimestamp from '@/elements/time/FormattedTimestamp.tsx';
-import { isEditableFile, isViewableArchive, isViewableImage } from '@/lib/files.ts';
+import { isOpenableFile } from '@/lib/files.ts';
 import { serverDirectoryEntrySchema } from '@/lib/schemas/server/files.ts';
 import { bytesToString } from '@/lib/size.ts';
 import FileRowContextMenu from '@/pages/server/files/FileRowContextMenu.tsx';
@@ -15,7 +16,7 @@ import FileRowIcon from './FileRowIcon.tsx';
 
 interface FileRowProps {
   file: z.infer<typeof serverDirectoryEntrySchema>;
-  handleOpen: () => void;
+  handleOpen: (openMode: FileOpenMode) => void;
   isSelected: boolean;
   isActing: boolean;
   multipleSelected: boolean;
@@ -26,9 +27,10 @@ const FileRow = forwardRef<HTMLTableRowElement, FileRowProps>(function FileRow(
   ref,
 ) {
   const canOpenActionBar = useServerCan(['files.read-content', 'files.archive', 'files.update', 'files.delete'], true);
-  const { browsingFastDirectory, doSelectFiles, addSelectedFile, removeSelectedFile, clickOnce, preferPhysicalSize } =
-    useFileManager();
+  const { doSelectFiles, addSelectedFile, removeSelectedFile, clickOnce, preferPhysicalSize } = useFileManager();
   const canOpenFile = useServerCan('files.read-content');
+
+  const openMode = useMemo(() => isOpenableFile(file), [file]);
 
   const toggleSelected = () => (isSelected ? removeSelectedFile(file) : addSelectedFile(file));
 
@@ -53,8 +55,8 @@ const FileRow = forwardRef<HTMLTableRowElement, FileRowProps>(function FileRow(
     }
 
     clickTimer.current = setTimeout(() => {
-      if (clickCount.current >= 2) {
-        handleOpen();
+      if (clickCount.current >= 2 && canOpenFile) {
+        handleOpen(openMode);
       }
 
       clickCount.current = 0;
@@ -83,16 +85,7 @@ const FileRow = forwardRef<HTMLTableRowElement, FileRowProps>(function FileRow(
           {({ items, openMenu }) => (
             <TableRow
               ref={ref}
-              className={
-                clickOnce &&
-                canOpenFile &&
-                (isEditableFile(file) ||
-                  isViewableImage(file) ||
-                  file.directory ||
-                  (isViewableArchive(file) && browsingFastDirectory))
-                  ? 'cursor-pointer select-none'
-                  : 'select-none'
-              }
+              className={clickOnce && canOpenFile && openMode.openable ? 'cursor-pointer select-none' : 'select-none'}
               bg={getBgColor()}
               onContextMenu={(e) => {
                 e.preventDefault();
@@ -104,8 +97,8 @@ const FileRow = forwardRef<HTMLTableRowElement, FileRowProps>(function FileRow(
               }}
               onClick={(e) => {
                 e.preventDefault();
-                if (clickOnce) {
-                  handleOpen();
+                if (clickOnce && canOpenFile) {
+                  handleOpen(openMode);
                 } else {
                   handleClick(e);
                 }

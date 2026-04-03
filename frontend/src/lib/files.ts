@@ -1,3 +1,6 @@
+import { join } from 'pathe';
+import { createSearchParams } from 'react-router';
+import { FileOpenMode } from 'shared/src/registries/pages/server/files.ts';
 import { z } from 'zod';
 import { serverDirectoryEntrySchema } from '@/lib/schemas/server/files.ts';
 import { getGlobalStore } from '@/stores/global.ts';
@@ -39,9 +42,41 @@ export function isViewableImage(file: z.infer<typeof serverDirectoryEntrySchema>
   return file.mime.startsWith('image/') && /^image\/(?!svg\+xml)/.test(file.mime);
 }
 
-export function isEditableFile(file: z.infer<typeof serverDirectoryEntrySchema>) {
+export function isOpenableFile(file: z.infer<typeof serverDirectoryEntrySchema>): FileOpenMode {
+  if (file.directory || isViewableArchive(file)) {
+    return {
+      openable: true,
+      handleOpen: ({ fileManagerContext, setSearchParams }) => {
+        setSearchParams({
+          directory: join(fileManagerContext.browsingDirectory, file.name),
+        });
+      },
+    };
+  }
+
+  for (const handler of window.extensionContext.extensionRegistry.pages.server.files.fileOpenableHandlers) {
+    const result = handler(file);
+    if (result.openable) {
+      return result;
+    }
+  }
+
   if (file.size > getGlobalStore().settings.server.maxFileManagerViewSize) {
-    return false;
+    return { openable: false };
+  }
+
+  if (isViewableImage(file)) {
+    return {
+      openable: true,
+      handleOpen: ({ server, fileManagerContext, navigate }) => {
+        navigate(
+          `/server/${server.uuidShort}/files/image?${createSearchParams({
+            directory: fileManagerContext.browsingDirectory,
+            file: file.name,
+          })}`,
+        );
+      },
+    };
   }
 
   const matches = [
@@ -52,9 +87,21 @@ export function isEditableFile(file: z.infer<typeof serverDirectoryEntrySchema>)
     /^image\/(?!svg\+xml)/,
   ];
 
-  if (isArchiveType(file) && !file.innerEditable) return false;
+  if (isArchiveType(file) && !file.innerEditable) return { openable: false };
 
-  return (file.editable || file.innerEditable) && matches.every((m) => !file.mime.match(m));
+  return (file.editable || file.innerEditable) && matches.every((m) => !file.mime.match(m))
+    ? {
+        openable: true,
+        handleOpen: ({ server, fileManagerContext, navigate }) => {
+          navigate(
+            `/server/${server.uuidShort}/files/edit?${createSearchParams({
+              directory: fileManagerContext.browsingDirectory,
+              file: file.name,
+            })}`,
+          );
+        },
+      }
+    : { openable: false };
 }
 
 export function permissionStringToNumber(mode: string) {

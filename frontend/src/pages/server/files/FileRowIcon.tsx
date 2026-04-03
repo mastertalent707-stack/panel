@@ -2,7 +2,7 @@ import { faFile, faFilePen, faFolder, faFolderTree, faImage, IconDefinition } fr
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { memo } from 'react';
 import { z } from 'zod';
-import { isEditableFile, isViewableArchive, isViewableImage } from '@/lib/files.ts';
+import { isOpenableFile, isViewableArchive, isViewableImage } from '@/lib/files.ts';
 import { serverDirectoryEntrySchema } from '@/lib/schemas/server/files.ts';
 
 function getFileIcon(file: z.infer<typeof serverDirectoryEntrySchema>): IconDefinition {
@@ -21,7 +21,7 @@ function getFileIcon(file: z.infer<typeof serverDirectoryEntrySchema>): IconDefi
     return faImage;
   } else if (isViewableArchive(file)) {
     return faFolderTree;
-  } else if (isEditableFile(file)) {
+  } else if (isOpenableFile(file)) {
     return faFilePen;
   }
 
