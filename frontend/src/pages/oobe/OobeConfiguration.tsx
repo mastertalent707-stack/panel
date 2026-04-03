@@ -34,7 +34,6 @@ export default function OobeConfiguration({ onNext }: OobeComponentProps) {
       applicationName: '',
       applicationLanguage: 'en',
       applicationUrl: '',
-      applicationTelemetry: true,
       applicationRegistration: false,
     },
     validateInputOnBlur: true,
@@ -50,7 +49,6 @@ export default function OobeConfiguration({ onNext }: OobeComponentProps) {
           applicationName: settings.app.name,
           applicationLanguage: settings.app.language,
           applicationUrl: window.location.origin,
-          applicationTelemetry: true,
           applicationRegistration: false,
         });
       })
@@ -71,7 +69,7 @@ export default function OobeConfiguration({ onNext }: OobeComponentProps) {
       language: form.values.applicationLanguage,
       url: form.values.applicationUrl,
       twoFactorRequirement: 'none',
-      telemetryEnabled: form.values.applicationTelemetry,
+      telemetryEnabled: true,
       registrationEnabled: form.values.applicationRegistration,
       languageChangeEnabled: true,
     })
