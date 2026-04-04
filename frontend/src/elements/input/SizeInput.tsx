@@ -103,7 +103,7 @@ function SizeInput({ mode, min, value, onChange, ...rest }: SizeInputProps) {
         }}
         style={{
           position: 'absolute',
-          top: rest.label ? 25 : 0,
+          bottom: 0,
           right: 0,
         }}
       />
