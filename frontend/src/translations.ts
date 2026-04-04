@@ -2042,6 +2042,16 @@ const baseTranslations = defineTranslations({
             dockerImageUpdated: 'Docker image updated.',
             variablesUpdated: 'Variables updated.',
           },
+          modal: {
+            unsavedChanges: {
+              title: 'Unsaved Changes',
+              content:
+                'You have unsaved changes to your startup variables. Are you sure you want to leave this page? If you leave, your changes will be lost.',
+              button: {
+                leave: 'Leave Page',
+              },
+            },
+          },
           noVariables: 'No startup variables found for this server.',
         },
         mounts: {
