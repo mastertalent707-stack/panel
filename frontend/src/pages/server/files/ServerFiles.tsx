@@ -26,7 +26,7 @@ import FileSettings from '@/pages/server/files/FileSettings.tsx';
 import FileToolbar from '@/pages/server/files/FileToolbar.tsx';
 import FileUpload from '@/pages/server/files/FileUpload.tsx';
 import { useKeyboardShortcuts } from '@/plugins/useKeyboardShortcuts.ts';
-import { getFileManager, useFileManager } from '@/providers/contexts/fileManagerContext.ts';
+import { useFileManager } from '@/providers/contexts/fileManagerContext.ts';
 import { FileManagerProvider } from '@/providers/FileManagerProvider.tsx';
 import { useToast } from '@/providers/ToastProvider.tsx';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
@@ -79,6 +79,7 @@ function ServerFilesComponent() {
   const typeAheadBuffer = useRef('');
   const typeAheadTimeout = useRef<ReturnType<typeof setTimeout>>(null);
   const fileManagerContext = useFileManager();
+  const fileManagerContextRef = useRef(fileManagerContext);
 
   const {
     isLoading,
@@ -115,7 +116,7 @@ function ServerFilesComponent() {
         if (typeAheadTimeout.current) clearTimeout(typeAheadTimeout.current);
         typeAheadBuffer.current = '';
 
-        const fileManagerContext = getFileManager();
+        const fileManagerContext = fileManagerContextRef.current;
 
         openMode.handleOpen({
           server,
@@ -176,6 +177,10 @@ function ServerFilesComponent() {
   useEffect(() => {
     multipleSelectedRef.current = selectedFiles.size > 1;
   }, [selectedFiles]);
+
+  useEffect(() => {
+    fileManagerContextRef.current = fileManagerContext;
+  }, [fileManagerContext]);
 
   useKeyboardShortcuts({
     shortcuts: [
