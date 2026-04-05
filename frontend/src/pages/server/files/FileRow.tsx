@@ -1,11 +1,10 @@
-import { forwardRef, memo, useMemo, useRef } from 'react';
+import { forwardRef, memo, useRef } from 'react';
 import { FileOpenMode } from 'shared/src/registries/pages/server/files.ts';
 import { z } from 'zod';
 import { ContextMenuToggle } from '@/elements/ContextMenu.tsx';
 import Checkbox from '@/elements/input/Checkbox.tsx';
 import { TableData, TableRow } from '@/elements/Table.tsx';
 import FormattedTimestamp from '@/elements/time/FormattedTimestamp.tsx';
-import { isOpenableFile } from '@/lib/files.ts';
 import { serverDirectoryEntrySchema } from '@/lib/schemas/server/files.ts';
 import { bytesToString } from '@/lib/size.ts';
 import FileRowContextMenu from '@/pages/server/files/FileRowContextMenu.tsx';
@@ -17,20 +16,21 @@ import FileRowIcon from './FileRowIcon.tsx';
 interface FileRowProps {
   file: z.infer<typeof serverDirectoryEntrySchema>;
   handleOpen: (openMode: FileOpenMode) => void;
+  openMode: FileOpenMode;
   isSelected: boolean;
   isActing: boolean;
   multipleSelected: boolean;
 }
 
 const FileRow = forwardRef<HTMLTableRowElement, FileRowProps>(function FileRow(
-  { file, handleOpen, isSelected, isActing, multipleSelected },
+  { file, handleOpen, openMode, isSelected, isActing, multipleSelected },
   ref,
 ) {
   const canOpenActionBar = useServerCan(['files.read-content', 'files.archive', 'files.update', 'files.delete'], true);
-  const { doSelectFiles, addSelectedFile, removeSelectedFile, clickOnce, preferPhysicalSize } = useFileManager();
+  const fileManagerContext = useFileManager();
   const canOpenFile = useServerCan('files.read-content');
 
-  const openMode = useMemo(() => isOpenableFile(file), [file]);
+  const { doSelectFiles, addSelectedFile, removeSelectedFile, clickOnce, preferPhysicalSize } = fileManagerContext;
 
   const toggleSelected = () => (isSelected ? removeSelectedFile(file) : addSelectedFile(file));
 
@@ -81,7 +81,7 @@ const FileRow = forwardRef<HTMLTableRowElement, FileRowProps>(function FileRow(
   return (
     <FileMassContextMenu>
       {({ openMassMenu }) => (
-        <FileRowContextMenu file={file}>
+        <FileRowContextMenu file={file} openMode={openMode}>
           {({ items, openMenu }) => (
             <TableRow
               ref={ref}
@@ -120,7 +120,7 @@ const FileRow = forwardRef<HTMLTableRowElement, FileRowProps>(function FileRow(
 
               <TableData>
                 <span className='flex items-center gap-4 leading-[100%]'>
-                  <FileRowIcon className='text-gray-400' file={file} />
+                  <FileRowIcon className='text-gray-400' file={file} fileManagerContext={fileManagerContext} />
                   {file.name}
                 </span>
               </TableData>

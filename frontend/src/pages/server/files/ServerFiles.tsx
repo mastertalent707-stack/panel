@@ -281,7 +281,7 @@ function ServerFilesComponent() {
         key: 'Enter',
         callback: () => {
           if (selectedFiles.size === 1 && openModal === null) {
-            handleOpen(isOpenableFile(selectedFiles.values()[0]));
+            handleOpen(isOpenableFile(selectedFiles.values()[0], fileManagerContext));
           }
         },
       },
@@ -370,6 +370,7 @@ function ServerFilesComponent() {
                       ref={innerRef as Ref<HTMLTableRowElement>}
                       file={entry}
                       handleOpen={handleOpen}
+                      openMode={isOpenableFile(entry, fileManagerContext)}
                       isSelected={selectedFiles.has(entry)}
                       isActing={actingFiles.has(entry) && actingFilesSource === browsingDirectory}
                       multipleSelected={selectedFiles.size > 1}

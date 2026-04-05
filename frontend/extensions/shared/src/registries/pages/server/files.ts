@@ -60,8 +60,14 @@ type FileEditorActionContent =
       }>;
     };
 
-type FileIconHandler = (file: z.infer<typeof serverDirectoryEntrySchema>) => IconDefinition | undefined;
-type FileOpenableHandler = (file: z.infer<typeof serverDirectoryEntrySchema>) => FileOpenMode;
+type FileIconHandler = (
+  file: z.infer<typeof serverDirectoryEntrySchema>,
+  fileManagerContext: FileManagerContextType,
+) => IconDefinition | undefined;
+type FileOpenableHandler = (
+  file: z.infer<typeof serverDirectoryEntrySchema>,
+  fileManagerContext: FileManagerContextType,
+) => FileOpenMode;
 type FileEditorAction = FileEditorActionBase & FileEditorActionContent;
 
 export class FilesRegistry implements Registry {

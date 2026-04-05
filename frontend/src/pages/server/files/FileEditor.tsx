@@ -4,6 +4,7 @@ import { join } from 'pathe';
 import { startTransition, useEffect, useMemo, useRef, useState } from 'react';
 import { createSearchParams, useNavigate, useParams, useSearchParams } from 'react-router';
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
+import { httpErrorToHuman } from '@/api/axios.ts';
 import getFileContent from '@/api/server/files/getFileContent.ts';
 import saveFileContent from '@/api/server/files/saveFileContent.ts';
 import Button from '@/elements/Button.tsx';
@@ -95,6 +96,10 @@ function FileEditorComponent() {
 
           setLoading(false);
         });
+      })
+      .catch((msg) => {
+        addToast(httpErrorToHuman(msg), 'error');
+        setLoading(false);
       });
   }, [fileName]);
 
@@ -110,23 +115,28 @@ function FileEditorComponent() {
     const currentContent = editorRef.current.getValue();
     setSaving(true);
 
-    saveFileContent(server.uuid, join(browsingDirectory, name ?? fileName), currentContent).then(() => {
-      startTransition(() => {
+    saveFileContent(server.uuid, join(browsingDirectory, name ?? fileName), currentContent)
+      .then(() => {
+        startTransition(() => {
+          setSaving(false);
+          setNameModalOpen(false);
+        });
+
+        addToast(t('pages.server.files.toast.fileSaved', {}), 'success');
+
+        if (name) {
+          navigate(
+            `/server/${server.uuidShort}/files/edit?${createSearchParams({
+              directory: browsingDirectory,
+              file: name,
+            })}`,
+          );
+        }
+      })
+      .catch((msg) => {
         setSaving(false);
-        setNameModalOpen(false);
+        addToast(httpErrorToHuman(msg), 'error');
       });
-
-      addToast(t('pages.server.files.toast.fileSaved', {}), 'success');
-
-      if (name) {
-        navigate(
-          `/server/${server.uuidShort}/files/edit?${createSearchParams({
-            directory: browsingDirectory,
-            file: name,
-          })}`,
-        );
-      }
-    });
   };
 
   if (!matchedFileEditorAction && !['new', 'edit', 'image'].includes(params.action!)) {
@@ -164,23 +174,25 @@ function FileEditorComponent() {
             <FileImageViewerSettings />
           ) : null}
         </Group>
-        <div hidden={!browsingWritableDirectory || params.action === 'image'}>
-          {matchedFileEditorAction?.header.rightSection ? (
-            <matchedFileEditorAction.header.rightSection />
-          ) : params.action === 'edit' ? (
-            <ServerCan action='files.update'>
-              <Button loading={saving} onClick={() => saveFile()}>
-                {t('common.button.save', {})}
-              </Button>
-            </ServerCan>
-          ) : (
-            <ServerCan action='files.create'>
-              <Button loading={saving} onClick={() => setNameModalOpen(true)}>
-                {t('common.button.create', {})}
-              </Button>
-            </ServerCan>
-          )}
-        </div>
+        {matchedFileEditorAction?.header.rightSection ? (
+          <matchedFileEditorAction.header.rightSection />
+        ) : (
+          <div hidden={!browsingWritableDirectory || params.action === 'image'}>
+            {params.action === 'edit' ? (
+              <ServerCan action='files.update'>
+                <Button loading={saving} onClick={() => saveFile()}>
+                  {t('common.button.save', {})}
+                </Button>
+              </ServerCan>
+            ) : (
+              <ServerCan action='files.create'>
+                <Button loading={saving} onClick={() => setNameModalOpen(true)}>
+                  {t('common.button.create', {})}
+                </Button>
+              </ServerCan>
+            )}
+          </div>
+        )}
       </div>
 
       <ConfirmationModal
