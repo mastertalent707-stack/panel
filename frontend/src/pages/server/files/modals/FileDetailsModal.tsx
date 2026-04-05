@@ -18,15 +18,13 @@ type Props = ModalProps & {
 
 export default function FileDetailsModal({ file, opened, onClose }: Props) {
   const { t } = useTranslations();
-  const fileManagerContext = useFileManager();
-
-  const { browsingDirectory } = fileManagerContext;
+  const { browsingDirectory } = useFileManager();
 
   return (
     <Modal title={t('pages.server.files.modal.details.title', {})} onClose={onClose} opened={opened} size='sm'>
       <div className='flex flex-col space-y-1'>
         <Title order={3} className='break-all'>
-          <FileRowIcon className='mr-2' file={file} fileManagerContext={fileManagerContext} />
+          <FileRowIcon className='mr-2' file={file} />
           {file?.name}
         </Title>
 
