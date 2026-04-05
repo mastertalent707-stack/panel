@@ -28,7 +28,7 @@ if (!difFile) {
 }
 
 const isVerbose = process.argv.includes('--verbose');
-const isChecking = process.argv.includes('--checking');
+const isChecking = process.argv.includes('--check');
 let failedCheck = false;
 
 const extractVariables = (text) => {
