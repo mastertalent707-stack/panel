@@ -83,12 +83,12 @@ try {
       failedCheck = true;
     }
   }
+
+  if (isChecking && failedCheck) {
+    console.error('Diff failed inspection check');
+    process.exit(1);
+  }
 } catch (error) {
   console.error('Error reading or parsing diff file:', error);
-  process.exit(1);
-}
-
-if (isChecking && failedCheck) {
-  console.error('Diff failed inspection check');
   process.exit(1);
 }

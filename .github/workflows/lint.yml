@@ -85,12 +85,19 @@ jobs:
         - name: Check translations
           run: |
             cd frontend
-            failed=0
+            failed_files=()
             for file in public/translations/*.json; do
               echo "Checking $file"
-              pnpm diff:translations "$file" --check || failed=1
+              pnpm diff:translations "$file" --check || failed_files+=("$file")
             done
-            exit $failed
+            if [ ${#failed_files[@]} -gt 0 ]; then
+              echo ""
+              echo "Failed translations:"
+              for f in "${failed_files[@]}"; do
+                echo "  - $f"
+              done
+              exit 1
+            fi
 
   lint-backend:
     name: Lint Backend
