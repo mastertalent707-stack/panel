@@ -65,7 +65,7 @@ export default function App({ theme }: { theme: MantineThemeOverride }) {
                     </HistoryRouter>
                   </HistoryContext.Provider>
 
-                  <ReactQueryDevtools initialIsOpen={false} />
+                  <ReactQueryDevtools initialIsOpen={false} theme='dark' />
                 </CurrentWindowProvider>
               </WindowProvider>
             </ToastProvider>
