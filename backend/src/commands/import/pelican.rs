@@ -1,23 +1,16 @@
-use super::{BASE64_ENGINE, decrypt_laravel_value, process_table};
+use super::{BASE64_ENGINE, collect_mappings, decrypt_laravel_value, process_table};
 use anyhow::Context;
 use base64::Engine;
 use clap::{Args, FromArgMatches};
 use colored::Colorize;
 use compact_str::ToCompactString;
+use shared::models::database_host::DatabaseCredentials;
 use sqlx::Row;
 use std::{
     collections::{HashMap, HashSet},
     str::FromStr,
     sync::Arc,
 };
-
-#[inline]
-fn collect_mappings(mappings: Vec<HashMap<i32, uuid::Uuid>>) -> HashMap<i32, uuid::Uuid> {
-    mappings
-        .into_iter()
-        .flatten()
-        .collect::<HashMap<i32, uuid::Uuid>>()
-}
 
 #[inline]
 fn first_import_tag(raw_tags: Option<&str>, fallback: &str) -> compact_str::CompactString {
@@ -840,7 +833,8 @@ impl shared::extensions::commands::CliCommand<PelicanArgs> for PelicanCommand {
                     "database_hosts",
                     None,
                     async |rows| {
-                        let mut mapping: HashMap<i32, uuid::Uuid> = HashMap::with_capacity(rows.len());
+                        let mut mapping: HashMap<i32, uuid::Uuid> =
+                            HashMap::with_capacity(rows.len());
 
                         for row in rows {
                             let id: i32 = row.try_get("id")?;
@@ -849,27 +843,34 @@ impl shared::extensions::commands::CliCommand<PelicanArgs> for PelicanCommand {
                             let port: i32 = row.try_get("port")?;
                             let username: &str = row.try_get("username")?;
                             let password: &str = row.try_get("password")?;
-                            let created: chrono::DateTime<chrono::Utc> = row.try_get("created_at")?;
+                            let created: chrono::DateTime<chrono::Utc> =
+                                row.try_get("created_at")?;
 
                             let password = match decrypt_laravel_value(password, &source_app_key) {
                                 Ok(password) => password,
                                 Err(_) => continue,
                             };
 
+                            let mut credentials = DatabaseCredentials::Details {
+                                host: host.into(),
+                                port: port as u16,
+                                username: username.into(),
+                                password,
+                            };
+
+                            credentials.encrypt(&database).await?;
+
                             let row = sqlx::query(
                                 r#"
-                                INSERT INTO database_hosts (name, type, host, port, username, password, created)
-                                VALUES ($1, $2, $3, $4, $5, $6, $7)
+                                INSERT INTO database_hosts (name, type, credentials, created)
+                                VALUES ($1, $2, $3, $4)
                                 ON CONFLICT (name) DO UPDATE SET name = EXCLUDED.name
                                 RETURNING uuid
                                 "#,
                             )
                             .bind(name)
                             .bind(shared::models::database_host::DatabaseType::Mysql)
-                            .bind(host)
-                            .bind(port)
-                            .bind(username)
-                            .bind(database.encrypt(password).await.unwrap_or_default())
+                            .bind(serde_json::to_value(credentials)?)
                             .bind(created)
                             .fetch_one(database.write())
                             .await?;

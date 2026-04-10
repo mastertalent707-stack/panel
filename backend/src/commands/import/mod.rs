@@ -4,6 +4,7 @@ use futures_util::StreamExt;
 use openssl::symm::Cipher;
 use serde::Deserialize;
 use shared::extensions::commands::CliCommandGroupBuilder;
+use std::collections::HashMap;
 
 mod pelican;
 mod pterodactyl;
@@ -14,6 +15,13 @@ static BASE64_ENGINE: base64::engine::general_purpose::GeneralPurpose =
         base64::engine::general_purpose::GeneralPurposeConfig::new()
             .with_decode_padding_mode(base64::engine::DecodePaddingMode::Indifferent),
     );
+
+#[inline]
+fn collect_mappings<K: std::hash::Hash + Eq>(
+    mappings: Vec<HashMap<K, uuid::Uuid>>,
+) -> HashMap<K, uuid::Uuid> {
+    mappings.into_iter().flatten().collect()
+}
 
 fn extract_php_serialized_string(
     serialized_data: &str,
@@ -175,6 +183,7 @@ pub async fn process_table<T, Fut: Future<Output = Result<T, anyhow::Error>>>(
 
     Ok(results)
 }
+
 pub fn commands(cli: CliCommandGroupBuilder) -> CliCommandGroupBuilder {
     cli.add_command(
         "pterodactyl",
