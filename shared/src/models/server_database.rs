@@ -327,10 +327,10 @@ impl ServerDatabase {
     ) -> Result<i64, crate::database::DatabaseError> {
         match self.database_host.get_connection(database).await? {
             crate::models::database_host::DatabasePool::Mysql(pool) => {
-                let row = sqlx::query(
-                    "SELECT CAST(SUM(data_length + index_length) AS INTEGER) FROM information_schema.tables WHERE table_schema = ?",
-                )
-                .bind(&self.name)
+                let row = sqlx::query(&format!(
+                    "SELECT CAST(SUM(data_length + index_length) AS INTEGER) FROM information_schema.tables WHERE table_schema = '{}'",
+                    self.name
+                ))
                 .fetch_one(&pool)
                 .await?;
 
