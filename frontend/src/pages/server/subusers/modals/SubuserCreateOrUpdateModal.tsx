@@ -64,7 +64,7 @@ export default function SubuserCreateOrUpdateModal({ subuser, onCreate, onUpdate
       }
       onClose={onClose}
       opened={opened}
-      size='xl'
+      size='95%'
     >
       <form onSubmit={form.onSubmit(() => doCreateOrUpdate())}>
         <Stack>

@@ -106,7 +106,7 @@ export default function ApiKeyCreateOrUpdateModal({ contextApiKey, opened, onClo
       }
       onClose={onClose}
       opened={opened}
-      size='xl'
+      size='95%'
     >
       <Stack>
         <Group grow>
