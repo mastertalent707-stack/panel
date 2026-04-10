@@ -1124,7 +1124,7 @@
             "transferCompleted": "La transferencia se completó correctamente. Reconectando al servidor...",
             "pullingImage": "Tu servidor está descargando su imagen de Docker. Espera...",
             "pulling": "Descargando",
-            "extracting": "Extrayendo",
+            "extracting": "Extrayendo"
           },
           "tooltip": {
             "search": "Buscar",

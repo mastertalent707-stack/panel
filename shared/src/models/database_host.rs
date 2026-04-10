@@ -69,12 +69,34 @@ pub enum DatabaseType {
     Mongodb,
 }
 
+impl DatabaseType {
+    pub fn from_url_scheme(scheme: &str) -> Result<Self, anyhow::Error> {
+        match scheme {
+            "mysql" | "mariadb" => Ok(Self::Mysql),
+            "postgres" | "postgresql" => Ok(Self::Postgres),
+            "mongodb" => Ok(Self::Mongodb),
+            _ => Err(anyhow::anyhow!("Unsupported database type: {}", scheme)),
+        }
+    }
+
+    pub const fn default_port(self) -> u16 {
+        match self {
+            DatabaseType::Mysql => 3306,
+            DatabaseType::Postgres => 5432,
+            DatabaseType::Mongodb => 27017,
+        }
+    }
+}
+
 fn validate_connection_string(connection_string: &str, _context: &()) -> Result<(), garde::Error> {
     if connection_string.trim().is_empty() {
         return Err(garde::Error::new("connection string cannot be empty"));
     }
 
-    reqwest::Url::parse(connection_string)
+    let url = reqwest::Url::parse(connection_string)
+        .map_err(|err| garde::Error::new(format!("Invalid connection string: {err}")))?;
+
+    DatabaseType::from_url_scheme(url.scheme())
         .map_err(|err| garde::Error::new(format!("Invalid connection string: {err}")))?;
 
     Ok(())
@@ -104,6 +126,7 @@ pub enum DatabaseCredentials {
     },
 }
 
+#[derive(ToSchema, Serialize)]
 pub struct ParsedConnectionDetails {
     pub host: compact_str::CompactString,
     pub port: u16,
@@ -168,11 +191,13 @@ impl DatabaseCredentials {
             DatabaseCredentials::ConnectionString { connection_string } => {
                 let connection_string = database.decrypt_base64(connection_string).await?;
                 let url = reqwest::Url::parse(connection_string.as_str())?;
+                let database_type = DatabaseType::from_url_scheme(url.scheme())?;
+
                 let host = url
                     .host_str()
                     .ok_or_else(|| anyhow::anyhow!("Invalid host"))?
                     .into();
-                let port = url.port().ok_or_else(|| anyhow::anyhow!("Invalid port"))?;
+                let port = url.port().unwrap_or_else(|| database_type.default_port());
                 let username = url.username().into();
 
                 Ok(ParsedConnectionDetails {
