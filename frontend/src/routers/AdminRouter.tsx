@@ -1,7 +1,7 @@
 import { faReply } from '@fortawesome/free-solid-svg-icons';
 import { Suspense, useEffect, useMemo } from 'react';
 import { NavLink, Route, Routes } from 'react-router';
-import getLatest from '@/api/admin/system/getLatest.ts';
+import getUpdates from '@/api/admin/system/updates/getUpdates.ts';
 import AppIcon from '@/elements/AppIcon.tsx';
 import { AdminCan } from '@/elements/Can.tsx';
 import Container from '@/elements/Container.tsx';
@@ -17,10 +17,10 @@ import { useAdminStore } from '@/stores/admin.tsx';
 
 export default function AdminRouter({ isNormal }: { isNormal: boolean }) {
   const { t } = useTranslations();
-  const { setLatestVersions } = useAdminStore();
+  const { setUpdateInformation } = useAdminStore();
 
   useEffect(() => {
-    getLatest().then(setLatestVersions);
+    getUpdates().then(setUpdateInformation).catch(console.error);
   }, []);
 
   const allAdminRoutes = useMemo(() => {
