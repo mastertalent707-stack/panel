@@ -59,6 +59,26 @@ export default function RatelimitsContainer() {
 
   const form = useForm<z.infer<typeof adminSettingsRatelimitsSchema>>({
     initialValues: {
+      authRegister: {
+        hits: 0,
+        windowSeconds: 0,
+      },
+      authLogin: {
+        hits: 0,
+        windowSeconds: 0,
+      },
+      authLoginCheckpoint: {
+        hits: 0,
+        windowSeconds: 0,
+      },
+      authLoginSecurityKey: {
+        hits: 0,
+        windowSeconds: 0,
+      },
+      authPasswordForgot: {
+        hits: 0,
+        windowSeconds: 0,
+      },
       client: {
         hits: 0,
         windowSeconds: 0,
@@ -103,6 +123,49 @@ export default function RatelimitsContainer() {
     <AdminSubContentContainer title='Ratelimit Settings' titleOrder={2}>
       <form onSubmit={form.onSubmit(() => doUpdate())}>
         <Stack>
+          <RatelimitConfigurationInput
+            label='auth/register'
+            hitsKey='authRegister'
+            windowSecondsKey='authRegister'
+            form={form}
+          />
+
+          <Divider />
+
+          <RatelimitConfigurationInput
+            label='auth/login'
+            hitsKey='authLogin'
+            windowSecondsKey='authLogin'
+            form={form}
+          />
+
+          <Divider />
+
+          <RatelimitConfigurationInput
+            label='auth/login/checkpoint'
+            hitsKey='authLoginCheckpoint'
+            windowSecondsKey='authLoginCheckpoint'
+            form={form}
+          />
+
+          <Divider />
+
+          <RatelimitConfigurationInput
+            label='auth/login/security-key'
+            hitsKey='authLoginSecurityKey'
+            windowSecondsKey='authLoginSecurityKey'
+            form={form}
+          />
+
+          <Divider />
+
+          <RatelimitConfigurationInput
+            label='auth/password/forgot'
+            hitsKey='authPasswordForgot'
+            windowSecondsKey='authPasswordForgot'
+            form={form}
+          />
+
           <RatelimitConfigurationInput label='client' hitsKey='client' windowSecondsKey='client' form={form} />
 
           <Divider />

@@ -16,6 +16,12 @@ pub struct RatelimitConfiguration {
 
 #[derive(Clone, ToSchema, Serialize, Deserialize)]
 pub struct AppSettingsRatelimits {
+    pub auth_register: RatelimitConfiguration,
+    pub auth_login: RatelimitConfiguration,
+    pub auth_login_checkpoint: RatelimitConfiguration,
+    pub auth_login_security_key: RatelimitConfiguration,
+    pub auth_password_forgot: RatelimitConfiguration,
+
     pub client: RatelimitConfiguration,
 
     pub client_servers_backups_create: RatelimitConfiguration,
@@ -30,6 +36,11 @@ impl SettingsSerializeExt for AppSettingsRatelimits {
         serializer: SettingsSerializer,
     ) -> Result<SettingsSerializer, anyhow::Error> {
         Ok(serializer
+            .write_serde_setting("auth_register", &self.auth_register)?
+            .write_serde_setting("auth_login", &self.auth_login)?
+            .write_serde_setting("auth_login_checkpoint", &self.auth_login_checkpoint)?
+            .write_serde_setting("auth_login_security_key", &self.auth_login_security_key)?
+            .write_serde_setting("auth_password_forgot", &self.auth_password_forgot)?
             .write_serde_setting("client", &self.client)?
             .write_serde_setting(
                 "client_servers_backups_create",
@@ -52,6 +63,36 @@ impl SettingsDeserializeExt for AppSettingsRatelimitsDeserializer {
         deserializer: SettingsDeserializer<'_>,
     ) -> Result<ExtensionSettings, anyhow::Error> {
         Ok(Box::new(AppSettingsRatelimits {
+            auth_register: deserializer.read_serde_setting("auth_register").unwrap_or(
+                RatelimitConfiguration {
+                    hits: 10,
+                    window_seconds: 3600,
+                },
+            ),
+            auth_login: deserializer.read_serde_setting("auth_login").unwrap_or(
+                RatelimitConfiguration {
+                    hits: 20,
+                    window_seconds: 300,
+                },
+            ),
+            auth_login_checkpoint: deserializer
+                .read_serde_setting("auth_login_checkpoint")
+                .unwrap_or(RatelimitConfiguration {
+                    hits: 10,
+                    window_seconds: 300,
+                }),
+            auth_login_security_key: deserializer
+                .read_serde_setting("auth_login_security_key")
+                .unwrap_or(RatelimitConfiguration {
+                    hits: 10,
+                    window_seconds: 300,
+                }),
+            auth_password_forgot: deserializer
+                .read_serde_setting("auth_password_forgot")
+                .unwrap_or(RatelimitConfiguration {
+                    hits: 10,
+                    window_seconds: 3600,
+                }),
             client: deserializer
                 .read_serde_setting("client")
                 .unwrap_or(RatelimitConfiguration {

@@ -115,6 +115,16 @@ mod put {
     #[derive(ToSchema, Validate, Deserialize)]
     pub struct PayloadRatelimits {
         #[garde(dive)]
+        auth_register: Option<shared::settings::ratelimits::RatelimitConfiguration>,
+        #[garde(dive)]
+        auth_login: Option<shared::settings::ratelimits::RatelimitConfiguration>,
+        #[garde(dive)]
+        auth_login_checkpoint: Option<shared::settings::ratelimits::RatelimitConfiguration>,
+        #[garde(dive)]
+        auth_login_security_key: Option<shared::settings::ratelimits::RatelimitConfiguration>,
+        #[garde(dive)]
+        auth_password_forgot: Option<shared::settings::ratelimits::RatelimitConfiguration>,
+        #[garde(dive)]
         client: Option<shared::settings::ratelimits::RatelimitConfiguration>,
         #[garde(dive)]
         client_servers_backups_create: Option<shared::settings::ratelimits::RatelimitConfiguration>,
@@ -276,6 +286,21 @@ mod put {
             }
         }
         if let Some(ratelimits) = data.ratelimits {
+            if let Some(auth_register) = ratelimits.auth_register {
+                settings.ratelimits.auth_register = auth_register;
+            }
+            if let Some(auth_login) = ratelimits.auth_login {
+                settings.ratelimits.auth_login = auth_login;
+            }
+            if let Some(auth_login_checkpoint) = ratelimits.auth_login_checkpoint {
+                settings.ratelimits.auth_login_checkpoint = auth_login_checkpoint;
+            }
+            if let Some(auth_login_security_key) = ratelimits.auth_login_security_key {
+                settings.ratelimits.auth_login_security_key = auth_login_security_key;
+            }
+            if let Some(auth_password_forgot) = ratelimits.auth_password_forgot {
+                settings.ratelimits.auth_password_forgot = auth_password_forgot;
+            }
             if let Some(client) = ratelimits.client {
                 settings.ratelimits.client = client;
             }

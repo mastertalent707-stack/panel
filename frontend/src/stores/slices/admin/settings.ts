@@ -55,6 +55,26 @@ export const createSettingsSlice: StateCreator<AdminStore, [], [], SettingsSlice
     serverLogScheduleActivity: true,
   },
   ratelimits: {
+    authRegister: {
+      hits: 0,
+      windowSeconds: 0,
+    },
+    authLogin: {
+      hits: 0,
+      windowSeconds: 0,
+    },
+    authLoginCheckpoint: {
+      hits: 0,
+      windowSeconds: 0,
+    },
+    authLoginSecurityKey: {
+      hits: 0,
+      windowSeconds: 0,
+    },
+    authPasswordForgot: {
+      hits: 0,
+      windowSeconds: 0,
+    },
     client: {
       hits: 0,
       windowSeconds: 0,

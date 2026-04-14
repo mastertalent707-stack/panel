@@ -117,6 +117,11 @@ export const adminSettingsRatelimitConfigurationSchema = z.object({
 });
 
 export const adminSettingsRatelimitsSchema = z.object({
+  authRegister: adminSettingsRatelimitConfigurationSchema,
+  authLogin: adminSettingsRatelimitConfigurationSchema,
+  authLoginCheckpoint: adminSettingsRatelimitConfigurationSchema,
+  authLoginSecurityKey: adminSettingsRatelimitConfigurationSchema,
+  authPasswordForgot: adminSettingsRatelimitConfigurationSchema,
   client: adminSettingsRatelimitConfigurationSchema,
   clientServersBackupsCreate: adminSettingsRatelimitConfigurationSchema,
   clientServersFilesPull: adminSettingsRatelimitConfigurationSchema,
@@ -188,10 +193,5 @@ export const adminSettingsSchema = z.object({
     serverLogAdminActivity: z.boolean(),
     serverLogScheduleActivity: z.boolean(),
   }),
-  ratelimits: z.object({
-    client: adminSettingsRatelimitConfigurationSchema,
-    clientServersBackupsCreate: adminSettingsRatelimitConfigurationSchema,
-    clientServersFilesPull: adminSettingsRatelimitConfigurationSchema,
-    clientServersFilesPullQuery: adminSettingsRatelimitConfigurationSchema,
-  }),
+  ratelimits: adminSettingsRatelimitsSchema,
 });
