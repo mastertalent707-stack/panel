@@ -1,4 +1,4 @@
-import { faFileArrowDown, faRotateLeft, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faFileArrowDown, faLink, faRotateLeft, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
 import { NavLink } from 'react-router';
 import { z } from 'zod';
@@ -19,6 +19,7 @@ import { useAdminCan } from '@/plugins/usePermissions.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import NodeBackupsDeleteModal from './modals/NodeBackupsDeleteModal.tsx';
+import NodeBackupsReattachModal from './modals/NodeBackupsReattachModal.tsx';
 import NodeBackupsRestoreModal from './modals/NodeBackupsRestoreModal.tsx';
 
 export default function NodeBackupRow({
@@ -31,7 +32,7 @@ export default function NodeBackupRow({
   const { t } = useTranslations();
   const { addToast } = useToast();
 
-  const [openModal, setOpenModal] = useState<'restore' | 'delete' | null>(null);
+  const [openModal, setOpenModal] = useState<'restore' | 'reattach' | 'delete' | null>(null);
 
   const doDownload = (archiveFormat: z.infer<typeof streamingArchiveFormat>) => {
     downloadNodeBackup(node.uuid, backup.uuid, archiveFormat)
@@ -52,6 +53,12 @@ export default function NodeBackupRow({
         node={node}
         backup={backup}
         opened={openModal === 'restore'}
+        onClose={() => setOpenModal(null)}
+      />
+      <NodeBackupsReattachModal
+        node={node}
+        backup={backup}
+        opened={openModal === 'reattach'}
         onClose={() => setOpenModal(null)}
       />
       <NodeBackupsDeleteModal
@@ -84,6 +91,14 @@ export default function NodeBackupRow({
             label: t('common.button.restore', {}),
             hidden: !backup.completed || isFailed,
             onClick: () => setOpenModal('restore'),
+            color: 'gray',
+            canAccess: useAdminCan('nodes.backups'),
+          },
+          {
+            icon: faLink,
+            label: 'Reattach',
+            hidden: !backup.completed || isFailed,
+            onClick: () => setOpenModal('reattach'),
             color: 'gray',
             canAccess: useAdminCan('nodes.backups'),
           },

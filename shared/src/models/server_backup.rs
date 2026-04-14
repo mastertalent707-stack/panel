@@ -715,11 +715,18 @@ impl ServerBackup {
         }
     }
 
+    #[inline]
+    pub fn is_remote(&self) -> bool {
+        matches!(self.disk, BackupDisk::S3 | BackupDisk::Restic)
+    }
+
     pub async fn into_admin_node_api_object(
         self,
         database: &crate::database::Database,
         storage_url_retriever: &StorageUrlRetriever<'_>,
     ) -> Result<AdminApiNodeServerBackup, anyhow::Error> {
+        let is_remote = self.is_remote();
+
         Ok(AdminApiNodeServerBackup {
             uuid: self.uuid,
             server: match self.server {
@@ -744,6 +751,7 @@ impl ServerBackup {
             is_locked: self.locked,
             is_browsable: self.browsable,
             is_streaming: self.streaming,
+            is_remote,
             checksum: self.checksum,
             bytes: self.bytes,
             files: self.files,
@@ -1224,6 +1232,7 @@ pub struct AdminApiNodeServerBackup {
     pub is_locked: bool,
     pub is_browsable: bool,
     pub is_streaming: bool,
+    pub is_remote: bool,
 
     pub checksum: Option<compact_str::CompactString>,
     pub bytes: i64,
