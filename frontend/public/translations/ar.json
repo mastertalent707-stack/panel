@@ -474,8 +474,6 @@
             "languagePlaceholder": "اللغة",
             "applicationUrl": "URL التطبيق",
             "applicationUrlPlaceholder": "https://calagop.us",
-            "telemetry": "تفعيل القياس عن بعد",
-            "telemetryDescription": "السماح لـ Calagopus بجمع بيانات الاستخدام المحدودة والمجهولة للمساعدة في تحسين التطبيق.",
             "registration": "تفعيل التسجيل",
             "registrationDescription": "السماح للمستخدمين الجدد بتسجيل حساباتهم الخاصة."
           },
