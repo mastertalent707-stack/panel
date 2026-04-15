@@ -34,7 +34,7 @@ const browserHistory = createBrowserHistory();
 const MAX_RETRIES = 10;
 
 export default function App({ theme }: { theme: MantineThemeOverride }) {
-  const { settings, setSettings, setLanguages } = useGlobalStore();
+  const { settings, setSettings, setLanguages, setTimeOffset } = useGlobalStore();
   const [loadWarning, setLoadWarning] = useState(false);
   const retryCount = useRef(0);
 
@@ -44,10 +44,11 @@ export default function App({ theme }: { theme: MantineThemeOverride }) {
 
     const loadData = () => {
       Promise.all([getSettings(), getLanguages()])
-        .then(([settings, languages]) => {
+        .then(([{ settings, serverTime }, languages]) => {
           if (cancelled) return;
           setSettings(settings);
           setLanguages(languages);
+          setTimeOffset(Date.now() - serverTime.getTime());
         })
         .catch((err) => {
           if (cancelled) return;

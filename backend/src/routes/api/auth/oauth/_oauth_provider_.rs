@@ -1,3 +1,5 @@
+use crate::routes::api::auth::login::checkpoint::TwoFactorRequiredJwt;
+
 use super::State;
 use axum::{
     body::Body,
@@ -5,6 +7,7 @@ use axum::{
     http::StatusCode,
     routing::get,
 };
+use base64::Engine;
 use compact_str::ToCompactString;
 use oauth2::{
     AuthUrl, AuthorizationCode, ClientId, ClientSecret, HttpRequest, HttpResponse, RedirectUrl,
@@ -13,13 +16,15 @@ use oauth2::{
 use serde::Deserialize;
 use shared::{
     GetState,
+    database::BASE64_ENGINE,
+    jwt::BasePayload,
     models::{
         ByUuid, CreatableModel, oauth_provider::OAuthProvider, user::User,
         user_activity::UserActivity, user_oauth_link::UserOAuthLink, user_session::UserSession,
     },
     response::ApiResponse,
 };
-use tower_cookies::{Cookie, Cookies};
+use tower_cookies::Cookies;
 use utoipa_axum::router::OpenApiRouter;
 
 #[derive(Deserialize)]
@@ -141,22 +146,7 @@ pub fn router(state: &State) -> OpenApiRouter<State> {
                     )
                     .await;
 
-                let settings = state.settings.get().await?;
-                let secure = settings.app.url.starts_with("https://");
-                drop(settings);
-
-                cookies.add(
-                    Cookie::build(("session", session_id.value().to_string()))
-                        .http_only(true)
-                        .same_site(tower_cookies::cookie::SameSite::Lax)
-                        .secure(secure)
-                        .path("/")
-                        .expires(
-                            tower_cookies::cookie::time::OffsetDateTime::now_utc()
-                                + tower_cookies::cookie::time::Duration::days(30),
-                        )
-                        .build(),
-                );
+                cookies.add(UserSession::get_cookie(&state, session_id.value().to_owned()).await?);
 
                 let token = client
                     .exchange_code(AuthorizationCode::new(params.0.code))
@@ -244,6 +234,64 @@ pub fn router(state: &State) -> OpenApiRouter<State> {
                     Some(oauth_link) => {
                         let user = oauth_link.user.fetch(&state.database).await?;
 
+                        if user.totp_enabled && !oauth_provider.login_bypass_2fa {
+                            if let Err(err) = UserActivity::create(
+                                &state,
+                                shared::models::user_activity::CreateUserActivityOptions {
+                                    user_uuid: user.uuid,
+                                    impersonator_uuid: None,
+                                    api_key_uuid: None,
+                                    event: "auth:checkpoint".into(),
+                                    ip: Some(ip.0.into()),
+                                    data: serde_json::json!({
+                                        "using": "oauth2",
+                                        "oauth_provider": oauth_provider.name,
+
+                                        "user_agent": headers
+                                            .get("User-Agent")
+                                            .map(|ua| shared::utils::slice_up_to(ua.to_str().unwrap_or("unknown"), 255))
+                                            .unwrap_or("unknown"),
+                                    }),
+                                    created: None,
+                                },
+                            )
+                            .await
+                            {
+                                tracing::warn!(
+                                    user = %user.uuid,
+                                    "failed to log user activity: {:#?}",
+                                    err
+                                );
+                            }
+
+                            let token = state.jwt.create(&TwoFactorRequiredJwt {
+                                base: BasePayload {
+                                    issuer: "panel".into(),
+                                    subject: None,
+                                    audience: Vec::new(),
+                                    expiration_time: Some(chrono::Utc::now().timestamp() + 300),
+                                    not_before: None,
+                                    issued_at: Some(chrono::Utc::now().timestamp()),
+                                    jwt_id: user.uuid.to_string(),
+                                },
+                                user_uuid: user.uuid,
+                            })?;
+
+                            let auth_info = serde_json::json!({
+                                "user": user.into_api_object(&state.storage.retrieve_urls().await?),
+                                "token": token,
+                            });
+                            let auth_info = BASE64_ENGINE.encode(serde_json::to_string(&auth_info)?.as_bytes());
+                            let auth_info = urlencoding::encode(&auth_info);
+
+                            let settings = state.settings.get().await?;
+
+                            return ApiResponse::new(Body::empty())
+                                .with_header("Location", format!("{}/auth/login/checkpoint?data={auth_info}", settings.app.url.trim_end_matches('/')))
+                                .with_status(StatusCode::TEMPORARY_REDIRECT)
+                                .ok();
+                        }
+
                         let key = UserSession::create(
                             &state,
                             shared::models::user_session::CreateUserSessionOptions {
@@ -258,22 +306,7 @@ pub fn router(state: &State) -> OpenApiRouter<State> {
                         )
                         .await?;
 
-                        let settings = state.settings.get().await?;
-                        let secure = settings.app.url.starts_with("https://");
-                        drop(settings);
-
-                        cookies.add(
-                            Cookie::build(("session", key))
-                                .http_only(true)
-                                .same_site(tower_cookies::cookie::SameSite::Strict)
-                                .secure(secure)
-                                .path("/")
-                                .expires(
-                                    tower_cookies::cookie::time::OffsetDateTime::now_utc()
-                                        + tower_cookies::cookie::time::Duration::days(30),
-                                )
-                                .build(),
-                        );
+                        cookies.add(UserSession::get_cookie(&state, key).await?);
 
                         if let Err(err) = UserActivity::create(
                             &state,
@@ -327,7 +360,6 @@ pub fn router(state: &State) -> OpenApiRouter<State> {
                                 .with_status(StatusCode::BAD_REQUEST)
                                 .ok();
                         }
-                        let secure = settings.app.url.starts_with("https://");
 
                         let username = oauth_provider.extract_username(&info)?.into();
                         let email = oauth_provider.extract_email(&info)?.into();
@@ -346,6 +378,7 @@ pub fn router(state: &State) -> OpenApiRouter<State> {
                             language: settings.app.language.clone(),
                         };
                         drop(settings);
+
                         let user = match User::create(&state, options).await {
                             Ok(user) => user,
                             Err(err) if err.is_unique_violation() => {
@@ -353,13 +386,7 @@ pub fn router(state: &State) -> OpenApiRouter<State> {
                                     .with_status(StatusCode::BAD_REQUEST)
                                     .ok();
                             }
-                            Err(err) => {
-                                tracing::error!("failed to create user: {:?}", err);
-
-                                return ApiResponse::error("failed to create user")
-                                    .with_status(StatusCode::INTERNAL_SERVER_ERROR)
-                                    .ok();
-                            }
+                            Err(err) => return ApiResponse::from(err).ok(),
                         };
 
                         let key = UserSession::create(
@@ -376,18 +403,7 @@ pub fn router(state: &State) -> OpenApiRouter<State> {
                         )
                         .await?;
 
-                        cookies.add(
-                            Cookie::build(("session", key))
-                                .http_only(true)
-                                .same_site(tower_cookies::cookie::SameSite::Strict)
-                                .secure(secure)
-                                .path("/")
-                                .expires(
-                                    tower_cookies::cookie::time::OffsetDateTime::now_utc()
-                                        + tower_cookies::cookie::time::Duration::days(30),
-                                )
-                                .build(),
-                        );
+                        cookies.add(UserSession::get_cookie(&state, key).await?);
 
                         let settings = state.settings.get().await?;
 

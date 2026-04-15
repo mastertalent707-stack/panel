@@ -10,11 +10,12 @@ use shared::{
         ByUuid,
         user::{AuthMethod, PermissionManager, User, UserImpersonator},
         user_activity::UserActivityLogger,
+        user_session::UserSession,
     },
     response::ApiResponse,
 };
 use std::sync::Arc;
-use tower_cookies::{Cookie, Cookies};
+use tower_cookies::Cookies;
 use utoipa_axum::router::OpenApiRouter;
 
 mod account;
@@ -86,20 +87,13 @@ pub async fn auth(
             Err(err) => return Ok(ApiResponse::from(err).into_response()),
         };
         let require_two_factor = auth_user.require_two_factor(&settings);
-        let secure = settings.app.url.starts_with("https://");
         drop(settings);
 
         cookies.add(
-            Cookie::build(("session", session_id.value().to_string()))
-                .http_only(true)
-                .same_site(tower_cookies::cookie::SameSite::Lax)
-                .secure(secure)
-                .path("/")
-                .expires(
-                    tower_cookies::cookie::time::OffsetDateTime::now_utc()
-                        + tower_cookies::cookie::time::Duration::days(30),
-                )
-                .build(),
+            match UserSession::get_cookie(&state, session_id.value().to_string()).await {
+                Ok(cookie) => cookie,
+                Err(err) => return Ok(ApiResponse::from(err).into_response()),
+            },
         );
 
         if !IGNORED_TWO_FACTOR_PATHS.contains(&matched_path.as_str())

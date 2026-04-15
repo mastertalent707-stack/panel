@@ -1031,6 +1031,7 @@ impl Server {
         Ok(status)
     }
 
+    /// Syncs the server with the node. This will update server resources, schedules, name, etc.
     pub async fn sync(self, database: &crate::database::Database) -> Result<(), anyhow::Error> {
         self.node
             .fetch_cached(database)
@@ -1046,6 +1047,19 @@ impl Server {
             .await?;
 
         Ok(())
+    }
+
+    /// Same as [`sync`](Self::sync) but runs in a background task, is deduplicated and is not awaited. Any errors will be logged but not returned.
+    ///
+    /// This method is meant to be used in 90% of cases where you want to sync the server with low priority.
+    pub async fn batch_sync(self, database: &Arc<crate::database::Database>) {
+        database
+            .batch_action("sync_server", self.uuid, {
+                let database = database.clone();
+
+                async move { self.sync(&database).await }
+            })
+            .await;
     }
 
     /// Triggers a re-installation of the server on the node.

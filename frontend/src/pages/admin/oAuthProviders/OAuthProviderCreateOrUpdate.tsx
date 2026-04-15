@@ -55,6 +55,7 @@ export default function OAuthProviderCreateOrUpdate({
       nameLastPath: null,
       enabled: true,
       loginOnly: false,
+      loginBypass2fa: false,
       linkViewable: true,
       userManageable: true,
       basicAuth: false,
@@ -97,6 +98,7 @@ export default function OAuthProviderCreateOrUpdate({
         nameLastPath: contextOAuthProvider.nameLastPath,
         enabled: contextOAuthProvider.enabled,
         loginOnly: contextOAuthProvider.loginOnly,
+        loginBypass2fa: contextOAuthProvider.loginBypass2fa,
         linkViewable: contextOAuthProvider.linkViewable,
         userManageable: contextOAuthProvider.userManageable,
         basicAuth: contextOAuthProvider.basicAuth,
@@ -301,14 +303,15 @@ export default function OAuthProviderCreateOrUpdate({
 
           <Group grow>
             <Switch
-              label='Enabled'
-              key={form.key('enabled')}
-              {...form.getInputProps('enabled', { type: 'checkbox' })}
-            />
-            <Switch
               label='Only allow Login'
               key={form.key('loginOnly')}
               {...form.getInputProps('loginOnly', { type: 'checkbox' })}
+            />
+            <Switch
+              label='Bypass 2FA on Login'
+              description='Allows users logging in with this provider to bypass 2FA'
+              key={form.key('loginBypass2fa')}
+              {...form.getInputProps('loginBypass2fa', { type: 'checkbox' })}
             />
           </Group>
 
@@ -326,6 +329,8 @@ export default function OAuthProviderCreateOrUpdate({
               {...form.getInputProps('userManageable', { type: 'checkbox' })}
             />
           </Group>
+
+          <Switch label='Enabled' key={form.key('enabled')} {...form.getInputProps('enabled', { type: 'checkbox' })} />
 
           <Group>
             <AdminCan action={contextOAuthProvider ? 'oauth-providers.update' : 'oauth-providers.create'} cantSave>

@@ -34,6 +34,7 @@ pub struct OAuthProvider {
 
     pub enabled: bool,
     pub login_only: bool,
+    pub login_bypass_2fa: bool,
     pub link_viewable: bool,
     pub user_manageable: bool,
     pub basic_auth: bool,
@@ -114,6 +115,10 @@ impl BaseModel for OAuthProvider {
                 compact_str::format_compact!("{prefix}login_only"),
             ),
             (
+                "oauth_providers.login_bypass_2fa",
+                compact_str::format_compact!("{prefix}login_bypass_2fa"),
+            ),
+            (
                 "oauth_providers.link_viewable",
                 compact_str::format_compact!("{prefix}link_viewable"),
             ),
@@ -159,6 +164,8 @@ impl BaseModel for OAuthProvider {
                 .try_get(compact_str::format_compact!("{prefix}name_last_path").as_str())?,
             enabled: row.try_get(compact_str::format_compact!("{prefix}enabled").as_str())?,
             login_only: row.try_get(compact_str::format_compact!("{prefix}login_only").as_str())?,
+            login_bypass_2fa: row
+                .try_get(compact_str::format_compact!("{prefix}login_bypass_2fa").as_str())?,
             link_viewable: row
                 .try_get(compact_str::format_compact!("{prefix}link_viewable").as_str())?,
             user_manageable: row
@@ -361,6 +368,7 @@ impl OAuthProvider {
             name_last_path: self.name_last_path,
             enabled: self.enabled,
             login_only: self.login_only,
+            login_bypass_2fa: self.login_bypass_2fa,
             link_viewable: self.link_viewable,
             user_manageable: self.user_manageable,
             basic_auth: self.basic_auth,
@@ -413,6 +421,8 @@ pub struct CreateOAuthProviderOptions {
     pub enabled: bool,
     #[garde(skip)]
     pub login_only: bool,
+    #[garde(skip)]
+    pub login_bypass_2fa: bool,
     #[garde(skip)]
     pub link_viewable: bool,
     #[garde(skip)]
@@ -504,6 +514,7 @@ impl CreatableModel for OAuthProvider {
             .set("name_last_path", &options.name_last_path)
             .set("enabled", options.enabled)
             .set("login_only", options.login_only)
+            .set("login_bypass_2fa", options.login_bypass_2fa)
             .set("link_viewable", options.link_viewable)
             .set("user_manageable", options.user_manageable)
             .set("basic_auth", options.basic_auth);
@@ -537,6 +548,8 @@ pub struct UpdateOAuthProviderOptions {
     pub enabled: Option<bool>,
     #[garde(skip)]
     pub login_only: Option<bool>,
+    #[garde(skip)]
+    pub login_bypass_2fa: Option<bool>,
     #[garde(skip)]
     pub link_viewable: Option<bool>,
     #[garde(skip)]
@@ -675,6 +688,7 @@ impl UpdatableModel for OAuthProvider {
             )
             .set("enabled", options.enabled)
             .set("login_only", options.login_only)
+            .set("login_bypass_2fa", options.login_bypass_2fa)
             .set("link_viewable", options.link_viewable)
             .set("user_manageable", options.user_manageable)
             .set("basic_auth", options.basic_auth)
@@ -693,6 +707,9 @@ impl UpdatableModel for OAuthProvider {
         }
         if let Some(login_only) = options.login_only {
             self.login_only = login_only;
+        }
+        if let Some(login_bypass_2fa) = options.login_bypass_2fa {
+            self.login_bypass_2fa = login_bypass_2fa;
         }
         if let Some(link_viewable) = options.link_viewable {
             self.link_viewable = link_viewable;
@@ -807,6 +824,7 @@ pub struct AdminApiOAuthProvider {
 
     pub enabled: bool,
     pub login_only: bool,
+    pub login_bypass_2fa: bool,
     pub link_viewable: bool,
     pub user_manageable: bool,
     pub basic_auth: bool,

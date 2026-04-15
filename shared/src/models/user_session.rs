@@ -5,15 +5,18 @@ use crate::{
     },
     prelude::*,
 };
+use compact_str::ToCompactString;
 use garde::Validate;
 use rand::distr::SampleString;
 use serde::{Deserialize, Serialize};
 use sha2::Digest;
 use sqlx::{Row, postgres::PgRow};
 use std::{
+    borrow::Cow,
     collections::BTreeMap,
     sync::{Arc, LazyLock},
 };
+use tower_cookies::Cookie;
 use utoipa::ToSchema;
 
 #[derive(Serialize, Deserialize, Clone)]
@@ -21,7 +24,7 @@ pub struct UserSession {
     pub uuid: uuid::Uuid,
 
     pub ip: sqlx::types::ipnetwork::IpNetwork,
-    pub user_agent: String,
+    pub user_agent: compact_str::CompactString,
 
     pub last_used: chrono::NaiveDateTime,
     pub created: chrono::NaiveDateTime,
@@ -163,8 +166,8 @@ impl UserSession {
                 async move {
                     sqlx::query!(
                         "UPDATE user_sessions
-		                    SET ip = $2, user_agent = $3, last_used = $4
-		                    WHERE user_sessions.uuid = $1",
+                        SET ip = $2, user_agent = $3, last_used = $4
+                        WHERE user_sessions.uuid = $1",
                         uuid,
                         ip,
                         user_agent,
@@ -179,11 +182,29 @@ impl UserSession {
             .await;
     }
 
+    pub async fn get_cookie<'a>(
+        state: &crate::State,
+        key: impl Into<Cow<'a, str>>,
+    ) -> Result<Cookie<'a>, anyhow::Error> {
+        let settings = state.settings.get().await?;
+
+        Ok(Cookie::build(("session", key))
+            .http_only(true)
+            .same_site(tower_cookies::cookie::SameSite::Strict)
+            .secure(settings.app.url.starts_with("https://"))
+            .path("/")
+            .expires(
+                tower_cookies::cookie::time::OffsetDateTime::now_utc()
+                    + tower_cookies::cookie::time::Duration::days(30),
+            )
+            .build())
+    }
+
     #[inline]
     pub fn into_api_object(self, auth: &GetAuthMethod) -> ApiUserSession {
         ApiUserSession {
             uuid: self.uuid,
-            ip: self.ip.ip().to_string(),
+            ip: self.ip.ip().to_compact_string(),
             user_agent: self.user_agent,
             is_using: match &**auth {
                 AuthMethod::Session(session) => session.uuid == self.uuid,
@@ -296,8 +317,8 @@ impl DeletableModel for UserSession {
 pub struct ApiUserSession {
     pub uuid: uuid::Uuid,
 
-    pub ip: String,
-    pub user_agent: String,
+    pub ip: compact_str::CompactString,
+    pub user_agent: compact_str::CompactString,
 
     pub is_using: bool,
 

@@ -1,12 +1,11 @@
 import { faExclamationTriangle, faFingerprint, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Alert, Center, Divider, Stack, Text, Title } from '@mantine/core';
+import { Alert, Divider, Stack, Text, Title } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { zod4Resolver } from 'mantine-form-zod-resolver';
 import { startTransition, useEffect, useRef, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router';
 import { z } from 'zod';
-import checkpointLogin from '@/api/auth/checkpointLogin.ts';
 import getOAuthProviders from '@/api/auth/getOAuthProviders.ts';
 import getSecurityKeys from '@/api/auth/getSecurityKeys.ts';
 import login from '@/api/auth/login.ts';
@@ -16,35 +15,26 @@ import Button from '@/elements/Button.tsx';
 import Captcha, { CaptchaRef } from '@/elements/Captcha.tsx';
 import Card from '@/elements/Card.tsx';
 import PasswordInput from '@/elements/input/PasswordInput.tsx';
-import PinInput from '@/elements/input/PinInput.tsx';
 import TextInput from '@/elements/input/TextInput.tsx';
-import { authPasswordSchema, authTotpSchema, authUsernameSchema } from '@/lib/schemas/auth.ts';
+import { authPasswordSchema, authUsernameSchema } from '@/lib/schemas/auth.ts';
 import { oAuthProviderSchema } from '@/lib/schemas/generic.ts';
-import { userSchema } from '@/lib/schemas/user.ts';
 import { useAuth } from '@/providers/AuthProvider.tsx';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import { useGlobalStore } from '@/stores/global.ts';
 import AuthWrapper from './AuthWrapper.tsx';
 
-interface TwoFactorInformation {
-  user: z.infer<typeof userSchema>;
-  token: string;
-}
-
 export default function Login() {
   const { doLogin } = useAuth();
-  const { settings } = useGlobalStore();
+  const { settings, timeOffset } = useGlobalStore();
   const { t } = useTranslations();
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [step, setStep] = useState<'username' | 'passkey' | 'password' | 'totp' | 'totp-recovery'>('username');
+  const [step, setStep] = useState<'username' | 'passkey' | 'password'>('username');
   const [oAuthProviders, setOAuthProviders] = useState<z.infer<typeof oAuthProviderSchema>[]>([]);
   const [passkeyUuid, setPasskeyUuid] = useState('');
   const [passkeyOptions, setPasskeyOptions] = useState<CredentialRequestOptions>();
-  const [twoFactorInformation, setTwoFactorInformation] = useState<TwoFactorInformation | null>(null);
-  const [timeOffset, setTimeOffset] = useState(0);
   const captchaRef = useRef<CaptchaRef>(null);
 
   const usernameForm = useForm({
@@ -61,14 +51,6 @@ export default function Login() {
     },
     validateInputOnBlur: true,
     validate: zod4Resolver(authPasswordSchema),
-  });
-
-  const totpForm = useForm({
-    initialValues: {
-      code: '',
-    },
-    validateInputOnBlur: true,
-    validate: zod4Resolver(authTotpSchema),
   });
 
   useEffect(() => {
@@ -88,8 +70,6 @@ export default function Login() {
 
     getSecurityKeys(usernameForm.values.username)
       .then((keys) => {
-        setTimeOffset(Date.now() - keys.serverTime.getTime());
-
         if (keys.options.publicKey?.allowCredentials?.length === 0) {
           setStep('password');
         } else {
@@ -171,10 +151,17 @@ export default function Login() {
       })
         .then((response) => {
           if (response.type === 'two_factor_required') {
-            startTransition(() => {
-              setTwoFactorInformation({ user: response.user, token: response.token });
-              setStep('totp');
-            });
+            const authInfo = btoa(
+              JSON.stringify({
+                user: response.user,
+                token: response.token,
+              }),
+            )
+              .replaceAll('+', '-')
+              .replaceAll('/', '_');
+
+            navigate(`/auth/login/checkpoint?data=${authInfo}`);
+
             return;
           }
 
@@ -186,22 +173,6 @@ export default function Login() {
         })
         .finally(() => setLoading(false));
     });
-  };
-
-  const doSubmitTotp = () => {
-    setLoading(true);
-
-    checkpointLogin({
-      code: totpForm.values.code,
-      confirmation_token: twoFactorInformation?.token ?? '',
-    })
-      .then((response) => {
-        doLogin(response.user);
-      })
-      .catch((msg) => {
-        setError(httpErrorToHuman(msg));
-      })
-      .finally(() => setLoading(false));
   };
 
   return (
@@ -357,87 +328,6 @@ export default function Login() {
                 <Divider label={t('common.divider.or', {})} labelPosition='center' />
                 <Button variant='light' onClick={() => navigate('/auth/forgot-password')} size='md' fullWidth>
                   {t('pages.auth.login.step.password.button.forgotPassword', {})}
-                </Button>
-              </Stack>
-            </Card>
-          </>
-        ) : step === 'totp' ? (
-          <>
-            <Title order={2}>{t('pages.auth.login.step.totp.title', {})}</Title>
-            <Card>
-              <Stack>
-                <div className='flex items-center gap-2'>
-                  <img
-                    src={twoFactorInformation?.user.avatar ?? '/icon.svg'}
-                    alt={twoFactorInformation?.user.username}
-                    className='size-14 rounded-full'
-                  />
-                  <span className='text-neutral-400'>
-                    {t('pages.auth.login.step.totp.welcomeBack', {
-                      username: twoFactorInformation?.user.username ?? '',
-                    })}
-                  </span>
-                </div>
-                <Text className=' text-neutral-400!'>{t('pages.auth.login.step.totp.enterCode', {})}</Text>
-                <Center>
-                  <PinInput
-                    length={6}
-                    placeholder='0'
-                    size='md'
-                    type='number'
-                    oneTimeCode
-                    autoFocus
-                    {...totpForm.getInputProps('code')}
-                  />
-                </Center>
-                <Button onClick={doSubmitTotp} loading={loading} disabled={!totpForm.isValid()} size='md' fullWidth>
-                  {t('pages.auth.login.step.totp.button.verify', {})}
-                </Button>
-                <Divider label={t('common.divider.or', {})} labelPosition='center' />
-                <Button
-                  variant='light'
-                  onClick={() => {
-                    totpForm.reset();
-                    setStep('totp-recovery');
-                  }}
-                  size='md'
-                  fullWidth
-                >
-                  {t('pages.auth.login.step.totp.button.useRecoveryCode', {})}
-                </Button>
-              </Stack>
-            </Card>
-          </>
-        ) : step === 'totp-recovery' ? (
-          <>
-            <div>
-              <Title order={2}>{t('pages.auth.login.step.totp.title', {})}</Title>
-              <Text className='text-neutral-400!'>{t('pages.auth.login.step.totpRecovery.subtitle', {})}</Text>
-            </div>
-            <Card>
-              <Stack>
-                <TextInput
-                  label={t('pages.auth.login.step.totpRecovery.form.label', {})}
-                  placeholder={t('pages.auth.login.step.totpRecovery.form.placeholder', {})}
-                  onKeyDown={(e) => e.key === 'Enter' && doSubmitTotp()}
-                  size='md'
-                  autoFocus
-                  {...totpForm.getInputProps('code')}
-                />
-                <Button onClick={doSubmitTotp} loading={loading} disabled={!totpForm.isValid()} size='md' fullWidth>
-                  {t('pages.auth.login.step.totp.button.verify', {})}
-                </Button>
-                <Divider label={t('common.divider.or', {})} labelPosition='center' />
-                <Button
-                  variant='light'
-                  onClick={() => {
-                    totpForm.reset();
-                    setStep('totp');
-                  }}
-                  size='md'
-                  fullWidth
-                >
-                  {t('pages.auth.login.step.totp.button.useTotp', {})}
                 </Button>
               </Stack>
             </Card>
