@@ -1,7 +1,7 @@
 import { faEllipsis, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Menu, MenuProps } from '@mantine/core';
-import { createContext, memo, ReactNode, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, memo, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { ContextMenuRegistry } from 'shared/src/registries/slices/contextMenu';
 import { useCurrentWindow } from '@/providers/CurrentWindowProvider.tsx';
 
@@ -200,13 +200,24 @@ function ContextMenuBase<P>({ items: rawItems = [], registry, registryProps, chi
 
   const { showMenu, hideMenu } = context;
 
-  const openMenu = useMemo(() => {
-    return (x: number, y: number) => {
+  const openMenu = useCallback(
+    (x: number, y: number) => {
       showMenu(x, y, items);
-    };
-  }, [items, showMenu]);
+    },
+    [items, showMenu],
+  );
 
-  return children({ items, openMenu, hideMenu });
+  return (
+    <>
+      {registry &&
+        registryProps &&
+        registry.componentItemInterceptors.map((Interceptor, idx) => (
+          <Interceptor key={`context-menu-interceptor-${idx}`} items={items} {...registryProps} />
+        ))}
+
+      {children({ items, openMenu, hideMenu })}
+    </>
+  );
 }
 
 const ContextMenu = memo(ContextMenuBase) as typeof ContextMenuBase;
