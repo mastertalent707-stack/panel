@@ -7,8 +7,11 @@ import { z } from 'zod';
 type ExtendedFormHook<BaseFormType extends z.ZodTypeAny, FormType extends z.ZodTypeAny> = UseFormReturnType<
   z.infer<FormType> & z.infer<BaseFormType>
 >;
+export type FormComponentProps<BaseFormType extends z.ZodTypeAny, FormType extends z.ZodTypeAny, Props = {}> = Props & {
+  form: ExtendedFormHook<BaseFormType, FormType>;
+};
 type Component<BaseFormType extends z.ZodTypeAny, FormType extends z.ZodTypeAny, Props = {}> = FC<
-  Props & { form: ExtendedFormHook<BaseFormType, FormType> }
+  FormComponentProps<BaseFormType, FormType, Props>
 >;
 
 export class FormContainerRegistry<BaseFormType extends z.ZodTypeAny, Props = {}> implements Registry {
