@@ -1,6 +1,6 @@
 import { Group, Title, TitleOrder } from '@mantine/core';
-import { Dispatch, ReactNode, SetStateAction } from 'react';
-import { ContainerRegistry } from 'shared';
+import { Dispatch, ReactNode, SetStateAction, useMemo } from 'react';
+import { ContainerRegistry, makeComponentHookable } from 'shared';
 import { useCurrentWindow } from '@/providers/CurrentWindowProvider.tsx';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import { useGlobalStore } from '@/stores/global.ts';
@@ -20,7 +20,19 @@ export interface Props {
   children: ReactNode;
 }
 
-export default function AccountContentContainer(props: Props) {
+function AccountContentContainer(props: Props) {
+  props = useMemo(() => {
+    let modifiedProps = props;
+
+    if (props.registry) {
+      for (const interceptor of props.registry.propsInterceptors) {
+        modifiedProps = interceptor(modifiedProps);
+      }
+    }
+
+    return modifiedProps;
+  }, [props]);
+
   const {
     title,
     subtitle,
@@ -94,3 +106,5 @@ export default function AccountContentContainer(props: Props) {
     </ContentContainer>
   );
 }
+
+export default makeComponentHookable(AccountContentContainer);

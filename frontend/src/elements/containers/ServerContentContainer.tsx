@@ -1,8 +1,8 @@
 import { faCancel } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Group, Title, TitleOrder } from '@mantine/core';
-import { Dispatch, ReactNode, SetStateAction, useEffect, useState } from 'react';
-import { ContainerRegistry } from 'shared';
+import { Dispatch, ReactNode, SetStateAction, useEffect, useMemo, useState } from 'react';
+import { ContainerRegistry, makeComponentHookable } from 'shared';
 import cancelTransfer from '@/api/admin/servers/cancelTransfer.ts';
 import { httpErrorToHuman } from '@/api/axios.ts';
 import cancelServerInstall from '@/api/server/settings/cancelServerInstall.ts';
@@ -34,7 +34,19 @@ export interface Props {
   fullscreen?: boolean;
 }
 
-export default function ServerContentContainer(props: Props) {
+function ServerContentContainer(props: Props) {
+  props = useMemo(() => {
+    let modifiedProps = props;
+
+    if (props.registry) {
+      for (const interceptor of props.registry.propsInterceptors) {
+        modifiedProps = interceptor(modifiedProps);
+      }
+    }
+
+    return modifiedProps;
+  }, [props]);
+
   const {
     title,
     subtitle,
@@ -243,3 +255,5 @@ export default function ServerContentContainer(props: Props) {
     </ContentContainer>
   );
 }
+
+export default makeComponentHookable(ServerContentContainer) as typeof ServerContentContainer;

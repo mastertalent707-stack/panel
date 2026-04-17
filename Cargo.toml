@@ -2,7 +2,7 @@
 resolver = "3"
 members = ["backend", "database-migrator", "rule-validator", "wings-api", "shared", "schema-extension/*", "backend-extensions/*"]
 default-members = ["backend"]
-package.rust-version = "1.93.0"
+package.rust-version = "1.95.0"
 package.license = "MIT"
 package.version = "1.0.3"
 package.edition = "2024"
