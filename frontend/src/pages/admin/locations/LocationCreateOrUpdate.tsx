@@ -1,4 +1,4 @@
-import { Group, Stack } from '@mantine/core';
+import { Group } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { zod4Resolver } from 'mantine-form-zod-resolver';
 import { useEffect, useState } from 'react';
@@ -84,64 +84,61 @@ export default ({ contextLocation }: { contextLocation?: z.infer<typeof adminLoc
       </ConfirmationModal>
 
       <form onSubmit={form.onSubmit(() => doCreateOrUpdate(false, ['admin', 'locations']))}>
-        <Stack mt='xs'>
-          <Group grow>
-            <TextInput
-              withAsterisk
-              label='Name'
-              placeholder='Name'
-              key={form.key('name')}
-              {...form.getInputProps('name')}
-            />
-            <Select
-              label='Backup Configuration'
-              placeholder='None'
-              data={backupConfigurations.items.map((backupConfiguration) => ({
-                label: backupConfiguration.name,
-                value: backupConfiguration.uuid,
-              }))}
-              searchable
-              searchValue={backupConfigurations.search}
-              onSearchChange={backupConfigurations.setSearch}
-              allowDeselect
-              clearable
-              disabled={!canReadBackupConfigurations}
-              loading={backupConfigurations.loading}
-              key={form.key('backupConfigurationUuid')}
-              {...form.getInputProps('backupConfigurationUuid')}
-            />
-          </Group>
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+          <TextInput
+            withAsterisk
+            label='Name'
+            placeholder='Name'
+            key={form.key('name')}
+            {...form.getInputProps('name')}
+          />
+          <Select
+            label='Backup Configuration'
+            placeholder='None'
+            data={backupConfigurations.items.map((backupConfiguration) => ({
+              label: backupConfiguration.name,
+              value: backupConfiguration.uuid,
+            }))}
+            searchable
+            searchValue={backupConfigurations.search}
+            onSearchChange={backupConfigurations.setSearch}
+            allowDeselect
+            clearable
+            disabled={!canReadBackupConfigurations}
+            loading={backupConfigurations.loading}
+            key={form.key('backupConfigurationUuid')}
+            {...form.getInputProps('backupConfigurationUuid')}
+          />
 
-          <Group grow align='start'>
-            <TextArea
-              label='Description'
-              placeholder='Description'
-              rows={3}
-              key={form.key('description')}
-              {...form.getInputProps('description')}
-            />
-          </Group>
+          <TextArea
+            label='Description'
+            placeholder='Description'
+            className='col-span-full'
+            rows={3}
+            key={form.key('description')}
+            {...form.getInputProps('description')}
+          />
+        </div>
 
-          <Group>
-            <AdminCan action={contextLocation ? 'locations.update' : 'locations.create'} cantSave>
-              <Button type='submit' disabled={!form.isValid()} loading={loading}>
-                Save
+        <Group mt='md'>
+          <AdminCan action={contextLocation ? 'locations.update' : 'locations.create'} cantSave>
+            <Button type='submit' disabled={!form.isValid()} loading={loading}>
+              Save
+            </Button>
+            {!contextLocation && (
+              <Button onClick={() => doCreateOrUpdate(true)} disabled={!form.isValid()} loading={loading}>
+                Save & Stay
               </Button>
-              {!contextLocation && (
-                <Button onClick={() => doCreateOrUpdate(true)} disabled={!form.isValid()} loading={loading}>
-                  Save & Stay
-                </Button>
-              )}
-            </AdminCan>
-            {contextLocation && (
-              <AdminCan action='locations.delete' cantDelete>
-                <Button color='red' onClick={() => setOpenModal('delete')} loading={loading}>
-                  Delete
-                </Button>
-              </AdminCan>
             )}
-          </Group>
-        </Stack>
+          </AdminCan>
+          {contextLocation && (
+            <AdminCan action='locations.delete' cantDelete>
+              <Button color='red' onClick={() => setOpenModal('delete')} loading={loading}>
+                Delete
+              </Button>
+            </AdminCan>
+          )}
+        </Group>
       </form>
     </AdminContentContainer>
   );

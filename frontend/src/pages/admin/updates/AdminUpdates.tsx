@@ -112,7 +112,7 @@ export default function AdminUpdates() {
           </div>
         </TitleCard>
         <TitleCard title='Outdated Extensions' icon={<FontAwesomeIcon icon={faPuzzlePiece} />}>
-          {loading || !updateInformation ? (
+          {!updateInformation ? (
             <Spinner.Centered />
           ) : !extensionUpdates.length && !extensionUpdateErrors.length ? (
             <>

@@ -80,7 +80,12 @@ mod get {
                     for node in &nodes.data {
                         let client = node.api_client(&state.database).await?;
                         versions_futures.push(async move {
-                            let overview = client.get_system_overview().await?;
+                            let overview = tokio::time::timeout(
+                                std::time::Duration::from_secs(2),
+                                client.get_system_overview(),
+                            )
+                            .await??;
+
                             Ok::<_, anyhow::Error>((
                                 node.uuid,
                                 ParsedVersionInformation::from_str(&overview.version)?,
