@@ -1,6 +1,6 @@
 import { faFileText, faRefresh, faUpload } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Group, Title } from '@mantine/core';
+import { Group } from '@mantine/core';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { z } from 'zod';
 import getAdminExtensions from '@/api/admin/extensions/getAdminExtensions.ts';
@@ -168,18 +168,24 @@ export default function AdminExtensions() {
     handleAdd(file);
   };
 
+  const installedCount =
+    (window.extensionContext.extensions?.length || 0) +
+    (backendExtensions?.filter(
+      (be) => !window.extensionContext.extensions.find((e) => e.packageName === be.metadataToml.packageName),
+    ).length || 0);
+
   return (
     <AdminContentContainer
       title='Extensions'
       contentRight={
         <AdminCan action='extensions.manage'>
-          <Group hidden={!extensionStatus}>
+          <Group hidden={!extensionStatus} gap='xs'>
             <Button
-              variant='outline'
+              variant='default'
               leftSection={<FontAwesomeIcon icon={faFileText} />}
               onClick={() => setOpenModal('logs')}
             >
-              View Build Logs
+              View build logs
             </Button>
             <ConditionalTooltip
               enabled={extensionStatus?.isBuilding || false}
@@ -191,7 +197,7 @@ export default function AdminExtensions() {
                 onClick={() => fileInputRef.current?.click()}
                 disabled={extensionStatus?.isBuilding}
               >
-                Install
+                Install extension
               </Button>
             </ConditionalTooltip>
 
@@ -205,10 +211,26 @@ export default function AdminExtensions() {
 
       {!backendExtensions ? (
         <Spinner.Centered />
-      ) : !backendExtensions.length && !window.extensionContext.extensions.length ? (
-        <span>No extensions installed.</span>
+      ) : installedCount === 0 ? (
+        <span>
+          No extensions installed.{' '}
+          {!extensionStatus && (
+            <span>
+              You don't seem to be using the heavy image required to install extensions, see{' '}
+              <a
+                href='https://calagopus.com/docs/panel/installation/docker#change-the-docker-image-variant-optional'
+                className='underline text-blue-400'
+                target='_blank'
+                rel='noopener noreferrer'
+              >
+                here
+              </a>
+              . on how to switch to it.
+            </span>
+          )}
+        </span>
       ) : (
-        <div className='flex flex-row flex-wrap gap-4'>
+        <div className='grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-3'>
           {window.extensionContext.extensions.map(
             (
               extension,
@@ -245,11 +267,14 @@ export default function AdminExtensions() {
       )}
 
       {extensionStatus && (
-        <>
-          <Group justify='space-between' align='center' mt='xl'>
-            <Title order={2} mt='xl' mb='sm'>
-              Pending Extensions
-            </Title>
+        <section className='mt-10'>
+          <div className='mb-4 flex items-center justify-between border-b border-zinc-700/60 pb-3'>
+            <h2 className='text-base font-medium text-white'>
+              Pending extensions
+              {extensionStatus.pendingExtensions.length > 0 && (
+                <span className='ml-2 text-xs text-zinc-500'>({extensionStatus.pendingExtensions.length})</span>
+              )}
+            </h2>
 
             <AdminCan action='extensions.manage'>
               <ConditionalTooltip
@@ -265,20 +290,22 @@ export default function AdminExtensions() {
               >
                 <Button
                   color='red'
+                  size='xs'
                   leftSection={<FontAwesomeIcon icon={faRefresh} />}
                   loading={extensionStatus.isBuilding}
+                  disabled={!extensionStatus.pendingExtensions.length && !extensionStatus.removedExtensions.length}
                   onClick={handleRebuild}
                 >
-                  Rebuild Extensions
+                  Rebuild extensions
                 </Button>
               </ConditionalTooltip>
             </AdminCan>
-          </Group>
+          </div>
 
           {!extensionStatus.pendingExtensions.length ? (
-            <span>No pending extensions.</span>
+            <p className='text-sm text-zinc-500'>No pending extensions.</p>
           ) : (
-            <div className='flex flex-row flex-wrap gap-4'>
+            <div className='grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-3'>
               {extensionStatus.pendingExtensions.map((extension) => (
                 <ExtensionCard
                   key={extension.metadataToml.packageName}
@@ -289,7 +316,7 @@ export default function AdminExtensions() {
               ))}
             </div>
           )}
-        </>
+        </section>
       )}
     </AdminContentContainer>
   );

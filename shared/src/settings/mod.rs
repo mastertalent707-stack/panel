@@ -834,14 +834,19 @@ impl Settings {
     }
 
     pub async fn new(database: Arc<crate::database::Database>) -> Result<Self, anyhow::Error> {
+        let (s1, s2) = tokio::try_join!(
+            Self::fetch_settings(&database),
+            Self::fetch_settings(&database)
+        )?;
+
         Ok(Self {
             cached: [
                 RwLock::new(SettingsBuffer {
-                    settings: Self::fetch_settings(&database).await?,
+                    settings: s1,
                     expires: std::time::Instant::now() + std::time::Duration::from_secs(60),
                 }),
                 RwLock::new(SettingsBuffer {
-                    settings: Self::fetch_settings(&database).await?,
+                    settings: s2,
                     expires: std::time::Instant::now() + std::time::Duration::from_secs(60),
                 }),
             ],

@@ -1,4 +1,4 @@
-import { faUnlockKeyhole } from '@fortawesome/free-solid-svg-icons';
+import { faExternalLink, faUnlockKeyhole } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Group } from '@mantine/core';
 import { UseFormReturnType, useForm } from '@mantine/form';
@@ -241,6 +241,15 @@ export default function DatabaseHostCreateOrUpdate({
               </AdminCan>
             </>
           )}
+          <a
+            href='https://calagopus.com/docs/advanced/setting-up-database-hosts'
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            <Button variant='subtle' leftSection={<FontAwesomeIcon icon={faExternalLink} />}>
+              View Documentation
+            </Button>
+          </a>
         </Group>
       </form>
     </AdminContentContainer>

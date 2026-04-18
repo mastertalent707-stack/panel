@@ -59,7 +59,7 @@ export default function AdminOverview() {
         <Alert className='mb-4' color='yellow'>
           A new version is available for the panel! You are currently on {settings.version} and the latest version is{' '}
           {updateInformation.latestPanel}. You may want to consider upgrading.{' '}
-          <a href='https://calagopus.com/docs/panel/updating' className='underline text-blue-400'>
+          <a href='https://calagopus.com/docs/panel/updating' className='underline text-blue-400' target='_blank'>
             Click here
           </a>{' '}
           to view upgrade instructions.

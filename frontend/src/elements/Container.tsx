@@ -42,7 +42,7 @@ function Container({ children, isNormal }: LayoutProps) {
 
         <span className='flex flex-row justify-end gap-2'>
           <Tooltip label={settings.version}>
-            <a href='https://calagopus.com' target='_blank' rel='noopener noreferrer' className='underline'>
+            <a href='https://calagopus.com' target='_blank' className='underline'>
               Calagopus
             </a>
           </Tooltip>

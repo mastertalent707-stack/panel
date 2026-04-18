@@ -1,4 +1,4 @@
-import { faChevronDown, faFileDownload } from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown, faExternalLink, faFileDownload } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Group, Title } from '@mantine/core';
 import { useForm } from '@mantine/form';
@@ -368,6 +368,11 @@ export default function OAuthProviderCreateOrUpdate({
               </Button>
             </AdminCan>
           )}
+          <a href='https://calagopus.com/docs/advanced/oauth' target='_blank' rel='noopener noreferrer'>
+            <Button variant='subtle' leftSection={<FontAwesomeIcon icon={faExternalLink} />}>
+              View Documentation
+            </Button>
+          </a>
         </Group>
       </form>
     </AdminContentContainer>
