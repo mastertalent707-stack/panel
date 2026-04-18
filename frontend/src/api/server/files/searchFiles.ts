@@ -23,10 +23,6 @@ interface Data {
 }
 
 export default async (uuid: string, data: Data): Promise<z.infer<typeof serverDirectoryEntrySchema>[]> => {
-  return new Promise((resolve, reject) => {
-    axiosInstance
-      .post(`/api/client/servers/${uuid}/files/search`, transformKeysToSnakeCase(data))
-      .then(({ data }) => resolve(data.entries))
-      .catch(reject);
-  });
+  const { data } = await axiosInstance.post(`/api/client/servers/${uuid}/files/search`, transformKeysToSnakeCase(data));
+  return data.entries;
 };

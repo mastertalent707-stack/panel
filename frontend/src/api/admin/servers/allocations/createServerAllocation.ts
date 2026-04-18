@@ -8,10 +8,9 @@ interface Data {
 }
 
 export default async (serverUuid: string, data: Data): Promise<z.infer<typeof serverAllocationSchema>> => {
-  return new Promise((resolve, reject) => {
-    axiosInstance
-      .post(`/api/admin/servers/${serverUuid}/allocations`, transformKeysToSnakeCase(data))
-      .then(({ data }) => resolve(data.allocation))
-      .catch(reject);
-  });
+  const { data } = await axiosInstance.post(
+    `/api/admin/servers/${serverUuid}/allocations`,
+    transformKeysToSnakeCase(data),
+  );
+  return data.allocation;
 };

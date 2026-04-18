@@ -6,10 +6,6 @@ import { transformKeysToSnakeCase } from '@/lib/transformers.ts';
 export default async (
   data: z.infer<typeof userCommandSnippetUpdateSchema>,
 ): Promise<z.infer<typeof userCommandSnippetSchema>> => {
-  return new Promise((resolve, reject) => {
-    axiosInstance
-      .post('/api/client/account/command-snippets', transformKeysToSnakeCase(data))
-      .then(({ data }) => resolve(data.commandSnippet))
-      .catch(reject);
-  });
+  const { data } = await axiosInstance.post('/api/client/account/command-snippets', transformKeysToSnakeCase(data));
+  return data.commandSnippet;
 };

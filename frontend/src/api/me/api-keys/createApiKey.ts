@@ -9,13 +9,9 @@ interface Response {
 }
 
 export default async (data: z.infer<typeof userApiKeyUpdateSchema>): Promise<Response> => {
-  return new Promise((resolve, reject) => {
-    axiosInstance
-      .post('/api/client/account/api-keys', {
-        ...transformKeysToSnakeCase(data),
-        expires: data.expires ? data.expires.toISOString() : null,
-      })
-      .then(({ data }) => resolve(data))
-      .catch(reject);
+  const { data } = await axiosInstance.post('/api/client/account/api-keys', {
+    ...transformKeysToSnakeCase(data),
+    expires: data.expires ? data.expires.toISOString() : null,
   });
+  return data;
 };

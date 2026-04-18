@@ -8,10 +8,6 @@ interface Data {
 }
 
 export default async (serverUuid: string, data: Data): Promise<z.infer<typeof adminServerMountSchema>> => {
-  return new Promise((resolve, reject) => {
-    axiosInstance
-      .post(`/api/admin/servers/${serverUuid}/mounts`, transformKeysToSnakeCase(data))
-      .then(({ data }) => resolve(data))
-      .catch(reject);
-  });
+  const { data } = await axiosInstance.post(`/api/admin/servers/${serverUuid}/mounts`, transformKeysToSnakeCase(data));
+  return data;
 };

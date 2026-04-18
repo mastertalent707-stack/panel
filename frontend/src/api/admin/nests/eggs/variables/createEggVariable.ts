@@ -8,10 +8,9 @@ export default async (
   eggUuid: string,
   data: z.infer<typeof adminEggVariableUpdateSchema>,
 ): Promise<z.infer<typeof adminEggVariableSchema>> => {
-  return new Promise((resolve, reject) => {
-    axiosInstance
-      .post(`/api/admin/nests/${nestUuid}/eggs/${eggUuid}/variables`, transformKeysToSnakeCase(data))
-      .then(({ data }) => resolve(data.variable))
-      .catch(reject);
-  });
+  const { data } = await axiosInstance.post(
+    `/api/admin/nests/${nestUuid}/eggs/${eggUuid}/variables`,
+    transformKeysToSnakeCase(data),
+  );
+  return data.variable;
 };

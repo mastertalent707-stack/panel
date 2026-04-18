@@ -8,10 +8,9 @@ export default async (
   scheduleUuid: string,
   data: z.infer<typeof serverScheduleStepUpdateSchema>,
 ): Promise<z.infer<typeof serverScheduleStepSchema>> => {
-  return new Promise((resolve, reject) => {
-    axiosInstance
-      .post(`/api/client/servers/${serverUuid}/schedules/${scheduleUuid}/steps`, transformKeysToSnakeCase(data))
-      .then(({ data }) => resolve(data.scheduleStep))
-      .catch(reject);
-  });
+  const { data } = await axiosInstance.post(
+    `/api/client/servers/${serverUuid}/schedules/${scheduleUuid}/steps`,
+    transformKeysToSnakeCase(data),
+  );
+  return data.scheduleStep;
 };

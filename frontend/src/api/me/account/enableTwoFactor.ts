@@ -7,10 +7,6 @@ interface Response {
 }
 
 export default async (data: z.infer<typeof dashboardTwoFactorEnableSchema>): Promise<Response> => {
-  return new Promise((resolve, reject) => {
-    axiosInstance
-      .post('/api/client/account/two-factor', data)
-      .then(({ data }) => resolve(data))
-      .catch(reject);
-  });
+  const { data } = await axiosInstance.post('/api/client/account/two-factor', data);
+  return data;
 };

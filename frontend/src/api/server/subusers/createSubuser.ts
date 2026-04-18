@@ -10,15 +10,11 @@ interface Data {
 }
 
 export default async (uuid: string, data: Data): Promise<z.infer<typeof serverSubuserSchema>> => {
-  return new Promise((resolve, reject) => {
-    axiosInstance
-      .post(`/api/client/servers/${uuid}/subusers`, {
-        email: data.email,
-        permissions: data.permissions,
-        ignored_files: data.ignoredFiles,
-        captcha: data.captcha,
-      })
-      .then(({ data }) => resolve(data.subuser))
-      .catch(reject);
+  const { data } = await axiosInstance.post(`/api/client/servers/${uuid}/subusers`, {
+    email: data.email,
+    permissions: data.permissions,
+    ignored_files: data.ignoredFiles,
+    captcha: data.captcha,
   });
+  return data.subuser;
 };

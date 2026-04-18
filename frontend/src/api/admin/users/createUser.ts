@@ -4,10 +4,6 @@ import { adminFullUserSchema, adminUserUpdateSchema } from '@/lib/schemas/admin/
 import { transformKeysToSnakeCase } from '@/lib/transformers.ts';
 
 export default async (data: z.infer<typeof adminUserUpdateSchema>): Promise<z.infer<typeof adminFullUserSchema>> => {
-  return new Promise((resolve, reject) => {
-    axiosInstance
-      .post('/api/admin/users', transformKeysToSnakeCase(data))
-      .then(({ data }) => resolve(data.user))
-      .catch(reject);
-  });
+  const { data } = await axiosInstance.post('/api/admin/users', transformKeysToSnakeCase(data));
+  return data.user;
 };

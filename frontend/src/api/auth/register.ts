@@ -13,10 +13,6 @@ interface Response {
 }
 
 export default async (data: Data): Promise<Response> => {
-  return new Promise((resolve, reject) => {
-    axiosInstance
-      .post('/api/auth/register', transformKeysToSnakeCase(data))
-      .then(({ data }) => resolve(data))
-      .catch(reject);
-  });
+  const { data } = await axiosInstance.post('/api/auth/register', transformKeysToSnakeCase(data));
+  return data;
 };

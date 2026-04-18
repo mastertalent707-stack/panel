@@ -37,15 +37,9 @@ interface Response {
 }
 
 export default async (user: string): Promise<Response> => {
-  return new Promise((resolve, reject) => {
-    axiosInstance
-      .get('/api/auth/login/security-key', { params: { user } })
-      .then(({ data }) =>
-        resolve({
-          uuid: data.uuid,
-          options: prepareCredentialOptions(data.options),
-        }),
-      )
-      .catch(reject);
-  });
+  const { data } = await axiosInstance.get('/api/auth/login/security-key', { params: { user } });
+  return {
+    uuid: data.uuid,
+    options: prepareCredentialOptions(data.options),
+  };
 };
