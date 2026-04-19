@@ -31,18 +31,8 @@ function Container({ children, isNormal }: LayoutProps) {
 
         {children}
       </div>
-      <div className='my-2 text-xs transition-all flex flex-col text-gray-400 mr-12'>
-        {window.extensionContext.extensionRegistry.pages.global.copyright.prependedComponents.map(
-          (Component, index) => (
-            <Component key={`global-copyright-prepended-${index}`} />
-          ),
-        )}
-
+      <div className='my-2 ml-auto mr-12'>
         <Copyright className='justify-end' />
-
-        {window.extensionContext.extensionRegistry.pages.global.copyright.appendedComponents.map((Component, index) => (
-          <Component key={`global-copyright-appended-${index}`} />
-        ))}
       </div>
     </div>
   );

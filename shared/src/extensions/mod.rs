@@ -297,7 +297,7 @@ pub trait Extension: Send + Sync {
         Arc::new(settings::EmptySettings)
     }
 
-    /// Your extension update checker, this is used to check for updates to your extension. It runs every 24 hours and on startup.
+    /// Your extension update checker, this is used to check for updates to your extension. It runs every 12 hours and on startup.
     /// You can return an `ExtensionUpdateInfo` struct with the new version and a list of changes, this changes list *should* be all
     /// changes from the current version to the new version. An empty changes list will simply not show any changelog, but will still show that an update is available.
     async fn check_for_updates(
@@ -307,7 +307,7 @@ pub trait Extension: Send + Sync {
     ) -> Result<Option<ExtensionUpdateInfo>, anyhow::Error> {
         Ok(None)
     }
-
+ 
     /// Your extension call processor, this can be called by other extensions to interact with yours,
     /// if the call does not apply to your extension, simply return `None` to continue the matching process.
     ///

@@ -134,7 +134,10 @@ export default function ServerGroupItem({
       </ConfirmationModal>
 
       <Card key={serverGroup.uuid} p={0} className='overflow-hidden rounded-xl!'>
-        <div className='flex flex-row items-end sm:items-center gap-3 px-3 bg-(--mantine-color-dark-7) justify-between'>
+        <div
+          id='server-group-item-header'
+          className='flex flex-row items-end sm:items-center gap-3 px-3 bg-(--mantine-color-dark-7) justify-between'
+        >
           <div className='flex flex-col my-3 sm:my-0'>
             <div className='flex flex-row'>
               <ActionIcon
