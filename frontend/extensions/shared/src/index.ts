@@ -4,6 +4,7 @@ import type { FC } from 'react';
 export interface GlobalRouteDefinition {
   path: string;
   filter?: () => boolean;
+  matches?: (path: string) => boolean;
   element: FC;
   exact?: boolean;
 }

@@ -1,6 +1,6 @@
 import { faArchive, faArrowRightLong, faChartBar, faCrow, faStethoscope } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Group, Text, Title } from '@mantine/core';
+import { Text, Title } from '@mantine/core';
 import { startTransition, useEffect, useState } from 'react';
 import getBackupStats, { type BackupStats } from '@/api/admin/stats/getBackupStats.ts';
 import getGeneralStats, { type GeneralStats } from '@/api/admin/stats/getGeneralStats.ts';
@@ -9,7 +9,6 @@ import { httpErrorToHuman } from '@/api/axios.ts';
 import Alert from '@/elements/Alert.tsx';
 import { AdminCan } from '@/elements/Can.tsx';
 import Card from '@/elements/Card.tsx';
-import AdminContentContainer from '@/elements/containers/AdminContentContainer.tsx';
 import Spinner from '@/elements/Spinner.tsx';
 import TitleCard from '@/elements/TitleCard.tsx';
 import { bytesToString } from '@/lib/size.ts';
@@ -48,13 +47,7 @@ export default function AdminOverview() {
   }, []);
 
   return (
-    <AdminContentContainer title='Admin' hideTitleComponent>
-      <Group justify='space-between' mb='md'>
-        <Title order={1} c='white'>
-          Overview
-        </Title>
-      </Group>
-
+    <>
       {updateInformation && parseVersion(updateInformation.latestPanel).isNewerThan(settings.version) && (
         <Alert className='mb-4' color='yellow'>
           A new version is available for the panel! You are currently on {settings.version} and the latest version is{' '}
@@ -319,6 +312,6 @@ export default function AdminOverview() {
           )}
         </TitleCard>
       </AdminCan>
-    </AdminContentContainer>
+    </>
   );
 }

@@ -217,6 +217,7 @@ mod post {
                 }
 
                 node_uuid = Some(node.uuid);
+                break;
             }
         } else {
             node_uuid = nodes.into_iter().next().map(|n| n.uuid);

@@ -81,6 +81,8 @@ function Link({ to, end, icon, name, title = name }: LinkProps) {
   const { t } = useTranslations();
   const { addWindow } = useWindows();
 
+  if (to.endsWith('/*')) to = to.slice(0, to.length - 2);
+
   return (
     <ContextMenu
       items={[

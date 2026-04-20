@@ -15,7 +15,6 @@ import { httpErrorToHuman } from '@/api/axios.ts';
 import Alert from '@/elements/Alert.tsx';
 import Button from '@/elements/Button.tsx';
 import Code from '@/elements/Code.tsx';
-import AdminContentContainer from '@/elements/containers/AdminContentContainer.tsx';
 import Spinner from '@/elements/Spinner.tsx';
 import Table, { TableData, TableRow } from '@/elements/Table.tsx';
 import TitleCard from '@/elements/TitleCard.tsx';
@@ -30,9 +29,9 @@ import { useSearchablePaginatedTable } from '@/plugins/useSearchablePageableTabl
 import { useToast } from '@/providers/ToastProvider.tsx';
 import { useAdminStore } from '@/stores/admin.tsx';
 import { useGlobalStore } from '@/stores/global.ts';
-import NodeRow from '../nodes/NodeRow.tsx';
+import NodeRow from '../../nodes/NodeRow.tsx';
 
-export default function AdminUpdates() {
+export default function AdminOverviewUpdates() {
   const { addToast } = useToast();
   const { updateInformation, setUpdateInformation } = useAdminStore();
   const { settings } = useGlobalStore();
@@ -40,7 +39,7 @@ export default function AdminUpdates() {
   const [nodes, setNodes] = useState<Awaited<ReturnType<typeof getNodeUpdates>> | null>(null);
   const [recheckLoading, setRecheckLoading] = useState(false);
 
-  const { loading, setPage } = useSearchablePaginatedTable({
+  const { loading, setPage, refetch } = useSearchablePaginatedTable({
     queryKey: queryKeys.admin.updates.all(),
     fetcher: (page) => getNodeUpdates(page),
     setStoreData: setNodes,
@@ -69,6 +68,7 @@ export default function AdminUpdates() {
     recheckUpdates()
       .then((updateInformation) => {
         setUpdateInformation(updateInformation);
+        refetch();
         addToast('Recheck complete', 'success');
       })
       .catch((msg) => addToast(httpErrorToHuman(msg), 'error'))
@@ -76,7 +76,7 @@ export default function AdminUpdates() {
   };
 
   return (
-    <AdminContentContainer title='Updates'>
+    <>
       {updateInformation && parseVersion(updateInformation.latestPanel).isNewerThan(settings.version) && (
         <Alert className='mb-4' color='yellow'>
           A new version is available for the panel! You are currently on {settings.version} and the latest version is{' '}
@@ -204,6 +204,6 @@ export default function AdminUpdates() {
           )}
         </TitleCard>
       </div>
-    </AdminContentContainer>
+    </>
   );
 }
