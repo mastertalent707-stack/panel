@@ -61,12 +61,9 @@ export function useSearchablePaginatedTable<T>({
     }
   }, [search]);
 
-  const enabled = !deps.length || deps.every(Boolean);
-
   const { data, isFetching, error, refetch } = useQuery({
     queryKey: [...queryKey, ...deps, { page, search: debouncedSearch }],
     queryFn: () => fetcher(page, debouncedSearch),
-    enabled,
     placeholderData: keepPreviousData,
   });
 
