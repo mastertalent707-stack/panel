@@ -57,8 +57,18 @@ fn main() {
     {
         let data = resp.bytes().expect("Failed to read response bytes");
 
+        println!(
+            "cargo:warning=Downloading and Compressing wings-rs version {tag} for {target_arch} from GitHub..."
+        );
+
         let compressed_data =
             zstd::encode_all(&*data, 22).expect("Failed to compress binary with zstd");
+
+        println!(
+            "cargo:warning=Compressed binary size: {} bytes -> {} bytes",
+            data.len(),
+            compressed_data.len()
+        );
 
         let mut file = File::create(&bin_path).expect("Failed to create bin");
         file.write_all(&compressed_data)
