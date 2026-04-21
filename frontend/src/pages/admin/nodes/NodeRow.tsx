@@ -93,10 +93,6 @@ export default function NodeRow({ node }: { node: z.infer<typeof adminNodeSchema
       </TableData>
 
       <TableData>
-        <Code>{node.url}</Code>
-      </TableData>
-
-      <TableData>
         <FormattedTimestamp timestamp={node.created} />
       </TableData>
     </TableRow>

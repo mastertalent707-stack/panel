@@ -102,7 +102,11 @@ const admin = {
   },
 
   updates: {
-    all: () => ['admin', 'updates'] as const,
+    nodes: () => ['admin', 'updates', 'nodes'] as const,
+  },
+
+  health: {
+    nodes: () => ['admin', 'health', 'nodes'] as const,
   },
 };
 

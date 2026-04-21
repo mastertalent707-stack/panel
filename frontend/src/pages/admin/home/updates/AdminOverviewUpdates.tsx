@@ -22,7 +22,7 @@ import { queryKeys } from '@/lib/queryKeys.ts';
 import {
   adminExtensionUpdateCheckResultErrorSchema,
   adminExtensionUpdateCheckResultUpdateAvailableSchema,
-} from '@/lib/schemas/admin/updates.ts';
+} from '@/lib/schemas/admin/system.ts';
 import { nodeTableColumns } from '@/lib/tableColumns.ts';
 import { parseVersion } from '@/lib/version.ts';
 import { useSearchablePaginatedTable } from '@/plugins/useSearchablePageableTable.ts';
@@ -40,7 +40,7 @@ export default function AdminOverviewUpdates() {
   const [recheckLoading, setRecheckLoading] = useState(false);
 
   const { loading, setPage, refetch } = useSearchablePaginatedTable({
-    queryKey: queryKeys.admin.updates.all(),
+    queryKey: queryKeys.admin.updates.nodes(),
     fetcher: (page) => getNodeUpdates(page),
     setStoreData: setNodes,
     paginationKey: 'outdatedNodes',

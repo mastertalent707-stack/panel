@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { axiosInstance } from '@/api/axios.ts';
-import { adminNodeUpdateInformationSchema } from '@/lib/schemas/admin/updates.ts';
+import { adminNodeUpdateInformationSchema } from '@/lib/schemas/admin/system.ts';
 
 export default async (
   page: number,

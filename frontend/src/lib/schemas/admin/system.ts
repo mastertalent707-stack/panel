@@ -33,3 +33,9 @@ export const adminNodeUpdateInformationSchema = z.object({
   version: z.string(),
   node: z.lazy(() => adminNodeSchema),
 });
+
+export const adminNodeDesyncSchema = z.object({
+  localTime: z.string(),
+  panelLocalTime: z.string(),
+  node: z.lazy(() => adminNodeSchema),
+});
