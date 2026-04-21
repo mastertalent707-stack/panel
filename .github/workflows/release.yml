@@ -124,7 +124,8 @@ jobs:
         if: contains(matrix.target, 'linux')
         run: |
           RUSTFLAGS="-C target-feature=+crt-static" \
-          cross build --release --target ${{ matrix.target }} -p $BIN_NAME -p $AIO_BIN_NAME
+          cross build --release --target ${{ matrix.target }} -p $BIN_NAME
+          cross build --release --target ${{ matrix.target }} -p $AIO_BIN_NAME
 
       - name: Build release binary (Windows)
         if: runner.os == 'Windows'
