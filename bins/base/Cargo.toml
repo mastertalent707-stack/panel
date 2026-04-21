@@ -4,6 +4,7 @@ rust-version = { workspace = true }
 license = { workspace = true }
 version = { workspace = true }
 edition = { workspace = true }
+default-run = "panel-rs"
 
 [dependencies]
 backend = { workspace = true }

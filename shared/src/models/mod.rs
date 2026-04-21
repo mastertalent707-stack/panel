@@ -5,7 +5,9 @@ use garde::Validate;
 use serde::{Deserialize, Serialize, de::DeserializeOwned};
 use sqlx::{
     Arguments, Postgres, QueryBuilder, Row,
-    postgres::{PgArguments, PgRow},
+    encode::IsNull,
+    error::BoxDynError,
+    postgres::{PgArgumentBuffer, PgArguments, PgRow, PgTypeInfo},
 };
 use std::{
     collections::{BTreeMap, HashSet},
@@ -974,5 +976,22 @@ impl<'a> UpdateQueryBuilder<'a> {
 
         let query = self.builder.build();
         query.execute(executor).await.map(|r| r.into())
+    }
+}
+
+/// SQLx helper type to preserve order of keys when encoding JSON. By default, SQLx encodes JSON using `serde_json::Value`, which does not preserve order of keys. This type allows you to encode any serializable type as JSON while preserving the order of keys.
+pub struct OrderedJson<T>(pub T);
+
+impl<T: Serialize> sqlx::Encode<'_, sqlx::Postgres> for OrderedJson<T> {
+    fn encode_by_ref(&self, buf: &mut PgArgumentBuffer) -> Result<IsNull, BoxDynError> {
+        serde_json::to_writer(&mut **buf, &self.0)?;
+        Ok(IsNull::No)
+    }
+}
+
+impl<T> sqlx::Type<sqlx::Postgres> for OrderedJson<T> {
+    fn type_info() -> PgTypeInfo {
+        // JSON, not JSONB, to preserve order of keys
+        PgTypeInfo::with_oid(sqlx::postgres::types::Oid(114))
     }
 }

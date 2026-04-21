@@ -122,7 +122,7 @@ impl EggRepositoryEgg {
         .bind(author)
         .bind(name)
         .bind(description)
-        .bind(serde_json::to_value(exported_egg)?)
+        .bind(OrderedJson(exported_egg))
         .fetch_one(database.write())
         .await?;
 

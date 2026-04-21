@@ -449,7 +449,7 @@ impl NestEgg {
                 config_files = $5, config_startup = $6, config_stop = $7,
                 config_script = $8, startup = $9,
                 force_outgoing_ip = $10, separate_port = $11, features = $12,
-                docker_images = $13, file_denylist = $14
+                docker_images = $13::json, file_denylist = $14
             WHERE nest_eggs.uuid = $1",
             self.uuid,
             &exported_egg.author,
@@ -479,7 +479,7 @@ impl NestEgg {
                 .into_iter()
                 .map(|f| f.into())
                 .collect::<Vec<_>>(),
-            serde_json::to_value(&exported_egg.docker_images)?,
+            serde_json::to_string(&exported_egg.docker_images)? as String,
             &exported_egg
                 .file_denylist
                 .into_iter()
@@ -976,10 +976,7 @@ impl CreatableModel for NestEgg {
             .set("force_outgoing_ip", options.force_outgoing_ip)
             .set("separate_port", options.separate_port)
             .set("features", &options.features)
-            .set(
-                "docker_images",
-                serde_json::to_value(&options.docker_images)?,
-            )
+            .set("docker_images", OrderedJson(&options.docker_images))
             .set("file_denylist", &options.file_denylist);
 
         let row = query_builder
@@ -1144,11 +1141,7 @@ impl UpdatableModel for NestEgg {
             .set("features", options.features.as_ref())
             .set(
                 "docker_images",
-                options
-                    .docker_images
-                    .as_ref()
-                    .map(serde_json::to_value)
-                    .transpose()?,
+                options.docker_images.as_ref().map(OrderedJson),
             )
             .set("file_denylist", options.file_denylist.as_ref())
             .where_eq("uuid", self.uuid);

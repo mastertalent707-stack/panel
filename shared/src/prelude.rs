@@ -1,6 +1,6 @@
 pub use crate::models::{
     BaseModel, ByUuid, CreatableModel, CreateListenerList, DeletableModel, DeleteListenerList,
-    EventEmittingModel, Fetchable, ListenerPriority, ModelHandlerList, UpdatableModel,
+    EventEmittingModel, Fetchable, ListenerPriority, ModelHandlerList, OrderedJson, UpdatableModel,
     UpdateListenerList,
 };
 pub use schema_extension_core::finish_extendible;

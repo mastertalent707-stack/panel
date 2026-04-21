@@ -62,7 +62,7 @@ async fn handle_aio_wings(state: &shared::State) -> Result<(), anyhow::Error> {
                         Some(backup_configuration) => backup_configuration,
                         None => {
                             tracing::info!("creating aio wings backup configuration...");
-                            BackupConfiguration::create(&state,shared::models::backup_configuration::CreateBackupConfigurationOptions {
+                            BackupConfiguration::create(state,shared::models::backup_configuration::CreateBackupConfigurationOptions {
                                 name: "Integrated Backup Configuration".into(),
                                 description: None,
                                 maintenance_enabled: false,
@@ -73,7 +73,7 @@ async fn handle_aio_wings(state: &shared::State) -> Result<(), anyhow::Error> {
                     };
 
                     Location::create(
-                        &state,
+                        state,
                         shared::models::location::CreateLocationOptions {
                             backup_configuration_uuid: Some(backup_configuration.uuid),
                             name: "Integrated Location".into(),
@@ -86,7 +86,7 @@ async fn handle_aio_wings(state: &shared::State) -> Result<(), anyhow::Error> {
 
             tracing::info!("creating aio wings node...");
             let node = Node::create(
-                &state,
+                state,
                 shared::models::node::CreateNodeOptions {
                     location_uuid: location.uuid,
                     backup_configuration_uuid: None,
@@ -159,7 +159,7 @@ async fn handle_aio_wings(state: &shared::State) -> Result<(), anyhow::Error> {
         serde_norway::Value::String(format!("http://localhost:{}", state.env.port)),
     );
     {
-        let api_mapping = match mapping.get_mut(&serde_norway::Value::String("api".into())) {
+        let api_mapping = match mapping.get_mut(serde_norway::Value::String("api".into())) {
             Some(serde_norway::Value::Mapping(api_mapping)) => api_mapping,
             _ => {
                 let api_mapping = serde_norway::Mapping::new();
@@ -167,7 +167,7 @@ async fn handle_aio_wings(state: &shared::State) -> Result<(), anyhow::Error> {
                     serde_norway::Value::String("api".into()),
                     serde_norway::Value::Mapping(api_mapping),
                 );
-                match mapping.get_mut(&serde_norway::Value::String("api".into())) {
+                match mapping.get_mut(serde_norway::Value::String("api".into())) {
                     Some(serde_norway::Value::Mapping(api_mapping)) => api_mapping,
                     _ => unreachable!(),
                 }
