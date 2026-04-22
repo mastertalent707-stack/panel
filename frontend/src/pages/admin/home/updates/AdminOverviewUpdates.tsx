@@ -28,13 +28,11 @@ import { parseVersion } from '@/lib/version.ts';
 import { useSearchablePaginatedTable } from '@/plugins/useSearchablePageableTable.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';
 import { useAdminStore } from '@/stores/admin.tsx';
-import { useGlobalStore } from '@/stores/global.ts';
 import NodeRow from '../../nodes/NodeRow.tsx';
 
 export default function AdminOverviewUpdates() {
   const { addToast } = useToast();
   const { updateInformation, setUpdateInformation } = useAdminStore();
-  const { settings } = useGlobalStore();
 
   const [nodes, setNodes] = useState<Awaited<ReturnType<typeof getNodeUpdates>> | null>(null);
   const [recheckLoading, setRecheckLoading] = useState(false);
@@ -77,16 +75,17 @@ export default function AdminOverviewUpdates() {
 
   return (
     <>
-      {updateInformation && parseVersion(updateInformation.latestPanel).isNewerThan(settings.version) && (
-        <Alert className='mb-4' color='yellow'>
-          A new version is available for the panel! You are currently on {settings.version} and the latest version is{' '}
-          {updateInformation.latestPanel}. You may want to consider upgrading.{' '}
-          <a href='https://calagopus.com/docs/panel/updating' className='underline text-blue-400' target='_blank'>
-            Click here
-          </a>{' '}
-          to view upgrade instructions.
-        </Alert>
-      )}
+      {updateInformation &&
+        parseVersion(updateInformation.latestPanelVersion).isNewerThan(updateInformation.panelVersion) && (
+          <Alert className='mb-4' color='yellow'>
+            A new version is available for the panel! You are currently on {updateInformation.panelVersion} and the
+            latest version is {updateInformation.latestPanelVersion}. You may want to consider upgrading.{' '}
+            <a href='https://calagopus.com/docs/panel/updating' className='underline text-blue-400' target='_blank'>
+              Click here
+            </a>{' '}
+            to view upgrade instructions.
+          </Alert>
+        )}
 
       <div className='2xl:columns-2 gap-4 space-y-4'>
         <TitleCard title='Panel Version' icon={<FontAwesomeIcon icon={faInfoCircle} />}>
@@ -94,13 +93,14 @@ export default function AdminOverviewUpdates() {
             <span>
               <FontAwesomeIcon
                 icon={
-                  updateInformation && parseVersion(updateInformation.latestPanel).isNewerThan(settings.version)
+                  updateInformation &&
+                  parseVersion(updateInformation.latestPanelVersion).isNewerThan(updateInformation.panelVersion)
                     ? faExclamationTriangle
                     : faCheck
                 }
               />{' '}
-              Your panel is currently running version <Code>{settings.version}</Code>. The latest available version is{' '}
-              <Code>{updateInformation?.latestPanel || 'unknown'}</Code>.
+              Your panel is currently running version <Code>{updateInformation?.panelVersion || 'unknown'}</Code>. The
+              latest available version is <Code>{updateInformation?.latestPanelVersion || 'unknown'}</Code>.
             </span>
 
             <Button
@@ -187,7 +187,7 @@ export default function AdminOverviewUpdates() {
           ) : (
             <>
               <FontAwesomeIcon icon={faExclamationTriangle} /> Some nodes are outdated, the latest available version is{' '}
-              <Code>{updateInformation?.latestWings || 'unknown'}</Code>. ({nodes?.outdatedNodes.total} outdated,{' '}
+              <Code>{updateInformation?.latestWingsVersion || 'unknown'}</Code>. ({nodes?.outdatedNodes.total} outdated,{' '}
               {nodes?.failedNodes} failed to check)
               <div className='mt-4' />
               <Table

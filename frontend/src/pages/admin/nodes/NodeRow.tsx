@@ -43,7 +43,7 @@ export default function NodeRow({ node }: { node: z.infer<typeof adminNodeSchema
             <Tooltip label='Error while fetching version'>
               <FontAwesomeIcon icon={faHeartBroken} className='text-red-500' />
             </Tooltip>
-          ) : updateInformation && parseVersion(updateInformation.latestWings).isNewerThan(version) ? (
+          ) : updateInformation && parseVersion(updateInformation.latestWingsVersion).isNewerThan(version) ? (
             <Tooltip label={`${version} (Update Available)`}>
               <FontAwesomeIcon icon={faHeart} className='text-yellow-500 animate-pulse' />
             </Tooltip>

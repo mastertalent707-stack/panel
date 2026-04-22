@@ -16,12 +16,10 @@ import { parseVersion } from '@/lib/version.ts';
 import { useAdminCan } from '@/plugins/usePermissions.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';
 import { useAdminStore } from '@/stores/admin.tsx';
-import { useGlobalStore } from '@/stores/global.ts';
 
 export default function AdminOverview() {
   const { addToast } = useToast();
   const { updateInformation } = useAdminStore();
-  const { settings } = useGlobalStore();
   const canReadStats = useAdminCan('stats.read');
 
   const [systemOverview, setSystemOverview] = useState<AdminSystemOverview | null>(null);
@@ -48,16 +46,17 @@ export default function AdminOverview() {
 
   return (
     <>
-      {updateInformation && parseVersion(updateInformation.latestPanel).isNewerThan(settings.version) && (
-        <Alert className='mb-4' color='yellow'>
-          A new version is available for the panel! You are currently on {settings.version} and the latest version is{' '}
-          {updateInformation.latestPanel}. You may want to consider upgrading.{' '}
-          <a href='https://calagopus.com/docs/panel/updating' className='underline text-blue-400' target='_blank'>
-            Click here
-          </a>{' '}
-          to view upgrade instructions.
-        </Alert>
-      )}
+      {updateInformation &&
+        parseVersion(updateInformation.latestPanelVersion).isNewerThan(updateInformation.panelVersion) && (
+          <Alert className='mb-4' color='yellow'>
+            A new version is available for the panel! You are currently on {updateInformation.panelVersion} and the
+            latest version is {updateInformation.latestPanelVersion}. You may want to consider upgrading.{' '}
+            <a href='https://calagopus.com/docs/panel/updating' className='underline text-blue-400' target='_blank'>
+              Click here
+            </a>{' '}
+            to view upgrade instructions.
+          </Alert>
+        )}
 
       <AdminCan
         action='stats.read'

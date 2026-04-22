@@ -24,8 +24,9 @@ export const adminExtensionUpdateCheckResultSchema = z.discriminatedUnion('type'
 ]);
 
 export const adminUpdateInformationSchema = z.object({
-  latestPanel: z.string(),
-  latestWings: z.string(),
+  panelVersion: z.string(),
+  latestPanelVersion: z.string(),
+  latestWingsVersion: z.string(),
   extensions: z.record(z.string(), adminExtensionUpdateCheckResultSchema),
 });
 

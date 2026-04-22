@@ -829,7 +829,7 @@ pub async fn handle_startup() -> (
     };
 
     let (router, mut openapi) = app.split_for_parts();
-    openapi.info.version = state.version.clone();
+    openapi.info.version = "1.0.0".into();
     openapi.info.description = None;
     openapi.info.title = format!("{} API", settings.app.name);
     openapi.info.contact = None;

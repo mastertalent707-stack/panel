@@ -131,7 +131,7 @@ mod get {
 
         let mut outdated_node_uuids = Vec::new();
         for (node_uuid, _, version) in node_versions {
-            if version.version < update_information.latest_wings {
+            if version.version < update_information.latest_wings_version {
                 outdated_node_uuids.push((node_uuid, version));
             }
         }
