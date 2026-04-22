@@ -77,32 +77,27 @@ export default function AdminOverviewHealth() {
             </>
           )}
         </TitleCard>
-        <TitleCard title='Extension Migrations' icon={<FontAwesomeIcon icon={faPuzzlePiece} />}>
+        <TitleCard title='Extension Migration Health' icon={<FontAwesomeIcon icon={faPuzzlePiece} />}>
           {!general ? (
             <Spinner.Centered />
           ) : !Object.keys(general.migrations.extensions).length ? (
-            <>No extension migrations found.</>
+            <>No extensions found.</>
           ) : (
             <>
               {Object.keys(general.migrations.extensions).length > 0 && (
-                <>
-                  <div className='mt-4' />
-                  <Table columns={['Package Name', 'Applied', 'Total']} loading={loading}>
-                    {Object.entries(general.migrations.extensions).map(([identifier, migrations]) => (
-                      <TableRow key={identifier}>
-                        <TableData>
-                          <Code>{identifier}</Code>
-                        </TableData>
-                        <TableData>
-                          <Code>{migrations.applied}</Code>
-                        </TableData>
-                        <TableData>
-                          <Code>{migrations.total}</Code>
-                        </TableData>
-                      </TableRow>
-                    ))}
-                  </Table>
-                </>
+                <Table columns={['Package Name', 'Applied', 'Total']} loading={loading}>
+                  {Object.entries(general.migrations.extensions).map(([identifier, migrations]) => (
+                    <TableRow key={identifier}>
+                      <TableData>
+                        <Code>{identifier}</Code>
+                      </TableData>
+                      <TableData>
+                        {migrations.applied} ({((migrations.applied / migrations.total) * 100).toFixed(2)}%)
+                      </TableData>
+                      <TableData>{migrations.total}</TableData>
+                    </TableRow>
+                  ))}
+                </Table>
               )}
             </>
           )}
@@ -121,9 +116,18 @@ export default function AdminOverviewHealth() {
               panel's clock). This can cause file download/console issues. ({nodes?.desyncNodes.total} desync,{' '}
               {nodes?.failedNodes} failed to check)
               <div className='mt-4' />
-              <Table columns={nodeTableColumns} loading={loading} pagination={nodes.desyncNodes} onPageSelect={setPage}>
+              <Table
+                columns={['', 'ID', 'Desync', ...nodeTableColumns.slice(2)]}
+                loading={loading}
+                pagination={nodes.desyncNodes}
+                onPageSelect={setPage}
+              >
                 {nodes.desyncNodes.data.map((node) => (
-                  <NodeRow key={node.node.uuid} node={node.node} />
+                  <NodeRow
+                    key={node.node.uuid}
+                    node={node.node}
+                    desync={Math.abs(new Date(node.localTime).getTime() - new Date(node.panelLocalTime).getTime())}
+                  />
                 ))}
               </Table>
             </>

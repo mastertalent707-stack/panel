@@ -122,7 +122,7 @@ mod get {
 
         let mut desync_node_uuids = Vec::new();
         for (node_uuid, _, local_time, panel_time) in node_local_times {
-            if (local_time - panel_time).abs() <= chrono::Duration::seconds(5) {
+            if (local_time - panel_time).abs() >= chrono::Duration::seconds(5) {
                 desync_node_uuids.push((node_uuid, local_time, panel_time));
             }
         }

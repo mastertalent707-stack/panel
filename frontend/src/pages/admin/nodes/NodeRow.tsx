@@ -14,7 +14,7 @@ import { adminNodeSchema } from '@/lib/schemas/admin/nodes.ts';
 import { parseVersion } from '@/lib/version.ts';
 import { useAdminStore } from '@/stores/admin.tsx';
 
-export default function NodeRow({ node }: { node: z.infer<typeof adminNodeSchema> }) {
+export default function NodeRow({ node, desync }: { node: z.infer<typeof adminNodeSchema>; desync?: number }) {
   const { updateInformation } = useAdminStore();
 
   const [version, setVersion] = useState<string | null>(null);
@@ -62,6 +62,8 @@ export default function NodeRow({ node }: { node: z.infer<typeof adminNodeSchema
           <Code>{node.uuid}</Code>
         </NavLink>
       </TableData>
+
+      {desync !== undefined && <TableData>{desync}ms</TableData>}
 
       <TableData>
         <span className='flex gap-2 items-center'>

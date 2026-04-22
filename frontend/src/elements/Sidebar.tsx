@@ -9,6 +9,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Menu } from '@mantine/core';
+import classNames from 'classnames';
 import { ReactNode, useEffect, useState } from 'react';
 import { MemoryRouter, NavLink, useNavigate } from 'react-router';
 import { makeComponentHookable } from 'shared';
@@ -54,7 +55,9 @@ function Sidebar({ children }: SidebarProps) {
         >
           <CloseButton size='xl' className='absolute! right-4 z-10' onClick={() => setIsMobileMenuOpen(false)} />
 
-          <div className='h-full flex flex-col overflow-y-auto'>{children}</div>
+          <div id='sidebar-content' className='h-full flex flex-col overflow-y-auto'>
+            {children}
+          </div>
         </Drawer>
 
         <Card
@@ -62,7 +65,9 @@ function Sidebar({ children }: SidebarProps) {
           p='sm'
           id='sidebar-desktop'
         >
-          <div className='h-full flex flex-col overflow-y-auto'>{children}</div>
+          <div id='sidebar-content' className='h-full flex flex-col overflow-y-auto'>
+            {children}
+          </div>
         </Card>
       </ContextMenuProvider>
     </>
@@ -75,9 +80,10 @@ type LinkProps = {
   icon?: IconDefinition;
   name?: string;
   title?: string;
+  className?: string;
 };
 
-function Link({ to, end, icon, name, title = name }: LinkProps) {
+function Link({ to, end, icon, name, title = name, className }: LinkProps) {
   const { t } = useTranslations();
   const { addWindow } = useWindows();
 
@@ -132,7 +138,7 @@ function Link({ to, end, icon, name, title = name }: LinkProps) {
           {({ isActive }) => (
             <Button
               color={isActive ? 'blue' : 'gray'}
-              className={isActive ? 'cursor-default! active' : undefined}
+              className={classNames(isActive && 'cursor-default! active', className)}
               variant='subtle'
               fullWidth
               styles={{ label: { width: '100%' } }}
