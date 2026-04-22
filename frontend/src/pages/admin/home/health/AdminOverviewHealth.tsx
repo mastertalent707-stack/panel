@@ -92,7 +92,8 @@ export default function AdminOverviewHealth() {
                         <Code>{identifier}</Code>
                       </TableData>
                       <TableData>
-                        {migrations.applied} ({((migrations.applied / migrations.total) * 100).toFixed(2)}%)
+                        {migrations.applied} (
+                        {(migrations.total === 0 ? 100 : (migrations.applied / migrations.total) * 100).toFixed(2)}%)
                       </TableData>
                       <TableData>{migrations.total}</TableData>
                     </TableRow>

@@ -4612,6 +4612,7 @@ dependencies = [
  "serde_norway",
  "shared",
  "sqlx",
+ "sysinfo 0.38.4",
  "tikv-jemallocator",
  "tokio",
  "tower",

@@ -84,6 +84,16 @@ async fn handle_aio_wings(state: &shared::State) -> Result<(), anyhow::Error> {
                 }
             };
 
+            let mut system = sysinfo::System::new();
+            system.refresh_memory();
+            let mut disks = sysinfo::Disks::new();
+            disks.refresh(true);
+
+            let disk = disks
+                .iter()
+                .find(|d| d.mount_point() == std::path::Path::new("/"))
+                .unwrap_or(&disks[0]);
+
             tracing::info!("creating aio wings node...");
             let node = Node::create(
                 state,
@@ -98,8 +108,8 @@ async fn handle_aio_wings(state: &shared::State) -> Result<(), anyhow::Error> {
                     url: "http://localhost:64332".into(),
                     sftp_host: None,
                     sftp_port: 2022,
-                    memory: 1,
-                    disk: 1,
+                    memory: system.total_memory() as i64 / 1024 / 1024,
+                    disk: disk.total_space() as i64 / 1024 / 1024,
                 },
             )
             .await?;
