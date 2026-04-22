@@ -23,6 +23,7 @@ import SizeInput from '@/elements/input/SizeInput.tsx';
 import TagsInput from '@/elements/input/TagsInput.tsx';
 import TextInput from '@/elements/input/TextInput.tsx';
 import { resolvePorts } from '@/lib/ip.ts';
+import { isNodeAIO } from '@/lib/node.ts';
 import { adminNodeAllocationsSchema } from '@/lib/schemas/admin/nodes.ts';
 import { oobeNodeSchema } from '@/lib/schemas/oobe.ts';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
@@ -156,6 +157,7 @@ export default function OobeNode({ onNext, onBack, canGoBack, skipFrom, data }: 
                 leftSection={<FontAwesomeIcon icon={faGlobe} size='sm' />}
                 placeholder={t('pages.oobe.node.form.urlPlaceholder', {})}
                 {...form.getInputProps('url')}
+                disabled={isEdit && isNodeAIO(existingNode)}
               />
               <TextInput
                 className='flex-1'
@@ -164,6 +166,7 @@ export default function OobeNode({ onNext, onBack, canGoBack, skipFrom, data }: 
                 leftSection={<FontAwesomeIcon icon={faGlobeAmericas} size='sm' />}
                 placeholder={t('pages.oobe.node.form.publicUrlPlaceholder', {})}
                 {...form.getInputProps('publicUrl')}
+                disabled={isEdit && isNodeAIO(existingNode)}
               />
             </div>
             <div className='flex flex-col sm:flex-row gap-2'>
