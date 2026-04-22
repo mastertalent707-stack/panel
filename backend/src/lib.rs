@@ -631,7 +631,11 @@ pub async fn handle_startup() -> (
                         .await
                         {
                             Ok(Ok(response)) => response,
-                            Ok(Err(_)) => break 'proxy,
+                            Ok(Err(_)) => {
+                                return ApiResponse::error("failed to connect to upstream")
+                                    .with_status(StatusCode::BAD_GATEWAY)
+                                    .ok();
+                            }
                             Err(_) => {
                                 return ApiResponse::error("upstream request timed out")
                                     .with_status(StatusCode::GATEWAY_TIMEOUT)
