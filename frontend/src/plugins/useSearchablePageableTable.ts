@@ -25,7 +25,7 @@ function parseNumber(num: string | null): number | null {
 }
 
 export function useSearchablePaginatedTable<T>({
-  queryKey,
+  queryKey = [],
   fetcher,
   setStoreData,
   paginationKey,

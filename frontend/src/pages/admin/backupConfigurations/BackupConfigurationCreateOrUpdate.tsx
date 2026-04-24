@@ -1,3 +1,5 @@
+import { faExternalLink } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Group } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { zod4Resolver } from 'mantine-form-zod-resolver';
@@ -216,6 +218,15 @@ export default function BackupConfigurationCreateOrUpdate({
               </Button>
             </AdminCan>
           )}
+          <a
+            href='https://calagopus.com/docs/advanced/setting-up-backup-configurations'
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            <Button variant='subtle' leftSection={<FontAwesomeIcon icon={faExternalLink} />}>
+              View Documentation
+            </Button>
+          </a>
         </Group>
         {(form.getValues().backupDisk === 's3' || backupConfigS3Form.isDirty() || backupConfigS3Form.isTouched()) && (
           <BackupS3 form={backupConfigS3Form} />
