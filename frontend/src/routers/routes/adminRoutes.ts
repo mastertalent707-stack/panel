@@ -42,6 +42,7 @@ const routes: AdminRouteDefinition[] = [
     name: 'Home',
     icon: faBuilding,
     path: '/*',
+    activeMatches: ['/admin/updates', '/admin/health'],
     element: AdminHome,
     exact: true,
   },

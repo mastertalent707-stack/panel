@@ -58,6 +58,7 @@ export default function AdminRouter({ isNormal }: { isNormal: boolean }) {
                     end={route.exact}
                     icon={route.icon}
                     name={typeof route.name === 'function' ? route.name() : route.name}
+                    activeMatches={route.activeMatches}
                   />
                 </AdminCan>
               ) : (
@@ -67,6 +68,7 @@ export default function AdminRouter({ isNormal }: { isNormal: boolean }) {
                   end={route.exact}
                   icon={route.icon}
                   name={typeof route.name === 'function' ? route.name() : route.name}
+                  activeMatches={route.activeMatches}
                 />
               ),
             )}
