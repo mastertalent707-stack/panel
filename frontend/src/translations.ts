@@ -540,6 +540,8 @@ const baseTranslations = defineTranslations({
         login: {
           error: {
             usernameRequired: 'Please enter a username',
+            registrationDisabled: 'No matching Account could be found and registration is currently disabled.',
+            userAlreadyExists: 'An account with this username or email already exists.',
           },
           passkey: {
             error: {

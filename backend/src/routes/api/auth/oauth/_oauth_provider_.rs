@@ -85,7 +85,8 @@ pub fn router(state: &State) -> OpenApiRouter<State> {
                     state
                         .database
                         .decrypt(oauth_provider.client_secret.clone())
-                        .await?.into(),
+                        .await?
+                        .into(),
                 ))
                 .set_auth_uri(AuthUrl::new(oauth_provider.auth_url.clone())?)
                 .set_token_uri(TokenUrl::new(oauth_provider.token_url.clone())?)
@@ -361,8 +362,9 @@ pub fn router(state: &State) -> OpenApiRouter<State> {
                     None => {
                         let settings = state.settings.get().await?;
                         if !settings.app.registration_enabled {
-                            return ApiResponse::error("registration is disabled")
-                                .with_status(StatusCode::BAD_REQUEST)
+                            return ApiResponse::new(Body::empty())
+                                .with_header("Location", format!("{}/auth/login?error=registration_disabled", settings.app.url.trim_end_matches('/')))
+                                .with_status(StatusCode::TEMPORARY_REDIRECT)
                                 .ok();
                         }
 
@@ -382,13 +384,15 @@ pub fn router(state: &State) -> OpenApiRouter<State> {
                             admin: false,
                             language: settings.app.language.clone(),
                         };
+                        let app_url = settings.app.url.clone();
                         drop(settings);
 
                         let user = match User::create(&state, options).await {
                             Ok(user) => user,
                             Err(err) if err.is_unique_violation() => {
-                                return ApiResponse::error("user with username or email already exists")
-                                    .with_status(StatusCode::BAD_REQUEST)
+                                return ApiResponse::new(Body::empty())
+                                    .with_header("Location", format!("{}/auth/login?error=user_already_exists", app_url.trim_end_matches('/')))
+                                    .with_status(StatusCode::TEMPORARY_REDIRECT)
                                     .ok();
                             }
                             Err(err) => return ApiResponse::from(err).ok(),
@@ -410,10 +414,8 @@ pub fn router(state: &State) -> OpenApiRouter<State> {
 
                         cookies.add(UserSession::get_cookie(&state, key).await?);
 
-                        let settings = state.settings.get().await?;
-
                         ApiResponse::new(Body::empty())
-                            .with_header("Location", &settings.app.url)
+                            .with_header("Location", app_url)
                             .with_status(StatusCode::TEMPORARY_REDIRECT)
                             .ok()
                     }

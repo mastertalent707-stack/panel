@@ -4,7 +4,7 @@ import { Alert, Divider, Stack, Text, Title } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { zod4Resolver } from 'mantine-form-zod-resolver';
 import { startTransition, useEffect, useRef, useState } from 'react';
-import { NavLink, useNavigate } from 'react-router';
+import { NavLink, useNavigate, useSearchParams } from 'react-router';
 import { z } from 'zod';
 import getOAuthProviders from '@/api/auth/getOAuthProviders.ts';
 import getSecurityKeys from '@/api/auth/getSecurityKeys.ts';
@@ -27,6 +27,7 @@ export default function Login() {
   const { doLogin } = useAuth();
   const { settings, timeOffset } = useGlobalStore();
   const { t } = useTranslations();
+  const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
@@ -58,6 +59,23 @@ export default function Login() {
       setOAuthProviders(oAuthProviders);
     });
   }, []);
+
+  useEffect(() => {
+    const error = searchParams.get('error');
+    if (error) {
+      switch (error) {
+        case 'registration_disabled':
+          setError(t('pages.auth.login.error.registrationDisabled', {}));
+          break;
+        case 'user_already_exists':
+          setError(t('pages.auth.login.error.userAlreadyExists', {}));
+          break;
+      }
+
+      searchParams.delete('error');
+      setSearchParams(searchParams);
+    }
+  }, [searchParams]);
 
   const doSubmitUsername = () => {
     if (!usernameForm.values.username) {
