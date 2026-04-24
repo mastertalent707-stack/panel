@@ -1,6 +1,6 @@
 import { faCheck, faGripVertical, faPencil, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Group, Input, Stack, StyleProp, Text } from "@mantine/core";
+import { Group, Input, Stack, StyleProp, Text } from '@mantine/core';
 import { ComponentProps, startTransition, useEffect, useRef, useState } from 'react';
 import { makeComponentHookable } from 'shared';
 import ActionIcon from '@/elements/ActionIcon.tsx';
@@ -20,7 +20,7 @@ interface TagsInputProps {
   onChange: (tags: string[]) => void;
   placeholder?: string;
   allowDuplicates?: boolean;
-  flex?: StyleProp<React.CSSProperties['flex']>
+  flex?: StyleProp<React.CSSProperties['flex']>;
 }
 
 interface DndTag extends DndItem {

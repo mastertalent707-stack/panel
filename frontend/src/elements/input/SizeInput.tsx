@@ -1,4 +1,4 @@
-import { Box, StyleProp } from "@mantine/core";
+import { Box, StyleProp } from '@mantine/core';
 import { startTransition, useEffect, useRef, useState } from 'react';
 import { makeComponentHookable } from 'shared';
 import { closestUnit, formatUnitBytes, mapUnitToLocale, mbToBytes, UNITS, unitToBytes } from '@/lib/size.ts';
@@ -13,7 +13,7 @@ interface SizeInputProps {
   min: number;
   value: number;
   onChange: (value: number) => void;
-  flex?: StyleProp<React.CSSProperties['flex']>
+  flex?: StyleProp<React.CSSProperties['flex']>;
 }
 
 function SizeInput({ mode, min, value, onChange, flex, ...rest }: SizeInputProps) {

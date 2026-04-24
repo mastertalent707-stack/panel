@@ -6,6 +6,7 @@ import { Route, Routes, useLocation, useNavigate } from 'react-router';
 import { z } from 'zod';
 import getEggRepositories from '@/api/admin/egg-repositories/getEggRepositories.ts';
 import getLocations from '@/api/admin/locations/getLocations.ts';
+import getNodeAllocations from '@/api/admin/nodes/allocations/getNodeAllocations.ts';
 import getNodes from '@/api/admin/nodes/getNodes.ts';
 import getServers from '@/api/admin/servers/getServers.ts';
 import updateOobeSettings from '@/api/admin/settings/updateOobeSettings.ts';
@@ -26,7 +27,6 @@ import { useAuth } from '@/providers/AuthProvider.tsx';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import { steps } from '@/routers/oobeSteps.ts';
 import { useGlobalStore } from '@/stores/global.ts';
-import getNodeAllocations from "@/api/admin/nodes/allocations/getNodeAllocations.ts";
 
 export interface OobeData {
   locations: z.infer<typeof adminLocationSchema>[];
