@@ -159,19 +159,36 @@ impl Mount {
                 .try_collect_vec()?,
         })
     }
+}
 
-    #[inline]
-    pub fn into_admin_api_object(self) -> AdminApiMount {
-        AdminApiMount {
-            uuid: self.uuid,
-            name: self.name,
-            description: self.description,
-            source: self.source,
-            target: self.target,
-            read_only: self.read_only,
-            user_mountable: self.user_mountable,
-            created: self.created.and_utc(),
-        }
+#[async_trait::async_trait]
+impl IntoAdminApiObject for Mount {
+    type AdminApiObject = AdminApiMount;
+    type ExtraArgs<'a> = ();
+
+    async fn into_admin_api_object<'a>(
+        self,
+        state: &crate::State,
+        _args: Self::ExtraArgs<'a>,
+    ) -> Result<Self::AdminApiObject, crate::database::DatabaseError> {
+        let api_object = AdminApiMount::init_hooks(&self, state).await?;
+
+        let api_object = finish_extendible!(
+            AdminApiMount {
+                uuid: self.uuid,
+                name: self.name,
+                description: self.description,
+                source: self.source,
+                target: self.target,
+                read_only: self.read_only,
+                user_mountable: self.user_mountable,
+                created: self.created.and_utc(),
+            },
+            api_object,
+            state
+        )?;
+
+        Ok(api_object)
     }
 }
 
@@ -394,6 +411,9 @@ impl DeletableModel for Mount {
     }
 }
 
+#[schema_extension_derive::extendible]
+#[init_args(Mount, crate::State)]
+#[hook_args(crate::State)]
 #[derive(ToSchema, Serialize)]
 #[schema(title = "Mount")]
 pub struct AdminApiMount {

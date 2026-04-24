@@ -75,7 +75,10 @@ export default function AdminRouter({ isNormal }: { isNormal: boolean }) {
         </Sidebar>
       )}
 
-      <div id='admin-root' className={isNormal ? 'max-w-[100vw] flex-1 lg:ml-0' : 'flex-1 lg:ml-0 overflow-auto'}>
+      <div
+        id='admin-root'
+        className={isNormal ? 'max-w-[100vw] flex-1 lg:ml-0' : 'flex-1 lg:ml-0 overflow-auto h-full'}
+      >
         <Container isNormal={isNormal}>
           {window.extensionContext.extensionRegistry.pages.admin.prependedComponents.map((Component, i) => (
             <Component key={`admin-prepended-component-${i}`} />

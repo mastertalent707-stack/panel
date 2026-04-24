@@ -8,7 +8,7 @@ mod get {
     use serde::{Deserialize, Serialize};
     use shared::{
         ApiError, GetState,
-        models::{Pagination, server::Server, user::GetPermissionManager},
+        models::{IntoAdminApiObject, Pagination, server::Server, user::GetPermissionManager},
         response::{ApiResponse, ApiResponseResult},
     };
     use utoipa::ToSchema;

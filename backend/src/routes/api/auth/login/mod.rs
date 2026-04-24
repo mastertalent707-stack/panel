@@ -13,7 +13,8 @@ mod post {
         ApiError, GetState,
         jwt::BasePayload,
         models::{
-            CreatableModel, user::User, user_activity::UserActivity, user_session::UserSession,
+            CreatableModel, IntoApiObject, user::User, user_activity::UserActivity,
+            user_session::UserSession,
         },
         response::{ApiResponse, ApiResponseResult},
     };
@@ -141,7 +142,10 @@ mod post {
             }
 
             ApiResponse::new_serialized(Response::TwoFactorRequired {
-                user: Box::new(user.into_api_object(&state.storage.retrieve_urls().await?)),
+                user: Box::new(
+                    user.into_api_object(&state, &state.storage.retrieve_urls().await?)
+                        .await?,
+                ),
                 token,
             })
             .ok()
@@ -191,7 +195,10 @@ mod post {
             }
 
             ApiResponse::new_serialized(Response::Completed {
-                user: Box::new(user.into_api_full_object(&state.storage.retrieve_urls().await?)),
+                user: Box::new(
+                    user.into_api_full_object(&state, &state.storage.retrieve_urls().await?)
+                        .await?,
+                ),
             })
             .ok()
         }

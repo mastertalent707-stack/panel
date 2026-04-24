@@ -488,42 +488,71 @@ impl DatabaseHost {
 
         row.try_map(|row| Self::map(None, &row))
     }
+}
 
-    #[inline]
-    pub fn into_admin_api_object(mut self) -> AdminApiDatabaseHost {
+#[async_trait::async_trait]
+impl IntoAdminApiObject for DatabaseHost {
+    type AdminApiObject = AdminApiDatabaseHost;
+    type ExtraArgs<'a> = ();
+
+    async fn into_admin_api_object<'a>(
+        mut self,
+        state: &crate::State,
+        _args: Self::ExtraArgs<'a>,
+    ) -> Result<Self::AdminApiObject, crate::database::DatabaseError> {
+        let api_object = AdminApiDatabaseHost::init_hooks(&self, state).await?;
         self.credentials.censor();
 
-        AdminApiDatabaseHost {
-            uuid: self.uuid,
-            name: self.name,
-            r#type: self.r#type,
-            deployment_enabled: self.deployment_enabled,
-            maintenance_enabled: self.maintenance_enabled,
-            public_host: self.public_host,
-            public_port: self.public_port,
-            credentials: self.credentials,
-            created: self.created.and_utc(),
-        }
-    }
+        let api_object = finish_extendible!(
+            AdminApiDatabaseHost {
+                uuid: self.uuid,
+                name: self.name,
+                r#type: self.r#type,
+                deployment_enabled: self.deployment_enabled,
+                maintenance_enabled: self.maintenance_enabled,
+                public_host: self.public_host,
+                public_port: self.public_port,
+                credentials: self.credentials,
+                created: self.created.and_utc(),
+            },
+            api_object,
+            state
+        )?;
 
-    #[inline]
-    pub async fn into_api_object(
+        Ok(api_object)
+    }
+}
+
+#[async_trait::async_trait]
+impl IntoApiObject for DatabaseHost {
+    type ApiObject = ApiDatabaseHost;
+    type ExtraArgs<'a> = ();
+
+    async fn into_api_object<'a>(
         self,
         state: &crate::State,
-    ) -> Result<ApiDatabaseHost, anyhow::Error> {
+        _args: Self::ExtraArgs<'a>,
+    ) -> Result<Self::ApiObject, crate::database::DatabaseError> {
+        let api_object = ApiDatabaseHost::init_hooks(&self, state).await?;
         let details = self
             .credentials
             .parse_connection_details(&state.database)
             .await?;
 
-        Ok(ApiDatabaseHost {
-            uuid: self.uuid,
-            name: self.name,
-            maintenance_enabled: self.maintenance_enabled,
-            r#type: self.r#type,
-            host: self.public_host.unwrap_or(details.host),
-            port: self.public_port.unwrap_or(details.port as i32),
-        })
+        let api_object = finish_extendible!(
+            ApiDatabaseHost {
+                uuid: self.uuid,
+                name: self.name,
+                maintenance_enabled: self.maintenance_enabled,
+                r#type: self.r#type,
+                host: self.public_host.unwrap_or(details.host),
+                port: self.public_port.unwrap_or(details.port as i32),
+            },
+            api_object,
+            state
+        )?;
+
+        Ok(api_object)
     }
 }
 
@@ -774,6 +803,9 @@ impl DeletableModel for DatabaseHost {
     }
 }
 
+#[schema_extension_derive::extendible]
+#[init_args(DatabaseHost, crate::State)]
+#[hook_args(crate::State)]
 #[derive(ToSchema, Serialize)]
 #[schema(title = "AdminDatabaseHost")]
 pub struct AdminApiDatabaseHost {
@@ -792,6 +824,9 @@ pub struct AdminApiDatabaseHost {
     pub created: chrono::DateTime<chrono::Utc>,
 }
 
+#[schema_extension_derive::extendible]
+#[init_args(DatabaseHost, crate::State)]
+#[hook_args(crate::State)]
 #[derive(ToSchema, Serialize)]
 #[schema(title = "DatabaseHost")]
 pub struct ApiDatabaseHost {

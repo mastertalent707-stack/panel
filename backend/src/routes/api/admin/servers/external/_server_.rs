@@ -6,7 +6,7 @@ mod get {
     use serde::Serialize;
     use shared::{
         ApiError, GetState,
-        models::{server::Server, user::GetPermissionManager},
+        models::{IntoAdminApiObject, server::Server, user::GetPermissionManager},
         response::{ApiResponse, ApiResponseResult},
     };
     use utoipa::ToSchema;

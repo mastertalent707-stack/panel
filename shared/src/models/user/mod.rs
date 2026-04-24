@@ -613,79 +613,130 @@ impl User {
         }
     }
 
-    #[inline]
-    pub fn into_api_object(self, storage_url_retriever: &StorageUrlRetriever<'_>) -> ApiUser {
-        ApiUser {
-            uuid: self.uuid,
-            username: self.username,
-            avatar: self
-                .avatar
-                .as_ref()
-                .map(|a| storage_url_retriever.get_url(a)),
-            totp_enabled: self.totp_enabled,
-            created: self.created.and_utc(),
-        }
-    }
-
-    #[inline]
-    pub fn into_api_full_object(
+    pub async fn into_api_full_object(
         self,
+        state: &crate::State,
         storage_url_retriever: &StorageUrlRetriever<'_>,
-    ) -> ApiFullUser {
+    ) -> Result<ApiFullUser, crate::database::DatabaseError> {
+        let api_object = ApiFullUser::init_hooks(&self, state).await?;
+
         let require_two_factor = self.require_two_factor(storage_url_retriever.get_settings());
 
-        ApiFullUser {
-            uuid: self.uuid,
-            username: self.username,
-            role: self.role.map(|r| r.into_admin_api_object()),
-            avatar: self
-                .avatar
-                .as_ref()
-                .map(|a| storage_url_retriever.get_url(a)),
-            email: self.email,
-            name_first: self.name_first,
-            name_last: self.name_last,
-            admin: self.admin,
-            totp_enabled: self.totp_enabled,
-            totp_last_used: self.totp_last_used.map(|dt| dt.and_utc()),
-            require_two_factor,
-            language: self.language,
-            toast_position: self.toast_position,
-            start_on_grouped_servers: self.start_on_grouped_servers,
-            has_password: self.has_password,
-            created: self.created.and_utc(),
-        }
-    }
+        let role = if let Some(r) = self.role {
+            Some(r.into_admin_api_object(state, ()).await?)
+        } else {
+            None
+        };
 
-    #[inline]
-    pub fn into_admin_api_object(
+        let api_object = finish_extendible!(
+            ApiFullUser {
+                uuid: self.uuid,
+                username: self.username,
+                role,
+                avatar: self
+                    .avatar
+                    .as_ref()
+                    .map(|a| storage_url_retriever.get_url(a)),
+                email: self.email,
+                name_first: self.name_first,
+                name_last: self.name_last,
+                admin: self.admin,
+                totp_enabled: self.totp_enabled,
+                totp_last_used: self.totp_last_used.map(|dt| dt.and_utc()),
+                require_two_factor,
+                language: self.language,
+                toast_position: self.toast_position,
+                start_on_grouped_servers: self.start_on_grouped_servers,
+                has_password: self.has_password,
+                created: self.created.and_utc(),
+            },
+            api_object,
+            state
+        )?;
+
+        Ok(api_object)
+    }
+}
+
+#[async_trait::async_trait]
+impl IntoApiObject for User {
+    type ApiObject = ApiUser;
+    type ExtraArgs<'a> = &'a crate::storage::StorageUrlRetriever<'a>;
+
+    async fn into_api_object<'a>(
         self,
-        storage_url_retriever: &StorageUrlRetriever<'_>,
-    ) -> AdminApiUser {
+        state: &crate::State,
+        storage_url_retriever: Self::ExtraArgs<'a>,
+    ) -> Result<Self::ApiObject, crate::database::DatabaseError> {
+        let api_object = ApiUser::init_hooks(&self, state).await?;
+
+        let api_object = finish_extendible!(
+            ApiUser {
+                uuid: self.uuid,
+                username: self.username,
+                avatar: self
+                    .avatar
+                    .as_ref()
+                    .map(|a| storage_url_retriever.get_url(a)),
+                totp_enabled: self.totp_enabled,
+                created: self.created.and_utc(),
+            },
+            api_object,
+            state
+        )?;
+
+        Ok(api_object)
+    }
+}
+
+#[async_trait::async_trait]
+impl IntoAdminApiObject for User {
+    type AdminApiObject = AdminApiUser;
+    type ExtraArgs<'a> = &'a crate::storage::StorageUrlRetriever<'a>;
+
+    async fn into_admin_api_object<'a>(
+        self,
+        state: &crate::State,
+        storage_url_retriever: Self::ExtraArgs<'a>,
+    ) -> Result<Self::AdminApiObject, crate::database::DatabaseError> {
+        let api_object = AdminApiUser::init_hooks(&self, state).await?;
+
         let require_two_factor = self.require_two_factor(storage_url_retriever.get_settings());
 
-        AdminApiUser {
-            uuid: self.uuid,
-            external_id: self.external_id,
-            username: self.username,
-            role: self.role.map(|r| r.into_admin_api_object()),
-            avatar: self
-                .avatar
-                .as_ref()
-                .map(|a| storage_url_retriever.get_url(a)),
-            email: self.email,
-            name_first: self.name_first,
-            name_last: self.name_last,
-            admin: self.admin,
-            totp_enabled: self.totp_enabled,
-            totp_last_used: self.totp_last_used.map(|dt| dt.and_utc()),
-            require_two_factor,
-            language: self.language,
-            toast_position: self.toast_position,
-            start_on_grouped_servers: self.start_on_grouped_servers,
-            has_password: self.has_password,
-            created: self.created.and_utc(),
-        }
+        let role = if let Some(r) = self.role {
+            Some(r.into_admin_api_object(state, ()).await?)
+        } else {
+            None
+        };
+
+        let api_object = finish_extendible!(
+            AdminApiUser {
+                uuid: self.uuid,
+                external_id: self.external_id,
+                username: self.username,
+                role,
+                avatar: self
+                    .avatar
+                    .as_ref()
+                    .map(|a| storage_url_retriever.get_url(a)),
+                email: self.email,
+                name_first: self.name_first,
+                name_last: self.name_last,
+                admin: self.admin,
+                totp_enabled: self.totp_enabled,
+                totp_last_used: self.totp_last_used.map(|dt| dt.and_utc()),
+                require_two_factor,
+                language: self.language,
+                toast_position: self.toast_position,
+                start_on_grouped_servers: self.start_on_grouped_servers,
+                has_password: self.has_password,
+                created: self.created.and_utc(),
+            },
+            api_object,
+            state
+        )?;
+
+        Ok(api_object)
     }
 }
 
@@ -1001,6 +1052,9 @@ impl ByUuid for User {
     }
 }
 
+#[schema_extension_derive::extendible]
+#[init_args(User, crate::State)]
+#[hook_args(crate::State)]
 #[derive(ToSchema, Serialize)]
 #[schema(title = "User")]
 pub struct ApiUser {
@@ -1014,6 +1068,9 @@ pub struct ApiUser {
     pub created: chrono::DateTime<chrono::Utc>,
 }
 
+#[schema_extension_derive::extendible]
+#[init_args(User, crate::State)]
+#[hook_args(crate::State)]
 #[derive(ToSchema, Serialize)]
 #[schema(title = "FullUser")]
 pub struct ApiFullUser {
@@ -1041,6 +1098,9 @@ pub struct ApiFullUser {
     pub created: chrono::DateTime<chrono::Utc>,
 }
 
+#[schema_extension_derive::extendible]
+#[init_args(User, crate::State)]
+#[hook_args(crate::State)]
 #[derive(ToSchema, Serialize)]
 #[schema(title = "AdminUser")]
 pub struct AdminApiUser {

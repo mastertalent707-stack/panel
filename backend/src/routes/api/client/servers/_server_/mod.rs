@@ -117,7 +117,7 @@ mod get {
     use serde::Serialize;
     use shared::{
         GetState,
-        models::{server::GetServer, user::GetUser},
+        models::{IntoApiObject, server::GetServer, user::GetUser},
         response::{ApiResponse, ApiResponseResult},
     };
     use utoipa::ToSchema;

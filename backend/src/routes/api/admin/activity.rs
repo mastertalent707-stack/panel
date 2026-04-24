@@ -7,8 +7,8 @@ mod get {
     use shared::{
         ApiError, GetState,
         models::{
-            Pagination, PaginationParamsWithSearch, admin_activity::AdminActivity,
-            user::GetPermissionManager,
+            IntoAdminApiObject, Pagination, PaginationParamsWithSearch,
+            admin_activity::AdminActivity, user::GetPermissionManager,
         },
         response::{ApiResponse, ApiResponseResult},
     };

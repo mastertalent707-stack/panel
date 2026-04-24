@@ -132,17 +132,34 @@ impl Role {
                 .try_collect_vec()?,
         })
     }
+}
 
-    #[inline]
-    pub fn into_admin_api_object(self) -> AdminApiRole {
-        AdminApiRole {
-            uuid: self.uuid,
-            name: self.name,
-            description: self.description,
-            admin_permissions: self.admin_permissions,
-            server_permissions: self.server_permissions,
-            created: self.created.and_utc(),
-        }
+#[async_trait::async_trait]
+impl IntoAdminApiObject for Role {
+    type AdminApiObject = AdminApiRole;
+    type ExtraArgs<'a> = ();
+
+    async fn into_admin_api_object<'a>(
+        self,
+        state: &crate::State,
+        _args: Self::ExtraArgs<'a>,
+    ) -> Result<Self::AdminApiObject, crate::database::DatabaseError> {
+        let api_object = AdminApiRole::init_hooks(&self, state).await?;
+
+        let api_object = finish_extendible!(
+            AdminApiRole {
+                uuid: self.uuid,
+                name: self.name,
+                description: self.description,
+                admin_permissions: self.admin_permissions,
+                server_permissions: self.server_permissions,
+                created: self.created.and_utc(),
+            },
+            api_object,
+            state
+        )?;
+
+        Ok(api_object)
     }
 }
 
@@ -352,6 +369,9 @@ impl DeletableModel for Role {
     }
 }
 
+#[schema_extension_derive::extendible]
+#[init_args(Role, crate::State)]
+#[hook_args(crate::State)]
 #[derive(ToSchema, Serialize)]
 #[schema(title = "Role")]
 pub struct AdminApiRole {

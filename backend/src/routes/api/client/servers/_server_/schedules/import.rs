@@ -7,7 +7,7 @@ mod post {
     use shared::{
         ApiError, GetState,
         models::{
-            CreatableModel,
+            CreatableModel, IntoApiObject,
             server::{GetServer, GetServerActivityLogger},
             server_schedule::{ExportedServerSchedule, ServerSchedule},
             server_schedule_step::ServerScheduleStep,
@@ -116,7 +116,7 @@ mod post {
         server.0.batch_sync(&state.database).await;
 
         ApiResponse::new_serialized(Response {
-            schedule: schedule.into_api_object(),
+            schedule: schedule.into_api_object(&state, ()).await?,
         })
         .ok()
     }

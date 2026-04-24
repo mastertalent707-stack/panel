@@ -211,22 +211,10 @@ impl EggRepositoryEgg {
         Ok(())
     }
 
-    #[inline]
-    pub fn into_admin_api_object(self) -> AdminApiEggRepositoryEgg {
-        AdminApiEggRepositoryEgg {
-            uuid: self.uuid,
-            path: self.path,
-            name: self.name,
-            description: self.description,
-            author: self.author,
-            exported_egg: self.exported_egg,
-        }
-    }
-
-    #[inline]
     pub async fn into_admin_egg_api_object(
         self,
         state: &crate::State,
+        _args: (),
     ) -> Result<AdminApiEggEggRepositoryEgg, crate::database::DatabaseError> {
         Ok(AdminApiEggEggRepositoryEgg {
             uuid: self.uuid,
@@ -235,12 +223,42 @@ impl EggRepositoryEgg {
                 .egg_repository
                 .fetch_cached(&state.database)
                 .await?
-                .into_admin_api_object(),
+                .into_admin_api_object(state, ())
+                .await?,
             name: self.name,
             description: self.description,
             author: self.author,
             exported_egg: self.exported_egg,
         })
+    }
+}
+
+#[async_trait::async_trait]
+impl IntoAdminApiObject for EggRepositoryEgg {
+    type AdminApiObject = AdminApiEggRepositoryEgg;
+    type ExtraArgs<'a> = ();
+
+    async fn into_admin_api_object<'a>(
+        self,
+        state: &crate::State,
+        _args: Self::ExtraArgs<'a>,
+    ) -> Result<Self::AdminApiObject, crate::database::DatabaseError> {
+        let api_object = AdminApiEggRepositoryEgg::init_hooks(&self, state).await?;
+
+        let api_object = finish_extendible!(
+            AdminApiEggRepositoryEgg {
+                uuid: self.uuid,
+                path: self.path,
+                name: self.name,
+                description: self.description,
+                author: self.author,
+                exported_egg: self.exported_egg,
+            },
+            api_object,
+            state
+        )?;
+
+        Ok(api_object)
     }
 }
 
@@ -303,6 +321,9 @@ impl DeletableModel for EggRepositoryEgg {
     }
 }
 
+#[schema_extension_derive::extendible]
+#[init_args(EggRepositoryEgg, crate::State)]
+#[hook_args(crate::State)]
 #[derive(ToSchema, Serialize)]
 #[schema(title = "EggRepositoryEgg")]
 pub struct AdminApiEggRepositoryEgg {

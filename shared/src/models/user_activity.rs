@@ -1,4 +1,4 @@
-use crate::{State, models::InsertQueryBuilder, prelude::*, storage::StorageUrlRetriever};
+use crate::{State, models::InsertQueryBuilder, prelude::*};
 use compact_str::ToCompactString;
 use garde::Validate;
 use serde::{Deserialize, Serialize};
@@ -179,30 +179,46 @@ impl UserActivity {
 
         Ok(result.rows_affected())
     }
+}
 
-    #[inline]
-    pub async fn into_api_object(
+#[async_trait::async_trait]
+impl IntoApiObject for UserActivity {
+    type ApiObject = ApiUserActivity;
+    type ExtraArgs<'a> = &'a crate::storage::StorageUrlRetriever<'a>;
+
+    async fn into_api_object<'a>(
         self,
         state: &crate::State,
-        storage_url_retriever: &StorageUrlRetriever<'_>,
-    ) -> Result<ApiUserActivity, anyhow::Error> {
-        Ok(ApiUserActivity {
-            impersonator: if let Some(impersonator) = self.impersonator {
-                Some(
-                    impersonator
-                        .fetch_cached(&state.database)
-                        .await?
-                        .into_api_object(storage_url_retriever),
-                )
-            } else {
-                None
+        storage_url_retriever: Self::ExtraArgs<'a>,
+    ) -> Result<Self::ApiObject, crate::database::DatabaseError> {
+        let api_object = ApiUserActivity::init_hooks(&self, state).await?;
+
+        let impersonator = if let Some(impersonator) = self.impersonator {
+            Some(
+                impersonator
+                    .fetch_cached(&state.database)
+                    .await?
+                    .into_api_object(state, storage_url_retriever)
+                    .await?,
+            )
+        } else {
+            None
+        };
+
+        let api_object = finish_extendible!(
+            ApiUserActivity {
+                impersonator,
+                event: self.event,
+                ip: self.ip.map(|ip| ip.ip().to_compact_string()),
+                data: self.data,
+                is_api: self.api_key.is_some(),
+                created: self.created.and_utc(),
             },
-            event: self.event,
-            ip: self.ip.map(|ip| ip.ip().to_compact_string()),
-            data: self.data,
-            is_api: self.api_key.is_some(),
-            created: self.created.and_utc(),
-        })
+            api_object,
+            state
+        )?;
+
+        Ok(api_object)
     }
 }
 
@@ -271,6 +287,9 @@ impl CreatableModel for UserActivity {
     }
 }
 
+#[schema_extension_derive::extendible]
+#[init_args(UserActivity, crate::State)]
+#[hook_args(crate::State)]
 #[derive(ToSchema, Serialize)]
 #[schema(title = "UserActivity")]
 pub struct ApiUserActivity {

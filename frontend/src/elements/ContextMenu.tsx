@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Menu, MenuProps } from '@mantine/core';
 import { createContext, memo, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { ContextMenuRegistry } from 'shared/src/registries/slices/contextMenu';
-import { useCurrentWindow } from '@/providers/CurrentWindowProvider.tsx';
 
 export interface ContextMenuItem {
   icon: IconDefinition;
@@ -32,8 +31,6 @@ interface ContextMenuContextType {
 const ContextMenuContext = createContext<ContextMenuContextType | undefined>(undefined);
 
 export const ContextMenuProvider = ({ children, menuProps }: { children: ReactNode; menuProps?: MenuProps }) => {
-  const { getParent } = useCurrentWindow();
-
   const [state, setState] = useState<ContextMenuState>({
     visible: false,
     x: 0,
@@ -42,15 +39,6 @@ export const ContextMenuProvider = ({ children, menuProps }: { children: ReactNo
   });
 
   const showMenu = (x: number, y: number, items: ContextMenuItem[]) => {
-    const windowContainer = getParent();
-
-    if (windowContainer) {
-      const windowRect = windowContainer.getBoundingClientRect();
-
-      x = windowRect ? x - windowRect.left : x;
-      y = windowRect ? y - windowRect.top : y;
-    }
-
     setState({ visible: true, x, y, items });
   };
 

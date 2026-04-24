@@ -219,19 +219,36 @@ impl ServerSchedule {
             .collect(),
         })
     }
+}
 
-    #[inline]
-    pub fn into_api_object(self) -> ApiServerSchedule {
-        ApiServerSchedule {
-            uuid: self.uuid,
-            name: self.name,
-            enabled: self.enabled,
-            triggers: self.triggers,
-            condition: self.condition,
-            last_run: self.last_run.map(|dt| dt.and_utc()),
-            last_failure: self.last_failure.map(|dt| dt.and_utc()),
-            created: self.created.and_utc(),
-        }
+#[async_trait::async_trait]
+impl IntoApiObject for ServerSchedule {
+    type ApiObject = ApiServerSchedule;
+    type ExtraArgs<'a> = ();
+
+    async fn into_api_object<'a>(
+        self,
+        state: &crate::State,
+        _args: Self::ExtraArgs<'a>,
+    ) -> Result<Self::ApiObject, crate::database::DatabaseError> {
+        let api_object = ApiServerSchedule::init_hooks(&self, state).await?;
+
+        let api_object = finish_extendible!(
+            ApiServerSchedule {
+                uuid: self.uuid,
+                name: self.name,
+                enabled: self.enabled,
+                triggers: self.triggers,
+                condition: self.condition,
+                last_run: self.last_run.map(|dt| dt.and_utc()),
+                last_failure: self.last_failure.map(|dt| dt.and_utc()),
+                created: self.created.and_utc(),
+            },
+            api_object,
+            state
+        )?;
+
+        Ok(api_object)
     }
 }
 
@@ -439,6 +456,9 @@ impl DeletableModel for ServerSchedule {
     }
 }
 
+#[schema_extension_derive::extendible]
+#[init_args(ServerSchedule, crate::State)]
+#[hook_args(crate::State)]
 #[derive(ToSchema, Serialize)]
 #[schema(title = "ServerSchedule")]
 pub struct ApiServerSchedule {

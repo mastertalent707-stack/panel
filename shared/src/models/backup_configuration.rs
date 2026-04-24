@@ -310,23 +310,37 @@ impl BackupConfiguration {
                 .try_collect_vec()?,
         })
     }
+}
 
-    #[inline]
-    pub async fn into_admin_api_object(
+#[async_trait::async_trait]
+impl IntoAdminApiObject for BackupConfiguration {
+    type AdminApiObject = AdminApiBackupConfiguration;
+    type ExtraArgs<'a> = ();
+
+    async fn into_admin_api_object<'a>(
         mut self,
         state: &crate::State,
-    ) -> Result<AdminApiBackupConfiguration, crate::database::DatabaseError> {
+        _args: Self::ExtraArgs<'a>,
+    ) -> Result<Self::AdminApiObject, crate::database::DatabaseError> {
+        let api_object = AdminApiBackupConfiguration::init_hooks(&self, state).await?;
+
         self.backup_configs.decrypt(&state.database).await?;
 
-        Ok(AdminApiBackupConfiguration {
-            uuid: self.uuid,
-            name: self.name,
-            maintenance_enabled: self.maintenance_enabled,
-            description: self.description,
-            backup_disk: self.backup_disk,
-            backup_configs: self.backup_configs,
-            created: self.created.and_utc(),
-        })
+        let api_object = finish_extendible!(
+            AdminApiBackupConfiguration {
+                uuid: self.uuid,
+                name: self.name,
+                maintenance_enabled: self.maintenance_enabled,
+                description: self.description,
+                backup_disk: self.backup_disk,
+                backup_configs: self.backup_configs,
+                created: self.created.and_utc(),
+            },
+            api_object,
+            state
+        )?;
+
+        Ok(api_object)
     }
 }
 
@@ -550,6 +564,9 @@ impl DeletableModel for BackupConfiguration {
     }
 }
 
+#[schema_extension_derive::extendible]
+#[init_args(BackupConfiguration, crate::State)]
+#[hook_args(crate::State)]
 #[derive(ToSchema, Serialize)]
 #[schema(title = "BackupConfiguration")]
 pub struct AdminApiBackupConfiguration {

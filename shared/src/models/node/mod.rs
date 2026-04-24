@@ -545,12 +545,20 @@ impl Node {
             payload,
         )
     }
+}
 
-    #[inline]
-    pub async fn into_admin_api_object(
+#[async_trait::async_trait]
+impl IntoAdminApiObject for Node {
+    type AdminApiObject = AdminApiNode;
+    type ExtraArgs<'a> = ();
+
+    async fn into_admin_api_object<'a>(
         self,
         state: &crate::State,
-    ) -> Result<AdminApiNode, anyhow::Error> {
+        _args: Self::ExtraArgs<'a>,
+    ) -> Result<Self::AdminApiObject, crate::database::DatabaseError> {
+        let api_object = AdminApiNode::init_hooks(&self, state).await?;
+
         let public_url = if self.is_all_in_one_node() {
             Some(self.public_url(state, "/").await?.to_string())
         } else {
@@ -558,12 +566,15 @@ impl Node {
         };
 
         let (location, backup_configuration) =
-            tokio::join!(self.location.into_admin_api_object(state), async {
+            tokio::join!(self.location.into_admin_api_object(state, ()), async {
                 if let Some(backup_configuration) = self.backup_configuration {
                     if let Ok(backup_configuration) =
                         backup_configuration.fetch_cached(&state.database).await
                     {
-                        backup_configuration.into_admin_api_object(state).await.ok()
+                        backup_configuration
+                            .into_admin_api_object(state, ())
+                            .await
+                            .ok()
                     } else {
                         None
                     }
@@ -572,24 +583,30 @@ impl Node {
                 }
             });
 
-        Ok(AdminApiNode {
-            uuid: self.uuid,
-            location,
-            backup_configuration,
-            name: self.name,
-            description: self.description,
-            deployment_enabled: self.deployment_enabled,
-            maintenance_enabled: self.maintenance_enabled,
-            public_url,
-            url: self.url.to_string(),
-            sftp_host: self.sftp_host,
-            sftp_port: self.sftp_port,
-            memory: self.memory,
-            disk: self.disk,
-            token_id: self.token_id,
-            token: state.database.decrypt(self.token).await?,
-            created: self.created.and_utc(),
-        })
+        let api_object = finish_extendible!(
+            AdminApiNode {
+                uuid: self.uuid,
+                location: location?,
+                backup_configuration,
+                name: self.name,
+                description: self.description,
+                deployment_enabled: self.deployment_enabled,
+                maintenance_enabled: self.maintenance_enabled,
+                public_url,
+                url: self.url.to_string(),
+                sftp_host: self.sftp_host,
+                sftp_port: self.sftp_port,
+                memory: self.memory,
+                disk: self.disk,
+                token_id: self.token_id,
+                token: state.database.decrypt(self.token).await?,
+                created: self.created.and_utc(),
+            },
+            api_object,
+            state
+        )?;
+
+        Ok(api_object)
     }
 }
 
@@ -958,6 +975,9 @@ impl DeletableModel for Node {
     }
 }
 
+#[schema_extension_derive::extendible]
+#[init_args(Node, crate::State)]
+#[hook_args(crate::State)]
 #[derive(ToSchema, Serialize)]
 #[schema(title = "Node")]
 pub struct AdminApiNode {

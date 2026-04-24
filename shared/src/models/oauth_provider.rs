@@ -359,45 +359,76 @@ impl OAuthProvider {
             },
         )
     }
+}
 
-    #[inline]
-    pub async fn into_admin_api_object(
+#[async_trait::async_trait]
+impl IntoAdminApiObject for OAuthProvider {
+    type AdminApiObject = AdminApiOAuthProvider;
+    type ExtraArgs<'a> = ();
+
+    async fn into_admin_api_object<'a>(
         self,
         state: &crate::State,
-    ) -> Result<AdminApiOAuthProvider, anyhow::Error> {
-        Ok(AdminApiOAuthProvider {
-            uuid: self.uuid,
-            name: self.name,
-            description: self.description,
-            client_id: self.client_id,
-            client_secret: state.database.decrypt(self.client_secret).await?,
-            auth_url: self.auth_url,
-            token_url: self.token_url,
-            info_url: self.info_url,
-            scopes: self.scopes,
-            identifier_path: self.identifier_path,
-            email_path: self.email_path,
-            username_path: self.username_path,
-            name_first_path: self.name_first_path,
-            name_last_path: self.name_last_path,
-            enabled: self.enabled,
-            login_only: self.login_only,
-            login_bypass_2fa: self.login_bypass_2fa,
-            link_viewable: self.link_viewable,
-            user_manageable: self.user_manageable,
-            basic_auth: self.basic_auth,
-            created: self.created.and_utc(),
-        })
-    }
+        _args: Self::ExtraArgs<'a>,
+    ) -> Result<Self::AdminApiObject, crate::database::DatabaseError> {
+        let api_object = AdminApiOAuthProvider::init_hooks(&self, state).await?;
 
-    #[inline]
-    pub fn into_api_object(self) -> ApiOAuthProvider {
-        ApiOAuthProvider {
-            uuid: self.uuid,
-            name: self.name,
-            link_viewable: self.link_viewable,
-            user_manageable: self.user_manageable,
-        }
+        let api_object = finish_extendible!(
+            AdminApiOAuthProvider {
+                uuid: self.uuid,
+                name: self.name,
+                description: self.description,
+                client_id: self.client_id,
+                client_secret: state.database.decrypt(self.client_secret).await?,
+                auth_url: self.auth_url,
+                token_url: self.token_url,
+                info_url: self.info_url,
+                scopes: self.scopes,
+                identifier_path: self.identifier_path,
+                email_path: self.email_path,
+                username_path: self.username_path,
+                name_first_path: self.name_first_path,
+                name_last_path: self.name_last_path,
+                enabled: self.enabled,
+                login_only: self.login_only,
+                login_bypass_2fa: self.login_bypass_2fa,
+                link_viewable: self.link_viewable,
+                user_manageable: self.user_manageable,
+                basic_auth: self.basic_auth,
+                created: self.created.and_utc(),
+            },
+            api_object,
+            state
+        )?;
+
+        Ok(api_object)
+    }
+}
+
+#[async_trait::async_trait]
+impl IntoApiObject for OAuthProvider {
+    type ApiObject = ApiOAuthProvider;
+    type ExtraArgs<'a> = ();
+
+    async fn into_api_object<'a>(
+        self,
+        state: &crate::State,
+        _args: Self::ExtraArgs<'a>,
+    ) -> Result<Self::ApiObject, crate::database::DatabaseError> {
+        let api_object = ApiOAuthProvider::init_hooks(&self, state).await?;
+
+        let api_object = finish_extendible!(
+            ApiOAuthProvider {
+                uuid: self.uuid,
+                name: self.name,
+                link_viewable: self.link_viewable,
+                user_manageable: self.user_manageable,
+            },
+            api_object,
+            state
+        )?;
+
+        Ok(api_object)
     }
 }
 
@@ -815,6 +846,9 @@ impl DeletableModel for OAuthProvider {
     }
 }
 
+#[schema_extension_derive::extendible]
+#[init_args(OAuthProvider, crate::State)]
+#[hook_args(crate::State)]
 #[derive(ToSchema, Serialize)]
 #[schema(title = "AdminOAuthProvider")]
 pub struct AdminApiOAuthProvider {
@@ -846,6 +880,9 @@ pub struct AdminApiOAuthProvider {
     pub created: chrono::DateTime<chrono::Utc>,
 }
 
+#[schema_extension_derive::extendible]
+#[init_args(OAuthProvider, crate::State)]
+#[hook_args(crate::State)]
 #[derive(ToSchema, Serialize)]
 #[schema(title = "OAuthProvider")]
 pub struct ApiOAuthProvider {

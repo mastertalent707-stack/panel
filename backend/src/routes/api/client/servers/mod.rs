@@ -13,7 +13,7 @@ mod get {
     use shared::{
         ApiError, GetState,
         models::{
-            Pagination,
+            IntoApiObject, Pagination,
             server::Server,
             user::{GetPermissionManager, GetUser},
         },

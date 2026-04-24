@@ -206,19 +206,36 @@ impl UserSecurityKey {
         .await?
         .rows_affected())
     }
+}
 
-    #[inline]
-    pub fn into_api_object(self) -> ApiUserSecurityKey {
-        ApiUserSecurityKey {
-            uuid: self.uuid,
-            name: self.name,
-            credential_id: self.passkey.as_ref().map_or_else(
-                || "".to_string(),
-                |pk| base64::engine::general_purpose::URL_SAFE_NO_PAD.encode(pk.cred_id()),
-            ),
-            last_used: self.last_used.map(|dt| dt.and_utc()),
-            created: self.created.and_utc(),
-        }
+#[async_trait::async_trait]
+impl IntoApiObject for UserSecurityKey {
+    type ApiObject = ApiUserSecurityKey;
+    type ExtraArgs<'a> = ();
+
+    async fn into_api_object<'a>(
+        self,
+        state: &crate::State,
+        _args: Self::ExtraArgs<'a>,
+    ) -> Result<Self::ApiObject, crate::database::DatabaseError> {
+        let api_object = ApiUserSecurityKey::init_hooks(&self, state).await?;
+
+        let api_object = finish_extendible!(
+            ApiUserSecurityKey {
+                uuid: self.uuid,
+                name: self.name,
+                credential_id: self.passkey.as_ref().map_or_else(
+                    || "".to_string(),
+                    |pk| base64::engine::general_purpose::URL_SAFE_NO_PAD.encode(pk.cred_id()),
+                ),
+                last_used: self.last_used.map(|dt| dt.and_utc()),
+                created: self.created.and_utc(),
+            },
+            api_object,
+            state
+        )?;
+
+        Ok(api_object)
     }
 }
 
@@ -371,6 +388,9 @@ impl DeletableModel for UserSecurityKey {
     }
 }
 
+#[schema_extension_derive::extendible]
+#[init_args(UserSecurityKey, crate::State)]
+#[hook_args(crate::State)]
 #[derive(ToSchema, Serialize)]
 #[schema(title = "UserSecurityKey")]
 pub struct ApiUserSecurityKey {

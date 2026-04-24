@@ -828,7 +828,7 @@ impl ServerBackup {
         self,
         state: &crate::State,
         storage_url_retriever: &StorageUrlRetriever<'_>,
-    ) -> Result<AdminApiNodeServerBackup, anyhow::Error> {
+    ) -> Result<AdminApiNodeServerBackup, crate::database::DatabaseError> {
         let is_remote = self.is_remote();
 
         Ok(AdminApiNodeServerBackup {
@@ -847,7 +847,7 @@ impl ServerBackup {
                 .node
                 .fetch_cached(&state.database)
                 .await?
-                .into_admin_api_object(state)
+                .into_admin_api_object(state, ())
                 .await?,
             name: self.name,
             ignored_files: self.ignored_files,
@@ -863,54 +863,85 @@ impl ServerBackup {
             created: self.created.and_utc(),
         })
     }
+}
 
-    pub async fn into_admin_api_object(
+#[async_trait::async_trait]
+impl IntoAdminApiObject for ServerBackup {
+    type AdminApiObject = AdminApiServerBackup;
+    type ExtraArgs<'a> = &'a crate::storage::StorageUrlRetriever<'a>;
+
+    async fn into_admin_api_object<'a>(
         self,
         state: &crate::State,
-        storage_url_retriever: &StorageUrlRetriever<'_>,
-    ) -> Result<AdminApiServerBackup, anyhow::Error> {
-        Ok(AdminApiServerBackup {
-            uuid: self.uuid,
-            server: match self.server {
-                Some(server) => Some(
-                    server
-                        .fetch_cached(&state.database)
-                        .await?
-                        .into_admin_api_object(state, storage_url_retriever)
-                        .await?,
-                ),
-                None => None,
-            },
-            name: self.name,
-            ignored_files: self.ignored_files,
-            is_successful: self.successful,
-            is_locked: self.locked,
-            is_browsable: self.browsable,
-            is_streaming: self.streaming,
-            checksum: self.checksum,
-            bytes: self.bytes,
-            files: self.files,
-            completed: self.completed.map(|dt| dt.and_utc()),
-            created: self.created.and_utc(),
-        })
-    }
+        storage_url_retriever: Self::ExtraArgs<'a>,
+    ) -> Result<Self::AdminApiObject, crate::database::DatabaseError> {
+        let api_object = AdminApiServerBackup::init_hooks(&self, state).await?;
 
-    #[inline]
-    pub fn into_api_object(self) -> ApiServerBackup {
-        ApiServerBackup {
-            uuid: self.uuid,
-            name: self.name,
-            ignored_files: self.ignored_files,
-            is_successful: self.successful,
-            is_locked: self.locked,
-            is_browsable: self.browsable,
-            is_streaming: self.streaming,
-            checksum: self.checksum,
-            bytes: self.bytes,
-            files: self.files,
-            completed: self.completed.map(|dt| dt.and_utc()),
-            created: self.created.and_utc(),
-        }
+        let api_object = finish_extendible!(
+            AdminApiServerBackup {
+                uuid: self.uuid,
+                server: match self.server {
+                    Some(server) => Some(
+                        server
+                            .fetch_cached(&state.database)
+                            .await?
+                            .into_admin_api_object(state, storage_url_retriever)
+                            .await?,
+                    ),
+                    None => None,
+                },
+                name: self.name,
+                ignored_files: self.ignored_files,
+                is_successful: self.successful,
+                is_locked: self.locked,
+                is_browsable: self.browsable,
+                is_streaming: self.streaming,
+                checksum: self.checksum,
+                bytes: self.bytes,
+                files: self.files,
+                completed: self.completed.map(|dt| dt.and_utc()),
+                created: self.created.and_utc(),
+            },
+            api_object,
+            state
+        )?;
+
+        Ok(api_object)
+    }
+}
+
+#[async_trait::async_trait]
+impl IntoApiObject for ServerBackup {
+    type ApiObject = ApiServerBackup;
+    type ExtraArgs<'a> = ();
+
+    async fn into_api_object<'a>(
+        self,
+        state: &crate::State,
+        _args: Self::ExtraArgs<'a>,
+    ) -> Result<Self::ApiObject, crate::database::DatabaseError> {
+        let api_object = ApiServerBackup::init_hooks(&self, state).await?;
+
+        let api_object = finish_extendible!(
+            ApiServerBackup {
+                uuid: self.uuid,
+                name: self.name,
+                ignored_files: self.ignored_files,
+                is_successful: self.successful,
+                is_locked: self.locked,
+                is_browsable: self.browsable,
+                is_streaming: self.streaming,
+                checksum: self.checksum,
+                bytes: self.bytes,
+                files: self.files,
+                completed: self.completed.map(|dt| dt.and_utc()),
+                created: self.created.and_utc(),
+            },
+            api_object,
+            state
+        )?;
+
+        Ok(api_object)
     }
 }
 
@@ -1346,6 +1377,9 @@ pub struct AdminApiNodeServerBackup {
     pub created: chrono::DateTime<chrono::Utc>,
 }
 
+#[schema_extension_derive::extendible]
+#[init_args(ServerBackup, crate::State)]
+#[hook_args(crate::State)]
 #[derive(ToSchema, Serialize)]
 #[schema(title = "AdminServerBackup")]
 pub struct AdminApiServerBackup {
@@ -1368,6 +1402,9 @@ pub struct AdminApiServerBackup {
     pub created: chrono::DateTime<chrono::Utc>,
 }
 
+#[schema_extension_derive::extendible]
+#[init_args(ServerBackup, crate::State)]
+#[hook_args(crate::State)]
 #[derive(ToSchema, Serialize)]
 #[schema(title = "ServerBackup")]
 pub struct ApiServerBackup {

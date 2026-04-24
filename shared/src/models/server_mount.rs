@@ -263,43 +263,25 @@ impl ServerMount {
         })
     }
 
-    #[inline]
-    pub async fn into_api_object(
-        self,
-        state: &crate::State,
-    ) -> Result<ApiServerMount, anyhow::Error> {
-        let mount = self.mount.fetch_cached(&state.database).await?;
-
-        Ok(ApiServerMount {
-            uuid: mount.uuid,
-            name: mount.name,
-            description: mount.description,
-            target: mount.target,
-            read_only: mount.read_only,
-            created: self.created.map(|dt| dt.and_utc()),
-        })
-    }
-
-    #[inline]
     pub async fn into_admin_server_api_object(
         self,
         state: &crate::State,
         storage_url_retriever: &StorageUrlRetriever<'_>,
-    ) -> Result<AdminApiServerServerMount, anyhow::Error> {
+    ) -> Result<AdminApiServerServerMount, crate::database::DatabaseError> {
         let created = match self.created {
             Some(created) => created,
             None => {
-                return Err(anyhow::anyhow!(
+                return Err(crate::database::DatabaseError::Any(anyhow::anyhow!(
                     "This mount does not have a server attached"
-                ));
+                )));
             }
         };
         let server = match self.server {
             Some(server) => server.fetch_cached(&state.database).await?,
             None => {
-                return Err(anyhow::anyhow!(
+                return Err(crate::database::DatabaseError::Any(anyhow::anyhow!(
                     "This mount does not have a server attached"
-                ));
+                )));
             }
         };
 
@@ -310,18 +292,61 @@ impl ServerMount {
             created: created.and_utc(),
         })
     }
+}
 
-    #[inline]
-    pub async fn into_admin_api_object(
+#[async_trait::async_trait]
+impl IntoApiObject for ServerMount {
+    type ApiObject = ApiServerMount;
+    type ExtraArgs<'a> = ();
+
+    async fn into_api_object<'a>(
         self,
         state: &crate::State,
-    ) -> Result<AdminApiServerMount, anyhow::Error> {
+        _args: Self::ExtraArgs<'a>,
+    ) -> Result<Self::ApiObject, crate::database::DatabaseError> {
+        let api_object = ApiServerMount::init_hooks(&self, state).await?;
         let mount = self.mount.fetch_cached(&state.database).await?;
 
-        Ok(AdminApiServerMount {
-            mount: mount.into_admin_api_object(),
-            created: self.created.map(|dt| dt.and_utc()),
-        })
+        let api_object = finish_extendible!(
+            ApiServerMount {
+                uuid: mount.uuid,
+                name: mount.name,
+                description: mount.description,
+                target: mount.target,
+                read_only: mount.read_only,
+                created: self.created.map(|dt| dt.and_utc()),
+            },
+            api_object,
+            state
+        )?;
+
+        Ok(api_object)
+    }
+}
+
+#[async_trait::async_trait]
+impl IntoAdminApiObject for ServerMount {
+    type AdminApiObject = AdminApiServerMount;
+    type ExtraArgs<'a> = ();
+
+    async fn into_admin_api_object<'a>(
+        self,
+        state: &crate::State,
+        _args: Self::ExtraArgs<'a>,
+    ) -> Result<Self::AdminApiObject, crate::database::DatabaseError> {
+        let api_object = AdminApiServerMount::init_hooks(&self, state).await?;
+        let mount = self.mount.fetch_cached(&state.database).await?;
+
+        let api_object = finish_extendible!(
+            AdminApiServerMount {
+                mount: mount.into_admin_api_object(state, ()).await?,
+                created: self.created.map(|dt| dt.and_utc()),
+            },
+            api_object,
+            state
+        )?;
+
+        Ok(api_object)
     }
 }
 
@@ -423,6 +448,9 @@ impl DeletableModel for ServerMount {
     }
 }
 
+#[schema_extension_derive::extendible]
+#[init_args(ServerMount, crate::State)]
+#[hook_args(crate::State)]
 #[derive(ToSchema, Serialize)]
 #[schema(title = "ServerMount")]
 pub struct ApiServerMount {
@@ -445,6 +473,9 @@ pub struct AdminApiServerServerMount {
     pub created: chrono::DateTime<chrono::Utc>,
 }
 
+#[schema_extension_derive::extendible]
+#[init_args(ServerMount, crate::State)]
+#[hook_args(crate::State)]
 #[derive(ToSchema, Serialize)]
 #[schema(title = "AdminServerMount")]
 pub struct AdminApiServerMount {

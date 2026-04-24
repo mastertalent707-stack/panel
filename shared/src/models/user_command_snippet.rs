@@ -182,16 +182,33 @@ impl UserCommandSnippet {
         .await
         .unwrap_or(0)
     }
+}
 
-    #[inline]
-    pub fn into_api_object(self) -> ApiUserCommandSnippet {
-        ApiUserCommandSnippet {
-            uuid: self.uuid,
-            name: self.name,
-            eggs: self.eggs,
-            command: self.command,
-            created: self.created.and_utc(),
-        }
+#[async_trait::async_trait]
+impl IntoApiObject for UserCommandSnippet {
+    type ApiObject = ApiUserCommandSnippet;
+    type ExtraArgs<'a> = ();
+
+    async fn into_api_object<'a>(
+        self,
+        state: &crate::State,
+        _args: Self::ExtraArgs<'a>,
+    ) -> Result<Self::ApiObject, crate::database::DatabaseError> {
+        let api_object = ApiUserCommandSnippet::init_hooks(&self, state).await?;
+
+        let api_object = finish_extendible!(
+            ApiUserCommandSnippet {
+                uuid: self.uuid,
+                name: self.name,
+                eggs: self.eggs,
+                command: self.command,
+                created: self.created.and_utc(),
+            },
+            api_object,
+            state
+        )?;
+
+        Ok(api_object)
     }
 }
 
@@ -361,6 +378,9 @@ impl DeletableModel for UserCommandSnippet {
     }
 }
 
+#[schema_extension_derive::extendible]
+#[init_args(UserCommandSnippet, crate::State)]
+#[hook_args(crate::State)]
 #[derive(ToSchema, Serialize)]
 #[schema(title = "UserCommandSnippet")]
 pub struct ApiUserCommandSnippet {

@@ -63,7 +63,7 @@ mod get {
     use serde::{Deserialize, Serialize};
     use shared::{
         ApiError, GetState,
-        models::user::GetPermissionManager,
+        models::{IntoApiObject, user::GetPermissionManager},
         response::{ApiResponse, ApiResponseResult},
     };
     use utoipa::ToSchema;

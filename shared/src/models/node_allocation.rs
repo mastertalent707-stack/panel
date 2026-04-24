@@ -1,4 +1,4 @@
-use crate::{prelude::*, storage::StorageUrlRetriever};
+use crate::prelude::*;
 use compact_str::ToCompactString;
 use serde::{Deserialize, Serialize};
 use sqlx::{Row, postgres::PgRow};
@@ -6,8 +6,6 @@ use std::{
     collections::{BTreeMap, HashMap},
     sync::LazyLock,
 };
-use utoipa::ToSchema;
-
 #[derive(Serialize, Deserialize, Clone)]
 pub struct NodeAllocation {
     pub uuid: uuid::Uuid,
@@ -652,13 +650,20 @@ impl NodeAllocation {
 
         Ok(deleted)
     }
+}
 
-    #[inline]
-    pub async fn into_admin_api_object(
+#[async_trait::async_trait]
+impl IntoAdminApiObject for NodeAllocation {
+    type AdminApiObject = AdminApiNodeAllocation;
+    type ExtraArgs<'a> = &'a crate::storage::StorageUrlRetriever<'a>;
+
+    async fn into_admin_api_object<'a>(
         self,
         state: &crate::State,
-        storage_url_retriever: &StorageUrlRetriever<'_>,
-    ) -> Result<AdminApiNodeAllocation, crate::database::DatabaseError> {
+        storage_url_retriever: Self::ExtraArgs<'a>,
+    ) -> Result<Self::AdminApiObject, crate::database::DatabaseError> {
+        let api_object = AdminApiNodeAllocation::init_hooks(&self, state).await?;
+
         let server = match self.server {
             Some(fetchable) => Some(
                 fetchable
@@ -670,17 +675,26 @@ impl NodeAllocation {
             None => None,
         };
 
-        Ok(AdminApiNodeAllocation {
-            uuid: self.uuid,
-            server,
-            ip: compact_str::format_compact!("{}", self.ip.ip()),
-            ip_alias: self.ip_alias,
-            port: self.port,
-            created: self.created.and_utc(),
-        })
+        let api_object = finish_extendible!(
+            AdminApiNodeAllocation {
+                uuid: self.uuid,
+                server,
+                ip: self.ip.ip().to_compact_string(),
+                ip_alias: self.ip_alias,
+                port: self.port,
+                created: self.created.and_utc(),
+            },
+            api_object,
+            state
+        )?;
+
+        Ok(api_object)
     }
 }
 
+#[schema_extension_derive::extendible]
+#[init_args(NodeAllocation, crate::State)]
+#[hook_args(crate::State)]
 #[derive(ToSchema, Serialize)]
 #[schema(title = "NodeAllocation")]
 pub struct AdminApiNodeAllocation {

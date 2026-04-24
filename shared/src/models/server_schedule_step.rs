@@ -159,16 +159,33 @@ impl ServerScheduleStep {
             order: self.order,
         }
     }
+}
 
-    #[inline]
-    pub fn into_api_object(self) -> ApiServerScheduleStep {
-        ApiServerScheduleStep {
-            uuid: self.uuid,
-            action: self.action,
-            order: self.order,
-            error: self.error,
-            created: self.created.and_utc(),
-        }
+#[async_trait::async_trait]
+impl IntoApiObject for ServerScheduleStep {
+    type ApiObject = ApiServerScheduleStep;
+    type ExtraArgs<'a> = ();
+
+    async fn into_api_object<'a>(
+        self,
+        state: &crate::State,
+        _args: Self::ExtraArgs<'a>,
+    ) -> Result<Self::ApiObject, crate::database::DatabaseError> {
+        let api_object = ApiServerScheduleStep::init_hooks(&self, state).await?;
+
+        let api_object = finish_extendible!(
+            ApiServerScheduleStep {
+                uuid: self.uuid,
+                action: self.action,
+                order: self.order,
+                error: self.error,
+                created: self.created.and_utc(),
+            },
+            api_object,
+            state
+        )?;
+
+        Ok(api_object)
     }
 }
 
@@ -327,6 +344,9 @@ impl DeletableModel for ServerScheduleStep {
     }
 }
 
+#[schema_extension_derive::extendible]
+#[init_args(ServerScheduleStep, crate::State)]
+#[hook_args(crate::State)]
 #[derive(ToSchema, Serialize)]
 #[schema(title = "ServerScheduleStep")]
 pub struct ApiServerScheduleStep {

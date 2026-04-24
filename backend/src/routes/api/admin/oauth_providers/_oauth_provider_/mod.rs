@@ -56,7 +56,7 @@ mod get {
     use serde::Serialize;
     use shared::{
         ApiError, GetState,
-        models::user::GetPermissionManager,
+        models::{IntoAdminApiObject, user::GetPermissionManager},
         response::{ApiResponse, ApiResponseResult},
     };
     use utoipa::ToSchema;
@@ -84,7 +84,7 @@ mod get {
         permissions.has_admin_permission("oauth-providers.read")?;
 
         ApiResponse::new_serialized(Response {
-            oauth_provider: oauth_provider.0.into_admin_api_object(&state).await?,
+            oauth_provider: oauth_provider.0.into_admin_api_object(&state, ()).await?,
         })
         .ok()
     }

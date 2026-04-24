@@ -67,6 +67,7 @@ const WindowProvider: FC<{ children: ReactNode }> = ({ children }) => {
             onClose={() => closeWindow(w.id)}
             defaultWidth='50%'
             defaultHeight='50%'
+            withScrollArea={false}
           >
             <CurrentWindowProvider id={w.id}>{w.component}</CurrentWindowProvider>
           </Window>

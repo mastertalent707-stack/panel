@@ -4,7 +4,6 @@ use crate::{
         database_host::{DatabaseTransaction, DatabaseType},
     },
     prelude::*,
-    storage::StorageUrlRetriever,
 };
 use garde::Validate;
 use rand::distr::SampleString;
@@ -440,47 +439,67 @@ impl ServerDatabase {
 
         Ok(())
     }
+}
 
-    #[inline]
-    pub async fn into_admin_api_object(
+#[async_trait::async_trait]
+impl IntoAdminApiObject for ServerDatabase {
+    type AdminApiObject = AdminApiServerDatabase;
+    type ExtraArgs<'a> = &'a crate::storage::StorageUrlRetriever<'a>;
+
+    async fn into_admin_api_object<'a>(
         self,
         state: &crate::State,
-        storage_url_retriever: &StorageUrlRetriever<'_>,
-    ) -> Result<AdminApiServerDatabase, anyhow::Error> {
+        storage_url_retriever: Self::ExtraArgs<'a>,
+    ) -> Result<Self::AdminApiObject, crate::database::DatabaseError> {
+        let api_object = AdminApiServerDatabase::init_hooks(&self, state).await?;
+
         let details = self
             .database_host
             .credentials
             .parse_connection_details(&state.database)
             .await?;
 
-        Ok(AdminApiServerDatabase {
-            uuid: self.uuid,
-            server: self
-                .server
-                .fetch_cached(&state.database)
-                .await?
-                .into_admin_api_object(state, storage_url_retriever)
-                .await?,
-            r#type: self.database_host.r#type,
-            host: self.database_host.public_host.unwrap_or(details.host),
-            port: self
-                .database_host
-                .public_port
-                .unwrap_or(details.port as i32),
-            name: self.name,
-            is_locked: self.locked,
-            username: self.username,
-            password: state.database.decrypt(self.password).await?,
-            created: self.created.and_utc(),
-        })
-    }
+        let api_object = finish_extendible!(
+            AdminApiServerDatabase {
+                uuid: self.uuid,
+                server: self
+                    .server
+                    .fetch_cached(&state.database)
+                    .await?
+                    .into_admin_api_object(state, storage_url_retriever)
+                    .await?,
+                r#type: self.database_host.r#type,
+                host: self.database_host.public_host.unwrap_or(details.host),
+                port: self
+                    .database_host
+                    .public_port
+                    .unwrap_or(details.port as i32),
+                name: self.name,
+                is_locked: self.locked,
+                username: self.username,
+                password: state.database.decrypt(self.password).await?,
+                created: self.created.and_utc(),
+            },
+            api_object,
+            state
+        )?;
 
-    #[inline]
-    pub async fn into_api_object(
+        Ok(api_object)
+    }
+}
+
+#[async_trait::async_trait]
+impl IntoApiObject for ServerDatabase {
+    type ApiObject = ApiServerDatabase;
+    type ExtraArgs<'a> = bool;
+
+    async fn into_api_object<'a>(
         self,
         state: &crate::State,
-        show_password: bool,
-    ) -> Result<ApiServerDatabase, anyhow::Error> {
+        show_password: Self::ExtraArgs<'a>,
+    ) -> Result<Self::ApiObject, crate::database::DatabaseError> {
+        let api_object = ApiServerDatabase::init_hooks(&self, state).await?;
+
         let mut username = self.username;
         let space_idx = username.find(' ');
 
@@ -494,24 +513,30 @@ impl ServerDatabase {
             .parse_connection_details(&state.database)
             .await?;
 
-        Ok(ApiServerDatabase {
-            uuid: self.uuid,
-            r#type: self.database_host.r#type,
-            host: self.database_host.public_host.unwrap_or(details.host),
-            port: self
-                .database_host
-                .public_port
-                .unwrap_or(details.port as i32),
-            name: self.name,
-            is_locked: self.locked,
-            username,
-            password: if show_password {
-                Some(state.database.decrypt(self.password).await?)
-            } else {
-                None
+        let api_object = finish_extendible!(
+            ApiServerDatabase {
+                uuid: self.uuid,
+                r#type: self.database_host.r#type,
+                host: self.database_host.public_host.unwrap_or(details.host),
+                port: self
+                    .database_host
+                    .public_port
+                    .unwrap_or(details.port as i32),
+                name: self.name,
+                is_locked: self.locked,
+                username,
+                password: if show_password {
+                    Some(state.database.decrypt(self.password).await?)
+                } else {
+                    None
+                },
+                created: self.created.and_utc(),
             },
-            created: self.created.and_utc(),
-        })
+            api_object,
+            state
+        )?;
+
+        Ok(api_object)
     }
 }
 
@@ -854,6 +879,9 @@ impl DeletableModel for ServerDatabase {
     }
 }
 
+#[schema_extension_derive::extendible]
+#[init_args(ServerDatabase, crate::State)]
+#[hook_args(crate::State)]
 #[derive(ToSchema, Serialize)]
 #[schema(title = "AdminServerDatabase")]
 pub struct AdminApiServerDatabase {
@@ -873,6 +901,9 @@ pub struct AdminApiServerDatabase {
     pub created: chrono::DateTime<chrono::Utc>,
 }
 
+#[schema_extension_derive::extendible]
+#[init_args(ServerDatabase, crate::State)]
+#[hook_args(crate::State)]
 #[derive(ToSchema, Serialize)]
 #[schema(title = "ServerDatabase")]
 pub struct ApiServerDatabase {

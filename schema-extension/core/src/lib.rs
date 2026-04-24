@@ -117,9 +117,9 @@ pub fn apply_extension_to_overlay<T: Extendible, E: Serialize>(
 
 #[macro_export]
 macro_rules! finish_extendible {
-    ($ty:ident { $($field:ident: $val:expr),* $(,)? }, $ready:expr $(, $hook_arg:expr)* $(,)?) => {{
+    ($ty:ident { $($tt:tt)* }, $ready:expr $(, $hook_arg:expr)* $(,)?) => {{
         let mut instance = $ty {
-            $($field: $val,)*
+            $($tt)*
             __overlay: $crate::ExtensionOverlay::new(),
         };
         $ty::finish_hooks(&mut instance, $ready $(, $hook_arg)*)?;

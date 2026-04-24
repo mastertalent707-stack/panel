@@ -1,4 +1,4 @@
-use crate::{State, models::InsertQueryBuilder, prelude::*, storage::StorageUrlRetriever};
+use crate::{State, models::InsertQueryBuilder, prelude::*};
 use compact_str::ToCompactString;
 use garde::Validate;
 use serde::{Deserialize, Serialize};
@@ -192,33 +192,53 @@ impl AdminActivity {
 
         Ok(result.rows_affected())
     }
+}
 
-    #[inline]
-    pub async fn into_admin_api_object(
+#[async_trait::async_trait]
+impl IntoAdminApiObject for AdminActivity {
+    type AdminApiObject = AdminApiAdminActivity;
+    type ExtraArgs<'a> = &'a crate::storage::StorageUrlRetriever<'a>;
+
+    async fn into_admin_api_object<'a>(
         self,
         state: &crate::State,
-        storage_url_retriever: &StorageUrlRetriever<'_>,
-    ) -> Result<AdminApiAdminActivity, anyhow::Error> {
-        Ok(AdminApiAdminActivity {
-            user: self
-                .user
-                .map(|user| user.into_api_object(storage_url_retriever)),
-            impersonator: if let Some(impersonator) = self.impersonator {
-                Some(
-                    impersonator
-                        .fetch_cached(&state.database)
-                        .await?
-                        .into_api_object(storage_url_retriever),
-                )
-            } else {
-                None
+        storage_url_retriever: Self::ExtraArgs<'a>,
+    ) -> Result<Self::AdminApiObject, crate::database::DatabaseError> {
+        let api_object = AdminApiAdminActivity::init_hooks(&self, state).await?;
+
+        let user = if let Some(user) = self.user {
+            Some(user.into_api_object(state, storage_url_retriever).await?)
+        } else {
+            None
+        };
+
+        let impersonator = if let Some(impersonator) = self.impersonator {
+            Some(
+                impersonator
+                    .fetch_cached(&state.database)
+                    .await?
+                    .into_api_object(state, storage_url_retriever)
+                    .await?,
+            )
+        } else {
+            None
+        };
+
+        let api_object = finish_extendible!(
+            AdminApiAdminActivity {
+                user,
+                impersonator,
+                event: self.event,
+                ip: self.ip.map(|ip| ip.ip().to_compact_string()),
+                data: self.data,
+                is_api: self.api_key.is_some(),
+                created: self.created.and_utc(),
             },
-            event: self.event,
-            ip: self.ip.map(|ip| ip.ip().to_compact_string()),
-            data: self.data,
-            is_api: self.api_key.is_some(),
-            created: self.created.and_utc(),
-        })
+            api_object,
+            state
+        )?;
+
+        Ok(api_object)
     }
 }
 
@@ -287,6 +307,9 @@ impl CreatableModel for AdminActivity {
     }
 }
 
+#[schema_extension_derive::extendible]
+#[init_args(AdminActivity, crate::State)]
+#[hook_args(crate::State)]
 #[derive(ToSchema, Serialize)]
 #[schema(title = "AdminAdminActivity")]
 pub struct AdminApiAdminActivity {

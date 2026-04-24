@@ -1,7 +1,6 @@
 use crate::{
     models::{InsertQueryBuilder, UpdateQueryBuilder},
     prelude::*,
-    storage::StorageUrlRetriever,
 };
 use garde::Validate;
 use rand::distr::SampleString;
@@ -170,18 +169,35 @@ impl ServerSubuser {
 
         Ok(())
     }
+}
 
-    #[inline]
-    pub fn into_api_object(
+#[async_trait::async_trait]
+impl IntoApiObject for ServerSubuser {
+    type ApiObject = ApiServerSubuser;
+    type ExtraArgs<'a> = &'a crate::storage::StorageUrlRetriever<'a>;
+
+    async fn into_api_object<'a>(
         self,
-        storage_url_retriever: &StorageUrlRetriever<'_>,
-    ) -> ApiServerSubuser {
-        ApiServerSubuser {
-            user: self.user.into_api_object(storage_url_retriever),
-            permissions: self.permissions,
-            ignored_files: self.ignored_files,
-            created: self.created.and_utc(),
-        }
+        state: &crate::State,
+        storage_url_retriever: Self::ExtraArgs<'a>,
+    ) -> Result<Self::ApiObject, crate::database::DatabaseError> {
+        let api_object = ApiServerSubuser::init_hooks(&self, state).await?;
+
+        let api_object = finish_extendible!(
+            ApiServerSubuser {
+                user: self
+                    .user
+                    .into_api_object(state, storage_url_retriever)
+                    .await?,
+                permissions: self.permissions,
+                ignored_files: self.ignored_files,
+                created: self.created.and_utc(),
+            },
+            api_object,
+            state
+        )?;
+
+        Ok(api_object)
     }
 }
 
@@ -444,6 +460,9 @@ impl DeletableModel for ServerSubuser {
     }
 }
 
+#[schema_extension_derive::extendible]
+#[init_args(ServerSubuser, crate::State)]
+#[hook_args(crate::State)]
 #[derive(ToSchema, Serialize)]
 #[schema(title = "ServerSubuser")]
 pub struct ApiServerSubuser {

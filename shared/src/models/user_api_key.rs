@@ -245,21 +245,38 @@ impl UserApiKey {
 
         Ok(new_key)
     }
+}
 
-    #[inline]
-    pub fn into_api_object(self) -> ApiUserApiKey {
-        ApiUserApiKey {
-            uuid: self.uuid,
-            name: self.name,
-            key_start: self.key_start,
-            allowed_ips: self.allowed_ips,
-            user_permissions: self.user_permissions,
-            admin_permissions: self.admin_permissions,
-            server_permissions: self.server_permissions,
-            last_used: self.last_used.map(|dt| dt.and_utc()),
-            expires: self.expires.map(|dt| dt.and_utc()),
-            created: self.created.and_utc(),
-        }
+#[async_trait::async_trait]
+impl IntoApiObject for UserApiKey {
+    type ApiObject = ApiUserApiKey;
+    type ExtraArgs<'a> = ();
+
+    async fn into_api_object<'a>(
+        self,
+        state: &crate::State,
+        _args: Self::ExtraArgs<'a>,
+    ) -> Result<Self::ApiObject, crate::database::DatabaseError> {
+        let api_object = ApiUserApiKey::init_hooks(&self, state).await?;
+
+        let api_object = finish_extendible!(
+            ApiUserApiKey {
+                uuid: self.uuid,
+                name: self.name,
+                key_start: self.key_start,
+                allowed_ips: self.allowed_ips,
+                user_permissions: self.user_permissions,
+                admin_permissions: self.admin_permissions,
+                server_permissions: self.server_permissions,
+                last_used: self.last_used.map(|dt| dt.and_utc()),
+                expires: self.expires.map(|dt| dt.and_utc()),
+                created: self.created.and_utc(),
+            },
+            api_object,
+            state
+        )?;
+
+        Ok(api_object)
     }
 }
 
@@ -496,6 +513,9 @@ impl DeletableModel for UserApiKey {
     }
 }
 
+#[schema_extension_derive::extendible]
+#[init_args(UserApiKey, crate::State)]
+#[hook_args(crate::State)]
 #[derive(ToSchema, Serialize)]
 #[schema(title = "UserApiKey")]
 pub struct ApiUserApiKey {

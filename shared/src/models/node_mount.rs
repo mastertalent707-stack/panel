@@ -175,31 +175,47 @@ impl NodeMount {
     pub async fn into_admin_node_api_object(
         self,
         state: &crate::State,
-    ) -> Result<AdminApiNodeNodeMount, anyhow::Error> {
+        _args: (),
+    ) -> Result<AdminApiNodeNodeMount, crate::database::DatabaseError> {
         Ok(AdminApiNodeNodeMount {
             node: self
                 .node
                 .fetch_cached(&state.database)
                 .await?
-                .into_admin_api_object(state)
+                .into_admin_api_object(state, ())
                 .await?,
             created: self.created.and_utc(),
         })
     }
+}
 
-    #[inline]
-    pub async fn into_admin_api_object(
+#[async_trait::async_trait]
+impl IntoAdminApiObject for NodeMount {
+    type AdminApiObject = AdminApiNodeMount;
+    type ExtraArgs<'a> = ();
+
+    async fn into_admin_api_object<'a>(
         self,
         state: &crate::State,
-    ) -> Result<AdminApiNodeMount, anyhow::Error> {
-        Ok(AdminApiNodeMount {
-            mount: self
-                .mount
-                .fetch_cached(&state.database)
-                .await?
-                .into_admin_api_object(),
-            created: self.created.and_utc(),
-        })
+        _args: Self::ExtraArgs<'a>,
+    ) -> Result<Self::AdminApiObject, crate::database::DatabaseError> {
+        let api_object = AdminApiNodeMount::init_hooks(&self, state).await?;
+
+        let api_object = finish_extendible!(
+            AdminApiNodeMount {
+                mount: self
+                    .mount
+                    .fetch_cached(&state.database)
+                    .await?
+                    .into_admin_api_object(state, ())
+                    .await?,
+                created: self.created.and_utc(),
+            },
+            api_object,
+            state
+        )?;
+
+        Ok(api_object)
     }
 }
 
@@ -303,6 +319,9 @@ pub struct AdminApiNodeNodeMount {
     pub created: chrono::DateTime<chrono::Utc>,
 }
 
+#[schema_extension_derive::extendible]
+#[init_args(NodeMount, crate::State)]
+#[hook_args(crate::State)]
 #[derive(ToSchema, Serialize)]
 #[schema(title = "AdminNodeMount")]
 pub struct AdminApiNodeMount {

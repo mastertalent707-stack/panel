@@ -8,7 +8,7 @@ mod post {
     use shared::{
         ApiError, GetState,
         models::{
-            CreatableModel, admin_activity::GetAdminActivityLogger,
+            CreatableModel, IntoAdminApiObject, admin_activity::GetAdminActivityLogger,
             nest_egg_variable::NestEggVariable, node::Node, node_allocation::NodeAllocation,
             server::Server, user::GetPermissionManager,
         },

@@ -6,8 +6,6 @@ use std::{
     collections::BTreeMap,
     sync::{Arc, LazyLock},
 };
-use utoipa::ToSchema;
-
 #[derive(Serialize, Deserialize, Clone)]
 pub struct ServerAllocation {
     pub uuid: uuid::Uuid,
@@ -261,18 +259,35 @@ impl ServerAllocation {
         .await
         .unwrap_or(0)
     }
+}
 
-    #[inline]
-    pub fn into_api_object(self, primary: Option<uuid::Uuid>) -> ApiServerAllocation {
-        ApiServerAllocation {
-            uuid: self.uuid,
-            ip: compact_str::format_compact!("{}", self.allocation.ip.ip()),
-            ip_alias: self.allocation.ip_alias,
-            port: self.allocation.port,
-            notes: self.notes,
-            is_primary: primary.is_some_and(|p| p == self.uuid),
-            created: self.created.and_utc(),
-        }
+#[async_trait::async_trait]
+impl IntoApiObject for ServerAllocation {
+    type ApiObject = ApiServerAllocation;
+    type ExtraArgs<'a> = Option<uuid::Uuid>;
+
+    async fn into_api_object<'a>(
+        self,
+        state: &crate::State,
+        primary: Self::ExtraArgs<'a>,
+    ) -> Result<Self::ApiObject, crate::database::DatabaseError> {
+        let api_object = ApiServerAllocation::init_hooks(&self, state).await?;
+
+        let api_object = finish_extendible!(
+            ApiServerAllocation {
+                uuid: self.uuid,
+                ip: compact_str::format_compact!("{}", self.allocation.ip.ip()),
+                ip_alias: self.allocation.ip_alias,
+                port: self.allocation.port,
+                notes: self.notes,
+                is_primary: primary.is_some_and(|p| p == self.uuid),
+                created: self.created.and_utc(),
+            },
+            api_object,
+            state
+        )?;
+
+        Ok(api_object)
     }
 }
 
@@ -313,6 +328,9 @@ impl DeletableModel for ServerAllocation {
     }
 }
 
+#[schema_extension_derive::extendible]
+#[init_args(ServerAllocation, crate::State)]
+#[hook_args(crate::State)]
 #[derive(ToSchema, Serialize)]
 #[schema(title = "ServerAllocation")]
 pub struct ApiServerAllocation {

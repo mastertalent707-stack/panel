@@ -808,53 +808,84 @@ impl NestEgg {
             .collect(),
         })
     }
+}
 
-    #[inline]
-    pub async fn into_admin_api_object(
+#[async_trait::async_trait]
+impl IntoAdminApiObject for NestEgg {
+    type AdminApiObject = AdminApiNestEgg;
+    type ExtraArgs<'a> = ();
+
+    async fn into_admin_api_object<'a>(
         self,
         state: &crate::State,
-    ) -> Result<AdminApiNestEgg, crate::database::DatabaseError> {
-        Ok(AdminApiNestEgg {
-            uuid: self.uuid,
-            egg_repository_egg: match self.egg_repository_egg {
-                Some(egg_repository_egg) => Some(
-                    egg_repository_egg
-                        .fetch_cached(&state.database)
-                        .await?
-                        .into_admin_egg_api_object(state)
-                        .await?,
-                ),
-                None => None,
-            },
-            name: self.name,
-            description: self.description,
-            author: self.author,
-            config_files: self.config_files,
-            config_startup: self.config_startup,
-            config_stop: self.config_stop,
-            config_script: self.config_script,
-            startup: self.startup,
-            force_outgoing_ip: self.force_outgoing_ip,
-            separate_port: self.separate_port,
-            features: self.features,
-            docker_images: self.docker_images,
-            file_denylist: self.file_denylist,
-            created: self.created.and_utc(),
-        })
-    }
+        _args: Self::ExtraArgs<'a>,
+    ) -> Result<Self::AdminApiObject, crate::database::DatabaseError> {
+        let api_object = AdminApiNestEgg::init_hooks(&self, state).await?;
 
-    #[inline]
-    pub fn into_api_object(self) -> ApiNestEgg {
-        ApiNestEgg {
-            uuid: self.uuid,
-            name: self.name,
-            description: self.description,
-            startup: self.startup,
-            separate_port: self.separate_port,
-            features: self.features,
-            docker_images: self.docker_images,
-            created: self.created.and_utc(),
-        }
+        let api_object = finish_extendible!(
+            AdminApiNestEgg {
+                uuid: self.uuid,
+                egg_repository_egg: match self.egg_repository_egg {
+                    Some(egg_repository_egg) => Some(
+                        egg_repository_egg
+                            .fetch_cached(&state.database)
+                            .await?
+                            .into_admin_egg_api_object(state, ())
+                            .await?,
+                    ),
+                    None => None,
+                },
+                name: self.name,
+                description: self.description,
+                author: self.author,
+                config_files: self.config_files,
+                config_startup: self.config_startup,
+                config_stop: self.config_stop,
+                config_script: self.config_script,
+                startup: self.startup,
+                force_outgoing_ip: self.force_outgoing_ip,
+                separate_port: self.separate_port,
+                features: self.features,
+                docker_images: self.docker_images,
+                file_denylist: self.file_denylist,
+                created: self.created.and_utc(),
+            },
+            api_object,
+            state
+        )?;
+
+        Ok(api_object)
+    }
+}
+
+#[async_trait::async_trait]
+impl IntoApiObject for NestEgg {
+    type ApiObject = ApiNestEgg;
+    type ExtraArgs<'a> = ();
+
+    async fn into_api_object<'a>(
+        self,
+        state: &crate::State,
+        _args: Self::ExtraArgs<'a>,
+    ) -> Result<Self::ApiObject, crate::database::DatabaseError> {
+        let api_object = ApiNestEgg::init_hooks(&self, state).await?;
+
+        let api_object = finish_extendible!(
+            ApiNestEgg {
+                uuid: self.uuid,
+                name: self.name,
+                description: self.description,
+                startup: self.startup,
+                separate_port: self.separate_port,
+                features: self.features,
+                docker_images: self.docker_images,
+                created: self.created.and_utc(),
+            },
+            api_object,
+            state
+        )?;
+
+        Ok(api_object)
     }
 }
 
@@ -1234,6 +1265,9 @@ impl DeletableModel for NestEgg {
     }
 }
 
+#[schema_extension_derive::extendible]
+#[init_args(NestEgg, crate::State)]
+#[hook_args(crate::State)]
 #[derive(ToSchema, Serialize)]
 #[schema(title = "AdminNestEgg")]
 pub struct AdminApiNestEgg {
@@ -1264,6 +1298,9 @@ pub struct AdminApiNestEgg {
     pub created: chrono::DateTime<chrono::Utc>,
 }
 
+#[schema_extension_derive::extendible]
+#[init_args(NestEgg, crate::State)]
+#[hook_args(crate::State)]
 #[derive(ToSchema, Serialize)]
 #[schema(title = "NestEgg")]
 pub struct ApiNestEgg {

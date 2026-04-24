@@ -14,6 +14,7 @@ use oauth2::{
     TokenResponse, TokenUrl, basic::BasicClient,
 };
 use serde::Deserialize;
+use shared::models::IntoApiObject;
 use shared::{
     GetState,
     database::BASE64_ENGINE,
@@ -284,7 +285,7 @@ pub fn router(state: &State) -> OpenApiRouter<State> {
                             })?;
 
                             let auth_info = serde_json::json!({
-                                "user": user.into_api_object(&state.storage.retrieve_urls().await?),
+                                "user": user.into_api_object(&state, &state.storage.retrieve_urls().await?).await?,
                                 "token": token,
                             });
                             let auth_info = BASE64_ENGINE.encode(serde_json::to_string(&auth_info)?.as_bytes());

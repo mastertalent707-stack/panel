@@ -11,7 +11,7 @@ mod get {
     use shared::{
         ApiError, GetState,
         models::{
-            Pagination, server::GetServer, server_database::ServerDatabase,
+            IntoApiObject, Pagination, server::GetServer, server_database::ServerDatabase,
             user::GetPermissionManager,
         },
         response::{ApiResponse, ApiResponseResult},
@@ -118,7 +118,7 @@ mod post {
     use shared::{
         ApiError, GetState,
         models::{
-            CreatableModel,
+            CreatableModel, IntoApiObject,
             database_host::DatabaseHost,
             server::{GetServer, GetServerActivityLogger},
             server_database::ServerDatabase,

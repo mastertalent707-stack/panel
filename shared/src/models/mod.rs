@@ -995,3 +995,27 @@ impl<T> sqlx::Type<sqlx::Postgres> for OrderedJson<T> {
         PgTypeInfo::with_oid(sqlx::postgres::types::Oid(114))
     }
 }
+
+#[async_trait::async_trait]
+pub trait IntoApiObject {
+    type ApiObject: Send;
+    type ExtraArgs<'a>: Send;
+
+    async fn into_api_object<'a>(
+        self,
+        state: &crate::State,
+        args: Self::ExtraArgs<'a>,
+    ) -> Result<Self::ApiObject, DatabaseError>;
+}
+
+#[async_trait::async_trait]
+pub trait IntoAdminApiObject {
+    type AdminApiObject: Send;
+    type ExtraArgs<'a>: Send;
+
+    async fn into_admin_api_object<'a>(
+        self,
+        state: &crate::State,
+        args: Self::ExtraArgs<'a>,
+    ) -> Result<Self::AdminApiObject, DatabaseError>;
+}

@@ -213,20 +213,37 @@ impl UserSession {
             )
             .build())
     }
+}
 
-    #[inline]
-    pub fn into_api_object(self, auth: &GetAuthMethod) -> ApiUserSession {
-        ApiUserSession {
-            uuid: self.uuid,
-            ip: self.ip.ip().to_compact_string(),
-            user_agent: self.user_agent,
-            is_using: match &**auth {
-                AuthMethod::Session(session) => session.uuid == self.uuid,
-                _ => false,
+#[async_trait::async_trait]
+impl IntoApiObject for UserSession {
+    type ApiObject = ApiUserSession;
+    type ExtraArgs<'a> = &'a GetAuthMethod;
+
+    async fn into_api_object<'a>(
+        self,
+        state: &crate::State,
+        auth: Self::ExtraArgs<'a>,
+    ) -> Result<Self::ApiObject, crate::database::DatabaseError> {
+        let api_object = ApiUserSession::init_hooks(&self, state).await?;
+
+        let api_object = finish_extendible!(
+            ApiUserSession {
+                uuid: self.uuid,
+                ip: self.ip.ip().to_compact_string(),
+                user_agent: self.user_agent,
+                is_using: match &**auth {
+                    AuthMethod::Session(session) => session.uuid == self.uuid,
+                    _ => false,
+                },
+                last_used: self.last_used.and_utc(),
+                created: self.created.and_utc(),
             },
-            last_used: self.last_used.and_utc(),
-            created: self.created.and_utc(),
-        }
+            api_object,
+            state
+        )?;
+
+        Ok(api_object)
     }
 }
 
@@ -326,6 +343,9 @@ impl DeletableModel for UserSession {
     }
 }
 
+#[schema_extension_derive::extendible]
+#[init_args(UserSession, crate::State)]
+#[hook_args(crate::State)]
 #[derive(ToSchema, Serialize, Deserialize)]
 #[schema(title = "UserSession")]
 pub struct ApiUserSession {

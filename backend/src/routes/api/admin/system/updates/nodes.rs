@@ -8,7 +8,10 @@ mod get {
     use serde::Serialize;
     use shared::{
         ApiError, GetState,
-        models::{ByUuid, Pagination, PaginationParams, node::Node, user::GetPermissionManager},
+        models::{
+            ByUuid, IntoAdminApiObject, Pagination, PaginationParams, node::Node,
+            user::GetPermissionManager,
+        },
         response::{ApiResponse, ApiResponseResult},
         updates::ParsedVersionInformation,
     };
@@ -152,7 +155,7 @@ mod get {
         {
             node_futures.push(async {
                 let node = Node::by_uuid_cached(&state.database, *node_uuid).await?;
-                node.into_admin_api_object(&state).await
+                node.into_admin_api_object(&state, ()).await
             });
         }
 

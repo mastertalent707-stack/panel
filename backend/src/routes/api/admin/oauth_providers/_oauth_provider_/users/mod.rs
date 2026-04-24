@@ -10,7 +10,7 @@ mod get {
     use shared::{
         ApiError, GetState,
         models::{
-            Pagination, PaginationParamsWithSearch, user::GetPermissionManager,
+            IntoAdminApiObject, Pagination, PaginationParamsWithSearch, user::GetPermissionManager,
             user_oauth_link::UserOAuthLink,
         },
         response::{ApiResponse, ApiResponseResult},

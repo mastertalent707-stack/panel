@@ -2,8 +2,6 @@ use crate::prelude::*;
 use serde::{Deserialize, Serialize};
 use sqlx::{Row, postgres::PgRow};
 use std::{collections::BTreeMap, sync::LazyLock};
-use utoipa::ToSchema;
-
 #[derive(Serialize, Deserialize)]
 pub struct ServerVariable {
     pub variable: super::nest_egg_variable::NestEggVariable,
@@ -123,24 +121,44 @@ impl ServerVariable {
             .map(|row| Self::map(None, &row))
             .try_collect_vec()
     }
+}
 
-    #[inline]
-    pub fn into_api_object(self) -> ApiServerVariable {
-        ApiServerVariable {
-            name: self.variable.name,
-            description: self.variable.description,
-            description_translations: self.variable.description_translations,
-            env_variable: self.variable.env_variable,
-            default_value: self.variable.default_value,
-            value: self.value,
-            is_editable: self.variable.user_editable,
-            is_secret: self.variable.secret,
-            rules: self.variable.rules,
-            created: self.created.and_utc(),
-        }
+#[async_trait::async_trait]
+impl IntoApiObject for ServerVariable {
+    type ApiObject = ApiServerVariable;
+    type ExtraArgs<'a> = ();
+
+    async fn into_api_object<'a>(
+        self,
+        state: &crate::State,
+        _args: Self::ExtraArgs<'a>,
+    ) -> Result<Self::ApiObject, crate::database::DatabaseError> {
+        let api_object = ApiServerVariable::init_hooks(&self, state).await?;
+
+        let api_object = finish_extendible!(
+            ApiServerVariable {
+                name: self.variable.name,
+                description: self.variable.description,
+                description_translations: self.variable.description_translations,
+                env_variable: self.variable.env_variable,
+                default_value: self.variable.default_value,
+                value: self.value,
+                is_editable: self.variable.user_editable,
+                is_secret: self.variable.secret,
+                rules: self.variable.rules,
+                created: self.created.and_utc(),
+            },
+            api_object,
+            state
+        )?;
+
+        Ok(api_object)
     }
 }
 
+#[schema_extension_derive::extendible]
+#[init_args(ServerVariable, crate::State)]
+#[hook_args(crate::State)]
 #[derive(ToSchema, Serialize)]
 #[schema(title = "ServerVariable")]
 pub struct ApiServerVariable {

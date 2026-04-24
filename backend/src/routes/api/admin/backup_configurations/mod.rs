@@ -9,8 +9,8 @@ mod get {
     use shared::{
         ApiError, GetState,
         models::{
-            Pagination, PaginationParamsWithSearch, backup_configuration::BackupConfiguration,
-            user::GetPermissionManager,
+            IntoAdminApiObject, Pagination, PaginationParamsWithSearch,
+            backup_configuration::BackupConfiguration, user::GetPermissionManager,
         },
         response::{ApiResponse, ApiResponseResult},
     };
@@ -65,7 +65,7 @@ mod get {
         ApiResponse::new_serialized(Response {
             backup_configurations: backup_configurations
                 .try_async_map(|backup_configuration| {
-                    backup_configuration.into_admin_api_object(&state)
+                    backup_configuration.into_admin_api_object(&state, ())
                 })
                 .await?,
         })
@@ -79,7 +79,7 @@ mod post {
     use shared::{
         ApiError, GetState,
         models::{
-            CreatableModel,
+            CreatableModel, IntoAdminApiObject,
             admin_activity::GetAdminActivityLogger,
             backup_configuration::{BackupConfiguration, CreateBackupConfigurationOptions},
             user::GetPermissionManager,
@@ -130,7 +130,9 @@ mod post {
             .await;
 
         ApiResponse::new_serialized(Response {
-            backup_configuration: backup_configuration.into_admin_api_object(&state).await?,
+            backup_configuration: backup_configuration
+                .into_admin_api_object(&state, ())
+                .await?,
         })
         .ok()
     }

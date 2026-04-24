@@ -1,4 +1,4 @@
-use crate::{models::InsertQueryBuilder, prelude::*, storage::StorageUrlRetriever};
+use crate::{models::InsertQueryBuilder, prelude::*};
 use garde::Validate;
 use serde::{Deserialize, Serialize};
 use sqlx::{Row, postgres::PgRow};
@@ -267,42 +267,71 @@ impl UserOAuthLink {
                 .try_collect_vec()?,
         })
     }
+}
 
-    #[inline]
-    pub async fn into_admin_api_object(
+#[async_trait::async_trait]
+impl IntoAdminApiObject for UserOAuthLink {
+    type AdminApiObject = AdminApiUserOAuthLink;
+    type ExtraArgs<'a> = &'a crate::storage::StorageUrlRetriever<'a>;
+
+    async fn into_admin_api_object<'a>(
         self,
         state: &crate::State,
-        storage_url_retriever: &StorageUrlRetriever<'_>,
-    ) -> Result<AdminApiUserOAuthLink, anyhow::Error> {
-        Ok(AdminApiUserOAuthLink {
-            uuid: self.uuid,
-            user: self
-                .user
-                .fetch_cached(&state.database)
-                .await?
-                .into_admin_api_object(storage_url_retriever),
-            identifier: self.identifier,
-            last_used: self.last_used.map(|dt| dt.and_utc()),
-            created: self.created.and_utc(),
-        })
+        storage_url_retriever: Self::ExtraArgs<'a>,
+    ) -> Result<Self::AdminApiObject, crate::database::DatabaseError> {
+        let api_object = AdminApiUserOAuthLink::init_hooks(&self, state).await?;
+
+        let api_object = finish_extendible!(
+            AdminApiUserOAuthLink {
+                uuid: self.uuid,
+                user: self
+                    .user
+                    .fetch_cached(&state.database)
+                    .await?
+                    .into_admin_api_object(state, storage_url_retriever)
+                    .await?,
+                identifier: self.identifier,
+                last_used: self.last_used.map(|dt| dt.and_utc()),
+                created: self.created.and_utc(),
+            },
+            api_object,
+            state
+        )?;
+
+        Ok(api_object)
     }
+}
 
-    #[inline]
-    pub async fn into_api_object(
+#[async_trait::async_trait]
+impl IntoApiObject for UserOAuthLink {
+    type ApiObject = ApiUserOAuthLink;
+    type ExtraArgs<'a> = ();
+
+    async fn into_api_object<'a>(
         self,
         state: &crate::State,
-    ) -> Result<ApiUserOAuthLink, anyhow::Error> {
-        Ok(ApiUserOAuthLink {
-            uuid: self.uuid,
-            oauth_provider: self
-                .oauth_provider
-                .fetch_cached(&state.database)
-                .await?
-                .into_api_object(),
-            identifier: self.identifier,
-            last_used: self.last_used.map(|dt| dt.and_utc()),
-            created: self.created.and_utc(),
-        })
+        _args: Self::ExtraArgs<'a>,
+    ) -> Result<Self::ApiObject, crate::database::DatabaseError> {
+        let api_object = ApiUserOAuthLink::init_hooks(&self, state).await?;
+
+        let api_object = finish_extendible!(
+            ApiUserOAuthLink {
+                uuid: self.uuid,
+                oauth_provider: self
+                    .oauth_provider
+                    .fetch_cached(&state.database)
+                    .await?
+                    .into_api_object(state, ())
+                    .await?,
+                identifier: self.identifier,
+                last_used: self.last_used.map(|dt| dt.and_utc()),
+                created: self.created.and_utc(),
+            },
+            api_object,
+            state
+        )?;
+
+        Ok(api_object)
     }
 }
 
@@ -404,6 +433,9 @@ impl DeletableModel for UserOAuthLink {
     }
 }
 
+#[schema_extension_derive::extendible]
+#[init_args(UserOAuthLink, crate::State)]
+#[hook_args(crate::State)]
 #[derive(ToSchema, Serialize)]
 #[schema(title = "AdminUserOAuthLink")]
 pub struct AdminApiUserOAuthLink {
@@ -416,6 +448,9 @@ pub struct AdminApiUserOAuthLink {
     pub created: chrono::DateTime<chrono::Utc>,
 }
 
+#[schema_extension_derive::extendible]
+#[init_args(UserOAuthLink, crate::State)]
+#[hook_args(crate::State)]
 #[derive(ToSchema, Serialize)]
 #[schema(title = "UserOAuthLink")]
 pub struct ApiUserOAuthLink {

@@ -66,7 +66,10 @@ export default function DashboardRouter({ isNormal }: { isNormal: boolean }) {
         </Sidebar>
       )}
 
-      <div id='dashboard-root' className={isNormal ? 'max-w-[100vw] flex-1 lg:ml-0' : 'flex-1 lg:ml-0 overflow-auto'}>
+      <div
+        id='dashboard-root'
+        className={isNormal ? 'max-w-[100vw] flex-1 lg:ml-0' : 'flex-1 lg:ml-0 overflow-auto h-full'}
+      >
         <Container isNormal={isNormal}>
           {window.extensionContext.extensionRegistry.pages.dashboard.prependedComponents.map((Component, i) => (
             <Component key={`dashboard-prepended-component-${i}`} />

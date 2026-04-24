@@ -11,7 +11,8 @@ mod get {
     use shared::{
         ApiError, GetState,
         models::{
-            Pagination, PaginationParamsWithSearch, server::Server, user::GetPermissionManager,
+            IntoAdminApiObject, Pagination, PaginationParamsWithSearch, server::Server,
+            user::GetPermissionManager,
         },
         response::{ApiResponse, ApiResponseResult},
     };
@@ -82,7 +83,7 @@ mod post {
     use shared::{
         ApiError, GetState,
         models::{
-            CreatableModel, admin_activity::GetAdminActivityLogger,
+            CreatableModel, IntoAdminApiObject, admin_activity::GetAdminActivityLogger,
             nest_egg_variable::NestEggVariable, server::Server, user::GetPermissionManager,
         },
         response::{ApiResponse, ApiResponseResult},
