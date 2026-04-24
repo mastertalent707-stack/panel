@@ -66,9 +66,7 @@ mod get {
 
         ApiResponse::new_serialized(Response {
             activities: activities
-                .try_async_map(|activity| {
-                    activity.into_api_object(&state.database, &storage_url_retriever)
-                })
+                .try_async_map(|activity| activity.into_api_object(&state, &storage_url_retriever))
                 .await?,
         })
         .ok()

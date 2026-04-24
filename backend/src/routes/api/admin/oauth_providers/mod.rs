@@ -63,9 +63,7 @@ mod get {
 
         ApiResponse::new_serialized(Response {
             oauth_providers: oauth_providers
-                .try_async_map(|oauth_provider| {
-                    oauth_provider.into_admin_api_object(&state.database)
-                })
+                .try_async_map(|oauth_provider| oauth_provider.into_admin_api_object(&state))
                 .await?,
         })
         .ok()
@@ -146,9 +144,7 @@ mod post {
             .await;
 
         ApiResponse::new_serialized(Response {
-            oauth_provider: oauth_provider
-                .into_admin_api_object(&state.database)
-                .await?,
+            oauth_provider: oauth_provider.into_admin_api_object(&state).await?,
         })
         .ok()
     }

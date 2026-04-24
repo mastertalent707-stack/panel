@@ -363,14 +363,14 @@ impl OAuthProvider {
     #[inline]
     pub async fn into_admin_api_object(
         self,
-        database: &crate::database::Database,
+        state: &crate::State,
     ) -> Result<AdminApiOAuthProvider, anyhow::Error> {
         Ok(AdminApiOAuthProvider {
             uuid: self.uuid,
             name: self.name,
             description: self.description,
             client_id: self.client_id,
-            client_secret: database.decrypt(self.client_secret).await?,
+            client_secret: state.database.decrypt(self.client_secret).await?,
             auth_url: self.auth_url,
             token_url: self.token_url,
             info_url: self.info_url,

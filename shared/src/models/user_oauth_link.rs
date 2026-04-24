@@ -271,14 +271,14 @@ impl UserOAuthLink {
     #[inline]
     pub async fn into_admin_api_object(
         self,
-        database: &crate::database::Database,
+        state: &crate::State,
         storage_url_retriever: &StorageUrlRetriever<'_>,
     ) -> Result<AdminApiUserOAuthLink, anyhow::Error> {
         Ok(AdminApiUserOAuthLink {
             uuid: self.uuid,
             user: self
                 .user
-                .fetch_cached(database)
+                .fetch_cached(&state.database)
                 .await?
                 .into_admin_api_object(storage_url_retriever),
             identifier: self.identifier,
@@ -290,13 +290,13 @@ impl UserOAuthLink {
     #[inline]
     pub async fn into_api_object(
         self,
-        database: &crate::database::Database,
+        state: &crate::State,
     ) -> Result<ApiUserOAuthLink, anyhow::Error> {
         Ok(ApiUserOAuthLink {
             uuid: self.uuid,
             oauth_provider: self
                 .oauth_provider
-                .fetch_cached(database)
+                .fetch_cached(&state.database)
                 .await?
                 .into_api_object(),
             identifier: self.identifier,

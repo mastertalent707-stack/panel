@@ -53,7 +53,7 @@ mod get {
         let mut stream = futures_util::stream::iter(
             database_hosts
                 .into_iter()
-                .map(|database_host| database_host.database_host.into_api_object(&state.database)),
+                .map(|database_host| database_host.database_host.into_api_object(&state)),
         )
         .buffered(10);
 

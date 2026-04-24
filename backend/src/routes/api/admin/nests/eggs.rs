@@ -37,7 +37,7 @@ mod get {
             futures_map
                 .entry(nest_egg.nest.uuid)
                 .or_insert_with(Vec::new)
-                .push(nest_egg.into_admin_api_object(&state.database));
+                .push(nest_egg.into_admin_api_object(&state));
         }
 
         let mut nests = Vec::new();

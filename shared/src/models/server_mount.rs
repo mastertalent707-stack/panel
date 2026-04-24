@@ -266,9 +266,9 @@ impl ServerMount {
     #[inline]
     pub async fn into_api_object(
         self,
-        database: &crate::database::Database,
+        state: &crate::State,
     ) -> Result<ApiServerMount, anyhow::Error> {
-        let mount = self.mount.fetch_cached(database).await?;
+        let mount = self.mount.fetch_cached(&state.database).await?;
 
         Ok(ApiServerMount {
             uuid: mount.uuid,

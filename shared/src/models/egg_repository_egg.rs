@@ -226,14 +226,14 @@ impl EggRepositoryEgg {
     #[inline]
     pub async fn into_admin_egg_api_object(
         self,
-        database: &crate::database::Database,
+        state: &crate::State,
     ) -> Result<AdminApiEggEggRepositoryEgg, crate::database::DatabaseError> {
         Ok(AdminApiEggEggRepositoryEgg {
             uuid: self.uuid,
             path: self.path,
             egg_repository: self
                 .egg_repository
-                .fetch_cached(database)
+                .fetch_cached(&state.database)
                 .await?
                 .into_admin_api_object(),
             name: self.name,

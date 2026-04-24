@@ -62,7 +62,7 @@ mod get {
 
         ApiResponse::new_serialized(Response {
             locations: locations
-                .async_map(|location| location.into_admin_api_object(&state.database))
+                .async_map(|location| location.into_admin_api_object(&state))
                 .await,
         })
         .ok()
@@ -124,7 +124,7 @@ mod post {
             .await;
 
         ApiResponse::new_serialized(Response {
-            location: location.into_admin_api_object(&state.database).await,
+            location: location.into_admin_api_object(&state).await,
         })
         .ok()
     }

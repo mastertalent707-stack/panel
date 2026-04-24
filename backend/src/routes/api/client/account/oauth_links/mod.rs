@@ -61,7 +61,7 @@ mod get {
 
         ApiResponse::new_serialized(Response {
             oauth_links: oauth_links
-                .try_async_map(|oauth_link| oauth_link.into_api_object(&state.database))
+                .try_async_map(|oauth_link| oauth_link.into_api_object(&state))
                 .await?,
         })
         .ok()

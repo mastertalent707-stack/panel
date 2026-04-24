@@ -314,9 +314,9 @@ impl BackupConfiguration {
     #[inline]
     pub async fn into_admin_api_object(
         mut self,
-        database: &crate::database::Database,
+        state: &crate::State,
     ) -> Result<AdminApiBackupConfiguration, crate::database::DatabaseError> {
-        self.backup_configs.decrypt(database).await?;
+        self.backup_configs.decrypt(&state.database).await?;
 
         Ok(AdminApiBackupConfiguration {
             uuid: self.uuid,

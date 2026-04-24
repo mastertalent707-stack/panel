@@ -65,7 +65,7 @@ mod get {
         ApiResponse::new_serialized(Response {
             backup_configurations: backup_configurations
                 .try_async_map(|backup_configuration| {
-                    backup_configuration.into_admin_api_object(&state.database)
+                    backup_configuration.into_admin_api_object(&state)
                 })
                 .await?,
         })
@@ -130,9 +130,7 @@ mod post {
             .await;
 
         ApiResponse::new_serialized(Response {
-            backup_configuration: backup_configuration
-                .into_admin_api_object(&state.database)
-                .await?,
+            backup_configuration: backup_configuration.into_admin_api_object(&state).await?,
         })
         .ok()
     }

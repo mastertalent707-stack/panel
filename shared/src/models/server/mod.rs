@@ -1617,7 +1617,7 @@ impl Server {
     ) -> Result<AdminApiServer, anyhow::Error> {
         let allocation_uuid = self.allocation.as_ref().map(|a| a.uuid);
 
-        let feature_limits = ApiServerFeatureLimits::init_hooks(&self, &state.database).await?;
+        let feature_limits = ApiServerFeatureLimits::init_hooks(&self, state).await?;
         let feature_limits = finish_extendible!(
             ApiServerFeatureLimits {
                 allocations: self.allocation_limit,
@@ -1626,7 +1626,7 @@ impl Server {
                 schedules: self.schedule_limit,
             },
             feature_limits,
-            &state.database
+            state
         )?;
 
         let (node, backup_configuration, egg) = tokio::join!(
@@ -1641,10 +1641,7 @@ impl Server {
                     if let Ok(backup_configuration) =
                         backup_configuration.fetch_cached(&state.database).await
                     {
-                        backup_configuration
-                            .into_admin_api_object(&state.database)
-                            .await
-                            .ok()
+                        backup_configuration.into_admin_api_object(state).await.ok()
                     } else {
                         None
                     }
@@ -1652,7 +1649,7 @@ impl Server {
                     None
                 }
             },
-            self.egg.into_admin_api_object(&state.database)
+            self.egg.into_admin_api_object(state)
         );
 
         Ok(AdminApiServer {
@@ -1694,16 +1691,16 @@ impl Server {
     #[inline]
     pub async fn into_api_object(
         self,
-        database: &crate::database::Database,
+        state: &crate::State,
         user: &super::user::User,
     ) -> Result<ApiServer, anyhow::Error> {
         let allocation_uuid = self.allocation.as_ref().map(|a| a.uuid);
         let (node, egg_configuration) = tokio::try_join!(
-            self.node.fetch_cached(database),
-            self.egg.configuration(database)
+            self.node.fetch_cached(&state.database),
+            self.egg.configuration(&state.database)
         )?;
 
-        let feature_limits = ApiServerFeatureLimits::init_hooks(&self, database).await?;
+        let feature_limits = ApiServerFeatureLimits::init_hooks(&self, state).await?;
         let feature_limits = finish_extendible!(
             ApiServerFeatureLimits {
                 allocations: self.allocation_limit,
@@ -1712,7 +1709,7 @@ impl Server {
                 schedules: self.schedule_limit,
             },
             feature_limits,
-            database
+            state
         )?;
 
         Ok(ApiServer {
@@ -2423,8 +2420,8 @@ pub struct ApiServerLimits {
 }
 
 #[schema_extension_derive::extendible]
-#[init_args(Server, crate::database::Database)]
-#[hook_args(crate::database::Database)]
+#[init_args(Server, crate::State)]
+#[hook_args(crate::State)]
 #[derive(ToSchema, Validate, Serialize, Deserialize, Clone)]
 pub struct ApiServerFeatureLimits {
     #[garde(range(min = 0))]

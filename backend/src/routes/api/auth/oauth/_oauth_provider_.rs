@@ -73,6 +73,11 @@ pub fn router(state: &State) -> OpenApiRouter<State> {
                     .ok();
             }
 
+            state
+                .cache
+                .invalidate(&format!("oauth_state::{}", params.state))
+                .await?;
+
             let settings = state.settings.get().await?;
 
             let client = BasicClient::new(ClientId::new(oauth_provider.client_id.to_string()))

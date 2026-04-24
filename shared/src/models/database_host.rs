@@ -509,9 +509,12 @@ impl DatabaseHost {
     #[inline]
     pub async fn into_api_object(
         self,
-        database: &crate::database::Database,
+        state: &crate::State,
     ) -> Result<ApiDatabaseHost, anyhow::Error> {
-        let details = self.credentials.parse_connection_details(database).await?;
+        let details = self
+            .credentials
+            .parse_connection_details(&state.database)
+            .await?;
 
         Ok(ApiDatabaseHost {
             uuid: self.uuid,

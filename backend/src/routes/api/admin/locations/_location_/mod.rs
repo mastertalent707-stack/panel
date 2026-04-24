@@ -86,7 +86,7 @@ mod get {
         permissions.has_admin_permission("locations.read")?;
 
         ApiResponse::new_serialized(Response {
-            location: location.0.into_admin_api_object(&state.database).await,
+            location: location.0.into_admin_api_object(&state).await,
         })
         .ok()
     }

@@ -812,16 +812,16 @@ impl NestEgg {
     #[inline]
     pub async fn into_admin_api_object(
         self,
-        database: &crate::database::Database,
+        state: &crate::State,
     ) -> Result<AdminApiNestEgg, crate::database::DatabaseError> {
         Ok(AdminApiNestEgg {
             uuid: self.uuid,
             egg_repository_egg: match self.egg_repository_egg {
                 Some(egg_repository_egg) => Some(
                     egg_repository_egg
-                        .fetch_cached(database)
+                        .fetch_cached(&state.database)
                         .await?
-                        .into_admin_egg_api_object(database)
+                        .into_admin_egg_api_object(state)
                         .await?,
                 ),
                 None => None,

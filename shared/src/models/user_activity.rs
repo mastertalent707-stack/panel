@@ -183,14 +183,14 @@ impl UserActivity {
     #[inline]
     pub async fn into_api_object(
         self,
-        database: &crate::database::Database,
+        state: &crate::State,
         storage_url_retriever: &StorageUrlRetriever<'_>,
     ) -> Result<ApiUserActivity, anyhow::Error> {
         Ok(ApiUserActivity {
             impersonator: if let Some(impersonator) = self.impersonator {
                 Some(
                     impersonator
-                        .fetch_cached(database)
+                        .fetch_cached(&state.database)
                         .await?
                         .into_api_object(storage_url_retriever),
                 )

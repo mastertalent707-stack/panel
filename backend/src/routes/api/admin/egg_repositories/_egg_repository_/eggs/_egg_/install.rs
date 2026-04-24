@@ -120,7 +120,7 @@ mod post {
             .await;
 
         ApiResponse::new_serialized(Response {
-            egg: egg.into_admin_api_object(&state.database).await?,
+            egg: egg.into_admin_api_object(&state).await?,
         })
         .ok()
     }

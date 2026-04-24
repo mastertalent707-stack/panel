@@ -164,19 +164,14 @@ impl Location {
     }
 
     #[inline]
-    pub async fn into_admin_api_object(
-        self,
-        database: &crate::database::Database,
-    ) -> AdminApiLocation {
+    pub async fn into_admin_api_object(self, state: &crate::State) -> AdminApiLocation {
         AdminApiLocation {
             uuid: self.uuid,
             backup_configuration: if let Some(backup_configuration) = self.backup_configuration {
-                if let Ok(backup_configuration) = backup_configuration.fetch_cached(database).await
+                if let Ok(backup_configuration) =
+                    backup_configuration.fetch_cached(&state.database).await
                 {
-                    backup_configuration
-                        .into_admin_api_object(database)
-                        .await
-                        .ok()
+                    backup_configuration.into_admin_api_object(state).await.ok()
                 } else {
                     None
                 }

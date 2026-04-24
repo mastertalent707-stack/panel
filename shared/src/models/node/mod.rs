@@ -557,25 +557,20 @@ impl Node {
             self.public_url.map(|url| url.to_string())
         };
 
-        let (location, backup_configuration) = tokio::join!(
-            self.location.into_admin_api_object(&state.database),
-            async {
+        let (location, backup_configuration) =
+            tokio::join!(self.location.into_admin_api_object(state), async {
                 if let Some(backup_configuration) = self.backup_configuration {
                     if let Ok(backup_configuration) =
                         backup_configuration.fetch_cached(&state.database).await
                     {
-                        backup_configuration
-                            .into_admin_api_object(&state.database)
-                            .await
-                            .ok()
+                        backup_configuration.into_admin_api_object(state).await.ok()
                     } else {
                         None
                     }
                 } else {
                     None
                 }
-            }
-        );
+            });
 
         Ok(AdminApiNode {
             uuid: self.uuid,
