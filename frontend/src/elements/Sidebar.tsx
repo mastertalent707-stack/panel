@@ -11,7 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Menu } from '@mantine/core';
 import classNames from 'classnames';
 import { ReactNode, useEffect, useState } from 'react';
-import { MemoryRouter, NavLink, matchPath, useLocation, useNavigate } from 'react-router';
+import { MemoryRouter, matchPath, NavLink, useLocation, useNavigate } from 'react-router';
 import { makeComponentHookable } from 'shared';
 import ActionIcon from '@/elements/ActionIcon.tsx';
 import Button from '@/elements/Button.tsx';
