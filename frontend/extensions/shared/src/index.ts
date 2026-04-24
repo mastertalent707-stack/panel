@@ -12,6 +12,7 @@ export interface GlobalRouteDefinition {
 export interface RouteDefinition extends GlobalRouteDefinition {
   name: string | (() => string) | undefined;
   icon?: IconDefinition;
+  activeMatches?: string[];
 }
 
 export interface AdminRouteDefinition extends RouteDefinition {

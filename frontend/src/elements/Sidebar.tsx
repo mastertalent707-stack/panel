@@ -11,7 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Menu } from '@mantine/core';
 import classNames from 'classnames';
 import { ReactNode, useEffect, useState } from 'react';
-import { MemoryRouter, NavLink, useNavigate } from 'react-router';
+import { MemoryRouter, matchPath, NavLink, useLocation, useNavigate } from 'react-router';
 import { makeComponentHookable } from 'shared';
 import ActionIcon from '@/elements/ActionIcon.tsx';
 import Button from '@/elements/Button.tsx';
@@ -81,11 +81,14 @@ type LinkProps = {
   name?: string;
   title?: string;
   className?: string;
+  activeMatches?: string[];
 };
 
-function Link({ to, end, icon, name, title = name, className }: LinkProps) {
+function Link({ to, end, icon, name, title = name, className, activeMatches }: LinkProps) {
   const { t } = useTranslations();
   const { addWindow } = useWindows();
+  const { pathname } = useLocation();
+  const extraActive = activeMatches?.some((pattern) => matchPath({ path: pattern, end: false }, pathname)) ?? false;
 
   if (to.endsWith('/*')) to = to.slice(0, to.length - 2);
 
@@ -135,17 +138,20 @@ function Link({ to, end, icon, name, title = name, className }: LinkProps) {
           }}
           className='w-full'
         >
-          {({ isActive }) => (
-            <Button
-              color={isActive ? 'blue' : 'gray'}
-              className={classNames(isActive && 'cursor-default! active', className)}
-              variant='subtle'
-              fullWidth
-              styles={{ label: { width: '100%' } }}
-            >
-              {icon && <FontAwesomeIcon icon={icon} className='mr-2' />} {name}
-            </Button>
-          )}
+          {({ isActive: navActive }) => {
+            const isActive = navActive || extraActive;
+            return (
+              <Button
+                color={isActive ? 'blue' : 'gray'}
+                className={classNames(isActive && 'cursor-default! active', className)}
+                variant='subtle'
+                fullWidth
+                styles={{ label: { width: '100%' } }}
+              >
+                {icon && <FontAwesomeIcon icon={icon} className='mr-2' />} {name}
+              </Button>
+            );
+          }}
         </NavLink>
       )}
     </ContextMenu>

@@ -171,6 +171,7 @@ export default function ServerRouter({ isNormal }: { isNormal: boolean }) {
                     end={route.exact}
                     icon={route.icon}
                     name={name}
+                    activeMatches={route.activeMatches}
                   />
                 </ServerCan>
               ) : (
@@ -180,6 +181,7 @@ export default function ServerRouter({ isNormal }: { isNormal: boolean }) {
                   end={route.exact}
                   icon={route.icon}
                   name={name}
+                  activeMatches={route.activeMatches}
                 />
               );
             }

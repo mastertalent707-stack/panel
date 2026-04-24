@@ -56,6 +56,7 @@ export default function DashboardRouter({ isNormal }: { isNormal: boolean }) {
                 end={route.exact}
                 icon={route.icon}
                 name={typeof route.name === 'function' ? route.name() : route.name}
+                activeMatches={route.activeMatches}
               />
             ))}
 
