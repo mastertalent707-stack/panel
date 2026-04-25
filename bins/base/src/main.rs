@@ -1,9 +1,4 @@
-use axum::{
-    ServiceExt,
-    body::Body,
-    extract::{ConnectInfo, Request},
-    middleware::Next,
-};
+use axum::{ServiceExt, middleware::Next};
 use std::net::{IpAddr, SocketAddr};
 use tower::Layer;
 use tower_http::normalize_path::NormalizePathLayer;
@@ -29,7 +24,8 @@ async fn main() {
         #[cfg(unix)]
         {
             router.layer(axum::middleware::from_fn(
-                |mut req: Request<Body>, next: Next| async move {
+                |mut req: axum::extract::Request<axum::body::Body>,
+                 next: axum::middleware::Next| async move {
                     req.extensions_mut()
                         .insert(ConnectInfo(SocketAddr::from(([127, 0, 0, 1], 0))));
                     next.run(req).await
