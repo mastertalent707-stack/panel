@@ -97,6 +97,10 @@ pub trait Extendible: Serialize + Sized + 'static {
         serde_json::from_value(serde_json::Value::Object(self.overlay_map().clone()))
             .map_err(anyhow::Error::from)
     }
+
+    fn insert_extension<E: Serialize>(&mut self, ext_value: E) -> Result<(), anyhow::Error> {
+        crate::apply_extension_to_overlay(self, ext_value)
+    }
 }
 
 pub fn apply_extension_to_overlay<T: Extendible, E: Serialize>(

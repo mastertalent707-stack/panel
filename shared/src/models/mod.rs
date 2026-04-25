@@ -199,17 +199,18 @@ pub trait BaseModel: Serialize + DeserializeOwned {
     /// Parses a model extension from the model's extension data. If the extension is not found, or if the data cannot be deserialized, an error is returned.
     ///
     /// This can be costly depending on what is stored, so use sparingly.
-    fn parse_model_extension<
-        Extension: SafeModelExtension<Value = T>,
-        T: Serialize + DeserializeOwned,
-    >(
+    fn parse_model_extension<Extension: SafeModelExtension>(
         &self,
-    ) -> Result<T, crate::database::DatabaseError> {
+    ) -> Result<Extension::Value, crate::database::DatabaseError>
+    where
+        Extension::Value: Serialize + DeserializeOwned,
+    {
         let data = self.get_extension_data();
 
         for (name, value) in data.iter() {
             if name.as_str() == Extension::name() {
-                let deserialized = rmp_serde::from_slice::<T>(value).map_err(anyhow::Error::new)?;
+                let deserialized =
+                    rmp_serde::from_slice::<Extension::Value>(value).map_err(anyhow::Error::new)?;
 
                 return Ok(deserialized);
             }
