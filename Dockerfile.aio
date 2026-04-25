@@ -4,8 +4,9 @@ FROM alpine:latest
 ARG TARGETPLATFORM
 COPY .docker/${TARGETPLATFORM#linux/}/panel-rs-aio /usr/bin/panel-rs
 
-ENV OCI_CONTAINER=official-aio
-
+RUN ln -s /usr/bin/panel-rs /usr/local/bin/calagopus-panel
 RUN touch /wings-config.yml
+
+ENV OCI_CONTAINER=official-aio
 
 ENTRYPOINT ["/usr/bin/panel-rs"]
