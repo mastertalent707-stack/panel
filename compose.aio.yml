@@ -39,6 +39,8 @@ services:
     ports:
       - 8000:8000
       - 2022:2022 # sftp port for integrated wings
+    extra_hosts: # mainly useful when importing from a standalone installation, can be omitted otherwise
+      - "host.docker.internal:host-gateway"
     depends_on:
       - db
       - cache

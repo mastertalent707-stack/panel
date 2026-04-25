@@ -116,7 +116,7 @@ execute_build() {
 
   # apply changes
   export NODE_OPTIONS="--max-old-space-size=2048"
-  /app/repo/target/$PROFILE_PATH/panel-rs-aio extensions apply --skip-replace-binary --profile $PROFILE >> "$EXTENSION_LOG" 2>&1
+  /app/repo/target/$PROFILE_PATH/panel-rs-aio extensions apply --skip-replace-binary --profile $PROFILE --bin panel-rs-aio >> "$EXTENSION_LOG" 2>&1
 
   local EXIT_CODE=$?
 

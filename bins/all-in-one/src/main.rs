@@ -136,7 +136,8 @@ async fn handle_aio_wings(state: &shared::State) -> Result<(), anyhow::Error> {
                     &tokio::fs::read_to_string(config_path)
                         .await
                         .context("failed to read aio base wings configuration file")?,
-                )?,
+                )
+                .unwrap_or_else(|_| serde_norway::Value::Mapping(serde_norway::Mapping::new())),
                 PathBuf::from(config_path),
             )
         } else {
