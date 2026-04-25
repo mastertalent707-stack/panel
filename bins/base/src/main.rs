@@ -1,4 +1,4 @@
-use axum::{ServiceExt, middleware::Next};
+use axum::ServiceExt;
 use std::net::{IpAddr, SocketAddr};
 use tower::Layer;
 use tower_http::normalize_path::NormalizePathLayer;
@@ -27,7 +27,10 @@ async fn main() {
                 |mut req: axum::extract::Request<axum::body::Body>,
                  next: axum::middleware::Next| async move {
                     req.extensions_mut()
-                        .insert(ConnectInfo(SocketAddr::from(([127, 0, 0, 1], 0))));
+                        .insert(axum::extract::ConnectInfo(SocketAddr::from((
+                            [127, 0, 0, 1],
+                            0,
+                        ))));
                     next.run(req).await
                 },
             ))
@@ -55,9 +58,9 @@ async fn main() {
                 .unwrap();
             axum::serve(
                 listener,
-                ServiceExt::<Request>::into_make_service_with_connect_info::<SocketAddr>(
-                    NormalizePathLayer::trim_trailing_slash().layer(router),
-                ),
+                ServiceExt::<axum::extract::Request>::into_make_service_with_connect_info::<
+                    SocketAddr,
+                >(NormalizePathLayer::trim_trailing_slash().layer(router)),
             )
             .await
             .unwrap();
@@ -68,7 +71,7 @@ async fn main() {
                 let listener = tokio::net::UnixListener::bind(&state.env.bind).unwrap();
                 axum::serve(
                     listener,
-                    ServiceExt::<Request>::into_make_service(
+                    ServiceExt::<axum::extract::Request>::into_make_service(
                         NormalizePathLayer::trim_trailing_slash().layer(router),
                     ),
                 )
