@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { z } from 'zod';
 import { getEmptyPaginationSet } from '@/api/axios.ts';
 import getMounts from '@/api/server/mounts/getMounts.ts';
@@ -15,13 +14,12 @@ export default function ServerMounts() {
   const { t } = useTranslations();
   const server = useServerStore((state) => state.server);
 
-  const [mounts, setMounts] = useState<Pagination<z.infer<typeof serverMountSchema>>>(getEmptyPaginationSet());
-
-  const { loading } = useSearchablePaginatedTable({
+  const { data, loading } = useSearchablePaginatedTable({
     queryKey: queryKeys.server(server.uuid).mounts.all(),
     fetcher: () => getMounts(server.uuid),
-    setStoreData: setMounts,
   });
+
+  const mounts = data ?? getEmptyPaginationSet<z.infer<typeof serverMountSchema>>();
 
   return (
     <ServerContentContainer

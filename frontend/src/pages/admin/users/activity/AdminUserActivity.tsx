@@ -1,5 +1,4 @@
 import { Group } from '@mantine/core';
-import { useState } from 'react';
 import { z } from 'zod';
 import getUserActivity from '@/api/admin/users/getUserActivity.ts';
 import { getEmptyPaginationSet } from '@/api/axios.ts';
@@ -17,15 +16,12 @@ import { useTranslations } from '@/providers/TranslationProvider.tsx';
 export default function AdminUserActivity({ user }: { user: z.infer<typeof fullUserSchema> }) {
   const { t } = useTranslations();
 
-  const [userActivity, setUserActivity] = useState<Pagination<z.infer<typeof userActivitySchema>>>(
-    getEmptyPaginationSet(),
-  );
-
-  const { loading, search, setSearch, setPage } = useSearchablePaginatedTable({
+  const { data, loading, search, setSearch, setPage } = useSearchablePaginatedTable({
     queryKey: queryKeys.admin.users.activity(user.uuid),
     fetcher: (page, search) => getUserActivity(user.uuid, page, search),
-    setStoreData: setUserActivity,
   });
+
+  const userActivity = data ?? getEmptyPaginationSet<z.infer<typeof userActivitySchema>>();
 
   return (
     <AdminSubContentContainer title='User Activity' titleOrder={2} search={search} setSearch={setSearch}>

@@ -1,6 +1,7 @@
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
+import { getEmptyPaginationSet } from '@/api/axios.ts';
 import getCommandSnippets from '@/api/me/command-snippets/getCommandSnippets.ts';
 import Button from '@/elements/Button.tsx';
 import { ContextMenuProvider } from '@/elements/ContextMenu.tsx';
@@ -9,21 +10,20 @@ import Table from '@/elements/Table.tsx';
 import { queryKeys } from '@/lib/queryKeys.ts';
 import { useSearchablePaginatedTable } from '@/plugins/useSearchablePageableTable.ts';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
-import { useUserStore } from '@/stores/user.ts';
 import CommandSnippetRow from './CommandSnippetRow.tsx';
 import CommandSnippetCreateModal from './modals/CommandSnippetCreateModal.tsx';
 
 export default function DashboardCommandSnippets() {
   const { t } = useTranslations();
-  const { commandSnippets, setCommandSnippets } = useUserStore();
 
   const [openModal, setOpenModal] = useState<'create' | null>(null);
 
-  const { loading, search, setSearch, setPage } = useSearchablePaginatedTable({
+  const { data, loading, search, setSearch, setPage } = useSearchablePaginatedTable({
     queryKey: queryKeys.user.commandSnippets.all(),
     fetcher: getCommandSnippets,
-    setStoreData: setCommandSnippets,
   });
+
+  const commandSnippets = (data ?? getEmptyPaginationSet()) as NonNullable<typeof data>;
 
   return (
     <AccountContentContainer

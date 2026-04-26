@@ -1,5 +1,4 @@
 import { Group } from '@mantine/core';
-import { useState } from 'react';
 import { z } from 'zod';
 import { getEmptyPaginationSet } from '@/api/axios.ts';
 import getServerActivity from '@/api/server/getServerActivity.ts';
@@ -16,16 +15,14 @@ import { useServerStore } from '@/stores/server.ts';
 
 export default function ServerActivity() {
   const { t } = useTranslations();
-  const [activities, setActivities] = useState<Pagination<z.infer<typeof serverActivitySchema>>>(
-    getEmptyPaginationSet(),
-  );
   const server = useServerStore((state) => state.server);
 
-  const { loading, search, setSearch, setPage } = useSearchablePaginatedTable({
+  const { data, loading, search, setSearch, setPage } = useSearchablePaginatedTable({
     queryKey: queryKeys.server(server.uuid).activity.all(),
     fetcher: (page, search) => getServerActivity(server.uuid, page, search),
-    setStoreData: setActivities,
   });
+
+  const activities = data ?? getEmptyPaginationSet<z.infer<typeof serverActivitySchema>>();
 
   return (
     <ServerContentContainer

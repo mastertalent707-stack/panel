@@ -75,16 +75,14 @@ function MountNodeRow({
 }
 
 export default function AdminMountNodes({ mount }: { mount: z.infer<typeof adminMountSchema> }) {
-  const [mountNodes, setMountNodes] = useState<Pagination<AndCreated<{ node: z.infer<typeof adminNodeSchema> }>>>(
-    getEmptyPaginationSet(),
-  );
   const [openModal, setOpenModal] = useState<'add' | null>(null);
 
-  const { loading, search, setSearch, setPage, refetch } = useSearchablePaginatedTable({
+  const { data, loading, search, setSearch, setPage, refetch } = useSearchablePaginatedTable({
     queryKey: queryKeys.admin.mounts.nodes(mount.uuid),
     fetcher: (page, search) => getMountNodes(mount.uuid, page, search),
-    setStoreData: setMountNodes,
   });
+
+  const mountNodes = data ?? getEmptyPaginationSet<AndCreated<{ node: z.infer<typeof adminNodeSchema> }>>();
 
   return (
     <AdminSubContentContainer

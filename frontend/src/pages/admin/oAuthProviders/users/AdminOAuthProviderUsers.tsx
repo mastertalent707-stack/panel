@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { z } from 'zod';
 import getOAuthProviderUsers from '@/api/admin/oauth-providers/users/getOAuthProviderUsers.ts';
 import { getEmptyPaginationSet } from '@/api/axios.ts';
@@ -15,15 +14,12 @@ export default function AdminOAuthProviderUsers({
 }: {
   oauthProvider: z.infer<typeof adminOAuthProviderSchema>;
 }) {
-  const [oauthProviderUsers, setOAuthProviderUsers] = useState<Pagination<z.infer<typeof adminOAuthUserLinkSchema>>>(
-    getEmptyPaginationSet(),
-  );
-
-  const { loading, search, setSearch, setPage } = useSearchablePaginatedTable({
+  const { data, loading, search, setSearch, setPage } = useSearchablePaginatedTable({
     queryKey: queryKeys.admin.oAuthProviders.users(oauthProvider.uuid),
     fetcher: (page, search) => getOAuthProviderUsers(oauthProvider.uuid, page, search),
-    setStoreData: setOAuthProviderUsers,
   });
+
+  const oauthProviderUsers = data ?? getEmptyPaginationSet<z.infer<typeof adminOAuthUserLinkSchema>>();
 
   return (
     <AdminSubContentContainer title='OAuth Provider Users' titleOrder={2} search={search} setSearch={setSearch}>

@@ -11,7 +11,7 @@ import { useMemo, useState } from 'react';
 import { z } from 'zod';
 import getNodeUpdates from '@/api/admin/system/updates/getNodeUpdates.ts';
 import recheckUpdates from '@/api/admin/system/updates/recheckUpdates.ts';
-import { httpErrorToHuman } from '@/api/axios.ts';
+import { getEmptyPaginationSet, httpErrorToHuman } from '@/api/axios.ts';
 import Alert from '@/elements/Alert.tsx';
 import Button from '@/elements/Button.tsx';
 import Code from '@/elements/Code.tsx';
@@ -34,15 +34,15 @@ export default function AdminOverviewUpdates() {
   const { addToast } = useToast();
   const { updateInformation, setUpdateInformation } = useAdminStore();
 
-  const [nodes, setNodes] = useState<Awaited<ReturnType<typeof getNodeUpdates>> | null>(null);
   const [recheckLoading, setRecheckLoading] = useState(false);
 
-  const { loading, setPage, refetch } = useSearchablePaginatedTable({
+  const { data, loading, setPage, refetch } = useSearchablePaginatedTable({
     queryKey: queryKeys.admin.updates.nodes(),
     fetcher: (page) => getNodeUpdates(page),
-    setStoreData: setNodes,
     paginationKey: 'outdatedNodes',
   });
+
+  const nodes = (data ?? getEmptyPaginationSet()) as NonNullable<typeof data>;
 
   const extensionUpdates = useMemo(
     () =>

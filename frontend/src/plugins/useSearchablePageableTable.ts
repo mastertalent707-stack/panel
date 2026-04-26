@@ -1,6 +1,6 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import debounce from 'debounce';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router';
 import { httpErrorToHuman } from '@/api/axios.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';
@@ -8,7 +8,6 @@ import { useToast } from '@/providers/ToastProvider.tsx';
 interface UseSearchablePaginatedTableOptions<T> {
   queryKey: readonly unknown[];
   fetcher: (page: number, search: string) => Promise<T>;
-  setStoreData: (data: T) => void;
   paginationKey?: string;
   deps?: unknown[];
   debounceMs?: number;
@@ -27,7 +26,6 @@ function parseNumber(num: string | null): number | null {
 export function useSearchablePaginatedTable<T>({
   queryKey = [],
   fetcher,
-  setStoreData,
   paginationKey,
   deps = [],
   debounceMs = 150,
@@ -47,10 +45,7 @@ export function useSearchablePaginatedTable<T>({
     }
   }, [modifyParams, page, search]);
 
-  const updateDebouncedSearch = useCallback(
-    debounce((s: string) => setDebouncedSearch(s), debounceMs),
-    [],
-  );
+  const updateDebouncedSearch = useMemo(() => debounce((s: string) => setDebouncedSearch(s), debounceMs), [debounceMs]);
 
   useEffect(() => {
     if (!search) {
@@ -61,7 +56,7 @@ export function useSearchablePaginatedTable<T>({
     }
   }, [search]);
 
-  const { data, isFetching, error, refetch } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: [...queryKey, ...deps, { page, search: debouncedSearch }],
     queryFn: () => fetcher(page, debouncedSearch),
     placeholderData: keepPreviousData,
@@ -98,16 +93,13 @@ export function useSearchablePaginatedTable<T>({
         setPage(1);
       } else if (page > totalPages && totalPages !== 0) {
         setPage(totalPages);
-      } else {
-        setStoreData(data);
       }
-    } else {
-      setStoreData(data);
     }
   }, [data]);
 
   return {
-    loading: isFetching,
+    data,
+    loading: isLoading,
     search,
     setSearch,
     page,

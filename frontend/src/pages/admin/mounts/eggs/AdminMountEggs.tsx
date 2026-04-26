@@ -78,16 +78,18 @@ function MountEggRow({
 }
 
 export default function AdminMountNestEggs({ mount }: { mount: z.infer<typeof adminMountSchema> }) {
-  const [mountNestEggs, setMountNestEggs] = useState<
-    Pagination<AndCreated<{ nest: z.infer<typeof adminNestSchema>; nestEgg: z.infer<typeof adminEggSchema> }>>
-  >(getEmptyPaginationSet());
   const [openModal, setOpenModal] = useState<'add' | null>(null);
 
-  const { loading, search, setSearch, setPage, refetch } = useSearchablePaginatedTable({
+  const { data, loading, search, setSearch, setPage, refetch } = useSearchablePaginatedTable({
     queryKey: queryKeys.admin.mounts.eggs(mount.uuid),
     fetcher: (page, search) => getMountNestEggs(mount.uuid, page, search),
-    setStoreData: setMountNestEggs,
   });
+
+  const mountNestEggs =
+    data ??
+    getEmptyPaginationSet<
+      AndCreated<{ nest: z.infer<typeof adminNestSchema>; nestEgg: z.infer<typeof adminEggSchema> }>
+    >();
 
   return (
     <AdminSubContentContainer

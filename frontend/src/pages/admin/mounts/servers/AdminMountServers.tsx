@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { z } from 'zod';
 import getMountServers from '@/api/admin/mounts/servers/getMountServers.ts';
 import { getEmptyPaginationSet } from '@/api/axios.ts';
@@ -12,15 +11,12 @@ import { useSearchablePaginatedTable } from '@/plugins/useSearchablePageableTabl
 import ServerRow from '../../servers/ServerRow.tsx';
 
 export default function AdminMountServers({ mount }: { mount: z.infer<typeof adminMountSchema> }) {
-  const [mountServers, setMountServers] = useState<
-    Pagination<AndCreated<{ server: z.infer<typeof adminServerSchema> }>>
-  >(getEmptyPaginationSet());
-
-  const { loading, search, setSearch, setPage } = useSearchablePaginatedTable({
+  const { data, loading, search, setSearch, setPage } = useSearchablePaginatedTable({
     queryKey: queryKeys.admin.mounts.servers(mount.uuid),
     fetcher: (page, search) => getMountServers(mount.uuid, page, search),
-    setStoreData: setMountServers,
   });
+
+  const mountServers = data ?? getEmptyPaginationSet<AndCreated<{ server: z.infer<typeof adminServerSchema> }>>();
 
   return (
     <AdminSubContentContainer title='Mount Servers' titleOrder={2} search={search} setSearch={setSearch}>

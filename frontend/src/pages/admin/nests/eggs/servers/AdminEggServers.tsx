@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { z } from 'zod';
 import getEggServers from '@/api/admin/nests/eggs/servers/getEggServers.ts';
 import { getEmptyPaginationSet } from '@/api/axios.ts';
@@ -19,13 +18,12 @@ export default function AdminEggServers({
   contextNest: z.infer<typeof adminNestSchema>;
   contextEgg: z.infer<typeof adminEggSchema>;
 }) {
-  const [eggServers, setEggServers] = useState<Pagination<z.infer<typeof adminServerSchema>>>(getEmptyPaginationSet());
-
-  const { loading, search, setSearch, setPage } = useSearchablePaginatedTable({
+  const { data, loading, search, setSearch, setPage } = useSearchablePaginatedTable({
     queryKey: queryKeys.admin.eggs.servers(contextEgg.uuid),
     fetcher: (page, search) => getEggServers(contextNest.uuid, contextEgg.uuid, page, search),
-    setStoreData: setEggServers,
   });
+
+  const eggServers = data ?? getEmptyPaginationSet<z.infer<typeof adminServerSchema>>();
 
   return (
     <AdminSubContentContainer title='Egg Servers' titleOrder={2} search={search} setSearch={setSearch}>

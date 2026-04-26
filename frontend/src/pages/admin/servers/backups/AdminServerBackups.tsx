@@ -13,17 +13,15 @@ import { useSearchablePaginatedTable } from '@/plugins/useSearchablePageableTabl
 import AdminServerBackupRow from './AdminServerBackupRow.tsx';
 
 export default function AdminServerBackups({ server }: { server: z.infer<typeof adminServerSchema> }) {
-  const [serverBackups, setServerBackups] = useState<Pagination<z.infer<typeof adminNodeServerBackupSchema>>>(
-    getEmptyPaginationSet(),
-  );
   const [showPartiallyDetachedServerBackups, setShowPartiallyDetachedServerBackups] = useState(false);
 
-  const { loading, search, setSearch, setPage } = useSearchablePaginatedTable({
+  const { data, loading, search, setSearch, setPage } = useSearchablePaginatedTable({
     queryKey: queryKeys.admin.servers.backups(server.uuid),
     fetcher: (page, search) => getServerBackups(server.uuid, page, search, showPartiallyDetachedServerBackups),
-    setStoreData: setServerBackups,
     deps: [showPartiallyDetachedServerBackups],
   });
+
+  const serverBackups = data ?? getEmptyPaginationSet<z.infer<typeof adminNodeServerBackupSchema>>();
 
   return (
     <AdminSubContentContainer

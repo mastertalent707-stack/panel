@@ -10,7 +10,7 @@ import { Title } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import getGeneralHealth from '@/api/admin/system/health/getGeneralHealth.ts';
 import getNodesHealth from '@/api/admin/system/health/getNodesHealth.ts';
-import { httpErrorToHuman } from '@/api/axios.ts';
+import { getEmptyPaginationSet, httpErrorToHuman } from '@/api/axios.ts';
 import Card from '@/elements/Card.tsx';
 import Code from '@/elements/Code.tsx';
 import Spinner from '@/elements/Spinner.tsx';
@@ -26,14 +26,14 @@ export default function AdminOverviewHealth() {
   const { addToast } = useToast();
 
   const [general, setGeneral] = useState<Awaited<ReturnType<typeof getGeneralHealth>> | null>(null);
-  const [nodes, setNodes] = useState<Awaited<ReturnType<typeof getNodesHealth>> | null>(null);
 
-  const { loading, setPage } = useSearchablePaginatedTable({
+  const { data, loading, setPage } = useSearchablePaginatedTable({
     queryKey: queryKeys.admin.health.nodes(),
     fetcher: (page) => getNodesHealth(page),
-    setStoreData: setNodes,
     paginationKey: 'desyncNodes',
   });
+
+  const nodes = (data ?? getEmptyPaginationSet()) as NonNullable<typeof data>;
 
   useEffect(() => {
     getGeneralHealth()

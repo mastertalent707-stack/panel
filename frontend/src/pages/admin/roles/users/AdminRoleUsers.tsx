@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { z } from 'zod';
 import getRoleUsers from '@/api/admin/roles/users/getRoleUsers.ts';
 import { getEmptyPaginationSet } from '@/api/axios.ts';
@@ -11,13 +10,12 @@ import UserRow from '@/pages/admin/users/UserRow.tsx';
 import { useSearchablePaginatedTable } from '@/plugins/useSearchablePageableTable.ts';
 
 export default function AdminRoleUsers({ role }: { role: z.infer<typeof roleSchema> }) {
-  const [roleUsers, setRoleUsers] = useState<Pagination<z.infer<typeof fullUserSchema>>>(getEmptyPaginationSet());
-
-  const { loading, search, setSearch, setPage } = useSearchablePaginatedTable({
+  const { data, loading, search, setSearch, setPage } = useSearchablePaginatedTable({
     queryKey: queryKeys.admin.roles.users(role.uuid),
     fetcher: (page, search) => getRoleUsers(role.uuid, page, search),
-    setStoreData: setRoleUsers,
   });
+
+  const roleUsers = data ?? getEmptyPaginationSet<z.infer<typeof fullUserSchema>>();
 
   return (
     <AdminSubContentContainer title='Role Users' titleOrder={2} search={search} setSearch={setSearch}>

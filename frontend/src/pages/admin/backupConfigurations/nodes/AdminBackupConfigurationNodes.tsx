@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { z } from 'zod';
 import getBackupConfigurationNodes from '@/api/admin/backup-configurations/nodes/getBackupConfigurationNodes.ts';
 import { getEmptyPaginationSet } from '@/api/axios.ts';
@@ -16,15 +15,12 @@ export default function AdminBackupConfigurationNodes({
 }: {
   backupConfiguration: z.infer<typeof adminBackupConfigurationSchema>;
 }) {
-  const [backupConfigurationNodes, setBackupConfigurationNodes] = useState<Pagination<z.infer<typeof adminNodeSchema>>>(
-    getEmptyPaginationSet(),
-  );
-
-  const { loading, search, setSearch, setPage } = useSearchablePaginatedTable({
+  const { data, loading, search, setSearch, setPage } = useSearchablePaginatedTable({
     queryKey: queryKeys.admin.backupConfigurations.nodes(backupConfiguration.uuid),
     fetcher: (page, search) => getBackupConfigurationNodes(backupConfiguration.uuid, page, search),
-    setStoreData: setBackupConfigurationNodes,
   });
+
+  const backupConfigurationNodes = data ?? getEmptyPaginationSet<z.infer<typeof adminNodeSchema>>();
 
   return (
     <AdminSubContentContainer title={`Backup Config Nodes`} titleOrder={2} search={search} setSearch={setSearch}>
