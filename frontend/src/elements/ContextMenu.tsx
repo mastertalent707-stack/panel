@@ -158,13 +158,15 @@ export const ContextMenuProvider = ({ children, menuProps }: { children: ReactNo
   );
 };
 
+export type ContextMenuChildrenProps = {
+  items: ContextMenuItem[];
+  openMenu: (x: number, y: number) => void;
+  hideMenu: () => void;
+};
+
 type ContextMenuProps<P = unknown> = {
   items: ContextMenuItem[];
-  children: (ctx: {
-    items: ContextMenuItem[];
-    openMenu: (x: number, y: number) => void;
-    hideMenu: () => void;
-  }) => ReactNode;
+  children: (ctx: ContextMenuChildrenProps) => ReactNode;
 } & ({ registry: ContextMenuRegistry<P>; registryProps: P } | { registry?: never; registryProps?: never });
 
 function ContextMenuBase<P>({ items: rawItems = [], registry, registryProps, children }: ContextMenuProps<P>) {

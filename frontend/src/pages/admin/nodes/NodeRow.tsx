@@ -5,6 +5,7 @@ import { NavLink } from 'react-router';
 import { z } from 'zod';
 import { axiosInstance } from '@/api/axios.ts';
 import Code from '@/elements/Code.tsx';
+import { ContextMenuChildrenProps, ContextMenuToggle } from '@/elements/ContextMenu.tsx';
 import Spinner from '@/elements/Spinner.tsx';
 import { TableData, TableRow } from '@/elements/Table.tsx';
 import Tooltip from '@/elements/Tooltip.tsx';
@@ -14,7 +15,15 @@ import { adminNodeSchema } from '@/lib/schemas/admin/nodes.ts';
 import { parseVersion } from '@/lib/version.ts';
 import { useAdminStore } from '@/stores/admin.tsx';
 
-export default function NodeRow({ node, desync }: { node: z.infer<typeof adminNodeSchema>; desync?: number }) {
+export default function NodeRow({
+  node,
+  desync,
+  contextMenuProps,
+}: {
+  node: z.infer<typeof adminNodeSchema>;
+  desync?: number;
+  contextMenuProps?: ContextMenuChildrenProps;
+}) {
   const { updateInformation } = useAdminStore();
 
   const [version, setVersion] = useState<string | null>(null);
@@ -36,7 +45,12 @@ export default function NodeRow({ node, desync }: { node: z.infer<typeof adminNo
   }, []);
 
   return (
-    <TableRow>
+    <TableRow
+      onContextMenu={(e) => {
+        e.preventDefault();
+        contextMenuProps?.openMenu(e.pageX, e.pageY);
+      }}
+    >
       <TableData>
         {version ? (
           version === 'Unavailable' ? (
@@ -97,6 +111,12 @@ export default function NodeRow({ node, desync }: { node: z.infer<typeof adminNo
       <TableData>
         <FormattedTimestamp timestamp={node.created} />
       </TableData>
+
+      {contextMenuProps && (
+        <TableData className='relative cursor-pointer min-w-10 text-center'>
+          <ContextMenuToggle items={contextMenuProps.items} openMenu={contextMenuProps.openMenu} />
+        </TableData>
+      )}
     </TableRow>
   );
 }
