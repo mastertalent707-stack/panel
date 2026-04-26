@@ -58,9 +58,7 @@ function Sidebar({ children, header }: SidebarProps) {
 
           <div id='sidebar-content' className='h-full flex flex-col'>
             {header && <div className='shrink-0'>{header}</div>}
-            <div className='flex flex-col flex-1 overflow-y-auto min-h-0'>
-              {children}
-            </div>
+            <div className='flex flex-col flex-1 overflow-y-auto min-h-0'>{children}</div>
           </div>
         </Drawer>
 
@@ -71,9 +69,7 @@ function Sidebar({ children, header }: SidebarProps) {
         >
           <div id='sidebar-content' className='h-full flex flex-col'>
             {header && <div className='shrink-0'>{header}</div>}
-            <div className='flex flex-col flex-1 overflow-y-auto min-h-0'>
-              {children}
-            </div>
+            <div className='flex flex-col flex-1 overflow-y-auto min-h-0'>{children}</div>
           </div>
         </Card>
       </ContextMenuProvider>
