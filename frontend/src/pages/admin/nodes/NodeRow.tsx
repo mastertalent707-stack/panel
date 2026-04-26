@@ -47,8 +47,10 @@ export default function NodeRow({
   return (
     <TableRow
       onContextMenu={(e) => {
+        if (!contextMenuProps) return;
+
         e.preventDefault();
-        contextMenuProps?.openMenu(e.pageX, e.pageY);
+        contextMenuProps.openMenu(e.pageX, e.pageY);
       }}
     >
       <TableData>

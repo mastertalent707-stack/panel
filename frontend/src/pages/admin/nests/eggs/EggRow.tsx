@@ -34,8 +34,10 @@ const EggRow = forwardRef<HTMLTableRowElement, EggRowProps>(function EggRow(
         return false;
       }}
       onContextMenu={(e) => {
+        if (!contextMenuProps) return;
+
         e.preventDefault();
-        contextMenuProps?.openMenu(e.pageX, e.pageY);
+        contextMenuProps.openMenu(e.pageX, e.pageY);
       }}
       ref={ref}
     >

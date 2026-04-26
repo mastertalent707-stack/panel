@@ -3,9 +3,8 @@ import { useFileDragAndDrop } from '@/pages/server/files/hooks/useFileDragAndDro
 import { useFileManager } from '@/providers/contexts/fileManagerContext.ts';
 
 export default function FileUpload() {
-  const { fileUploader } = useFileManager();
+  const { fileUploader, browsingWritableDirectory, fileInputRef, folderInputRef } = useFileManager();
   const { uploadFiles, handleFileSelect, handleFolderSelect } = fileUploader;
-  const { browsingWritableDirectory, fileInputRef, folderInputRef } = useFileManager();
 
   const { isDragging } = useFileDragAndDrop({
     onDrop: uploadFiles,
