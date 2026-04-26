@@ -36,17 +36,18 @@ export default function AdminRouter({ isNormal }: { isNormal: boolean }) {
   return (
     <div className='lg:flex h-full'>
       {isNormal && (
-        <Sidebar>
-          <NavLink to='/' className='w-full'>
-            <AppIcon />
-          </NavLink>
-
-          <Sidebar.Divider />
-
-          <Sidebar.Link to='/' end icon={faReply} name='Back' />
-
-          <Sidebar.Divider />
-
+        <Sidebar
+          header={
+            <>
+              <NavLink to='/' className='w-full'>
+                <AppIcon />
+              </NavLink>
+              <Sidebar.Divider />
+              <Sidebar.Link to='/' end icon={faReply} name='Back' />
+              <Sidebar.Divider />
+            </>
+          }
+        >
           {allAdminRoutes
             .filter((route) => !!route.name && (!route.filter || route.filter()))
             .map((route) =>

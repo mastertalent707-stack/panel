@@ -116,17 +116,19 @@ export default function ServerRouter({ isNormal }: { isNormal: boolean }) {
   return (
     <div className='lg:flex h-full'>
       {isNormal && (
-        <Sidebar>
-          <NavLink to='/' className='w-full'>
-            <AppIcon />
-          </NavLink>
-
-          <div className='flex flex-col gap-2 mt-2 mb-1'>
-            <ServerStatusIndicator />
-          </div>
-
-          <Sidebar.Divider />
-
+        <Sidebar
+          header={
+            <>
+              <NavLink to='/' className='w-full'>
+                <AppIcon />
+              </NavLink>
+              <div className='flex flex-col gap-2 mt-2 mb-1'>
+                <ServerStatusIndicator />
+              </div>
+              <Sidebar.Divider />
+            </>
+          }
+        >
           <Sidebar.Link to='/' end icon={faServer} name={t('pages.account.home.title', {})} />
           {isAdmin(user) && (
             <>

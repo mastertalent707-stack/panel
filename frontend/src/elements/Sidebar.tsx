@@ -28,9 +28,10 @@ import ContextMenu, { ContextMenuProvider } from './ContextMenu.tsx';
 
 type SidebarProps = {
   children: ReactNode;
+  header?: ReactNode;
 };
 
-function Sidebar({ children }: SidebarProps) {
+function Sidebar({ children, header }: SidebarProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -55,8 +56,11 @@ function Sidebar({ children }: SidebarProps) {
         >
           <CloseButton size='xl' className='absolute! right-4 z-10' onClick={() => setIsMobileMenuOpen(false)} />
 
-          <div id='sidebar-content' className='h-full flex flex-col overflow-y-auto'>
-            {children}
+          <div id='sidebar-content' className='h-full flex flex-col'>
+            {header && <div className='shrink-0'>{header}</div>}
+            <div className='flex flex-col flex-1 overflow-y-auto min-h-0'>
+              {children}
+            </div>
           </div>
         </Drawer>
 
@@ -65,8 +69,11 @@ function Sidebar({ children }: SidebarProps) {
           p='sm'
           id='sidebar-desktop'
         >
-          <div id='sidebar-content' className='h-full flex flex-col overflow-y-auto'>
-            {children}
+          <div id='sidebar-content' className='h-full flex flex-col'>
+            {header && <div className='shrink-0'>{header}</div>}
+            <div className='flex flex-col flex-1 overflow-y-auto min-h-0'>
+              {children}
+            </div>
           </div>
         </Card>
       </ContextMenuProvider>
