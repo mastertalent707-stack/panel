@@ -590,7 +590,9 @@ pub trait ByUuid: BaseModel {
         match Self::by_uuid_cached(database, uuid).await {
             Ok(res) => Ok(Some(res)),
             Err(err) => {
-                if let Some(sqlx::Error::RowNotFound) = err.downcast_ref::<sqlx::Error>() {
+                if let Some(DatabaseError::Sqlx(sqlx::Error::RowNotFound)) =
+                    err.downcast_ref::<DatabaseError>()
+                {
                     Ok(None)
                 } else {
                     Err(err)
