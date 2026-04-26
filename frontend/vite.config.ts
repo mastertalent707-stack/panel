@@ -214,6 +214,9 @@ export default defineConfig({
         {
           src: monacoVsDir,
           dest: 'monaco',
+          rename: {
+            stripBase: 7,
+          },
         },
       ],
     }),
