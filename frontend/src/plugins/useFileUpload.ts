@@ -28,6 +28,7 @@ export interface FileUploader {
   uploadFiles: (files: File[]) => Promise<void>;
   cancelFileUpload: (fileKey: string) => void;
   cancelFolderUpload: (folderName: string) => void;
+  cancelAllUploads: () => void;
   handleFileSelect: (event: ChangeEvent<HTMLInputElement>, inputRef: RefObject<HTMLInputElement | null>) => void;
   handleFolderSelect: (event: ChangeEvent<HTMLInputElement>, inputRef: RefObject<HTMLInputElement | null>) => void;
 }
@@ -573,6 +574,7 @@ export function useFileUpload(
         promises.push(
           fileSemaphore.acquire().then(async () => {
             try {
+              if (controller.signal.aborted) return;
               if (splittingEnabled && file.size > CHUNK_TARGET_BYTES) {
                 await uploadSplitFile(file, index, key, controller);
               } else {
@@ -622,6 +624,7 @@ export function useFileUpload(
           promises.push(
             semaphore.acquire().then(async () => {
               try {
+                if (controller.signal.aborted) return;
                 await uploadRequest(chunk, chunkIndices, batchId, controller);
               } finally {
                 semaphore.release();
@@ -703,6 +706,15 @@ export function useFileUpload(
     [addToast],
   );
 
+  const cancelAllUploads = useCallback(() => {
+    controllers.current.forEach((controller) => controller.abort());
+    controllers.current.clear();
+    folderFileCounts.current.clear();
+    setUploadingFiles(new Map());
+    onUploadCompleteRef.current();
+    addToast(t('elements.fileUpload.toast.cancelledAll', {}), 'success');
+  }, []);
+
   const aggregatedUploadProgress = useMemo(() => {
     const map = new Map<string, AggregatedUploadProgress>();
 
@@ -767,6 +779,7 @@ export function useFileUpload(
     uploadFiles,
     cancelFileUpload,
     cancelFolderUpload,
+    cancelAllUploads,
     handleFileSelect,
     handleFolderSelect,
   };

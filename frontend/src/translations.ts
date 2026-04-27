@@ -336,6 +336,7 @@ const baseTranslations = defineTranslations({
           uploading: 'Started uploading {files}...',
           cancelledFile: 'Successfully cancelled upload of `{file}`.',
           cancelledFolder: 'Successfully cancelled upload of `{folder}` ({files}).',
+          cancelledAll: 'All uploads have been cancelled.',
         },
       },
     },
@@ -1241,6 +1242,8 @@ const baseTranslations = defineTranslations({
             receivingRemote: 'Receiving {files} from remote server',
             sendingRemote: 'Sending {files} to remote server',
             rateLimited: 'Your upload has been rate limited. Waiting...',
+            cancelAllUploads: 'Cancel all uploads',
+            cancelAllOperations: 'Cancel all operations',
           },
           dropzone: {
             title: 'Drop files here to upload',
@@ -1255,6 +1258,7 @@ const baseTranslations = defineTranslations({
           },
           toast: {
             operationCancelled: 'Operation cancelled',
+            allOperationsCancelled: 'All operations have been cancelled.',
             copyingStarted: '{files} started copying.',
             filesCouldNotBeMoved: 'Files could not be moved.',
             filesMoved: '{files} moved.',

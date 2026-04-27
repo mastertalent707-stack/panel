@@ -1,5 +1,5 @@
-import { Popover, Text, UnstyledButton } from '@mantine/core';
-import { memo, useMemo } from 'react';
+import { Button, Popover, Text, UnstyledButton } from '@mantine/core';
+import { memo, useCallback, useMemo } from 'react';
 import { httpErrorToHuman } from '@/api/axios.ts';
 import cancelOperation from '@/api/server/files/cancelOperation.ts';
 import CloseButton from '@/elements/CloseButton.tsx';
@@ -19,7 +19,8 @@ function FileOperationsProgress() {
   const { addToast } = useToast();
   const { server, fileOperations, removeFileOperation } = useServerStore();
   const { fileUploader } = useFileManager();
-  const { uploadingFiles, cancelFileUpload, cancelFolderUpload, aggregatedUploadProgress } = fileUploader;
+  const { uploadingFiles, cancelFileUpload, cancelFolderUpload, cancelAllUploads, aggregatedUploadProgress } =
+    fileUploader;
 
   const blocker = useBlocker(uploadingFiles.size > 0, true);
 
@@ -29,6 +30,14 @@ function FileOperationsProgress() {
     }
     return false;
   }, [uploadingFiles]);
+
+  const cancelAllOperations = useCallback(() => {
+    fileOperations.forEach((_, uuid) => {
+      removeFileOperation(uuid);
+      cancelOperation(server.uuid, uuid).catch(console.error);
+    });
+    addToast(t('pages.server.files.toast.allOperationsCancelled', {}), 'success');
+  }, [fileOperations, server.uuid, removeFileOperation, addToast, t]);
 
   const doCancelOperation = (uuid: string) => {
     removeFileOperation(uuid);
@@ -118,6 +127,19 @@ function FileOperationsProgress() {
               {t('pages.server.files.operations.rateLimited', {})}
             </Text>
           )}
+
+          <div className='flex gap-2 mb-3'>
+            {uploadingFiles.size > 0 && (
+              <Button size='xs' variant='subtle' color='red' onClick={cancelAllUploads}>
+                {t('pages.server.files.operations.cancelAllUploads', {})}
+              </Button>
+            )}
+            {fileOperations.size > 0 && (
+              <Button size='xs' variant='subtle' color='red' onClick={cancelAllOperations}>
+                {t('pages.server.files.operations.cancelAllOperations', {})}
+              </Button>
+            )}
+          </div>
 
           {Array.from(aggregatedUploadProgress).map(([folderName, info]) => {
             const progress = info.totalSize > 0 ? (info.uploadedSize / info.totalSize) * 100 : 0;
