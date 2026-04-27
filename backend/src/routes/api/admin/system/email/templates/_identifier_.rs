@@ -2,7 +2,7 @@ use super::State;
 use utoipa_axum::{router::OpenApiRouter, routes};
 
 mod get {
-    use axum::extract::Path;
+    use axum::{extract::Path, http::StatusCode};
     use serde::Serialize;
     use shared::{
         GetState,
@@ -37,7 +37,7 @@ mod get {
 
         let Ok(template) = state.mail.templates.get_template(&identifier) else {
             return ApiResponse::error("email template not found")
-                .with_status(axum::http::StatusCode::NOT_FOUND)
+                .with_status(StatusCode::NOT_FOUND)
                 .ok();
         };
 
@@ -56,7 +56,7 @@ mod get {
 }
 
 mod put {
-    use axum::extract::Path;
+    use axum::{extract::Path, http::StatusCode};
     use serde::{Deserialize, Serialize};
     use shared::{
         GetState,
@@ -87,7 +87,7 @@ mod put {
 
         let Ok(template) = state.mail.templates.get_template(&identifier) else {
             return ApiResponse::error("email template not found")
-                .with_status(axum::http::StatusCode::NOT_FOUND)
+                .with_status(StatusCode::NOT_FOUND)
                 .ok();
         };
 
