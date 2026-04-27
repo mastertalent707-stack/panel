@@ -1,7 +1,8 @@
-import { Button, Popover, Text, UnstyledButton } from '@mantine/core';
+import { Popover, Text, UnstyledButton } from '@mantine/core';
 import { memo, useCallback, useMemo } from 'react';
 import { httpErrorToHuman } from '@/api/axios.ts';
 import cancelOperation from '@/api/server/files/cancelOperation.ts';
+import Button from '@/elements/Button.tsx';
 import CloseButton from '@/elements/CloseButton.tsx';
 import ConfirmationModal from '@/elements/modals/ConfirmationModal.tsx';
 import Progress from '@/elements/Progress.tsx';
