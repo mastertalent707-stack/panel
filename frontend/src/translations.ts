@@ -1240,6 +1240,7 @@ const baseTranslations = defineTranslations({
             copyingMany: 'Copying {files}',
             receivingRemote: 'Receiving {files} from remote server',
             sendingRemote: 'Sending {files} to remote server',
+            rateLimited: 'Your upload has been rate limited. Waiting...',
           },
           dropzone: {
             title: 'Drop files here to upload',

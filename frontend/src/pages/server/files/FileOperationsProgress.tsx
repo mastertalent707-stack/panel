@@ -23,6 +23,13 @@ function FileOperationsProgress() {
 
   const blocker = useBlocker(uploadingFiles.size > 0, true);
 
+  const isRateLimited = useMemo(() => {
+    for (const file of uploadingFiles.values()) {
+      if (file.retryAttempt > 0 && file.status === 'uploading') return true;
+    }
+    return false;
+  }, [uploadingFiles]);
+
   const doCancelOperation = (uuid: string) => {
     removeFileOperation(uuid);
 
@@ -81,13 +88,18 @@ function FileOperationsProgress() {
               sections={[
                 {
                   value: averageOperationProgress,
-                  color: uploadingFiles.size > 0 ? 'green' : 'blue',
+                  color: isRateLimited ? 'orange' : uploadingFiles.size > 0 ? 'green' : 'blue',
                 },
               ]}
               roundCaps
               thickness={4}
               label={
-                <Text c={uploadingFiles.size > 0 ? 'green' : 'blue'} fw={700} ta='center' size='xs'>
+                <Text
+                  c={isRateLimited ? 'orange' : uploadingFiles.size > 0 ? 'green' : 'blue'}
+                  fw={700}
+                  ta='center'
+                  size='xs'
+                >
                   {averageOperationProgress.toFixed(0)}%
                 </Text>
               }
@@ -99,6 +111,12 @@ function FileOperationsProgress() {
             (Component, i) => (
               <Component key={`files-operationProgress-prepended-${i}`} />
             ),
+          )}
+
+          {isRateLimited && (
+            <Text size='xs' c='orange' mb='sm'>
+              {t('pages.server.files.operations.rateLimited', {})}
+            </Text>
           )}
 
           {Array.from(aggregatedUploadProgress).map(([folderName, info]) => {
@@ -116,7 +134,7 @@ function FileOperationsProgress() {
                     label={`${bytesToString(info.uploadedSize)} / ${bytesToString(info.totalSize)}`}
                     innerClassName='w-full'
                   >
-                    <Progress value={progress} />
+                    <Progress value={progress} color={isRateLimited ? 'orange' : undefined} />
                   </Tooltip>
                 </div>
                 <CloseButton className='ml-3' onClick={() => cancelFolderUpload(folderName)} />
@@ -142,7 +160,7 @@ function FileOperationsProgress() {
                     label={`${bytesToString(file.uploaded)} / ${bytesToString(file.size)}`}
                     innerClassName='w-full'
                   >
-                    <Progress value={file.progress} />
+                    <Progress value={file.progress} color={isRateLimited ? 'orange' : undefined} />
                   </Tooltip>
                 </div>
                 <CloseButton className='ml-3' onClick={() => cancelFileUpload(key)} />
