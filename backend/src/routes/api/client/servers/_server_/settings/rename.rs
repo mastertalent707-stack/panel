@@ -23,6 +23,7 @@ mod post {
         name: Option<compact_str::CompactString>,
         #[garde(length(chars, min = 1, max = 1024))]
         #[schema(min_length = 1, max_length = 1024)]
+        #[serde(with = "serde_with::rust::double_option")]
         description: Option<Option<compact_str::CompactString>>,
     }
 
