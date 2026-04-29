@@ -1677,7 +1677,7 @@
             "noActionSelected": "Välj en åtgärdstyp att konfigurera",
             "noActionDetails": "Åtgärdsinformation inte tillgänglig",
             "ignoreFailure": "Ignorera fel: {value}",
-            "foreground": "Förgrund: {värde}"
+            "foreground": "Förgrund: {value}"
           },
           "steps": {
             "empty": {
@@ -1953,7 +1953,7 @@
         },
         "backups": {
           "title": "Säkerhetskopieringar",
-          "subtitle": "{nuvarande} av maximalt {max} säkerhetskopior skapade.",
+          "subtitle": "{current} av maximalt {max} säkerhetskopior skapade.",
           "tooltip": {
             "limitReached": "Den här servern är begränsad till {max} säkerhetskopior."
           },
