@@ -157,7 +157,7 @@ export default function ServerStartup() {
                   <Select
                     data={[
                       {
-                        label: 'Custom',
+                        label: t('common.custom', {}),
                         value: '',
                       },
                       ...Object.entries(server.egg.startupCommands).map(([key, value]) => ({
