@@ -126,7 +126,7 @@ export default function AdminExtensions() {
       });
   };
 
-  const handleAdd = async (file: File) => {
+  const handleAdd = (file: File) => {
     addExtension(file)
       .then((extension) => {
         setExtensionStatus((prev) => {
@@ -164,7 +164,7 @@ export default function AdminExtensions() {
     filterFile: (file) => file.name.toLowerCase().endsWith('.zip'),
   });
 
-  const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -228,7 +228,9 @@ export default function AdminExtensions() {
         </Stack>
 
         <ModalFooter>
-          <Button color='red'>Delete</Button>
+          <Button color='red' onClick={() => handleRemove(removalExtension!)}>
+            Delete
+          </Button>
           <Button variant='default' onClick={() => setRemovalExtension(null)}>
             Close
           </Button>

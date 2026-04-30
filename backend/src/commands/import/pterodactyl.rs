@@ -693,7 +693,7 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                                 INSERT INTO nest_eggs (
                                     uuid, nest_uuid, author, name, description, features, docker_images,
                                     file_denylist, config_files, config_startup, config_stop,
-                                    config_script, startup, force_outgoing_ip, created
+                                    config_script, startup_commands, force_outgoing_ip, created
                                 )
                                 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
                                 ON CONFLICT (nest_uuid, name) DO UPDATE SET description = EXCLUDED.description
@@ -712,7 +712,7 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                             .bind(serde_json::to_value(config_startup)?)
                             .bind(serde_json::to_value(config_stop)?)
                             .bind(serde_json::to_value(config_script)?)
-                            .bind(startup)
+                            .bind(serde_json::json!({ "Default": startup }))
                             .bind(force_outgoing_ip)
                             .bind(created)
                             .fetch_one(database.write())
@@ -899,9 +899,9 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                                 let egg_id: u32 = row.try_get("egg_id")?;
                                 let startup: &str = row.try_get("startup")?;
                                 let image: &str = row.try_get("image")?;
-                                let allocation_limit: u32 = row.try_get("allocation_limit")?;
-                                let database_limit: u32 = row.try_get("database_limit")?;
-                                let backup_limit: u32 = row.try_get("backup_limit")?;
+                                let allocation_limit: u32 = row.try_get::<Option<u32>, _>("allocation_limit")?.unwrap_or(0);
+                                let database_limit: u32 = row.try_get::<Option<u32>, _>("database_limit")?.unwrap_or(0);
+                                let backup_limit: u32 = row.try_get::<Option<u32>, _>("backup_limit")?.unwrap_or(0);
                                 let created: chrono::DateTime<chrono::Utc> = row.try_get("created_at")?;
 
                                 let node_uuid = match node_mappings.get(&node_id) {

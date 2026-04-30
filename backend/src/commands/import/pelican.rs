@@ -7,6 +7,7 @@ use base64::Engine;
 use clap::{Args, FromArgMatches};
 use colored::Colorize;
 use compact_str::ToCompactString;
+use indexmap::IndexMap;
 use shared::models::database_host::DatabaseCredentials;
 use sqlx::Row;
 use sqlx::any::AnyPoolOptions;
@@ -829,15 +830,10 @@ impl shared::extensions::commands::CliCommand<PelicanArgs> for PelicanCommand {
                                 config_startup
                                     .and_then(|value| serde_json::from_str(value).ok())
                                     .unwrap_or_default();
-                            let startup = startup_commands
+                            let startup_commands: IndexMap<compact_str::CompactString, compact_str::CompactString> = startup_commands
                                 .and_then(|value| {
-                                    serde_json::from_str::<HashMap<String, String>>(value)
+                                    serde_json::from_str(value)
                                         .ok()
-                                        .and_then(|mut commands| {
-                                            commands
-                                                .remove("Default")
-                                                .or_else(|| commands.into_values().next())
-                                        })
                                 })
                                 .unwrap_or_default();
                             let config_stop: shared::models::nest_egg::NestEggConfigStop =
@@ -866,7 +862,7 @@ impl shared::extensions::commands::CliCommand<PelicanArgs> for PelicanCommand {
                                 INSERT INTO nest_eggs (
                                     uuid, nest_uuid, author, name, description, features, docker_images,
                                     file_denylist, config_files, config_startup, config_stop,
-                                    config_script, startup, force_outgoing_ip, created
+                                    config_script, startup_commands, force_outgoing_ip, created
                                 )
                                 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
                                 ON CONFLICT (nest_uuid, name) DO UPDATE SET description = EXCLUDED.description
@@ -885,7 +881,7 @@ impl shared::extensions::commands::CliCommand<PelicanArgs> for PelicanCommand {
                             .bind(serde_json::to_value(config_startup)?)
                             .bind(serde_json::to_value(config_stop)?)
                             .bind(serde_json::to_value(config_script)?)
-                            .bind(startup)
+                            .bind(serde_json::to_value(startup_commands)?)
                             .bind(force_outgoing_ip)
                             .bind(created)
                             .fetch_one(database.write())
@@ -1082,9 +1078,9 @@ impl shared::extensions::commands::CliCommand<PelicanArgs> for PelicanCommand {
                                 let egg_id: i32 = row.try_get("egg_id")?;
                                 let startup: &str = row.try_get("startup")?;
                                 let image: &str = row.try_get("image")?;
-                                let allocation_limit: Option<i32> = row.try_get("allocation_limit")?;
-                                let database_limit: i32 = row.try_get("database_limit")?;
-                                let backup_limit: i32 = row.try_get("backup_limit")?;
+                                let allocation_limit: i32 = row.try_get::<Option<i32>, _>("allocation_limit")?.unwrap_or(0);
+                                let database_limit: i32 = row.try_get::<Option<i32>, _>("database_limit")?.unwrap_or(0);
+                                let backup_limit: i32 = row.try_get::<Option<i32>, _>("backup_limit")?.unwrap_or(0);
                                 let created = source_datetime(&row, "created_at")?;
 
                                 let node_uuid = match node_mappings.get(&node_id) {
@@ -1139,7 +1135,7 @@ impl shared::extensions::commands::CliCommand<PelicanArgs> for PelicanCommand {
                                 .bind(io_weight as i16)
                                 .bind(cpu)
                                 .bind(&[] as &[i32])
-                                .bind(allocation_limit.unwrap_or_default())
+                                .bind(allocation_limit)
                                 .bind(database_limit)
                                 .bind(backup_limit)
                                 .bind(egg_uuid)

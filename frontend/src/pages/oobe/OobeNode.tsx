@@ -203,7 +203,7 @@ export default function OobeNode({ onNext, onBack, canGoBack, skipFrom, data }: 
                 label={t('pages.oobe.node.form.memory', {})}
                 mode='mb'
                 min={0}
-                flex={1}
+                className='flex-1'
                 value={form.values.memory}
                 onChange={(value) => form.setFieldValue('memory', value)}
               />
@@ -212,7 +212,7 @@ export default function OobeNode({ onNext, onBack, canGoBack, skipFrom, data }: 
                 label={t('pages.oobe.node.form.disk', {})}
                 mode='mb'
                 min={0}
-                flex={1}
+                className='flex-1'
                 value={form.values.disk}
                 onChange={(value) => form.setFieldValue('disk', value)}
               />
