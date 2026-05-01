@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { z } from 'zod';
 import getNodeBackups from '@/api/admin/nodes/backups/getNodeBackups.ts';
-import { getEmptyPaginationSet } from '@/api/axios.ts';
 import { ContextMenuProvider } from '@/elements/ContextMenu.tsx';
 import AdminSubContentContainer from '@/elements/containers/AdminSubContentContainer.tsx';
 import Switch from '@/elements/input/Switch.tsx';
@@ -9,18 +8,20 @@ import Table from '@/elements/Table.tsx';
 import { queryKeys } from '@/lib/queryKeys.ts';
 import { adminNodeSchema } from '@/lib/schemas/admin/nodes.ts';
 import { useSearchablePaginatedTable } from '@/plugins/useSearchablePageableTable.ts';
+import { useAdminStore } from '@/stores/admin.tsx';
 import NodeBackupRow from './NodeBackupRow.tsx';
 
 export default function AdminNodeBackups({ node }: { node: z.infer<typeof adminNodeSchema> }) {
+  const { nodeBackups, setNodeBackups } = useAdminStore();
+
   const [showDetachedNodeBackups, setShowDetachedNodeBackups] = useState(false);
 
-  const { data, loading, search, setSearch, setPage } = useSearchablePaginatedTable({
+  const { loading, search, setSearch, setPage } = useSearchablePaginatedTable({
     queryKey: queryKeys.admin.nodes.backups(node.uuid),
     fetcher: (page, search) => getNodeBackups(node.uuid, page, search, showDetachedNodeBackups),
+    setStoreData: setNodeBackups,
     deps: [showDetachedNodeBackups],
   });
-
-  const nodeBackups = (data ?? getEmptyPaginationSet()) as NonNullable<typeof data>;
 
   return (
     <AdminSubContentContainer

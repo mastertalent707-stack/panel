@@ -19,6 +19,9 @@ export default function EggRepositoryEggs({
 }: {
   contextEggRepository: z.infer<typeof adminEggRepositorySchema>;
 }) {
+  const [eggRepositoryEggs, setEggRepositoryEggs] = useState(
+    getEmptyPaginationSet<z.infer<typeof adminEggRepositoryEggSchema>>(),
+  );
   const [selectedEggs, setSelectedEggs] = useState(
     new ObjectSet<z.infer<typeof adminEggRepositoryEggSchema>, 'uuid'>('uuid'),
   );
@@ -54,12 +57,11 @@ export default function EggRepositoryEggs({
     [],
   );
 
-  const { data, loading, search, setSearch, setPage } = useSearchablePaginatedTable({
+  const { loading, search, setSearch, setPage } = useSearchablePaginatedTable({
     queryKey: queryKeys.admin.eggRepositories.eggs(contextEggRepository.uuid),
     fetcher: (page, search) => getEggRepositoryEggs(contextEggRepository.uuid, page, search),
+    setStoreData: setEggRepositoryEggs,
   });
-
-  const eggRepositoryEggs = (data ?? getEmptyPaginationSet()) as NonNullable<typeof data>;
 
   useKeyboardShortcuts({
     shortcuts: [

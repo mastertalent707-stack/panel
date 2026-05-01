@@ -1,7 +1,6 @@
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
-import { getEmptyPaginationSet } from '@/api/axios.ts';
 import getSecurityKeys from '@/api/me/security-keys/getSecurityKeys.ts';
 import Button from '@/elements/Button.tsx';
 import ConditionalTooltip from '@/elements/ConditionalTooltip.tsx';
@@ -11,20 +10,21 @@ import Table from '@/elements/Table.tsx';
 import { queryKeys } from '@/lib/queryKeys.ts';
 import { useSearchablePaginatedTable } from '@/plugins/useSearchablePageableTable.ts';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
+import { useUserStore } from '@/stores/user.ts';
 import SecurityKeyCreateModal from './modals/SecurityKeyCreateModal.tsx';
 import SshKeyRow from './SecurityKeyRow.tsx';
 
 export default function DashboardSecurityKeys() {
   const { t } = useTranslations();
+  const { securityKeys, setSecurityKeys } = useUserStore();
 
   const [openModal, setOpenModal] = useState<'create' | null>(null);
 
-  const { data, loading, search, setSearch, setPage } = useSearchablePaginatedTable({
+  const { loading, search, setSearch, setPage } = useSearchablePaginatedTable({
     queryKey: queryKeys.user.securityKeys.all(),
     fetcher: getSecurityKeys,
+    setStoreData: setSecurityKeys,
   });
-
-  const securityKeys = (data ?? getEmptyPaginationSet()) as NonNullable<typeof data>;
 
   return (
     <AccountContentContainer

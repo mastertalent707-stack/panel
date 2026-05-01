@@ -6,7 +6,7 @@ import { Route, Routes, useNavigate } from 'react-router';
 import { z } from 'zod';
 import createOAuthProvider from '@/api/admin/oauth-providers/createOAuthProvider.ts';
 import getOAuthProviders from '@/api/admin/oauth-providers/getOAuthProviders.ts';
-import { getEmptyPaginationSet, httpErrorToHuman } from '@/api/axios.ts';
+import { httpErrorToHuman } from '@/api/axios.ts';
 import Button from '@/elements/Button.tsx';
 import { AdminCan } from '@/elements/Can.tsx';
 import AdminContentContainer from '@/elements/containers/AdminContentContainer.tsx';
@@ -19,6 +19,7 @@ import { useImportDragAndDrop } from '@/plugins/useImportDragAndDrop.ts';
 import { useSearchablePaginatedTable } from '@/plugins/useSearchablePageableTable.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';
 import AdminPermissionGuard from '@/routers/guards/AdminPermissionGuard.tsx';
+import { useAdminStore } from '@/stores/admin.tsx';
 import DatabaseHostCreateOrUpdate from './OAuthProviderCreateOrUpdate.tsx';
 import OAuthProviderImportOverlay from './OAuthProviderImportOverlay.tsx';
 import DatabaseHostRow from './OAuthProviderRow.tsx';
@@ -27,15 +28,15 @@ import DatabaseHostView from './OAuthProviderView.tsx';
 function OAuthProvidersContainer() {
   const navigate = useNavigate();
   const { addToast } = useToast();
+  const { oauthProviders, addOAuthProvider, setOAuthProviders } = useAdminStore();
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const { data, loading, search, setSearch, setPage, refetch } = useSearchablePaginatedTable({
+  const { loading, search, setSearch, setPage } = useSearchablePaginatedTable({
     queryKey: queryKeys.admin.oAuthProviders.all(),
     fetcher: getOAuthProviders,
+    setStoreData: setOAuthProviders,
   });
-
-  const oauthProviders = (data ?? getEmptyPaginationSet()) as NonNullable<typeof data>;
 
   const handleImport = async (file: File) => {
     const text = await file.text().then((t) => t.trim());
@@ -56,8 +57,8 @@ function OAuthProvidersContainer() {
       clientId: 'example',
       clientSecret: 'example',
     })
-      .then(() => {
-        refetch();
+      .then((data) => {
+        addOAuthProvider(data);
         addToast('OAuth Provider imported.', 'success');
       })
       .catch((msg) => {

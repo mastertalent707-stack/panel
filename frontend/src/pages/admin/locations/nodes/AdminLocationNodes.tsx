@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { z } from 'zod';
 import getLocationNodes from '@/api/admin/locations/nodes/getLocationNodes.ts';
 import { getEmptyPaginationSet } from '@/api/axios.ts';
@@ -11,12 +12,15 @@ import { useSearchablePaginatedTable } from '@/plugins/useSearchablePageableTabl
 import NodeRow from '../../nodes/NodeRow.tsx';
 
 export default function AdminLocationNodes({ location }: { location: z.infer<typeof adminLocationSchema> }) {
-  const { data, loading, search, setSearch, setPage } = useSearchablePaginatedTable({
+  const [locationNodes, setLocationNodes] = useState<Pagination<z.infer<typeof adminNodeSchema>>>(
+    getEmptyPaginationSet(),
+  );
+
+  const { loading, search, setSearch, setPage } = useSearchablePaginatedTable({
     queryKey: queryKeys.admin.locations.nodes(location.uuid),
     fetcher: (page, search) => getLocationNodes(location.uuid, page, search),
+    setStoreData: setLocationNodes,
   });
-
-  const locationNodes = data ?? getEmptyPaginationSet<z.infer<typeof adminNodeSchema>>();
 
   return (
     <AdminSubContentContainer title='Location Nodes' titleOrder={2} search={search} setSearch={setSearch}>

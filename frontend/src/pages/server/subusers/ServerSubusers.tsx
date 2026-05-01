@@ -1,7 +1,7 @@
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useState } from 'react';
-import { getEmptyPaginationSet, httpErrorToHuman } from '@/api/axios.ts';
+import { httpErrorToHuman } from '@/api/axios.ts';
 import getPermissions from '@/api/getPermissions.ts';
 import createSubuser from '@/api/server/subusers/createSubuser.ts';
 import getSubusers from '@/api/server/subusers/getSubusers.ts';
@@ -22,7 +22,7 @@ import SubuserRow from './SubuserRow.tsx';
 export default function ServerSubusers() {
   const { t } = useTranslations();
   const { addToast } = useToast();
-  const { server } = useServerStore();
+  const { server, subusers, setSubusers, addSubuser } = useServerStore();
   const { setAvailablePermissions } = useGlobalStore();
 
   const [openModal, setOpenModal] = useState<'create' | null>(null);
@@ -33,17 +33,16 @@ export default function ServerSubusers() {
     });
   }, []);
 
-  const { data, loading, search, setSearch, setPage, refetch } = useSearchablePaginatedTable({
+  const { loading, search, setSearch, setPage } = useSearchablePaginatedTable({
     queryKey: queryKeys.server(server.uuid).subusers.all(),
     fetcher: (page, search) => getSubusers(server.uuid, page, search),
+    setStoreData: setSubusers,
   });
-
-  const subusers = (data ?? getEmptyPaginationSet()) as NonNullable<typeof data>;
 
   const doCreate = (email: string, permissions: string[], ignoredFiles: string[], captcha: string | null) => {
     createSubuser(server.uuid, { email, permissions, ignoredFiles, captcha })
-      .then(() => {
-        refetch();
+      .then((subuser) => {
+        addSubuser(subuser);
         addToast(t('pages.server.subusers.modal.createSubuser.toast.created', {}), 'success');
         setOpenModal(null);
       })

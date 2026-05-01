@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
 import { z } from 'zod';
 import getServerMounts from '@/api/admin/servers/mounts/getServerMounts.ts';
-import { getEmptyPaginationSet } from '@/api/axios.ts';
 import Button from '@/elements/Button.tsx';
 import { ContextMenuProvider } from '@/elements/ContextMenu.tsx';
 import AdminSubContentContainer from '@/elements/containers/AdminSubContentContainer.tsx';
@@ -14,16 +13,18 @@ import { serverMountTableColumns } from '@/lib/tableColumns.ts';
 import ServerMountAddModal from '@/pages/admin/servers/mounts/modals/ServerMountAddModal.tsx';
 import ServerMountRow from '@/pages/admin/servers/mounts/ServerMountRow.tsx';
 import { useSearchablePaginatedTable } from '@/plugins/useSearchablePageableTable.ts';
+import { useAdminStore } from '@/stores/admin.tsx';
 
 export default function AdminServerMounts({ server }: { server: z.infer<typeof adminServerSchema> }) {
+  const { serverMounts, setServerMounts } = useAdminStore();
+
   const [openModal, setOpenModal] = useState<'add' | null>(null);
 
-  const { data, loading, search, setSearch, setPage } = useSearchablePaginatedTable({
+  const { loading, search, setSearch, setPage } = useSearchablePaginatedTable({
     queryKey: queryKeys.admin.servers.mounts(server.uuid),
     fetcher: (page, search) => getServerMounts(server.uuid, page, search),
+    setStoreData: setServerMounts,
   });
-
-  const serverMounts = (data ?? getEmptyPaginationSet()) as NonNullable<typeof data>;
 
   return (
     <AdminSubContentContainer

@@ -2,7 +2,7 @@ import { faPlus, faUpload } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import jsYaml from 'js-yaml';
 import { ChangeEvent, useRef, useState } from 'react';
-import { getEmptyPaginationSet, httpErrorToHuman } from '@/api/axios.ts';
+import { httpErrorToHuman } from '@/api/axios.ts';
 import getSchedules from '@/api/server/schedules/getSchedules.ts';
 import importSchedule from '@/api/server/schedules/importSchedule.ts';
 import Button from '@/elements/Button.tsx';
@@ -24,18 +24,17 @@ import ScheduleRow from './ScheduleRow.tsx';
 export default function ServerSchedules() {
   const { t } = useTranslations();
   const { addToast } = useToast();
-  const { server } = useServerStore();
+  const { server, schedules, setSchedules, addSchedule } = useServerStore();
 
   const [openModal, setOpenModal] = useState<'create' | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const { data, loading, search, setSearch, setPage, refetch } = useSearchablePaginatedTable({
+  const { loading, search, setSearch, setPage } = useSearchablePaginatedTable({
     queryKey: queryKeys.server(server.uuid).schedules.all(),
     fetcher: (page, search) => getSchedules(server.uuid, page, search),
+    setStoreData: setSchedules,
   });
-
-  const schedules = (data ?? getEmptyPaginationSet()) as NonNullable<typeof data>;
 
   const handleImport = async (file: File) => {
     const text = await file.text().then((t) => t.trim());
@@ -52,8 +51,8 @@ export default function ServerSchedules() {
     }
 
     importSchedule(server.uuid, data)
-      .then(() => {
-        refetch();
+      .then((data) => {
+        addSchedule(data);
         addToast(t('pages.server.schedules.toast.imported', {}), 'success');
       })
       .catch((msg) => {

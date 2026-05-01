@@ -11,9 +11,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Collapse, Menu } from '@mantine/core';
-import { useQueryClient } from '@tanstack/react-query';
 import classNames from 'classnames';
-import { ComponentProps, memo, useEffect, useMemo, useState } from 'react';
+import { ComponentProps, memo, startTransition, useEffect, useState } from 'react';
 import { z } from 'zod';
 import { getEmptyPaginationSet, httpErrorToHuman } from '@/api/axios.ts';
 import deleteServerGroup from '@/api/me/servers/groups/deleteServerGroup.ts';
@@ -67,28 +66,21 @@ export default function ServerGroupItem({
   const { t, tItem } = useTranslations();
   const { updateServerGroup: updateStateServerGroup, removeServerGroup } = useUserStore();
   const { addToast } = useToast();
-  const queryClient = useQueryClient();
 
   const [isExpanded, setIsExpanded] = useState(
     localStorage.getItem(`server-group-expanded-${serverGroup.uuid}`) !== 'false',
   );
-
+  const [servers, setServers] = useState(getEmptyPaginationSet<z.infer<typeof serverSchema>>());
   const [openModal, setOpenModal] = useState<'edit' | 'delete' | 'add-server' | null>(null);
 
   const { handleBulkPowerAction, bulkActionLoading: groupActionLoading } = useBulkPowerActions();
 
-  const { data, loading, search, setSearch, setPage, refetch } = useSearchablePaginatedTable({
+  const { loading, search, setSearch, setPage, refetch } = useSearchablePaginatedTable({
     queryKey: [...queryKeys.user.servers.all(), serverGroup.uuid],
     fetcher: (page, search) => getServerGroupServers(serverGroup.uuid, page, search),
+    setStoreData: setServers,
     modifyParams: false,
   });
-
-  const servers = (data ?? getEmptyPaginationSet()) as NonNullable<typeof data>;
-
-  const queryKey = useMemo(
-    () => [...queryKeys.user.servers.all(), serverGroup.uuid, servers.page, search],
-    [serverGroup.uuid, servers.page, search],
-  );
 
   useEffect(() => {
     localStorage.setItem(`server-group-expanded-${serverGroup.uuid}`, String(isExpanded));
@@ -115,17 +107,6 @@ export default function ServerGroupItem({
   }));
 
   const serverCount = servers?.total ?? serverGroup.serverOrder.length;
-
-  const doOptimisticUpdate = (items: DndServer[], serverOrder: string[]) => {
-    queryClient.setQueryData(queryKey, (old) => {
-      if (!old) return old;
-      return { ...old, data: items };
-    });
-
-    updateStateServerGroup(serverGroup.uuid, {
-      serverOrder,
-    });
-  };
 
   return (
     <>
@@ -280,33 +261,32 @@ export default function ServerGroupItem({
                 strategy={rectSortingStrategy}
                 callbacks={{
                   onDragEnd: async (items) => {
-                    const startIndex = (servers.page - 1) * servers.perPage;
-
                     const serverOrder = insertItems(
                       serverGroup.serverOrder,
                       items.map((s) => s.uuid),
-                      startIndex,
+                      (servers.page - 1) * servers.perPage,
                     );
 
-                    const previous = queryClient.getQueryData(queryKey);
+                    startTransition(() => {
+                      setServers({ ...servers, data: items });
+                    });
 
-                    doOptimisticUpdate(items, serverOrder);
-
-                    try {
-                      await updateServerGroup(serverGroup.uuid, { serverOrder });
-                    } catch (err) {
-                      queryClient.setQueryData(queryKey, previous);
+                    await updateServerGroup(serverGroup.uuid, { serverOrder }).catch((err) => {
+                      addToast(httpErrorToHuman(err), 'error');
                       updateStateServerGroup(serverGroup.uuid, {
                         serverOrder: serverGroup.serverOrder,
                       });
-                      addToast(httpErrorToHuman(err), 'error');
-                    }
+                      setServers({ ...servers, data: servers.data });
+                    });
+                  },
+                  onError: (error) => {
+                    console.error('Drag error:', error);
                   },
                 }}
-                renderOverlay={(active) =>
-                  active ? (
+                renderOverlay={(activeServer) =>
+                  activeServer ? (
                     <div style={{ cursor: 'grabbing' }}>
-                      <MemoizedServerItem server={active} showSelection={false} />
+                      <MemoizedServerItem server={activeServer} onGroupRemove={() => null} showSelection={false} />
                     </div>
                   ) : null
                 }
@@ -319,19 +299,16 @@ export default function ServerGroupItem({
                           server={server}
                           showSelection={false}
                           onGroupRemove={() => {
-                            const previous = queryClient.getQueryData(queryKey);
-
                             const serverOrder = serverGroup.serverOrder.filter(
-                              (_, idx) => (servers.page - 1) * servers.perPage + i !== idx,
+                              (_, orderI) => (servers.page - 1) * servers.perPage + i !== orderI,
                             );
+                            updateStateServerGroup(serverGroup.uuid, {
+                              serverOrder,
+                            });
+                            setServers((prev) => ({ ...prev, data: prev.data.filter((_, dataI) => i !== dataI) }));
 
-                            const newItems = items.filter((_, idx) => idx !== i);
-
-                            doOptimisticUpdate(newItems, serverOrder);
-
-                            updateServerGroup(serverGroup.uuid, { serverOrder }).catch((err) => {
-                              queryClient.setQueryData(queryKey, previous);
-                              addToast(httpErrorToHuman(err), 'error');
+                            updateServerGroup(serverGroup.uuid, { serverOrder }).catch((msg) => {
+                              addToast(httpErrorToHuman(msg), 'error');
                             });
                           }}
                         />

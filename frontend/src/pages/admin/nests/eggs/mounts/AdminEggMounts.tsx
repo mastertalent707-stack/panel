@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
 import { z } from 'zod';
 import getEggMounts from '@/api/admin/nests/eggs/mounts/getEggMounts.ts';
-import { getEmptyPaginationSet } from '@/api/axios.ts';
 import Button from '@/elements/Button.tsx';
 import { ContextMenuProvider } from '@/elements/ContextMenu.tsx';
 import AdminSubContentContainer from '@/elements/containers/AdminSubContentContainer.tsx';
@@ -12,6 +11,7 @@ import { queryKeys } from '@/lib/queryKeys.ts';
 import { adminEggSchema } from '@/lib/schemas/admin/eggs.ts';
 import { adminNestSchema } from '@/lib/schemas/admin/nests.ts';
 import { useSearchablePaginatedTable } from '@/plugins/useSearchablePageableTable.ts';
+import { useAdminStore } from '@/stores/admin.tsx';
 import EggMountRow from './EggMountRow.tsx';
 import EggMountAddModal from './modals/EggMountAddModal.tsx';
 
@@ -22,14 +22,15 @@ export default function AdminEggMounts({
   contextNest: z.infer<typeof adminNestSchema>;
   contextEgg: z.infer<typeof adminEggSchema>;
 }) {
+  const { eggMounts, setEggMounts } = useAdminStore();
+
   const [openModal, setOpenModal] = useState<'add' | null>(null);
 
-  const { data, loading, search, setSearch, setPage } = useSearchablePaginatedTable({
+  const { loading, search, setSearch, setPage } = useSearchablePaginatedTable({
     queryKey: queryKeys.admin.eggs.mounts(contextEgg.uuid),
     fetcher: (page, search) => getEggMounts(contextNest.uuid, contextEgg.uuid, page, search),
+    setStoreData: setEggMounts,
   });
-
-  const eggMounts = (data ?? getEmptyPaginationSet()) as NonNullable<typeof data>;
 
   return (
     <AdminSubContentContainer

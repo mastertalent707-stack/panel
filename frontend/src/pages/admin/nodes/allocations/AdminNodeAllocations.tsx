@@ -4,7 +4,6 @@ import { Group } from '@mantine/core';
 import { MouseEvent as ReactMouseEvent, Ref, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { z } from 'zod';
 import getNodeAllocations from '@/api/admin/nodes/allocations/getNodeAllocations.ts';
-import { getEmptyPaginationSet } from '@/api/axios.ts';
 import ActionIcon from '@/elements/ActionIcon.tsx';
 import Button from '@/elements/Button.tsx';
 import AdminSubContentContainer from '@/elements/containers/AdminSubContentContainer.tsx';
@@ -23,23 +22,12 @@ import NodeAllocationsCreateModal from './modals/NodeAllocationsCreateModal.tsx'
 import NodeAllocationRow from './NodeAllocationRow.tsx';
 
 export default function AdminNodeAllocations({ node }: { node: z.infer<typeof adminNodeSchema> }) {
-  const { selectedNodeAllocations, setSelectedNodeAllocations } = useAdminStore();
+  const { nodeAllocations, setNodeAllocations, selectedNodeAllocations, setSelectedNodeAllocations } = useAdminStore();
 
   const [openModal, setOpenModal] = useState<'create' | null>(null);
   const [ipFilter, setIpFilter] = useState('');
   const [portFilter, setPortFilter] = useState('');
   const selectedNodeAllocationsPreviousRef = useRef(selectedNodeAllocations.values());
-
-  const { data, loading, search, setSearch, setPage, refetch } = useSearchablePaginatedTable({
-    queryKey: queryKeys.admin.nodes.allocations(node.uuid),
-    fetcher: (page, generalSearch) => {
-      const finalSearch = buildSearch(generalSearch || '', ipFilter, portFilter);
-      return getNodeAllocations(node.uuid, page, finalSearch);
-    },
-    deps: [ipFilter, portFilter, node.uuid],
-  });
-
-  const nodeAllocations = (data ?? getEmptyPaginationSet()) as NonNullable<typeof data>;
 
   const uniqueIps = useMemo(() => {
     const ips = new Set<string>();
@@ -64,6 +52,16 @@ export default function AdminNodeAllocations({ node }: { node: z.infer<typeof ad
     if (port) parts.push(port);
     return parts.length > 0 ? parts.join(':') : undefined;
   }, []);
+
+  const { loading, search, setSearch, setPage, refetch } = useSearchablePaginatedTable({
+    queryKey: queryKeys.admin.nodes.allocations(node.uuid),
+    fetcher: (page, generalSearch) => {
+      const finalSearch = buildSearch(generalSearch || '', ipFilter, portFilter);
+      return getNodeAllocations(node.uuid, page, finalSearch);
+    },
+    setStoreData: setNodeAllocations,
+    deps: [ipFilter, portFilter, node.uuid],
+  });
 
   useEffect(() => {
     refetch();
