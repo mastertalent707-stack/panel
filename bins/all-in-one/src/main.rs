@@ -94,6 +94,11 @@ async fn handle_aio_wings(state: &shared::State) -> Result<(), anyhow::Error> {
                 .find(|d| d.mount_point() == std::path::Path::new("/"))
                 .unwrap_or(&disks[0]);
 
+            fn round_to_closest_gib(bytes: u64) -> u64 {
+                const GIB: u64 = 1024 * 1024 * 1024;
+                bytes.div_ceil(GIB) * GIB
+            }
+
             tracing::info!("creating aio wings node...");
             let node = Node::create(
                 state,
@@ -108,8 +113,8 @@ async fn handle_aio_wings(state: &shared::State) -> Result<(), anyhow::Error> {
                     url: "http://localhost:64332".into(),
                     sftp_host: None,
                     sftp_port: 2022,
-                    memory: system.total_memory() as i64 / 1024 / 1024,
-                    disk: disk.total_space() as i64 / 1024 / 1024,
+                    memory: round_to_closest_gib(system.total_memory()) as i64 / 1024 / 1024,
+                    disk: round_to_closest_gib(disk.total_space()) as i64 / 1024 / 1024,
                 },
             )
             .await?;
@@ -132,12 +137,14 @@ async fn handle_aio_wings(state: &shared::State) -> Result<(), anyhow::Error> {
         if let Some(config_path) = &state.env.aio_base_wings_configuration {
             tracing::info!("using aio base wings configuration from environment variable");
             (
-                serde_norway::from_str(
-                    &tokio::fs::read_to_string(config_path)
-                        .await
-                        .context("failed to read aio base wings configuration file")?,
-                )
-                .unwrap_or_else(|_| serde_norway::Value::Mapping(serde_norway::Mapping::new())),
+                serde_norway::Value::Mapping(
+                    serde_norway::from_str(
+                        &tokio::fs::read_to_string(config_path)
+                            .await
+                            .context("failed to read aio base wings configuration file")?,
+                    )
+                    .unwrap_or_else(|_| serde_norway::Mapping::new()),
+                ),
                 PathBuf::from(config_path),
             )
         } else {
@@ -159,11 +166,11 @@ async fn handle_aio_wings(state: &shared::State) -> Result<(), anyhow::Error> {
     );
     mapping.insert(
         serde_norway::Value::String("token_id".into()),
-        serde_norway::Value::String(token_id.to_string()),
+        serde_norway::Value::String(token_id),
     );
     mapping.insert(
         serde_norway::Value::String("token".into()),
-        serde_norway::Value::String(token.clone()),
+        serde_norway::Value::String(token),
     );
     mapping.insert(
         serde_norway::Value::String("remote".into()),
