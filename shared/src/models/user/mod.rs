@@ -828,7 +828,7 @@ impl CreatableModel for User {
             .await?;
         let uuid: uuid::Uuid = row.get("uuid");
 
-        Self::by_uuid(&state.database, uuid).await
+        Self::by_uuid_with_transaction(transaction, uuid).await
     }
 
     async fn create(
