@@ -399,6 +399,16 @@ pub fn router(state: &State) -> OpenApiRouter<State> {
                             Err(err) => return ApiResponse::from(err).ok(),
                         };
 
+                        let options = shared::models::user_oauth_link::CreateUserOAuthLinkOptions {
+                            user_uuid: user.uuid,
+                            oauth_provider_uuid: oauth_provider.uuid,
+                            identifier: identifier.to_compact_string(),
+                        };
+                        match shared::models::user_oauth_link::UserOAuthLink::create(&state, options).await {
+                            Ok(_) => {},
+                            Err(err) => return ApiResponse::from(err).ok(),
+                        }
+
                         let key = UserSession::create(
                             &state,
                             shared::models::user_session::CreateUserSessionOptions {

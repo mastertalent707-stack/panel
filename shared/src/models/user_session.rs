@@ -204,7 +204,7 @@ impl UserSession {
 
         Ok(Cookie::build(("session", key))
             .http_only(true)
-            .same_site(tower_cookies::cookie::SameSite::Strict)
+            .same_site(tower_cookies::cookie::SameSite::Lax)
             .secure(settings.app.url.starts_with("https://"))
             .path("/")
             .expires(
