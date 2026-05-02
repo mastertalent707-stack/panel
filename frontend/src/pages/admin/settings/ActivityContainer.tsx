@@ -16,7 +16,7 @@ import { useAdminStore } from '@/stores/admin.tsx';
 
 export default function ActivityContainer() {
   const { addToast } = useToast();
-  const { activity } = useAdminStore();
+  const { activity, updateSettings } = useAdminStore();
 
   const [loading, setLoading] = useState(false);
 
@@ -44,6 +44,7 @@ export default function ActivityContainer() {
     updateActivitySettings(adminSettingsActivitySchema.parse(form.getValues()))
       .then(() => {
         addToast('Activity settings updated.', 'success');
+        updateSettings({ activity: adminSettingsActivitySchema.parse(form.getValues()) });
       })
       .catch((msg) => {
         addToast(httpErrorToHuman(msg), 'error');

@@ -17,7 +17,7 @@ import { useAdminStore } from '@/stores/admin.tsx';
 
 export default function WebauthnContainer() {
   const { addToast } = useToast();
-  const { webauthn } = useAdminStore();
+  const { webauthn, updateSettings } = useAdminStore();
 
   const [openModal, setOpenModal] = useState<'changeRpId' | null>(null);
   const [loading, setLoading] = useState(false);
@@ -42,6 +42,7 @@ export default function WebauthnContainer() {
     updateWebauthnSettings(adminSettingsWebauthnSchema.parse(form.getValues()))
       .then(() => {
         addToast('Webauthn settings updated.', 'success');
+        updateSettings({ webauthn: adminSettingsWebauthnSchema.parse(form.getValues()) });
       })
       .catch((msg) => {
         addToast(httpErrorToHuman(msg), 'error');

@@ -26,7 +26,7 @@ import CaptchaTurnstile from './forms/CaptchaTurnstile.tsx';
 
 export default function CaptchaContainer() {
   const { addToast } = useToast();
-  const { captchaProvider } = useAdminStore();
+  const { captchaProvider, updateSettings } = useAdminStore();
 
   const [loading, setLoading] = useState(false);
 
@@ -50,6 +50,7 @@ export default function CaptchaContainer() {
     updateCaptchaSettings(adminSettingsCaptchaProviderSchema.parse(form.getValues()))
       .then(() => {
         addToast('Captcha settings updated.', 'success');
+        updateSettings({ captchaProvider: adminSettingsCaptchaProviderSchema.parse(form.getValues()) });
       })
       .catch((msg) => {
         addToast(httpErrorToHuman(msg), 'error');

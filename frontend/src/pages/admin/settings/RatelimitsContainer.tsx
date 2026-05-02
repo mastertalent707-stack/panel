@@ -42,7 +42,7 @@ const DEFAULT_VALUES: RatelimitsSchema = Object.fromEntries(
 
 export default function RatelimitsContainer() {
   const { addToast } = useToast();
-  const { ratelimits } = useAdminStore();
+  const { ratelimits, updateSettings } = useAdminStore();
   const [loading, setLoading] = useState(false);
 
   const form = useForm<RatelimitsSchema>({
@@ -60,8 +60,13 @@ export default function RatelimitsContainer() {
   const doUpdate = () => {
     setLoading(true);
     updateRatelimitSettings(adminSettingsRatelimitsSchema.parse(form.getValues()))
-      .then(() => addToast('Rate limit settings updated.', 'success'))
-      .catch((msg) => addToast(httpErrorToHuman(msg), 'error'))
+      .then(() => {
+        addToast('Rate limit settings updated.', 'success');
+        updateSettings({ ratelimits: adminSettingsRatelimitsSchema.parse(form.getValues()) });
+      })
+      .catch((msg) => {
+        addToast(httpErrorToHuman(msg), 'error');
+      })
       .finally(() => setLoading(false));
   };
 

@@ -27,7 +27,7 @@ import TelemetryPreviewModal from './modals/TelemetryPreviewModal.tsx';
 
 export default function ApplicationContainer() {
   const { addToast } = useToast();
-  const { app } = useAdminStore();
+  const { app, updateSettings: updateAdminSettings } = useAdminStore();
   const { languages, settings, updateSettings } = useGlobalStore();
 
   const [loading, setLoading] = useState(false);
@@ -69,6 +69,7 @@ export default function ApplicationContainer() {
       .then(() => {
         addToast('Application settings updated.', 'success');
         updateSettings({ app: { ...settings.app, ...form.getValues() } });
+        updateAdminSettings({ app: adminSettingsApplicationSchema.parse(form.getValues()) });
       })
       .catch((msg) => {
         addToast(httpErrorToHuman(msg), 'error');

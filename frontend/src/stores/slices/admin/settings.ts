@@ -8,6 +8,7 @@ export interface SettingsSlice extends z.infer<typeof adminSettingsSchema> {
   updateInformation: z.infer<typeof adminUpdateInformationSchema> | null;
 
   setSettings: (settings: z.infer<typeof adminSettingsSchema>) => void;
+  updateSettings: (settings: Partial<z.infer<typeof adminSettingsSchema>>) => void;
   setUpdateInformation: (updateInformation: z.infer<typeof adminUpdateInformationSchema> | null) => void;
 }
 
@@ -105,6 +106,18 @@ export const createSettingsSlice: StateCreator<AdminStore, [], [], SettingsSlice
       state.webauthn = value.webauthn;
       state.activity = value.activity;
       state.ratelimits = value.ratelimits;
+      return state;
+    }),
+  updateSettings: (value) =>
+    set((state) => {
+      if (value.storageDriver) state.storageDriver = value.storageDriver;
+      if (value.mailMode) state.mailMode = value.mailMode;
+      if (value.captchaProvider) state.captchaProvider = value.captchaProvider;
+      if (value.app) state.app = { ...state.app, ...value.app };
+      if (value.server) state.server = { ...state.server, ...value.server };
+      if (value.webauthn) state.webauthn = { ...state.webauthn, ...value.webauthn };
+      if (value.activity) state.activity = { ...state.activity, ...value.activity };
+      if (value.ratelimits) state.ratelimits = { ...state.ratelimits, ...value.ratelimits };
       return state;
     }),
   setUpdateInformation: (value) => set((state) => ({ ...state, updateInformation: value })),

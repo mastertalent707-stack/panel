@@ -18,7 +18,7 @@ import { useGlobalStore } from '@/stores/global.ts';
 
 export default function ServerContainer() {
   const { addToast } = useToast();
-  const { server } = useAdminStore();
+  const { server, updateSettings: updateAdminSettings } = useAdminStore();
   const { updateSettings } = useGlobalStore();
 
   const [loading, setLoading] = useState(false);
@@ -52,6 +52,7 @@ export default function ServerContainer() {
       .then(() => {
         addToast('Server settings updated.', 'success');
         updateSettings({ server: { ...form.getValues() } });
+        updateAdminSettings({ server: adminSettingsServerSchema.parse(form.getValues()) });
       })
       .catch((msg) => {
         addToast(httpErrorToHuman(msg), 'error');

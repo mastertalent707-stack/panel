@@ -25,7 +25,7 @@ import EmailSendTestModal from './modals/EmailSendTestModal.tsx';
 
 export default function EmailContainer() {
   const { addToast } = useToast();
-  const { mailMode } = useAdminStore();
+  const { mailMode, updateSettings } = useAdminStore();
 
   const [loading, setLoading] = useState(false);
   const [openModal, setOpenModal] = useState<'sendTestEmail' | null>(null);
@@ -49,6 +49,7 @@ export default function EmailContainer() {
     updateEmailSettings(adminSettingsEmailSchema.parse(form.getValues()))
       .then(() => {
         addToast('Email settings updated.', 'success');
+        updateSettings({ mailMode: adminSettingsEmailSchema.parse(form.getValues()) });
       })
       .catch((msg) => {
         addToast(httpErrorToHuman(msg), 'error');

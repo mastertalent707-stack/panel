@@ -23,7 +23,7 @@ import StorageS3 from './forms/StorageS3.tsx';
 
 export default function StorageContainer() {
   const { addToast } = useToast();
-  const { storageDriver } = useAdminStore();
+  const { storageDriver, updateSettings } = useAdminStore();
 
   const [openModal, setOpenModal] = useState<'changeStorageType' | null>(null);
   const [loading, setLoading] = useState(false);
@@ -48,6 +48,7 @@ export default function StorageContainer() {
     updateStorageSettings(adminSettingsStorageSchema.parse(form.getValues()))
       .then(() => {
         addToast('Storage settings updated.', 'success');
+        updateSettings({ storageDriver: adminSettingsStorageSchema.parse(form.getValues()) });
       })
       .catch((msg) => {
         addToast(httpErrorToHuman(msg), 'error');
