@@ -9,6 +9,7 @@ import { z } from 'zod';
 import createOAuthProvider from '@/api/admin/oauth-providers/createOAuthProvider.ts';
 import deleteOAuthProvider from '@/api/admin/oauth-providers/deleteOAuthProvider.ts';
 import updateOAuthProvider from '@/api/admin/oauth-providers/updateOAuthProvider.ts';
+import Anchor from '@/elements/Anchor.tsx';
 import Button from '@/elements/Button.tsx';
 import { AdminCan } from '@/elements/Can.tsx';
 import Card from '@/elements/Card.tsx';
@@ -368,11 +369,11 @@ export default function OAuthProviderCreateOrUpdate({
               </Button>
             </AdminCan>
           )}
-          <a href='https://calagopus.com/docs/advanced/oauth' target='_blank' rel='noopener noreferrer'>
+          <Anchor href='https://calagopus.com/docs/advanced/oauth' target='_blank' rel='noopener noreferrer'>
             <Button variant='subtle' leftSection={<FontAwesomeIcon icon={faExternalLink} />}>
               View Documentation
             </Button>
-          </a>
+          </Anchor>
         </Group>
       </form>
     </AdminContentContainer>

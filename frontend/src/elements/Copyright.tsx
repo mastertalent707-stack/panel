@@ -1,4 +1,5 @@
 import classNames from 'classnames';
+import Anchor from '@/elements/Anchor.tsx';
 
 export default function Copyright({ className }: { className?: string }) {
   return (
@@ -8,9 +9,9 @@ export default function Copyright({ className }: { className?: string }) {
       ))}
 
       <span className='flex flex-row gap-2'>
-        <a href='https://calagopus.com' target='_blank' className='underline'>
+        <Anchor href='https://calagopus.com' target='_blank' className='underline'>
           Calagopus
-        </a>
+        </Anchor>
         &copy; 2025 - {new Date().getFullYear()}
       </span>
 

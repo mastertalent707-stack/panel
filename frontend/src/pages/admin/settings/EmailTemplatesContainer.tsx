@@ -1,10 +1,11 @@
-import { Anchor, Divider, Group, NavLink, Paper, ScrollArea, Stack, Text } from '@mantine/core';
+import { Divider, Group, NavLink, Paper, ScrollArea, Stack, Text } from '@mantine/core';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import getEmailTemplate from '@/api/admin/settings/email-templates/getEmailTemplate.ts';
 import getEmailTemplates from '@/api/admin/settings/email-templates/getEmailTemplates.ts';
 import updateEmailTemplate from '@/api/admin/settings/email-templates/updateEmailTemplate.ts';
 import { httpErrorToHuman } from '@/api/axios.ts';
+import Anchor from '@/elements/Anchor.tsx';
 import Badge from '@/elements/Badge.tsx';
 import Button from '@/elements/Button.tsx';
 import { AdminCan } from '@/elements/Can.tsx';

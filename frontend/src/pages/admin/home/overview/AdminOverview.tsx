@@ -25,6 +25,7 @@ import getGeneralStats, { type GeneralStats } from '@/api/admin/stats/getGeneral
 import getOverview, { AdminSystemOverview } from '@/api/admin/system/getOverview.ts';
 import { httpErrorToHuman } from '@/api/axios.ts';
 import Alert from '@/elements/Alert.tsx';
+import Anchor from '@/elements/Anchor.tsx';
 import { AdminCan } from '@/elements/Can.tsx';
 import Card from '@/elements/Card.tsx';
 import Spinner from '@/elements/Spinner.tsx';
@@ -69,9 +70,13 @@ export default function AdminOverview() {
           <Alert className='mb-4' color='yellow'>
             A new version is available for the panel! You are currently on {updateInformation.panelVersion} and the
             latest version is {updateInformation.latestPanelVersion}. You may want to consider upgrading.{' '}
-            <a href='https://calagopus.com/docs/panel/updating' className='underline text-blue-400' target='_blank'>
+            <Anchor
+              href='https://calagopus.com/docs/panel/updating'
+              className='underline text-blue-400'
+              target='_blank'
+            >
               Click here
-            </a>{' '}
+            </Anchor>{' '}
             to view upgrade instructions.
           </Alert>
         )}

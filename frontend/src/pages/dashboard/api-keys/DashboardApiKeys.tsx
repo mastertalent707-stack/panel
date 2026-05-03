@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Group } from '@mantine/core';
 import { useState } from 'react';
 import getApiKeys from '@/api/me/api-keys/getApiKeys.ts';
+import Anchor from '@/elements/Anchor.tsx';
 import Button from '@/elements/Button.tsx';
 import { ContextMenuProvider } from '@/elements/ContextMenu.tsx';
 import AccountContentContainer from '@/elements/containers/AccountContentContainer.tsx';
@@ -33,11 +34,11 @@ export default function DashboardApiKeys() {
       setSearch={setSearch}
       contentRight={
         <Group>
-          <a href='/api' target='_blank'>
+          <Anchor href='/api' target='_blank'>
             <Button variant='light' color='gray' leftSection={<FontAwesomeIcon icon={faCode} />}>
               {t('pages.account.apiKeys.button.apiDocumentation', {})}
             </Button>
-          </a>
+          </Anchor>
           <Button onClick={() => setOpenModal('create')} color='blue' leftSection={<FontAwesomeIcon icon={faPlus} />}>
             {t('common.button.create', {})}
           </Button>
