@@ -113,7 +113,7 @@ export default function ServerItem({
                     )}
                   </span>
                 </div>
-                <div className='flex flex-row items-center min-w-0 justify-end sm:max-w-none max-w-[160px]'>
+                <div className='flex flex-row items-center min-w-0 sm:justify-end sm:max-w-none'>
                   {server.allocation ? (
                     server.egg.separatePort ? (
                       <div className='flex flex-row gap-2 min-w-0'>
