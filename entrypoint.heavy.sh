@@ -9,22 +9,22 @@ export EXTENSION_LOG="/tmp/extension_build.log"
 export EXTENSION_BUILD_LOCK="/tmp/extension_build.lock"
 
 if [ ! -d "/app/binaries" ]; then
-  echo "Error: /app/binaries directory is missing. Please mount the binaries volume."
+  echo "Error: /app/binaries directory is missing. Please mount the binaries volume. read https://calagopus.com/docs/panel/extensions/switching-to-the-heavy-image"
   exit 1
 fi
 
 if [ ! -d "/app/translations" ]; then
-  echo "Error: /app/translations directory is missing. Please mount the translations volume."
+  echo "Error: /app/translations directory is missing. Please mount the translations volume. read https://calagopus.com/docs/panel/extensions/switching-to-the-heavy-image"
   exit 1
 fi
 
 if [ ! -d "/app/extensions" ]; then
-  echo "Error: /app/extensions directory is missing. Please mount the extensions volume."
+  echo "Error: /app/extensions directory is missing. Please mount the extensions volume. read https://calagopus.com/docs/panel/extensions/switching-to-the-heavy-image"
   exit 1
 fi
 
 if [ ! -d "/app/repo/database/extension-migrations" ]; then
-  echo "Error: /app/repo/database/extension-migrations directory is missing. Please mount a volume for database extension migrations."
+  echo "Error: /app/repo/database/extension-migrations directory is missing. Please mount a volume for database extension migrations. read https://calagopus.com/docs/panel/extensions/switching-to-the-heavy-image"
   exit 1
 fi
 
