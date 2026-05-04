@@ -8,7 +8,7 @@ export const axiosInstance: AxiosInstance = axios.create({
 });
 
 axiosInstance.interceptors.request.use((request) => {
-  request.headers.set('Calagopus-User', localStorage.getItem('impersonatedUser'));
+  request.headers.set('Calagopus-User', localStorage.getItem('impersonated_user'));
 
   return request;
 });
@@ -37,7 +37,7 @@ export const untransformedAxiosInstance: AxiosInstance = axios.create({
 });
 
 untransformedAxiosInstance.interceptors.request.use((request) => {
-  request.headers.set('Calagopus-User', localStorage.getItem('impersonatedUser'));
+  request.headers.set('Calagopus-User', localStorage.getItem('impersonated_user'));
 
   return request;
 });
