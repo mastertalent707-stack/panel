@@ -1,8 +1,5 @@
 use crate::{
-    jwt::BasePayload,
-    models::{InsertQueryBuilder, UpdateQueryBuilder},
-    prelude::*,
-    storage::StorageUrlRetriever,
+    jwt::BasePayload, models::UpdateQueryBuilder, prelude::*, storage::StorageUrlRetriever,
 };
 use compact_str::ToCompactString;
 use garde::Validate;
@@ -968,55 +965,11 @@ impl CreatableModel for ServerBackup {
     }
 
     async fn create_with_transaction(
-        state: &crate::State,
-        mut options: Self::CreateOptions<'_>,
-        transaction: &mut sqlx::Transaction<'_, sqlx::Postgres>,
+        _state: &crate::State,
+        _options: Self::CreateOptions<'_>,
+        _transaction: &mut sqlx::Transaction<'_, sqlx::Postgres>,
     ) -> Result<Self, crate::database::DatabaseError> {
-        options.validate()?;
-
-        let backup_configuration = options
-            .server
-            .backup_configuration(&state.database)
-            .await
-            .ok_or_else(|| {
-                anyhow::Error::new(
-                    crate::response::DisplayError::new(
-                        "no backup configuration available, unable to create backup",
-                    )
-                    .with_status(StatusCode::EXPECTATION_FAILED),
-                )
-            })?;
-
-        if backup_configuration.maintenance_enabled {
-            return Err(anyhow::Error::new(
-                crate::response::DisplayError::new(
-                    "cannot create backup while backup configuration is in maintenance mode",
-                )
-                .with_status(StatusCode::EXPECTATION_FAILED),
-            )
-            .into());
-        }
-
-        let mut query_builder = InsertQueryBuilder::new("server_backups");
-
-        Self::run_create_handlers(&mut options, &mut query_builder, state, transaction).await?;
-
-        query_builder
-            .set("server_uuid", options.server.uuid)
-            .set("node_uuid", options.server.node.uuid)
-            .set("backup_configuration_uuid", backup_configuration.uuid)
-            .set("name", &options.name)
-            .set("ignored_files", &options.ignored_files)
-            .set("bytes", 0i64)
-            .set("disk", backup_configuration.backup_disk);
-
-        let row = query_builder
-            .returning(&Self::columns_sql(None))
-            .fetch_one(&mut **transaction)
-            .await?;
-        let backup = Self::map(None, &row)?;
-
-        Ok(backup)
+        Err(anyhow::anyhow!("create_with_transaction is not supported for ServerBackup").into())
     }
 
     async fn create(

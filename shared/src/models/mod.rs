@@ -974,6 +974,7 @@ pub struct UpdateQueryBuilder<'a> {
     builder: QueryBuilder<'a, Postgres>,
     updated_fields: HashSet<&'a str>,
     has_set_fields: bool,
+    has_where: bool,
 }
 
 impl<'a> UpdateQueryBuilder<'a> {
@@ -986,6 +987,7 @@ impl<'a> UpdateQueryBuilder<'a> {
             builder,
             updated_fields: HashSet::new(),
             has_set_fields: false,
+            has_where: false,
         }
     }
 
@@ -1021,7 +1023,13 @@ impl<'a> UpdateQueryBuilder<'a> {
         column: &'a str,
         value: T,
     ) -> &mut Self {
-        self.builder.push(" WHERE ");
+        if self.has_where {
+            self.builder.push(" AND ");
+        } else {
+            self.builder.push(" WHERE ");
+            self.has_where = true;
+        }
+
         self.builder.push(column);
         self.builder.push(" = ");
         self.builder.push_bind(value);
