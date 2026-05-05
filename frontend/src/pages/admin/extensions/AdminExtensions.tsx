@@ -272,11 +272,9 @@ export default function AdminExtensions() {
                 key={extension.packageName}
                 extension={extension}
                 backendExtension={backendExtension}
-                isRemoved={
-                  extensionStatus?.removedExtensions.some(
-                    (e) => e.metadataToml.packageName === extension.packageName,
-                  ) && false
-                }
+                isRemoved={extensionStatus?.removedExtensions.some(
+                  (e) => e.metadataToml.packageName === extension.packageName,
+                )}
                 onRemove={extensionStatus && backendExtension ? () => setRemovalExtension(backendExtension) : undefined}
               />
             ),

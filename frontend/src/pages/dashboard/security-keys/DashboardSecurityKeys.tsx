@@ -12,7 +12,7 @@ import { useSearchablePaginatedTable } from '@/plugins/useSearchablePageableTabl
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import { useUserStore } from '@/stores/user.ts';
 import SecurityKeyCreateModal from './modals/SecurityKeyCreateModal.tsx';
-import SshKeyRow from './SecurityKeyRow.tsx';
+import SecurityKeyRow from './SecurityKeyRow.tsx';
 
 export default function DashboardSecurityKeys() {
   const { t } = useTranslations();
@@ -64,7 +64,7 @@ export default function DashboardSecurityKeys() {
           onPageSelect={setPage}
         >
           {securityKeys.data.map((key) => (
-            <SshKeyRow key={key.uuid} securityKey={key} />
+            <SecurityKeyRow key={key.uuid} securityKey={key} />
           ))}
         </Table>
       </ContextMenuProvider>

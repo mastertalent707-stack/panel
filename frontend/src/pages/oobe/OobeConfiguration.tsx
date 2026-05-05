@@ -99,7 +99,7 @@ export default function OobeConfiguration({ onNext }: OobeComponentProps) {
       {error && <AlertError error={error} setError={setError} />}
 
       <form onSubmit={form.onSubmit(() => onSubmit())}>
-        <Stack gap='xl¢'>
+        <Stack gap='xl'>
           <div className='flex flex-col gap-4'>
             <div className='flex flex-col md:flex-row gap-2 '>
               <TextInput
