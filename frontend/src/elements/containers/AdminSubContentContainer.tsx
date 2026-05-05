@@ -14,7 +14,7 @@ export type Props<P = {}> = {
   setSearch?: Dispatch<SetStateAction<string>>;
   contentRight?: ReactNode;
   children: ReactNode;
-} & ({ registry: ContainerRegistry<Props<P>>; registryProps: P } | { registry?: never; registryProps?: never });
+} & ({ registry: ContainerRegistry<Props<P>, P>; registryProps: P } | { registry?: never; registryProps?: never });
 
 function AdminSubContentContainer<P>(props: Props<P>) {
   props = useMemo(() => {
