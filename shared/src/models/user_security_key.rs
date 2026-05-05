@@ -270,6 +270,8 @@ impl CreatableModel for UserSecurityKey {
         mut options: Self::CreateOptions<'_>,
         transaction: &mut sqlx::Transaction<'_, sqlx::Postgres>,
     ) -> Result<Self, crate::database::DatabaseError> {
+        options.validate()?;
+
         let mut query_builder = InsertQueryBuilder::new("user_security_keys");
 
         Self::run_create_handlers(&mut options, &mut query_builder, state, transaction).await?;

@@ -263,7 +263,7 @@ impl shared::extensions::commands::CliCommand<RemoveArgs> for RemoveCommand {
                     println!("removed and rolled back database migrations for this extension");
                 }
 
-                println!("sucessfully removed {}", args.package_name.cyan());
+                println!("successfully removed {}", args.package_name.cyan());
 
                 Ok(0)
             })

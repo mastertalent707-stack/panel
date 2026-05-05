@@ -66,8 +66,8 @@ pub fn router(state: &State) -> OpenApiRouter<State> {
             if state
                 .cache
                 .get::<u16>(&format!("oauth_state::{}", params.state))
-                .await
-                .is_err()
+                .await?
+                .is_none()
             {
                 return ApiResponse::error("oauth csrf state not found, please try again")
                     .with_status(StatusCode::NOT_FOUND)

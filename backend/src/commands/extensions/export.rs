@@ -118,7 +118,7 @@ impl shared::extensions::commands::CliCommand<ExportArgs> for ExportCommand {
                 };
 
                 println!(
-                    "sucessfully exported {} to {}",
+                    "successfully exported {} to {}",
                     extension_distr.metadata_toml.name.cyan(),
                     output_path.to_string_lossy().cyan()
                 );

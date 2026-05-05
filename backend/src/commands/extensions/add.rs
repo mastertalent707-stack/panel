@@ -233,7 +233,7 @@ impl shared::extensions::commands::CliCommand<AddArgs> for AddCommand {
                 );
 
                 println!(
-                    "sucessfully added {}",
+                    "successfully added {}",
                     extension_distr.metadata_toml.name.cyan(),
                 );
                 println!(

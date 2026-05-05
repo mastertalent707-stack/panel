@@ -9,7 +9,7 @@ mod post {
     use shared::{
         ApiError, GetState,
         models::{
-            ByUuid, DeletableModel, admin_activity::GetAdminActivityLogger, nest_egg::NestEgg,
+            DeletableModel, admin_activity::GetAdminActivityLogger, nest_egg::NestEgg,
             server::Server, user::GetPermissionManager,
         },
         response::{ApiResponse, ApiResponseResult},
@@ -53,7 +53,8 @@ mod post {
                 return Ok(false);
             }
 
-            let nest_egg = match NestEgg::by_uuid_optional(&state.database, egg).await? {
+            let nest_egg = match NestEgg::by_nest_uuid_uuid(&state.database, nest.uuid, egg).await?
+            {
                 Some(nest_egg) => nest_egg,
                 None => return Ok(false),
             };

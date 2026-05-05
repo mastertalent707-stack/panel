@@ -146,6 +146,12 @@ mod get {
 
         let part_size = s3_configuration.part_size;
         let part_count = (params.size as f64 / s3_configuration.part_size as f64).ceil() as usize;
+        if part_count > 10_000_000 {
+            return ApiResponse::error("backup is too large")
+                .with_status(StatusCode::EXPECTATION_FAILED)
+                .ok();
+        }
+
         let mut parts = Vec::new();
         parts.reserve_exact(part_count);
 

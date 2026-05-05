@@ -262,7 +262,7 @@ impl Cache {
         let lock_id = lock_id.into();
         let redis_key = compact_str::format_compact!("lock::{}", lock_id);
         let ttl_secs = ttl.unwrap_or(30);
-        let deadline = timeout.map(|ms| Instant::now() + Duration::from_secs(ms));
+        let deadline = timeout.map(|ms| Instant::now() + Duration::from_millis(ms));
 
         tracing::debug!("acquiring cache lock");
 
