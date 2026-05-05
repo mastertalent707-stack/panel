@@ -194,7 +194,7 @@ impl User {
         let row = sqlx::query(
             r#"
             INSERT INTO users (username, email, name_first, name_last, password, admin)
-            VALUES ($1, $2, $3, $4, crypt($5, gen_salt('bf', 8)), (SELECT COUNT(*) = 0 FROM users))
+            VALUES ($1, $2, $3, $4, crypt($5, gen_salt('bf', 12)), (SELECT COUNT(*) = 0 FROM users))
             RETURNING users.uuid
             "#,
         )
@@ -572,7 +572,7 @@ impl User {
             sqlx::query(
                 r#"
 		            UPDATE users
-		            SET password = crypt($2, gen_salt('bf'))
+		            SET password = crypt($2, gen_salt('bf', 12))
 		            WHERE users.uuid = $1
 		            "#,
             )
@@ -611,7 +611,7 @@ impl User {
             sqlx::query(
                 r#"
 		            UPDATE users
-		            SET password = crypt($2, gen_salt('bf'))
+		            SET password = crypt($2, gen_salt('bf', 12))
 		            WHERE users.uuid = $1
 		            "#,
             )
@@ -854,7 +854,7 @@ impl CreatableModel for User {
             .set("name_last", &options.name_last);
 
         if let Some(password) = &options.password {
-            query_builder.set_expr("password", "crypt($1, gen_salt('bf', 8))", vec![password]);
+            query_builder.set_expr("password", "crypt($1, gen_salt('bf', 12))", vec![password]);
         }
 
         query_builder

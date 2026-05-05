@@ -20,8 +20,15 @@ declare global {
   }
 }
 
+const SafeMarkdownLink = ({ href, children }: { href?: string; children?: ReactNode }) => {
+  if (href && /^(javascript|data|vbscript):/i.test(href)) {
+    return <span>{children}</span>;
+  }
+  return <a href={href}>{children}</a>;
+};
+
 String.prototype.md = function (): ReactNode {
-  return <Markdown>{this.toString()}</Markdown>;
+  return <Markdown components={{ a: SafeMarkdownLink }}>{this.toString()}</Markdown>;
 };
 
 const TranslationProvider = ({ children }: { children: ReactNode }) => {
@@ -126,6 +133,7 @@ const TranslationProvider = ({ children }: { children: ReactNode }) => {
           <Markdown
             components={{
               p: ({ children }) => <>{children}</>,
+              a: SafeMarkdownLink,
             }}
           >
             {translation}
@@ -161,6 +169,7 @@ const TranslationProvider = ({ children }: { children: ReactNode }) => {
                 <Markdown
                   components={{
                     p: ({ children }) => <>{children}</>,
+                    a: SafeMarkdownLink,
                   }}
                 >
                   {trimmed}
@@ -177,6 +186,7 @@ const TranslationProvider = ({ children }: { children: ReactNode }) => {
       <Markdown
         components={{
           p: ({ children }) => <>{children}</>,
+          a: SafeMarkdownLink,
         }}
       >
         {translation}

@@ -231,7 +231,7 @@ impl UserApiKey {
         sqlx::query(
             r#"
             UPDATE user_api_keys
-            SET key_start = $1, key = crypt($2, gen_salt('xdes', 321))
+            SET key_start = $1, key = crypt($2, gen_salt('bf', 12))
             WHERE user_api_keys.uuid = $3
             "#,
         )
@@ -335,7 +335,7 @@ impl CreatableModel for UserApiKey {
             .set("user_uuid", options.user_uuid)
             .set("name", &options.name)
             .set("key_start", &key[0..16])
-            .set_expr("key", "crypt($1, gen_salt('xdes', 321))", vec![&key])
+            .set_expr("key", "crypt($1, gen_salt('bf', 12))", vec![&key])
             .set("allowed_ips", &options.allowed_ips)
             .set("user_permissions", &options.user_permissions)
             .set("admin_permissions", &options.admin_permissions)

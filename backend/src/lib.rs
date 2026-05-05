@@ -526,18 +526,19 @@ pub async fn handle_startup() -> (
 
                     let settings = state.settings.get().await?;
 
-                    let base_filesystem = match settings.storage_driver.get_cap_filesystem().await {
-                        Some(filesystem) => filesystem?,
-                        None => {
-                            return ApiResponse::error("file not found")
-                                .with_status(StatusCode::NOT_FOUND)
-                                .ok();
-                        }
-                    };
+                    let base_filesystem =
+                        match settings.storage_driver.get_cap_filesystem("avatars").await {
+                            Some(filesystem) => filesystem?,
+                            None => {
+                                return ApiResponse::error("file not found")
+                                    .with_status(StatusCode::NOT_FOUND)
+                                    .ok();
+                            }
+                        };
 
                     drop(settings);
 
-                    let path = PathBuf::from(format!("avatars/{user}/{file}"));
+                    let path = PathBuf::from(format!("{user}/{file}"));
                     let size = match base_filesystem.async_metadata(&path).await {
                         Ok(metadata) => metadata.len(),
                         Err(_) => {
@@ -681,9 +682,9 @@ pub async fn handle_startup() -> (
                 }
 
                 if !path.starts_with("/api") {
-                    let path = &path[1.min(path.len())..];
+                    let path = urlencoding::decode(&path[1.min(path.len())..])?;
 
-                    let (is_index, entry) = match FRONTEND_ASSETS.get_entry(path) {
+                    let (is_index, entry) = match FRONTEND_ASSETS.get_entry(&*path) {
                         Some(entry) => (false, entry),
                         None => (true, FRONTEND_ASSETS.get_entry("index.html").unwrap()),
                     };
@@ -699,7 +700,7 @@ pub async fn handle_startup() -> (
                         let settings = state.settings.get().await?;
 
                         let base_filesystem =
-                            match settings.storage_driver.get_cap_filesystem().await {
+                            match settings.storage_driver.get_cap_filesystem("assets").await {
                                 Some(filesystem) => filesystem?,
                                 None => {
                                     return ApiResponse::error("file not found")
@@ -709,9 +710,9 @@ pub async fn handle_startup() -> (
                             };
                         drop(settings);
 
-                        let path = urlencoding::decode(path)?;
+                        let path = path.strip_prefix("assets/").unwrap_or(&path);
 
-                        let metadata = match base_filesystem.async_metadata(&*path).await {
+                        let metadata = match base_filesystem.async_metadata(path).await {
                             Ok(metadata) => metadata,
                             Err(_) => {
                                 return ApiResponse::error("file not found")
@@ -720,7 +721,7 @@ pub async fn handle_startup() -> (
                             }
                         };
 
-                        let tokio_file = match base_filesystem.async_open(&*path).await {
+                        let tokio_file = match base_filesystem.async_open(path).await {
                             Ok(file) => file,
                             Err(_) => {
                                 return ApiResponse::error("file not found")
