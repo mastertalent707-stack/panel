@@ -52,9 +52,12 @@ function AdminSubContentContainer<P>(props: Props<P>) {
 
       {hideTitleComponent ? null : setSearch ? (
         <Group justify='space-between' mb='md'>
-          <Title order={titleOrder} c='white'>
-            {title}
-          </Title>
+          <div>
+            <Title order={titleOrder} c='white'>
+              {title}
+            </Title>
+            {subtitle ? <p className='text-xs text-gray-300!'>{subtitle}</p> : null}
+          </div>
           <Group>
             <TextInput
               placeholder={t('common.input.search', {})}
@@ -67,15 +70,21 @@ function AdminSubContentContainer<P>(props: Props<P>) {
         </Group>
       ) : contentRight ? (
         <Group justify='space-between' mb='md'>
-          <Title order={titleOrder} c='white'>
-            {title}
-          </Title>
+          <div>
+            <Title order={titleOrder} c='white'>
+              {title}
+            </Title>
+            {subtitle ? <p className='text-xs text-gray-300!'>{subtitle}</p> : null}
+          </div>
           <Group>{contentRight}</Group>
         </Group>
       ) : (
-        <Title order={titleOrder} c='white'>
-          {title}
-        </Title>
+        <div className='mb-4'>
+          <Title order={titleOrder} c='white'>
+            {title}
+          </Title>
+          {subtitle ? <p className='text-xs text-gray-300!'>{subtitle}</p> : null}
+        </div>
       )}
       {registry?.prependedContentComponents.map((Component, index) => (
         <Component key={`prepended-sub-content-${index}`} {...props} {...registryProps} />
