@@ -139,7 +139,30 @@ export default function AnnouncementCreateOrUpdate({
             {...form.getInputProps('type')}
           />
 
-          <Switch label='Enabled' key={form.key('enabled')} {...form.getInputProps('enabled', { type: 'checkbox' })} />
+          <LocalizedTextInput
+            withAsterisk
+            label='Title'
+            placeholder='Title'
+            value={form.values.title}
+            setValue={(value) => form.setFieldValue('title', value ?? '')}
+            valueTranslations={form.values.titleTranslations}
+            setValueTranslations={(translations) => form.setFieldValue('titleTranslations', translations)}
+            languages={languages}
+            error={form.errors.title}
+          />
+
+          <LocalizedTextArea
+            withAsterisk
+            label='Content'
+            placeholder='Content'
+            value={form.values.content}
+            setValue={(value) => form.setFieldValue('content', value ?? '')}
+            valueTranslations={form.values.contentTranslations}
+            setValueTranslations={(translations) => form.setFieldValue('contentTranslations', translations)}
+            languages={languages}
+            error={form.errors.content}
+            className='col-span-full'
+          />
 
           <DateTimePicker
             label='Enabled Start'
@@ -155,33 +178,8 @@ export default function AnnouncementCreateOrUpdate({
             onChange={(value) => form.setFieldValue('enabledEnd', value ? new Date(value) : null)}
           />
 
-          <LocalizedTextInput
-            withAsterisk
-            label='Title'
-            placeholder='Title'
-            value={form.values.title}
-            setValue={(value) => form.setFieldValue('title', value ?? '')}
-            valueTranslations={form.values.titleTranslations}
-            setValueTranslations={(translations) => form.setFieldValue('titleTranslations', translations)}
-            languages={languages}
-            error={form.errors.title as string | undefined}
-          />
-
-          <LocalizedTextArea
-            withAsterisk
-            label='Content'
-            placeholder='Content'
-            value={form.values.content}
-            setValue={(value) => form.setFieldValue('content', value ?? '')}
-            valueTranslations={form.values.contentTranslations}
-            setValueTranslations={(translations) => form.setFieldValue('contentTranslations', translations)}
-            languages={languages}
-            error={form.errors.content as string | undefined}
-          />
-
           <MultiSelect
             label='Locations'
-            placeholder='All Locations'
             description='Leave empty to apply to all locations.'
             data={locations.items.map((l) => ({ label: l.name, value: l.uuid }))}
             searchable
@@ -195,7 +193,6 @@ export default function AnnouncementCreateOrUpdate({
 
           <MultiSelect
             label='Nodes'
-            placeholder='All Nodes'
             description='Leave empty to apply to all nodes.'
             data={nodes.items.map((n) => ({ label: n.name, value: n.uuid }))}
             searchable
@@ -209,7 +206,6 @@ export default function AnnouncementCreateOrUpdate({
 
           <MultiSelect
             label='Backup Configurations'
-            placeholder='All Backup Configurations'
             description='Leave empty to apply to all backup configurations.'
             data={backupConfigurations.items.map((b) => ({ label: b.name, value: b.uuid }))}
             searchable
@@ -220,6 +216,8 @@ export default function AnnouncementCreateOrUpdate({
             key={form.key('backupConfigurations')}
             {...form.getInputProps('backupConfigurations')}
           />
+
+          <Switch label='Enabled' key={form.key('enabled')} {...form.getInputProps('enabled', { type: 'checkbox' })} />
         </div>
 
         <Group mt='md'>

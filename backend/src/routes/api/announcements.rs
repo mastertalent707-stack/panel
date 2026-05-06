@@ -30,7 +30,7 @@ mod get {
         ApiResponse::new_serialized(Response {
             announcements: announcements
                 .into_iter()
-                .map(|a| a.into_api_object(&state, ()))
+                .map(|announcement| announcement.into_api_object(&state, ()))
                 .try_collect_async_vec()
                 .await?,
         })

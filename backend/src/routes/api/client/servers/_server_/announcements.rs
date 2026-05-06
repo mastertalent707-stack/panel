@@ -26,12 +26,19 @@ mod get {
         ),
     ))]
     pub async fn route(state: GetState, server: GetServer) -> ApiResponseResult {
-        let announcements = Announcement::all_by_active_server(&state.database, &server).await?;
+        let announcements = state
+            .cache
+            .cached(
+                &format!("announcements::active::{}", server.uuid),
+                60,
+                || async { Announcement::all_by_active_server(&state.database, &server).await },
+            )
+            .await?;
 
         ApiResponse::new_serialized(Response {
             announcements: announcements
                 .into_iter()
-                .map(|a| a.into_api_object(&state, ()))
+                .map(|announcement| announcement.into_api_object(&state, ()))
                 .try_collect_async_vec()
                 .await?,
         })

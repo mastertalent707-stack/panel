@@ -157,6 +157,7 @@ export default function EggVariableContainer({
               valueTranslations={form.values.descriptionTranslations}
               setValueTranslations={(translations) => form.setFieldValue('descriptionTranslations', translations)}
               languages={languages}
+              error={form.errors.description}
             />
 
             <Group grow>

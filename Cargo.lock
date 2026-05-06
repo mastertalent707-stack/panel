@@ -699,7 +699,7 @@ dependencies = [
 
 [[package]]
 name = "backend"
-version = "1.0.4"
+version = "1.0.5"
 dependencies = [
  "anyhow",
  "axum",
@@ -1706,7 +1706,7 @@ checksum = "a4ae5f15dda3c708c0ade84bfee31ccab44a3da4f88015ed22f63732abe300c8"
 
 [[package]]
 name = "database-migrator"
-version = "1.0.4"
+version = "1.0.5"
 dependencies = [
  "chrono",
  "clap",
@@ -2173,7 +2173,7 @@ dependencies = [
 
 [[package]]
 name = "extension-internal-list"
-version = "1.0.4"
+version = "1.0.5"
 dependencies = [
  "semver",
  "shared",
@@ -4560,7 +4560,7 @@ dependencies = [
 
 [[package]]
 name = "panel-rs"
-version = "1.0.4"
+version = "1.0.5"
 dependencies = [
  "axum",
  "backend",
@@ -4576,7 +4576,7 @@ dependencies = [
 
 [[package]]
 name = "panel-rs-aio"
-version = "1.0.4"
+version = "1.0.5"
 dependencies = [
  "anyhow",
  "axum",
@@ -5621,7 +5621,7 @@ dependencies = [
 
 [[package]]
 name = "rule-validator"
-version = "1.0.4"
+version = "1.0.5"
 dependencies = [
  "chrono",
  "chrono-tz",
@@ -6565,7 +6565,7 @@ dependencies = [
 
 [[package]]
 name = "shared"
-version = "1.0.4"
+version = "1.0.5"
 dependencies = [
  "accept-header",
  "anyhow",
@@ -8749,7 +8749,7 @@ checksum = "d6bbff5f0aada427a1e5a6da5f1f98158182f26556f345ac9e04d36d0ebed650"
 
 [[package]]
 name = "wings-api"
-version = "1.0.4"
+version = "1.0.5"
 dependencies = [
  "anyhow",
  "chrono",
