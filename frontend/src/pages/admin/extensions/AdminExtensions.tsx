@@ -120,6 +120,7 @@ export default function AdminExtensions() {
             : prev,
         );
         addToast(`Extension \`${backendExtension.metadataToml.packageName}\` removed successfully.`.md(), 'success');
+        setRemovalExtension(null);
       })
       .catch((msg) => {
         addToast(httpErrorToHuman(msg), 'error');
