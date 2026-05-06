@@ -1,7 +1,7 @@
 use anyhow::Context;
 use axum::{
     body::Body,
-    extract::{ConnectInfo, Path, Request},
+    extract::{ConnectInfo, Request},
     http::{HeaderValue, StatusCode},
     middleware::Next,
     response::Response,
@@ -16,7 +16,7 @@ use shared::{
     models::{ByUuid, node::Node},
     response::ApiResponse,
 };
-use std::{net::SocketAddr, path::PathBuf, sync::Arc};
+use std::{net::SocketAddr, sync::Arc};
 use tokio::sync::RwLock;
 use tower_cookies::CookieManagerLayer;
 use utoipa::openapi::security::{ApiKey, ApiKeyValue, SecurityScheme};
@@ -514,59 +514,6 @@ pub async fn handle_startup() -> (
     let app = OpenApiRouter::new()
         .merge(routes::router(&state))
         .merge(extension_router)
-        .route(
-            "/avatars/{user}/{file}",
-            axum::routing::get(
-                |state: GetState, Path::<(uuid::Uuid, String)>((user, file))| async move {
-                    if file.len() != 13 || file.contains("..") || !file.ends_with(".webp") {
-                        return ApiResponse::error("file not found")
-                            .with_status(StatusCode::NOT_FOUND)
-                            .ok();
-                    }
-
-                    let settings = state.settings.get().await?;
-
-                    let base_filesystem =
-                        match settings.storage_driver.get_cap_filesystem("avatars").await {
-                            Some(filesystem) => filesystem?,
-                            None => {
-                                return ApiResponse::error("file not found")
-                                    .with_status(StatusCode::NOT_FOUND)
-                                    .ok();
-                            }
-                        };
-
-                    drop(settings);
-
-                    let path = PathBuf::from(format!("{user}/{file}"));
-                    let size = match base_filesystem.async_metadata(&path).await {
-                        Ok(metadata) => metadata.len(),
-                        Err(_) => {
-                            return ApiResponse::error("file not found")
-                                .with_status(StatusCode::NOT_FOUND)
-                                .ok();
-                        }
-                    };
-
-                    let tokio_file = match base_filesystem.async_open(path).await {
-                        Ok(file) => file,
-                        Err(_) => {
-                            return ApiResponse::error("file not found")
-                                .with_status(StatusCode::NOT_FOUND)
-                                .ok();
-                        }
-                    };
-
-                    ApiResponse::new(Body::from_stream(tokio_util::io::ReaderStream::new(
-                        tokio_file,
-                    )))
-                    .with_header("Content-Type", "image/webp")
-                    .with_header("Content-Length", size.to_compact_string())
-                    .with_header("ETag", file.trim_end_matches(".webp"))
-                    .ok()
-                },
-            ),
-        )
         .fallback(
             |state: GetState, ip: GetIp, mut req: Request<Body>| async move {
                 let is_upgrade = req
@@ -689,7 +636,11 @@ pub async fn handle_startup() -> (
                         None => (true, FRONTEND_ASSETS.get_entry("index.html").unwrap()),
                     };
 
-                    if (entry.as_file().is_none() || is_index) && path.starts_with("assets") {
+                    if (entry.as_file().is_none() || is_index)
+                        && (path.starts_with("assets")
+                            || path.starts_with("avatars")
+                            || path.starts_with("publicdata"))
+                    {
                         // technically not needed (cap filesystem) but never hurts
                         if path.contains("..") {
                             return ApiResponse::error("file not found")
@@ -699,8 +650,20 @@ pub async fn handle_startup() -> (
 
                         let settings = state.settings.get().await?;
 
+                        let base_dir = if path.starts_with("assets") {
+                            "assets"
+                        } else if path.starts_with("avatars") {
+                            "avatars"
+                        } else if path.starts_with("publicdata") {
+                            "publicdata"
+                        } else {
+                            return ApiResponse::error("file not found")
+                                .with_status(StatusCode::NOT_FOUND)
+                                .ok();
+                        };
+
                         let base_filesystem =
-                            match settings.storage_driver.get_cap_filesystem("assets").await {
+                            match settings.storage_driver.get_cap_filesystem(base_dir).await {
                                 Some(filesystem) => filesystem?,
                                 None => {
                                     return ApiResponse::error("file not found")
@@ -710,7 +673,9 @@ pub async fn handle_startup() -> (
                             };
                         drop(settings);
 
-                        let path = path.strip_prefix("assets/").unwrap_or(&path);
+                        let path = path
+                            .strip_prefix(&format!("{}/", base_dir))
+                            .unwrap_or(&path);
 
                         let metadata = match base_filesystem.async_metadata(path).await {
                             Ok(metadata) => metadata,
