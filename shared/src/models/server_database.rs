@@ -236,7 +236,7 @@ impl ServerDatabase {
     pub async fn count_by_server_uuid(
         database: &crate::database::Database,
         server_uuid: uuid::Uuid,
-    ) -> i64 {
+    ) -> Result<i64, sqlx::Error> {
         sqlx::query_scalar(
             r#"
             SELECT COUNT(*)
@@ -247,13 +247,12 @@ impl ServerDatabase {
         .bind(server_uuid)
         .fetch_one(database.read())
         .await
-        .unwrap_or(0)
     }
 
     pub async fn count_by_database_host_uuid(
         database: &crate::database::Database,
         database_host_uuid: uuid::Uuid,
-    ) -> i64 {
+    ) -> Result<i64, sqlx::Error> {
         sqlx::query_scalar(
             r#"
             SELECT COUNT(*)
@@ -264,7 +263,6 @@ impl ServerDatabase {
         .bind(database_host_uuid)
         .fetch_one(database.read())
         .await
-        .unwrap_or(0)
     }
 
     pub async fn rotate_password(

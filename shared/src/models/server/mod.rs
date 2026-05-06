@@ -977,7 +977,7 @@ impl Server {
     pub async fn count_by_user_uuid(
         database: &crate::database::Database,
         user_uuid: uuid::Uuid,
-    ) -> i64 {
+    ) -> Result<i64, sqlx::Error> {
         sqlx::query_scalar(
             r#"
             SELECT COUNT(*)
@@ -988,13 +988,12 @@ impl Server {
         .bind(user_uuid)
         .fetch_one(database.read())
         .await
-        .unwrap_or(0)
     }
 
     pub async fn count_by_node_uuid(
         database: &crate::database::Database,
         node_uuid: uuid::Uuid,
-    ) -> i64 {
+    ) -> Result<i64, sqlx::Error> {
         sqlx::query_scalar(
             r#"
             SELECT COUNT(*)
@@ -1005,13 +1004,12 @@ impl Server {
         .bind(node_uuid)
         .fetch_one(database.read())
         .await
-        .unwrap_or(0)
     }
 
     pub async fn count_by_egg_uuid(
         database: &crate::database::Database,
         egg_uuid: uuid::Uuid,
-    ) -> i64 {
+    ) -> Result<i64, sqlx::Error> {
         sqlx::query_scalar(
             r#"
             SELECT COUNT(*)
@@ -1022,7 +1020,6 @@ impl Server {
         .bind(egg_uuid)
         .fetch_one(database.read())
         .await
-        .unwrap_or(0)
     }
 
     /// Fetches the current status of the server from the database. This is the most up-to-date status, as opposed to the potentially cached status in the `Server` struct.

@@ -12,7 +12,6 @@ export const adminSettingsApplicationSchema = z.object({
   twoFactorRequirement: z.enum(['admins', 'all_users', 'none']),
   telemetryEnabled: z.boolean(),
   registrationEnabled: z.boolean(),
-  languageChangeEnabled: z.boolean(),
 });
 
 export const adminSettingsCaptchaProviderNoneSchema = z.object({
@@ -116,12 +115,22 @@ export const adminSettingsServerSchema = z.object({
   maxFileManagerViewSize: z.number().min(0),
   maxFileManagerContentSearchSize: z.number().min(0),
   maxFileManagerSearchResults: z.number().min(1),
-  maxSchedulesStepCount: z.number().min(0),
+  maxSubuserCount: z.number().min(0),
+  maxScheduleStepCount: z.number().min(0),
   allowOverwritingCustomDockerImage: z.boolean(),
   allowEditingStartupCommand: z.boolean(),
   allowViewingInstallationLogs: z.boolean(),
   allowAcknowledgingInstallationFailure: z.boolean(),
   allowViewingTransferProgress: z.boolean(),
+});
+
+export const adminSettingsUserSchema = z.object({
+  maxServerGroupCount: z.number().min(0),
+  maxApiKeyCount: z.number().min(0),
+  maxCommandSnippetCount: z.number().min(0),
+  maxSecurityKeyCount: z.number().min(0),
+  maxSshKeyCount: z.number().min(0),
+  allowChangingLanguage: z.boolean(),
 });
 
 export const adminSettingsActivitySchema = z.object({
@@ -182,37 +191,10 @@ export const adminSettingsSchema = z.object({
   storageDriver: adminSettingsStorageSchema,
   mailMode: adminSettingsEmailSchema,
   captchaProvider: adminSettingsCaptchaProviderSchema,
-  app: z.object({
-    name: z.string(),
-    icon: z.string(),
-    url: z.string(),
-    language: z.string(),
-    twoFactorRequirement: twoFactorRequirement,
-    telemetryEnabled: z.boolean(),
-    registrationEnabled: z.boolean(),
-  }),
-  webauthn: z.object({
-    rpId: z.string(),
-    rpOrigin: z.string(),
-  }),
-  server: z.object({
-    maxFileManagerViewSize: z.number(),
-    maxFileManagerContentSearchSize: z.number(),
-    maxFileManagerSearchResults: z.number(),
-    maxSchedulesStepCount: z.number(),
-    allowOverwritingCustomDockerImage: z.boolean(),
-    allowEditingStartupCommand: z.boolean(),
-    allowViewingInstallationLogs: z.boolean(),
-    allowAcknowledgingInstallationFailure: z.boolean(),
-    allowViewingTransferProgress: z.boolean(),
-  }),
-  activity: z.object({
-    adminLogRetentionDays: z.number(),
-    userLogRetentionDays: z.number(),
-    serverLogRetentionDays: z.number(),
-
-    serverLogAdminActivity: z.boolean(),
-    serverLogScheduleActivity: z.boolean(),
-  }),
+  app: adminSettingsApplicationSchema,
+  webauthn: adminSettingsWebauthnSchema,
+  server: adminSettingsServerSchema,
+  user: adminSettingsUserSchema,
+  activity: adminSettingsActivitySchema,
   ratelimits: adminSettingsRatelimitsSchema,
 });

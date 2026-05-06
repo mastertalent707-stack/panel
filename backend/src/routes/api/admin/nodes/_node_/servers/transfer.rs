@@ -101,7 +101,7 @@ mod post {
 
             let has_primary = server.allocation.is_some();
             let total_allocations =
-                ServerAllocation::count_by_server_uuid(&state.database, server.uuid).await;
+                ServerAllocation::count_by_server_uuid(&state.database, server.uuid).await?;
 
             let mut allocation_uuid = None;
             let mut allocation_uuids = Vec::new();

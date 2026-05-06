@@ -58,12 +58,32 @@ export const userToastPositionEnum = pgEnum('user_toast_position', [
   'BOTTOM_CENTER',
   'BOTTOM_RIGHT',
 ]);
+export const announcementTypeEnum = pgEnum('announcement_type', ['INFO', 'WARNING', 'ERROR']);
 
 // Tables
 export const settingsTable = pgTable('settings', {
   key: varchar({ length: 255 }).primaryKey().notNull(),
   value: text().notNull(),
 });
+
+export const announcementsTable = pgTable(
+  'announcements',
+  {
+    uuid: uuid().default(sql`gen_random_uuid()`).primaryKey().notNull(),
+    type: announcementTypeEnum().notNull(),
+    enabled: boolean().default(false).notNull(),
+    enabled_start: timestamp(),
+    enabled_end: timestamp(),
+    title: varchar({ length: 255 * UTF8_MAX_SCALAR_SIZE }).notNull(),
+    title_translations: jsonb().default({}).notNull(),
+    content: text().notNull(),
+    content_translations: jsonb().default({}).notNull(),
+    locations: uuid().array().default([]).notNull(),
+    nodes: uuid().array().default([]).notNull(),
+    backup_configurations: uuid().array().default([]).notNull(),
+    created: timestamp().defaultNow().notNull(),
+  }
+);
 
 export const emailTemplatesTable = pgTable(
   'email_templates',

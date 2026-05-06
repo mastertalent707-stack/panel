@@ -100,7 +100,7 @@ mod patch {
                 .ok();
         }
 
-        if !state.settings.get().await?.app.language_change_enabled {
+        if !state.settings.get().await?.user.allow_changing_language {
             data.language = None;
         }
 

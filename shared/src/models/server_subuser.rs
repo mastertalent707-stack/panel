@@ -151,23 +151,20 @@ impl ServerSubuser {
         })
     }
 
-    pub async fn delete_by_uuids(
+    pub async fn count_by_server_uuid(
         database: &crate::database::Database,
         server_uuid: uuid::Uuid,
-        user_uuid: uuid::Uuid,
-    ) -> Result<(), crate::database::DatabaseError> {
-        sqlx::query(
+    ) -> Result<i64, sqlx::Error> {
+        sqlx::query_scalar(
             r#"
-            DELETE FROM server_subusers
-            WHERE server_subusers.server_uuid = $1 AND server_subusers.user_uuid = $2
+            SELECT COUNT(*)
+            FROM server_subusers
+            WHERE server_subusers.server_uuid = $1
             "#,
         )
         .bind(server_uuid)
-        .bind(user_uuid)
-        .execute(database.write())
-        .await?;
-
-        Ok(())
+        .fetch_one(database.read())
+        .await
     }
 }
 

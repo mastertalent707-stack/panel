@@ -28,7 +28,8 @@ export default function ServerContainer() {
       maxFileManagerViewSize: 0,
       maxFileManagerContentSearchSize: 0,
       maxFileManagerSearchResults: 1,
-      maxSchedulesStepCount: 0,
+      maxSubuserCount: 0,
+      maxScheduleStepCount: 0,
       allowOverwritingCustomDockerImage: false,
       allowEditingStartupCommand: false,
       allowViewingInstallationLogs: false,
@@ -76,10 +77,10 @@ export default function ServerContainer() {
 
             <NumberInput
               withAsterisk
-              label='Max Server Schedule Steps'
-              placeholder='Max Server Schedule Steps'
-              key={form.key('maxSchedulesStepCount')}
-              {...form.getInputProps('maxSchedulesStepCount')}
+              label='Max Schedule Steps'
+              placeholder='Max Schedule Steps'
+              key={form.key('maxScheduleStepCount')}
+              {...form.getInputProps('maxScheduleStepCount')}
             />
           </Group>
 
@@ -116,6 +117,14 @@ export default function ServerContainer() {
               {...form.getInputProps('allowEditingStartupCommand', { type: 'checkbox' })}
             />
           </Group>
+
+          <NumberInput
+            withAsterisk
+            label='Max Subuser Count'
+            placeholder='Max Subuser Count'
+            key={form.key('maxSubuserCount')}
+            {...form.getInputProps('maxSubuserCount')}
+          />
 
           <Switch
             label='Allow Viewing Installation Logs'

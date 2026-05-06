@@ -63,7 +63,7 @@ mod post {
             )
             .await?;
 
-        let backups = ServerBackup::count_by_server_uuid(&state.database, server.uuid).await;
+        let backups = ServerBackup::count_by_server_uuid(&state.database, server.uuid).await?;
         if backups >= server.backup_limit as i64
             && let Err(err) = ServerBackup::delete_oldest_by_server_uuid(&state, &server).await
         {

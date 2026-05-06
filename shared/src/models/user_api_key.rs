@@ -245,6 +245,22 @@ impl UserApiKey {
 
         Ok(new_key)
     }
+
+    pub async fn count_by_user_uuid(
+        database: &crate::database::Database,
+        user_uuid: uuid::Uuid,
+    ) -> Result<i64, sqlx::Error> {
+        sqlx::query_scalar(
+            r#"
+            SELECT COUNT(*)
+            FROM user_api_keys
+            WHERE user_api_keys.user_uuid = $1
+            "#,
+        )
+        .bind(user_uuid)
+        .fetch_one(database.read())
+        .await
+    }
 }
 
 #[async_trait::async_trait]

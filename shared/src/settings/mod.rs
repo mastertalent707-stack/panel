@@ -26,6 +26,7 @@ pub mod activity;
 pub mod app;
 pub mod ratelimits;
 pub mod server;
+pub mod user;
 pub mod webauthn;
 
 #[derive(ToSchema, Validate, Serialize, Deserialize, Clone)]
@@ -212,6 +213,8 @@ pub struct AppSettings {
     pub webauthn: webauthn::AppSettingsWebauthn,
     #[schema(inline)]
     pub server: server::AppSettingsServer,
+    #[schema(inline)]
+    pub user: user::AppSettingsUser,
     #[schema(inline)]
     pub activity: activity::AppSettingsActivity,
     #[schema(inline)]
@@ -455,6 +458,8 @@ impl SettingsSerializeExt for AppSettings {
             .await?
             .nest("server", &self.server)
             .await?
+            .nest("user", &self.user)
+            .await?
             .nest("activity", &self.activity)
             .await?
             .nest("ratelimits", &self.ratelimits)
@@ -686,6 +691,9 @@ impl SettingsDeserializeExt for AppSettingsDeserializer {
                 .await?,
             server: deserializer
                 .nest("server", &server::AppSettingsServerDeserializer)
+                .await?,
+            user: deserializer
+                .nest("user", &user::AppSettingsUserDeserializer)
                 .await?,
             activity: deserializer
                 .nest("activity", &activity::AppSettingsActivityDeserializer)

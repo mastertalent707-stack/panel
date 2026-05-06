@@ -129,7 +129,7 @@ impl UserServerGroup {
     pub async fn count_by_user_uuid(
         database: &crate::database::Database,
         user_uuid: uuid::Uuid,
-    ) -> i64 {
+    ) -> Result<i64, sqlx::Error> {
         sqlx::query_scalar(
             r#"
             SELECT COUNT(*)
@@ -140,7 +140,6 @@ impl UserServerGroup {
         .bind(user_uuid)
         .fetch_one(database.read())
         .await
-        .unwrap_or(0)
     }
 }
 

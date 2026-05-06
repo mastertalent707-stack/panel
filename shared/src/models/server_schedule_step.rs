@@ -138,7 +138,7 @@ impl ServerScheduleStep {
     pub async fn count_by_schedule_uuid(
         database: &crate::database::Database,
         schedule_uuid: uuid::Uuid,
-    ) -> i64 {
+    ) -> Result<i64, sqlx::Error> {
         sqlx::query_scalar(
             r#"
             SELECT COUNT(*)
@@ -149,7 +149,6 @@ impl ServerScheduleStep {
         .bind(schedule_uuid)
         .fetch_one(database.read())
         .await
-        .unwrap_or(0)
     }
 
     #[inline]

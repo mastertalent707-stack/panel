@@ -390,7 +390,7 @@ impl Node {
     pub async fn count_by_location_uuid(
         database: &crate::database::Database,
         location_uuid: uuid::Uuid,
-    ) -> i64 {
+    ) -> Result<i64, sqlx::Error> {
         sqlx::query_scalar(
             r#"
             SELECT COUNT(*)
@@ -401,7 +401,6 @@ impl Node {
         .bind(location_uuid)
         .fetch_one(database.read())
         .await
-        .unwrap_or(0)
     }
 
     /// Fetch the current configuration of this node

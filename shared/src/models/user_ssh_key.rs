@@ -136,6 +136,22 @@ impl UserSshKey {
                 .try_collect_vec()?,
         })
     }
+
+    pub async fn count_by_user_uuid(
+        database: &crate::database::Database,
+        user_uuid: uuid::Uuid,
+    ) -> Result<i64, sqlx::Error> {
+        sqlx::query_scalar(
+            r#"
+            SELECT COUNT(*)
+            FROM user_ssh_keys
+            WHERE user_ssh_keys.user_uuid = $1
+            "#,
+        )
+        .bind(user_uuid)
+        .fetch_one(database.read())
+        .await
+    }
 }
 
 #[async_trait::async_trait]

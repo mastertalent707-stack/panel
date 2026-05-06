@@ -71,7 +71,6 @@ export default function OobeConfiguration({ onNext }: OobeComponentProps) {
       twoFactorRequirement: 'none',
       telemetryEnabled: true,
       registrationEnabled: form.values.applicationRegistration,
-      languageChangeEnabled: true,
     })
       .then(() => {
         onNext();

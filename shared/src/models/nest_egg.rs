@@ -757,7 +757,7 @@ impl NestEgg {
     pub async fn count_by_nest_uuid(
         database: &crate::database::Database,
         nest_uuid: uuid::Uuid,
-    ) -> i64 {
+    ) -> Result<i64, sqlx::Error> {
         sqlx::query_scalar(
             r#"
             SELECT COUNT(*)
@@ -768,7 +768,6 @@ impl NestEgg {
         .bind(nest_uuid)
         .fetch_one(database.read())
         .await
-        .unwrap_or(0)
     }
 
     pub async fn configuration(

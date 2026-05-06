@@ -49,7 +49,8 @@ mod post {
         permissions.has_admin_permission("eggs.delete")?;
 
         let delete_egg = async |egg: uuid::Uuid| {
-            if Server::count_by_egg_uuid(&state.database, egg).await > 0 {
+            let servers = Server::count_by_egg_uuid(&state.database, egg).await?;
+            if servers > 0 {
                 return Ok(false);
             }
 

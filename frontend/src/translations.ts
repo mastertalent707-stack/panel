@@ -832,6 +832,7 @@ const baseTranslations = defineTranslations({
         },
         securityKeys: {
           title: 'Security Keys',
+          subtitle: '{current} of {max} maximum security keys created.',
           table: {
             columns: {
               credentialId: 'Credential ID',
@@ -839,6 +840,7 @@ const baseTranslations = defineTranslations({
           },
           tooltip: {
             secureContextRequired: 'A secure context (HTTPS) is required to use security keys.',
+            limitReached: 'You are limited to {max} security keys.',
           },
           modal: {
             createSecurityKey: {
@@ -922,8 +924,12 @@ const baseTranslations = defineTranslations({
         },
         sshKeys: {
           title: 'SSH Keys',
+          subtitle: '{current} of {max} maximum ssh keys created.',
           button: {
             import: 'Import',
+          },
+          tooltip: {
+            limitReached: 'You are limited to {max} ssh keys.',
           },
           table: {
             columns: {
@@ -970,6 +976,10 @@ const baseTranslations = defineTranslations({
         },
         commandSnippets: {
           title: 'Command Snippets',
+          subtitle: '{current} of {max} maximum command snippets created.',
+          tooltip: {
+            limitReached: 'You are limited to {max} command snippets.',
+          },
           table: {
             columns: {
               eggs: 'Eggs',
@@ -1025,8 +1035,12 @@ const baseTranslations = defineTranslations({
         },
         apiKeys: {
           title: 'API Keys',
+          subtitle: '{current} of {max} maximum api keys created.',
           button: {
             apiDocumentation: 'API Documentation',
+          },
+          tooltip: {
+            limitReached: 'You are limited to {max} api keys.',
           },
           table: {
             columns: {
@@ -1923,6 +1937,10 @@ const baseTranslations = defineTranslations({
         },
         subusers: {
           title: 'Subusers',
+          subtitle: '{current} of {max} maximum subusers created.',
+          tooltip: {
+            limitReached: 'This server is limited to {max} subusers.',
+          },
           table: {
             columns: {
               twoFactorEnabled: '2FA Enabled',

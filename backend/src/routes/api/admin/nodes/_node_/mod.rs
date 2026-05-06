@@ -129,7 +129,8 @@ mod delete {
     ) -> ApiResponseResult {
         permissions.has_admin_permission("nodes.delete")?;
 
-        if Server::count_by_node_uuid(&state.database, node.uuid).await > 0 {
+        let servers = Server::count_by_node_uuid(&state.database, node.uuid).await?;
+        if servers > 0 {
             return ApiResponse::error("node has servers, cannot delete")
                 .with_status(StatusCode::BAD_REQUEST)
                 .ok();
