@@ -291,7 +291,7 @@ impl CreatableModel for AdminActivity {
             .set("api_key_uuid", options.api_key_uuid)
             .set("event", &options.event)
             .set("ip", options.ip)
-            .set("data", options.data);
+            .set("data", &options.data);
 
         if let Some(created) = options.created {
             query_builder.set("created", created);
@@ -299,7 +299,11 @@ impl CreatableModel for AdminActivity {
 
         query_builder.execute(&mut **transaction).await?;
 
-        Ok(())
+        let mut result = ();
+
+        Self::run_after_create_handlers(&mut result, &options, state, transaction).await?;
+
+        Ok(result)
     }
 }
 

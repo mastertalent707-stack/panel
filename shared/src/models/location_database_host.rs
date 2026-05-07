@@ -247,16 +247,20 @@ impl CreatableModel for LocationDatabaseHost {
 
         query_builder.execute(&mut **transaction).await?;
 
-        match Self::by_location_uuid_database_host_uuid_with_transaction(
+        let mut result = match Self::by_location_uuid_database_host_uuid_with_transaction(
             transaction,
             options.location_uuid,
             options.database_host_uuid,
         )
         .await?
         {
-            Some(location_database_host) => Ok(location_database_host),
-            None => Err(sqlx::Error::RowNotFound.into()),
-        }
+            Some(location_database_host) => location_database_host,
+            None => return Err(sqlx::Error::RowNotFound.into()),
+        };
+
+        Self::run_after_create_handlers(&mut result, &options, state, transaction).await?;
+
+        Ok(result)
     }
 }
 
@@ -264,8 +268,8 @@ impl CreatableModel for LocationDatabaseHost {
 impl DeletableModel for LocationDatabaseHost {
     type DeleteOptions = ();
 
-    fn get_delete_handlers() -> &'static LazyLock<DeleteListenerList<Self>> {
-        static DELETE_LISTENERS: LazyLock<DeleteListenerList<LocationDatabaseHost>> =
+    fn get_delete_handlers() -> &'static LazyLock<DeleteHandlerList<Self>> {
+        static DELETE_LISTENERS: LazyLock<DeleteHandlerList<LocationDatabaseHost>> =
             LazyLock::new(|| Arc::new(ModelHandlerList::default()));
 
         &DELETE_LISTENERS
@@ -290,6 +294,9 @@ impl DeletableModel for LocationDatabaseHost {
         .bind(self.database_host.uuid)
         .execute(&mut **transaction)
         .await?;
+
+        self.run_after_delete_handlers(&options, state, transaction)
+            .await?;
 
         Ok(())
     }

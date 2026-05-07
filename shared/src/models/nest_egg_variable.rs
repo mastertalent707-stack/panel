@@ -418,7 +418,10 @@ impl CreatableModel for NestEggVariable {
             .returning(&Self::columns_sql(None))
             .fetch_one(&mut **transaction)
             .await?;
-        let nest_egg_variable = Self::map(None, &row)?;
+        let mut nest_egg_variable = Self::map(None, &row)?;
+
+        Self::run_after_create_handlers(&mut nest_egg_variable, &options, state, transaction)
+            .await?;
 
         Ok(nest_egg_variable)
     }
@@ -474,8 +477,8 @@ pub struct UpdateNestEggVariableOptions {
 impl UpdatableModel for NestEggVariable {
     type UpdateOptions = UpdateNestEggVariableOptions;
 
-    fn get_update_handlers() -> &'static LazyLock<UpdateListenerList<Self>> {
-        static UPDATE_LISTENERS: LazyLock<UpdateListenerList<NestEggVariable>> =
+    fn get_update_handlers() -> &'static LazyLock<UpdateHandlerList<Self>> {
+        static UPDATE_LISTENERS: LazyLock<UpdateHandlerList<NestEggVariable>> =
             LazyLock::new(|| Arc::new(ModelHandlerList::default()));
 
         &UPDATE_LISTENERS
@@ -491,7 +494,7 @@ impl UpdatableModel for NestEggVariable {
 
         let mut query_builder = UpdateQueryBuilder::new("nest_egg_variables");
 
-        Self::run_update_handlers(self, &mut options, &mut query_builder, state, transaction)
+        self.run_update_handlers(&mut options, &mut query_builder, state, transaction)
             .await?;
 
         query_builder
@@ -564,6 +567,8 @@ impl UpdatableModel for NestEggVariable {
             self.rules = rules;
         }
 
+        self.run_after_update_handlers(state, transaction).await?;
+
         Ok(())
     }
 }
@@ -572,8 +577,8 @@ impl UpdatableModel for NestEggVariable {
 impl DeletableModel for NestEggVariable {
     type DeleteOptions = ();
 
-    fn get_delete_handlers() -> &'static LazyLock<DeleteListenerList<Self>> {
-        static DELETE_LISTENERS: LazyLock<DeleteListenerList<NestEggVariable>> =
+    fn get_delete_handlers() -> &'static LazyLock<DeleteHandlerList<Self>> {
+        static DELETE_LISTENERS: LazyLock<DeleteHandlerList<NestEggVariable>> =
             LazyLock::new(|| Arc::new(ModelHandlerList::default()));
 
         &DELETE_LISTENERS
@@ -597,6 +602,9 @@ impl DeletableModel for NestEggVariable {
         .bind(self.uuid)
         .execute(&mut **transaction)
         .await?;
+
+        self.run_after_delete_handlers(&options, state, transaction)
+            .await?;
 
         Ok(())
     }

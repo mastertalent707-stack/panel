@@ -238,7 +238,9 @@ impl CreatableModel for UserSshKey {
             .returning(&Self::columns_sql(None))
             .fetch_one(&mut **transaction)
             .await?;
-        let ssh_key = Self::map(None, &row)?;
+        let mut ssh_key = Self::map(None, &row)?;
+
+        Self::run_after_create_handlers(&mut ssh_key, &options, state, transaction).await?;
 
         Ok(ssh_key)
     }
@@ -255,8 +257,8 @@ pub struct UpdateUserSshKeyOptions {
 impl UpdatableModel for UserSshKey {
     type UpdateOptions = UpdateUserSshKeyOptions;
 
-    fn get_update_handlers() -> &'static LazyLock<UpdateListenerList<Self>> {
-        static UPDATE_LISTENERS: LazyLock<UpdateListenerList<UserSshKey>> =
+    fn get_update_handlers() -> &'static LazyLock<UpdateHandlerList<Self>> {
+        static UPDATE_LISTENERS: LazyLock<UpdateHandlerList<UserSshKey>> =
             LazyLock::new(|| Arc::new(ModelHandlerList::default()));
 
         &UPDATE_LISTENERS
@@ -272,7 +274,7 @@ impl UpdatableModel for UserSshKey {
 
         let mut query_builder = UpdateQueryBuilder::new("user_ssh_keys");
 
-        Self::run_update_handlers(self, &mut options, &mut query_builder, state, transaction)
+        self.run_update_handlers(&mut options, &mut query_builder, state, transaction)
             .await?;
 
         query_builder
@@ -285,6 +287,8 @@ impl UpdatableModel for UserSshKey {
             self.name = name;
         }
 
+        self.run_after_update_handlers(state, transaction).await?;
+
         Ok(())
     }
 }
@@ -293,8 +297,8 @@ impl UpdatableModel for UserSshKey {
 impl DeletableModel for UserSshKey {
     type DeleteOptions = ();
 
-    fn get_delete_handlers() -> &'static LazyLock<DeleteListenerList<Self>> {
-        static DELETE_LISTENERS: LazyLock<DeleteListenerList<UserSshKey>> =
+    fn get_delete_handlers() -> &'static LazyLock<DeleteHandlerList<Self>> {
+        static DELETE_LISTENERS: LazyLock<DeleteHandlerList<UserSshKey>> =
             LazyLock::new(|| Arc::new(ModelHandlerList::default()));
 
         &DELETE_LISTENERS
@@ -318,6 +322,9 @@ impl DeletableModel for UserSshKey {
         .bind(self.uuid)
         .execute(&mut **transaction)
         .await?;
+
+        self.run_after_delete_handlers(&options, state, transaction)
+            .await?;
 
         Ok(())
     }

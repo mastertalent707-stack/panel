@@ -1023,7 +1023,9 @@ impl CreatableModel for ServerBackup {
             .returning(&Self::columns_sql(None))
             .fetch_one(&mut *transaction)
             .await?;
-        let backup = Self::map(None, &row)?;
+        let mut backup = Self::map(None, &row)?;
+
+        Self::run_after_create_handlers(&mut backup, &options, state, &mut transaction).await?;
 
         transaction.commit().await?;
 
@@ -1127,8 +1129,8 @@ pub struct UpdateServerBackupOptions {
 impl UpdatableModel for ServerBackup {
     type UpdateOptions = UpdateServerBackupOptions;
 
-    fn get_update_handlers() -> &'static LazyLock<UpdateListenerList<Self>> {
-        static UPDATE_LISTENERS: LazyLock<UpdateListenerList<ServerBackup>> =
+    fn get_update_handlers() -> &'static LazyLock<UpdateHandlerList<Self>> {
+        static UPDATE_LISTENERS: LazyLock<UpdateHandlerList<ServerBackup>> =
             LazyLock::new(|| Arc::new(ModelHandlerList::default()));
 
         &UPDATE_LISTENERS
@@ -1144,7 +1146,7 @@ impl UpdatableModel for ServerBackup {
 
         let mut query_builder = UpdateQueryBuilder::new("server_backups");
 
-        Self::run_update_handlers(self, &mut options, &mut query_builder, state, transaction)
+        self.run_update_handlers(&mut options, &mut query_builder, state, transaction)
             .await?;
 
         query_builder
@@ -1160,6 +1162,8 @@ impl UpdatableModel for ServerBackup {
         if let Some(locked) = options.locked {
             self.locked = locked;
         }
+
+        self.run_after_update_handlers(state, transaction).await?;
 
         Ok(())
     }
@@ -1206,7 +1210,7 @@ impl ByUuid for ServerBackup {
     }
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct DeleteServerBackupOptions {
     pub force: bool,
 }
@@ -1215,8 +1219,8 @@ pub struct DeleteServerBackupOptions {
 impl DeletableModel for ServerBackup {
     type DeleteOptions = DeleteServerBackupOptions;
 
-    fn get_delete_handlers() -> &'static LazyLock<DeleteListenerList<Self>> {
-        static DELETE_LISTENERS: LazyLock<DeleteListenerList<ServerBackup>> =
+    fn get_delete_handlers() -> &'static LazyLock<DeleteHandlerList<Self>> {
+        static DELETE_LISTENERS: LazyLock<DeleteHandlerList<ServerBackup>> =
             LazyLock::new(|| Arc::new(ModelHandlerList::default()));
 
         &DELETE_LISTENERS
@@ -1308,25 +1312,22 @@ impl DeletableModel for ServerBackup {
             .into());
         }
 
-        let database = Arc::clone(&state.database);
-        let server_uuid = self.server.as_ref().map(|s| s.uuid);
-        let backup_uuid = self.uuid;
-        let backup_disk = self.disk;
-        let backup_upload_path = self.upload_path.clone();
+        let backup = self.clone();
+        let state = state.clone();
 
         tokio::spawn(async move {
-            match backup_disk {
+            match backup.disk {
                 BackupDisk::S3 => {
                     if let Some(mut s3_configuration) = backup_configuration.backup_configs.s3 {
-                        s3_configuration.decrypt(&database).await?;
+                        s3_configuration.decrypt(&state.database).await?;
 
                         let client = s3_configuration
                             .into_client()
                             .map_err(|err| sqlx::Error::Io(std::io::Error::other(err)))?;
-                        let file_path = match backup_upload_path {
+                        let file_path = match &backup.upload_path {
                             Some(path) => path,
-                            None => if let Some(server_uuid) = server_uuid {
-                                Self::s3_path(server_uuid, backup_uuid)
+                            None => if let Some(server) = &backup.server {
+                                &Self::s3_path(server.uuid, backup.uuid)
                             } else {
                                 return Err(anyhow::anyhow!("backup upload path not found"))
                             }
@@ -1334,25 +1335,25 @@ impl DeletableModel for ServerBackup {
 
                         if let Err(err) = client.delete_object(file_path).await {
                             if options.force {
-                                tracing::error!(server = ?server_uuid, backup = %backup_uuid, "failed to delete S3 backup, ignoring: {:?}", err);
+                                tracing::error!(server = ?backup.server.as_ref().map(|s| s.uuid), backup = %backup.uuid, "failed to delete S3 backup, ignoring: {:?}", err);
                             } else {
                                 return Err(err.into());
                             }
                         }
                     } else if options.force {
-                        tracing::warn!(server = ?server_uuid, backup = %backup_uuid, "S3 backup deletion attempted but no S3 configuration found, ignoring");
+                        tracing::warn!(server = ?backup.server.as_ref().map(|s| s.uuid), backup = %backup.uuid, "S3 backup deletion attempted but no S3 configuration found, ignoring");
                     } else {
                         return Err(anyhow::anyhow!("s3 backup deletion attempted but no S3 configuration found"));
                     }
                 }
                 _ => {
                     if let Err(err) = node
-                        .api_client(&database)
+                        .api_client(&state.database)
                         .await?
                         .delete_backups_backup(
-                            backup_uuid,
+                            backup.uuid,
                             &wings_api::backups_backup::delete::RequestBody {
-                                adapter: backup_disk.to_wings_adapter(),
+                                adapter: backup.disk.to_wings_adapter(),
                             },
                         )
                         .await
@@ -1370,9 +1371,11 @@ impl DeletableModel for ServerBackup {
                 WHERE server_backups.uuid = $1
                 "#,
             )
-            .bind(backup_uuid)
+            .bind(backup.uuid)
             .execute(&mut *transaction)
             .await?;
+
+            backup.run_after_delete_handlers(&options, &state, &mut transaction).await?;
 
             transaction.commit().await?;
 

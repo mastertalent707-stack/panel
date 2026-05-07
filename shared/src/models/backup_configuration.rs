@@ -440,7 +440,10 @@ impl CreatableModel for BackupConfiguration {
             .returning(&Self::columns_sql(None))
             .fetch_one(&mut **transaction)
             .await?;
-        let backup_configuration = Self::map(None, &row)?;
+        let mut backup_configuration = Self::map(None, &row)?;
+
+        Self::run_after_create_handlers(&mut backup_configuration, &options, state, transaction)
+            .await?;
 
         Ok(backup_configuration)
     }
@@ -471,8 +474,8 @@ pub struct UpdateBackupConfigurationOptions {
 impl UpdatableModel for BackupConfiguration {
     type UpdateOptions = UpdateBackupConfigurationOptions;
 
-    fn get_update_handlers() -> &'static LazyLock<UpdateListenerList<Self>> {
-        static UPDATE_LISTENERS: LazyLock<UpdateListenerList<BackupConfiguration>> =
+    fn get_update_handlers() -> &'static LazyLock<UpdateHandlerList<Self>> {
+        static UPDATE_LISTENERS: LazyLock<UpdateHandlerList<BackupConfiguration>> =
             LazyLock::new(|| Arc::new(ModelHandlerList::default()));
 
         &UPDATE_LISTENERS
@@ -488,7 +491,7 @@ impl UpdatableModel for BackupConfiguration {
 
         let mut query_builder = UpdateQueryBuilder::new("backup_configurations");
 
-        Self::run_update_handlers(self, &mut options, &mut query_builder, state, transaction)
+        self.run_update_handlers(&mut options, &mut query_builder, state, transaction)
             .await?;
 
         query_builder
@@ -529,6 +532,8 @@ impl UpdatableModel for BackupConfiguration {
             self.backup_configs = backup_configs;
         }
 
+        self.run_after_update_handlers(state, transaction).await?;
+
         Ok(())
     }
 }
@@ -537,8 +542,8 @@ impl UpdatableModel for BackupConfiguration {
 impl DeletableModel for BackupConfiguration {
     type DeleteOptions = ();
 
-    fn get_delete_handlers() -> &'static LazyLock<DeleteListenerList<Self>> {
-        static DELETE_LISTENERS: LazyLock<DeleteListenerList<BackupConfiguration>> =
+    fn get_delete_handlers() -> &'static LazyLock<DeleteHandlerList<Self>> {
+        static DELETE_LISTENERS: LazyLock<DeleteHandlerList<BackupConfiguration>> =
             LazyLock::new(|| Arc::new(ModelHandlerList::default()));
 
         &DELETE_LISTENERS
@@ -562,6 +567,9 @@ impl DeletableModel for BackupConfiguration {
         .bind(self.uuid)
         .execute(&mut **transaction)
         .await?;
+
+        self.run_after_delete_handlers(&options, state, transaction)
+            .await?;
 
         Ok(())
     }

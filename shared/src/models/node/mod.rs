@@ -1,6 +1,6 @@
 use crate::{
     models::{
-        CreatableModel, CreateListenerList, InsertQueryBuilder, UpdatableModel, UpdateListenerList,
+        CreatableModel, CreateListenerList, InsertQueryBuilder, UpdatableModel, UpdateHandlerList,
         UpdateQueryBuilder,
     },
     prelude::*,
@@ -756,9 +756,13 @@ impl CreatableModel for Node {
             .returning("uuid")
             .fetch_one(&mut **transaction)
             .await?;
-        let uuid: uuid::Uuid = row.get("uuid");
+        let uuid: uuid::Uuid = row.try_get("uuid")?;
 
-        Self::by_uuid_with_transaction(transaction, uuid).await
+        let mut result = Self::by_uuid_with_transaction(transaction, uuid).await?;
+
+        Self::run_after_create_handlers(&mut result, &options, state, transaction).await?;
+
+        Ok(result)
     }
 }
 
@@ -822,8 +826,8 @@ pub struct UpdateNodeOptions {
 impl UpdatableModel for Node {
     type UpdateOptions = UpdateNodeOptions;
 
-    fn get_update_handlers() -> &'static LazyLock<UpdateListenerList<Self>> {
-        static UPDATE_LISTENERS: LazyLock<UpdateListenerList<Node>> =
+    fn get_update_handlers() -> &'static LazyLock<UpdateHandlerList<Self>> {
+        static UPDATE_LISTENERS: LazyLock<UpdateHandlerList<Node>> =
             LazyLock::new(|| Arc::new(ModelHandlerList::default()));
 
         &UPDATE_LISTENERS
@@ -872,7 +876,7 @@ impl UpdatableModel for Node {
 
         let mut query_builder = UpdateQueryBuilder::new("nodes");
 
-        Self::run_update_handlers(self, &mut options, &mut query_builder, state, transaction)
+        self.run_update_handlers(&mut options, &mut query_builder, state, transaction)
             .await?;
 
         query_builder
@@ -943,6 +947,8 @@ impl UpdatableModel for Node {
             self.disk = disk;
         }
 
+        self.run_after_update_handlers(state, transaction).await?;
+
         Ok(())
     }
 }
@@ -951,8 +957,8 @@ impl UpdatableModel for Node {
 impl DeletableModel for Node {
     type DeleteOptions = ();
 
-    fn get_delete_handlers() -> &'static LazyLock<DeleteListenerList<Self>> {
-        static DELETE_LISTENERS: LazyLock<DeleteListenerList<Node>> =
+    fn get_delete_handlers() -> &'static LazyLock<DeleteHandlerList<Self>> {
+        static DELETE_LISTENERS: LazyLock<DeleteHandlerList<Node>> =
             LazyLock::new(|| Arc::new(ModelHandlerList::default()));
 
         &DELETE_LISTENERS
@@ -980,6 +986,9 @@ impl DeletableModel for Node {
         .bind(self.uuid)
         .execute(&mut **transaction)
         .await?;
+
+        self.run_after_delete_handlers(&options, state, transaction)
+            .await?;
 
         Ok(())
     }

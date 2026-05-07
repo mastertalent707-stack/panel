@@ -298,7 +298,11 @@ impl CreatableModel for UserSession {
 
         query_builder.execute(&mut **transaction).await?;
 
-        Ok(format!("{key_id}:{hash}"))
+        let mut result = format!("{key_id}:{hash}");
+
+        Self::run_after_create_handlers(&mut result, &options, state, transaction).await?;
+
+        Ok(result)
     }
 }
 
@@ -306,8 +310,8 @@ impl CreatableModel for UserSession {
 impl DeletableModel for UserSession {
     type DeleteOptions = ();
 
-    fn get_delete_handlers() -> &'static LazyLock<DeleteListenerList<Self>> {
-        static DELETE_LISTENERS: LazyLock<DeleteListenerList<UserSession>> =
+    fn get_delete_handlers() -> &'static LazyLock<DeleteHandlerList<Self>> {
+        static DELETE_LISTENERS: LazyLock<DeleteHandlerList<UserSession>> =
             LazyLock::new(|| Arc::new(ModelHandlerList::default()));
 
         &DELETE_LISTENERS
@@ -331,6 +335,9 @@ impl DeletableModel for UserSession {
         .bind(self.uuid)
         .execute(&mut **transaction)
         .await?;
+
+        self.run_after_delete_handlers(&options, state, transaction)
+            .await?;
 
         Ok(())
     }

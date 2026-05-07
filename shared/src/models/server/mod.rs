@@ -2094,6 +2094,12 @@ impl CreatableModel for Server {
                         .await?;
                     }
 
+                    let mut result =
+                        Self::by_uuid_with_transaction(&mut transaction, server_uuid).await?;
+
+                    Self::run_after_create_handlers(&mut result, &options, state, &mut transaction)
+                        .await?;
+
                     transaction.commit().await?;
 
                     if let Err(err) = node
@@ -2115,7 +2121,7 @@ impl CreatableModel for Server {
                         return Err(err.into());
                     }
 
-                    return Self::by_uuid(&state.database, server_uuid).await;
+                    return Ok(result);
                 }
                 Err(_) if attempts < 3 => {
                     attempts += 1;
@@ -2203,8 +2209,8 @@ pub struct UpdateServerOptions {
 impl UpdatableModel for Server {
     type UpdateOptions = UpdateServerOptions;
 
-    fn get_update_handlers() -> &'static LazyLock<UpdateListenerList<Self>> {
-        static UPDATE_LISTENERS: LazyLock<UpdateListenerList<Server>> =
+    fn get_update_handlers() -> &'static LazyLock<UpdateHandlerList<Self>> {
+        static UPDATE_LISTENERS: LazyLock<UpdateHandlerList<Server>> =
             LazyLock::new(|| Arc::new(ModelHandlerList::default()));
 
         &UPDATE_LISTENERS
@@ -2263,7 +2269,7 @@ impl UpdatableModel for Server {
 
         let mut query_builder = UpdateQueryBuilder::new("servers");
 
-        Self::run_update_handlers(self, &mut options, &mut query_builder, state, transaction)
+        self.run_update_handlers(&mut options, &mut query_builder, state, transaction)
             .await?;
 
         query_builder
@@ -2378,11 +2384,13 @@ impl UpdatableModel for Server {
             self.schedule_limit = feature_limits.schedules;
         }
 
+        self.run_after_update_handlers(state, transaction).await?;
+
         Ok(())
     }
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct DeleteServerOptions {
     pub force: bool,
 }
@@ -2391,8 +2399,8 @@ pub struct DeleteServerOptions {
 impl DeletableModel for Server {
     type DeleteOptions = DeleteServerOptions;
 
-    fn get_delete_handlers() -> &'static LazyLock<DeleteListenerList<Self>> {
-        static DELETE_LISTENERS: LazyLock<DeleteListenerList<Server>> =
+    fn get_delete_handlers() -> &'static LazyLock<DeleteHandlerList<Self>> {
+        static DELETE_LISTENERS: LazyLock<DeleteHandlerList<Server>> =
             LazyLock::new(|| Arc::new(ModelHandlerList::default()));
 
         &DELETE_LISTENERS
