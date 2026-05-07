@@ -540,6 +540,10 @@ const baseTranslations = defineTranslations({
           login: 'Login',
           loginWith: 'Login with {name}',
         },
+        alert: {
+          urlMismatch:
+            'The application URL does not match the current URL. Expected: `{appUrl}`, Current: `{currentUrl}`.',
+        },
         login: {
           error: {
             usernameRequired: 'Please enter a username',

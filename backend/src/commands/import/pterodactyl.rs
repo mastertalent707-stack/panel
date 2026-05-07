@@ -976,9 +976,9 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                                     INSERT INTO servers (
                                         uuid, uuid_short, external_id, node_uuid, name, description, status, suspended,
                                         owner_uuid, memory, swap, disk, io_weight, cpu, pinned_cpus, allocation_limit,
-                                        database_limit, backup_limit, egg_uuid, startup, image, created
+                                        database_limit, backup_limit, schedule_limit, egg_uuid, startup, image, created
                                     )
-                                    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22)
+                                    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23)
                                     ON CONFLICT DO NOTHING
                                     "#,
                                 )
@@ -1000,6 +1000,7 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                                 .bind(allocation_limit as i32)
                                 .bind(database_limit as i32)
                                 .bind(backup_limit as i32)
+                                .bind(10)
                                 .bind(egg_uuid)
                                 .bind(startup)
                                 .bind(image)
