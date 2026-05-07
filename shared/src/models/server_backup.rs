@@ -1238,6 +1238,11 @@ impl DeletableModel for ServerBackup {
         state: &crate::State,
         options: Self::DeleteOptions,
     ) -> Result<(), anyhow::Error> {
+        let mut transaction = state.database.write().begin().await?;
+
+        self.run_delete_handlers(&options, state, &mut transaction)
+            .await?;
+
         let node = self.node.fetch_cached(&state.database).await?;
 
         let backup_configuration = match &self.backup_configuration {
@@ -1248,33 +1253,43 @@ impl DeletableModel for ServerBackup {
                 let database = Arc::clone(&state.database);
                 let backup_uuid = self.uuid;
                 let backup_disk = self.disk;
-                let node_uuid = node.uuid;
 
-                if backup_disk != BackupDisk::S3
-                    && let Err(err) = node
-                        .api_client(&database)
-                        .await?
-                        .delete_backups_backup(
-                            backup_uuid,
-                            &wings_api::backups_backup::delete::RequestBody {
-                                adapter: backup_disk.to_wings_adapter(),
-                            },
-                        )
-                        .await
-                    && !matches!(
-                        err,
-                        wings_api::client::ApiHttpError::Http(StatusCode::NOT_FOUND, _)
+                return tokio::spawn(async move {
+                    if backup_disk != BackupDisk::S3
+                        && let Err(err) = node
+                            .api_client(&database)
+                            .await?
+                            .delete_backups_backup(
+                                backup_uuid,
+                                &wings_api::backups_backup::delete::RequestBody {
+                                    adapter: backup_disk.to_wings_adapter(),
+                                },
+                            )
+                            .await
+                            && !matches!(
+                                err,
+                                wings_api::client::ApiHttpError::Http(StatusCode::NOT_FOUND, _)
+                            )
+                    {
+                        tracing::error!(node = %node.uuid, backup = %backup_uuid, "unable to delete backup on node: {:?}", err)
+                    }
+
+                    sqlx::query(
+                        r#"
+                        UPDATE server_backups
+                        SET deleted = NOW()
+                        WHERE server_backups.uuid = $1
+                        "#,
                     )
-                {
-                    tracing::error!(node = %node_uuid, backup = %backup_uuid, "unable to delete backup on node: {:?}", err)
-                }
-
-                let mut transaction = state.database.write().begin().await?;
-                self.delete_with_transaction(state, options, &mut transaction)
+                    .bind(backup_uuid)
+                    .execute(&mut *transaction)
                     .await?;
-                transaction.commit().await?;
 
-                return Ok(());
+                    transaction.commit().await?;
+
+                    Ok(())
+                })
+                .await?;
             }
             None => {
                 return Err(crate::response::DisplayError::new(
@@ -1298,8 +1313,6 @@ impl DeletableModel for ServerBackup {
         let backup_uuid = self.uuid;
         let backup_disk = self.disk;
         let backup_upload_path = self.upload_path.clone();
-        let self_clone = self.clone();
-        let state_clone = state.clone();
 
         tokio::spawn(async move {
             match backup_disk {
@@ -1350,8 +1363,17 @@ impl DeletableModel for ServerBackup {
                 }
             }
 
-            let mut transaction = state_clone.database.write().begin().await?;
-            self_clone.delete_with_transaction(&state_clone, options, &mut transaction).await?;
+            sqlx::query(
+                r#"
+                UPDATE server_backups
+                SET deleted = NOW()
+                WHERE server_backups.uuid = $1
+                "#,
+            )
+            .bind(backup_uuid)
+            .execute(&mut *transaction)
+            .await?;
+
             transaction.commit().await?;
 
             Ok(())
