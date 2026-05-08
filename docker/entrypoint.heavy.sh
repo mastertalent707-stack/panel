@@ -122,6 +122,13 @@ execute_build() {
 
   cp -R /app/repo/frontend/public/translations/* /app/translations/ 2>/dev/null || true
 
+  # apply translation overrides if they exist
+  mkdir -p /app/translations/overrides
+  find /app/translations/overrides -type f -name "*.json" | while read -r override_file; do
+    real_file="/app/translations/$(basename "$override_file")"
+    node /applyJson.js "$real_file" "$override_file"
+  done
+
   # check status of extensions apply
   if [ $EXIT_CODE -eq 0 ]; then
     echo "Extension build successful. Saving new binary."

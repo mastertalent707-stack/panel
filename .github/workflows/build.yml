@@ -208,7 +208,7 @@ jobs:
       - name: Build & push multi-arch image
         uses: docker/build-push-action@v7
         with:
-          context: .
+          context: ./docker
           platforms: linux/amd64,linux/arm64,linux/riscv64,linux/ppc64le
           push: true
           tags: ghcr.io/${{ github.repository }}:nightly
@@ -218,7 +218,7 @@ jobs:
       - name: Build & push multi-arch AIO image
         uses: docker/build-push-action@v7
         with:
-          context: .
+          context: ./docker
           file: Dockerfile.aio
           platforms: linux/amd64,linux/arm64,linux/riscv64,linux/ppc64le
           push: true
@@ -260,7 +260,7 @@ jobs:
       - name: Build & push heavy platform image
         uses: docker/build-push-action@v7
         with:
-          context: .
+          context: ./docker
           file: Dockerfile.heavy
           platforms: ${{ matrix.platform }}
           push: true
@@ -271,7 +271,7 @@ jobs:
       - name: Build & push heavy AIO platform image
         uses: docker/build-push-action@v7
         with:
-          context: .
+          context: ./docker
           file: Dockerfile.heavy.aio
           platforms: ${{ matrix.platform }}
           push: true

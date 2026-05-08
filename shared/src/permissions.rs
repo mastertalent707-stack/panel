@@ -454,6 +454,7 @@ pub(crate) static BASE_ADMIN_PERMISSIONS: LazyLock<IndexMap<&'static str, Permis
                         ("read", "Allows viewing database hosts."),
                         ("update", "Allows modifying database hosts."),
                         ("delete", "Allows deleting database hosts."),
+                        ("test", "Allows testing database host connections."),
                     ]),
                 },
             ),
