@@ -8,7 +8,9 @@ import deleteAnnouncement from '@/api/admin/announcements/deleteAnnouncement.ts'
 import updateAnnouncement from '@/api/admin/announcements/updateAnnouncement.ts';
 import getBackupConfigurations from '@/api/admin/backup-configurations/getBackupConfigurations.ts';
 import getLocations from '@/api/admin/locations/getLocations.ts';
+import getAllEggs from '@/api/admin/nests/getAllEggs.ts';
 import getNodes from '@/api/admin/nodes/getNodes.ts';
+import { httpErrorToHuman } from '@/api/axios.ts';
 import Button from '@/elements/Button.tsx';
 import { AdminCan } from '@/elements/Can.tsx';
 import Code from '@/elements/Code.tsx';
@@ -17,6 +19,7 @@ import DateTimePicker from '@/elements/input/DateTimePicker.tsx';
 import LocalizedTextArea from '@/elements/input/LocalizedTextArea.tsx';
 import LocalizedTextInput from '@/elements/input/LocalizedTextInput.tsx';
 import MultiSelect from '@/elements/input/MultiSelect.tsx';
+import MultiSelectGroup from '@/elements/input/MultiSelectGroup.tsx';
 import Select from '@/elements/input/Select.tsx';
 import Switch from '@/elements/input/Switch.tsx';
 import ConfirmationModal from '@/elements/modals/ConfirmationModal.tsx';
@@ -30,6 +33,7 @@ import {
 import { useAdminCan } from '@/plugins/usePermissions.ts';
 import { useResourceForm } from '@/plugins/useResourceForm.ts';
 import { useSearchableResource } from '@/plugins/useSearchableResource.ts';
+import { useToast } from '@/providers/ToastProvider.tsx';
 import { useGlobalStore } from '@/stores/global.ts';
 
 export default function AnnouncementCreateOrUpdate({
@@ -38,11 +42,14 @@ export default function AnnouncementCreateOrUpdate({
   contextAnnouncement?: z.infer<typeof adminAnnouncementSchema>;
 }) {
   const { languages } = useGlobalStore();
+  const { addToast } = useToast();
+
   const canReadLocations = useAdminCan('locations.read');
   const canReadNodes = useAdminCan('nodes.read');
   const canReadBackupConfigurations = useAdminCan('backup-configurations.read');
 
   const [openModal, setOpenModal] = useState<'delete' | null>(null);
+  const [eggs, setEggs] = useState<{ group: string; items: { label: string; value: string }[] }[]>([]);
 
   const form = useForm<z.infer<typeof adminAnnouncementUpdateSchema>>({
     initialValues: {
@@ -57,6 +64,7 @@ export default function AnnouncementCreateOrUpdate({
       locations: [],
       nodes: [],
       backupConfigurations: [],
+      eggs: [],
     },
     validateInputOnBlur: true,
     validate: zod4Resolver(adminAnnouncementUpdateSchema),
@@ -91,9 +99,26 @@ export default function AnnouncementCreateOrUpdate({
         locations: contextAnnouncement.locations,
         nodes: contextAnnouncement.nodes,
         backupConfigurations: contextAnnouncement.backupConfigurations,
+        eggs: contextAnnouncement.eggs,
       });
     }
   }, [contextAnnouncement]);
+
+  useEffect(() => {
+    getAllEggs()
+      .then((eggs) => {
+        setEggs(
+          eggs.map((v) => ({
+            group: v.nest.name,
+            items: v.eggs.map((e) => ({
+              label: e.name,
+              value: e.uuid,
+            })),
+          })),
+        );
+      })
+      .catch((msg) => addToast(httpErrorToHuman(msg), 'error'));
+  }, []);
 
   const locations = useSearchableResource({
     queryKey: queryKeys.admin.locations.all(),
@@ -215,6 +240,15 @@ export default function AnnouncementCreateOrUpdate({
             loading={backupConfigurations.loading}
             key={form.key('backupConfigurations')}
             {...form.getInputProps('backupConfigurations')}
+          />
+
+          <MultiSelectGroup
+            label='Eggs'
+            placeholder='Select Eggs'
+            data={eggs}
+            searchable
+            loading={!eggs.length}
+            {...form.getInputProps('eggs')}
           />
 
           <Switch label='Enabled' key={form.key('enabled')} {...form.getInputProps('enabled', { type: 'checkbox' })} />

@@ -1561,14 +1561,7 @@ pub mod servers_server_script {
 
         pub type RequestBody = InstallationScript;
 
-        nestify::nest! {
-            #[derive(Debug, ToSchema, Deserialize, Serialize, Clone)] pub struct Response200 {
-                #[schema(inline)]
-                pub stdout: compact_str::CompactString,
-                #[schema(inline)]
-                pub stderr: compact_str::CompactString,
-            }
-        }
+        pub type Response200 = AsyncResponseReader;
 
         pub type Response = Response200;
     }
@@ -1889,7 +1882,17 @@ pub mod system_config {
                     },
 
                     #[schema(inline)]
+                    pub machine_id: #[derive(Debug, ToSchema, Deserialize, Serialize, Clone)] pub struct Response200SystemMachineId {
+                        #[schema(inline)]
+                        pub enabled: bool,
+                    },
+
+                    #[schema(inline)]
+                    pub disk_check_concurrency: u64,
+                    #[schema(inline)]
                     pub disk_check_interval: u64,
+                    #[schema(inline)]
+                    pub full_disk_check_every: u64,
                     #[schema(inline)]
                     pub disk_check_use_inotify: bool,
                     #[schema(inline)]

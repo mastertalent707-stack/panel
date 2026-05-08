@@ -1,8 +1,9 @@
-import { faCircleXmark, faExclamationTriangle, faInfoCircle, faUserCheck } from '@fortawesome/free-solid-svg-icons';
+import { faUserCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ReactNode } from 'react';
 import { makeComponentHookable } from 'shared';
 import Copyright from '@/elements/Copyright.tsx';
+import { announcementTypeColorMapping, announcementTypeIconMapping } from '@/lib/enums.ts';
 import { useAuth } from '@/providers/AuthProvider.tsx';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import { useGlobalStore } from '@/stores/global.ts';
@@ -34,20 +35,10 @@ function Container({ children, isNormal }: LayoutProps) {
         )}
         {announcements.map((announcement) => (
           <Alert
-            icon={
-              <FontAwesomeIcon
-                icon={
-                  announcement.type === 'info'
-                    ? faInfoCircle
-                    : announcement.type === 'warning'
-                      ? faExclamationTriangle
-                      : faCircleXmark
-                }
-              />
-            }
+            icon={<FontAwesomeIcon icon={announcementTypeIconMapping[announcement.type]} />}
             key={announcement.uuid}
             title={announcement.titleTranslations[language] ?? announcement.title}
-            color={announcement.type === 'info' ? 'blue' : announcement.type === 'warning' ? 'yellow' : 'red'}
+            color={announcementTypeColorMapping[announcement.type]}
             className='mt-2 mx-2'
           >
             {(announcement.contentTranslations[language] ?? announcement.content).md()}

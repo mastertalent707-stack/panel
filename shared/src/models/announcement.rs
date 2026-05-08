@@ -17,6 +17,7 @@ use utoipa::ToSchema;
 #[sqlx(type_name = "announcement_type", rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum AnnouncementType {
     Info,
+    Success,
     Warning,
     Error,
 }
@@ -90,6 +91,7 @@ pub struct Announcement {
     pub locations: Vec<uuid::Uuid>,
     pub nodes: Vec<uuid::Uuid>,
     pub backup_configurations: Vec<uuid::Uuid>,
+    pub eggs: Vec<uuid::Uuid>,
 
     pub created: chrono::NaiveDateTime,
 
@@ -164,6 +166,10 @@ impl BaseModel for Announcement {
                 compact_str::format_compact!("{prefix}backup_configurations"),
             ),
             (
+                "announcements.eggs",
+                compact_str::format_compact!("{prefix}eggs"),
+            ),
+            (
                 "announcements.created",
                 compact_str::format_compact!("{prefix}created"),
             ),
@@ -194,6 +200,7 @@ impl BaseModel for Announcement {
             nodes: row.try_get(compact_str::format_compact!("{prefix}nodes").as_str())?,
             backup_configurations: row
                 .try_get(compact_str::format_compact!("{prefix}backup_configurations").as_str())?,
+            eggs: row.try_get(compact_str::format_compact!("{prefix}eggs").as_str())?,
             created: row.try_get(compact_str::format_compact!("{prefix}created").as_str())?,
             extension_data: Self::map_extensions(prefix, row)?,
         })
@@ -251,6 +258,7 @@ impl Announcement {
                 AND array_length(announcements.locations, 1) IS NULL
                 AND array_length(announcements.nodes, 1) IS NULL
                 AND array_length(announcements.backup_configurations, 1) IS NULL
+                AND array_length(announcements.eggs, 1) IS NULL
             ORDER BY announcements.created
             "#,
             Self::columns_sql(None)
@@ -280,11 +288,13 @@ impl Announcement {
                     array_length(announcements.locations, 1) IS NOT NULL
                     OR array_length(announcements.nodes, 1) IS NOT NULL
                     OR array_length(announcements.backup_configurations, 1) IS NOT NULL
+                    OR array_length(announcements.eggs, 1) IS NOT NULL
                 )
                 AND (
                     (announcements.locations IS NULL OR $1 = ANY(announcements.locations))
                     OR (announcements.nodes IS NULL OR $2 = ANY(announcements.nodes))
                     OR ($3 IS NOT NULL AND (announcements.backup_configurations IS NULL OR $3 = ANY(announcements.backup_configurations)))
+                    OR (announcements.eggs IS NULL OR $4 = ANY(announcements.eggs))
                 )
             ORDER BY announcements.created
             "#,
@@ -301,6 +311,7 @@ impl Announcement {
             },
             |b| Some(b.uuid),
         ))
+        .bind(server.egg.uuid)
         .fetch_all(database.read())
         .await?;
 
@@ -336,6 +347,7 @@ impl IntoAdminApiObject for Announcement {
                 locations: self.locations,
                 nodes: self.nodes,
                 backup_configurations: self.backup_configurations,
+                eggs: self.eggs,
                 created: self.created.and_utc(),
             },
             api_object,
@@ -448,6 +460,9 @@ pub struct CreateAnnouncementOptions {
     #[garde(length(max = 100))]
     #[schema(max_length = 100)]
     pub backup_configurations: Vec<uuid::Uuid>,
+    #[garde(length(max = 100))]
+    #[schema(max_length = 100)]
+    pub eggs: Vec<uuid::Uuid>,
 }
 
 #[async_trait::async_trait]
@@ -490,7 +505,8 @@ impl CreatableModel for Announcement {
             )
             .set("locations", &options.locations)
             .set("nodes", &options.nodes)
-            .set("backup_configurations", &options.backup_configurations);
+            .set("backup_configurations", &options.backup_configurations)
+            .set("eggs", &options.eggs);
 
         let row = query_builder
             .returning(&Self::columns_sql(None))
@@ -540,6 +556,9 @@ pub struct UpdateAnnouncementOptions {
     #[garde(length(max = 100))]
     #[schema(max_length = 100)]
     pub backup_configurations: Option<Vec<uuid::Uuid>>,
+    #[garde(length(max = 100))]
+    #[schema(max_length = 100)]
+    pub eggs: Option<Vec<uuid::Uuid>>,
 }
 
 #[async_trait::async_trait]
@@ -607,6 +626,7 @@ impl UpdatableModel for Announcement {
                 "backup_configurations",
                 options.backup_configurations.as_ref(),
             )
+            .set("eggs", options.eggs.as_ref())
             .where_eq("uuid", self.uuid);
 
         query_builder.execute(&mut **transaction).await?;
@@ -643,6 +663,9 @@ impl UpdatableModel for Announcement {
         }
         if let Some(backup_configurations) = options.backup_configurations {
             self.backup_configurations = backup_configurations;
+        }
+        if let Some(eggs) = options.eggs {
+            self.eggs = eggs;
         }
 
         self.run_after_update_handlers(state, transaction).await?;
@@ -709,6 +732,7 @@ pub struct AdminApiAnnouncement {
     pub locations: Vec<uuid::Uuid>,
     pub nodes: Vec<uuid::Uuid>,
     pub backup_configurations: Vec<uuid::Uuid>,
+    pub eggs: Vec<uuid::Uuid>,
 
     pub created: chrono::DateTime<chrono::Utc>,
 }

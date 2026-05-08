@@ -58,7 +58,7 @@ export const userToastPositionEnum = pgEnum('user_toast_position', [
   'BOTTOM_CENTER',
   'BOTTOM_RIGHT',
 ]);
-export const announcementTypeEnum = pgEnum('announcement_type', ['INFO', 'WARNING', 'ERROR']);
+export const announcementTypeEnum = pgEnum('announcement_type', ['INFO', 'SUCCESS', 'WARNING', 'ERROR']);
 
 // Tables
 export const settingsTable = pgTable('settings', {
@@ -81,6 +81,7 @@ export const announcementsTable = pgTable(
     locations: uuid().array().default([]).notNull(),
     nodes: uuid().array().default([]).notNull(),
     backup_configurations: uuid().array().default([]).notNull(),
+    eggs: uuid().array().default([]).notNull(),
     created: timestamp().defaultNow().notNull(),
   }
 );

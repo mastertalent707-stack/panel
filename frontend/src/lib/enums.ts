@@ -4,6 +4,8 @@ import {
   faBoxArchive,
   faBriefcase,
   faChartPie,
+  faCheckCircle,
+  faCircleXmark,
   faCloud,
   faCode,
   faCog,
@@ -18,6 +20,7 @@ import {
   faEgg,
   faEnvelope,
   faEquals,
+  faExclamationTriangle,
   faExpand,
   faFile,
   faFileZipper,
@@ -26,6 +29,7 @@ import {
   faFolderOpen,
   faGear,
   faHourglass,
+  faInfoCircle,
   faKey,
   faKiwiBird,
   faNetworkWired,
@@ -104,8 +108,23 @@ export const databaseTypeLabelMapping: Record<z.infer<typeof databaseType>, stri
 
 export const announcementTypeLabelMapping: Record<z.infer<typeof announcementType>, string> = {
   info: 'Info',
+  success: 'Success',
   warning: 'Warning',
   error: 'Error',
+};
+
+export const announcementTypeColorMapping: Record<z.infer<typeof announcementType>, string> = {
+  info: 'blue',
+  success: 'green',
+  warning: 'yellow',
+  error: 'red',
+};
+
+export const announcementTypeIconMapping: Record<z.infer<typeof announcementType>, IconDefinition> = {
+  info: faInfoCircle,
+  success: faCheckCircle,
+  warning: faExclamationTriangle,
+  error: faCircleXmark,
 };
 
 export const databaseCredentialTypeLabelMapping: Record<

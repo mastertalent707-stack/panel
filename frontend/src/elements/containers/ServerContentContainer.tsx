@@ -1,4 +1,4 @@
-import { faCancel, faCircleXmark, faExclamationTriangle, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { faCancel } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Group, Title, TitleOrder } from '@mantine/core';
 import { Dispatch, ReactNode, SetStateAction, useEffect, useMemo, useState } from 'react';
@@ -7,6 +7,7 @@ import cancelTransfer from '@/api/admin/servers/cancelTransfer.ts';
 import { httpErrorToHuman } from '@/api/axios.ts';
 import cancelServerInstall from '@/api/server/settings/cancelServerInstall.ts';
 import TextInput from '@/elements/input/TextInput.tsx';
+import { announcementTypeColorMapping, announcementTypeIconMapping } from '@/lib/enums.ts';
 import { bytesToString } from '@/lib/size.ts';
 import { useAuth } from '@/providers/AuthProvider.tsx';
 import { useCurrentWindow } from '@/providers/CurrentWindowProvider.tsx';
@@ -118,20 +119,10 @@ function ServerContentContainer(props: Props) {
     <ContentContainer title={`${title} | ${server.name}`}>
       {serverAnnouncements.map((announcement) => (
         <Alert
-          icon={
-            <FontAwesomeIcon
-              icon={
-                announcement.type === 'info'
-                  ? faInfoCircle
-                  : announcement.type === 'warning'
-                    ? faExclamationTriangle
-                    : faCircleXmark
-              }
-            />
-          }
+          icon={<FontAwesomeIcon icon={announcementTypeIconMapping[announcement.type]} />}
           key={announcement.uuid}
           title={announcement.titleTranslations[language] ?? announcement.title}
-          color={announcement.type === 'info' ? 'blue' : announcement.type === 'warning' ? 'yellow' : 'red'}
+          color={announcementTypeColorMapping[announcement.type]}
           className='mt-2 mx-2'
         >
           {(announcement.contentTranslations[language] ?? announcement.content).md()}

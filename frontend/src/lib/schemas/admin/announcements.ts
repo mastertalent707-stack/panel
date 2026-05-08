@@ -14,6 +14,7 @@ export const adminAnnouncementSchema = z.object({
   locations: z.array(z.string()),
   nodes: z.array(z.string()),
   backupConfigurations: z.array(z.string()),
+  eggs: z.array(z.string()),
   created: z.string(),
 });
 
