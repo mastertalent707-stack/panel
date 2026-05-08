@@ -209,6 +209,7 @@ jobs:
         uses: docker/build-push-action@v7
         with:
           context: ./docker
+          file: ./docker/Dockerfile
           platforms: linux/amd64,linux/arm64,linux/riscv64,linux/ppc64le
           push: true
           tags: ghcr.io/${{ github.repository }}:nightly
@@ -219,7 +220,7 @@ jobs:
         uses: docker/build-push-action@v7
         with:
           context: ./docker
-          file: Dockerfile.aio
+          file: ./docker/Dockerfile.aio
           platforms: linux/amd64,linux/arm64,linux/riscv64,linux/ppc64le
           push: true
           tags: ghcr.io/${{ github.repository }}:nightly-aio
@@ -261,7 +262,7 @@ jobs:
         uses: docker/build-push-action@v7
         with:
           context: ./docker
-          file: Dockerfile.heavy
+          file: ./docker/Dockerfile.heavy
           platforms: ${{ matrix.platform }}
           push: true
           tags: ghcr.io/${{ github.repository }}:nightly-heavy-${{ matrix.tag_suffix }}
@@ -272,7 +273,7 @@ jobs:
         uses: docker/build-push-action@v7
         with:
           context: ./docker
-          file: Dockerfile.heavy.aio
+          file: ./docker/Dockerfile.heavy.aio
           platforms: ${{ matrix.platform }}
           push: true
           tags: ghcr.io/${{ github.repository }}:nightly-heavy-aio-${{ matrix.tag_suffix }}
