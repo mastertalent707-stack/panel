@@ -162,7 +162,7 @@ async fn handle_aio_wings(state: &shared::State) -> Result<(), anyhow::Error> {
 
     mapping.insert(
         serde_norway::Value::String("uuid".into()),
-        serde_norway::Value::String(node.uuid.to_string()),
+        serde_norway::Value::String(Node::AIO_NODE_UUID.to_string()),
     );
     mapping.insert(
         serde_norway::Value::String("token_id".into()),
