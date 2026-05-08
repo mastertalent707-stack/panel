@@ -12,3 +12,7 @@ postgres/
 *.yml
 *.md
 LICENSE
+.github/
+.hooks/
+.vscode/
+.zed/

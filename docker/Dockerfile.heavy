@@ -35,16 +35,16 @@ RUN mkdir -p .cargo && \
     printf '[target."x86_64-unknown-linux-gnu"]\nlinker = "clang"\nrustflags = ["-C", "link-arg=-fuse-ld=mold"]\n' > .cargo/config.toml
 RUN cargo chef cook --profile heavy-release --recipe-path recipe.json
 
-COPY .. /app/repo
+COPY . /app/repo
 RUN cd frontend && pnpm install --frozen-lockfile && pnpm build:ci
 RUN cargo build --profile heavy-release --workspace
 
 RUN ln -s /app/repo/target/heavy-release/panel-rs /usr/local/bin/panel-rs
 RUN ln -s /app/repo/target/heavy-release/panel-rs /usr/local/bin/calagopus-panel
 
-COPY applyJson.js /applyJson.js
+COPY ./docker/applyJson.js /applyJson.js
 
-COPY entrypoint.heavy.sh /entrypoint.sh
+COPY ./docker/entrypoint.heavy.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 ENV OCI_CONTAINER=official-heavy
