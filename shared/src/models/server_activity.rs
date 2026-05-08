@@ -176,12 +176,12 @@ impl ServerActivity {
 #[async_trait::async_trait]
 impl IntoApiObject for ServerActivity {
     type ApiObject = ApiServerActivity;
-    type ExtraArgs<'a> = &'a crate::storage::StorageUrlRetriever<'a>;
+    type ExtraArgs<'a> = (&'a crate::storage::StorageUrlRetriever<'a>, bool);
 
     async fn into_api_object<'a>(
         self,
         state: &crate::State,
-        storage_url_retriever: Self::ExtraArgs<'a>,
+        (storage_url_retriever, show_ip): Self::ExtraArgs<'a>,
     ) -> Result<Self::ApiObject, crate::database::DatabaseError> {
         let api_object = ApiServerActivity::init_hooks(&self, state).await?;
 
@@ -208,7 +208,11 @@ impl IntoApiObject for ServerActivity {
                 user,
                 impersonator,
                 event: self.event,
-                ip: self.ip.map(|ip| ip.ip().to_compact_string()),
+                ip: if show_ip {
+                    self.ip.map(|ip| ip.ip().to_compact_string())
+                } else {
+                    None
+                },
                 data: self.data,
                 is_api: self.api_key.is_some(),
                 is_schedule: self.schedule.is_some(),

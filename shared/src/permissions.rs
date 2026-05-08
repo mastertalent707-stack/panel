@@ -710,10 +710,13 @@ pub(crate) static BASE_SERVER_PERMISSIONS: LazyLock<IndexMap<&'static str, Permi
                 "activity",
                 PermissionGroup {
                     description: "Permissions that control the ability to view the activity log on this server.",
-                    permissions: IndexMap::from([(
-                        "read",
-                        "Allows viewing the server's activity logs.",
-                    )]),
+                    permissions: IndexMap::from([
+                        ("read", "Allows viewing the server's activity logs."),
+                        (
+                            "read-ip",
+                            "Allows viewing IP addresses associated with activity logs.",
+                        ),
+                    ]),
                 },
             ),
         ])
