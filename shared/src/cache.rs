@@ -569,6 +569,24 @@ impl Cache {
         }
     }
 
+    pub async fn list(
+        &self,
+        prefix: &str,
+    ) -> Result<Vec<compact_str::CompactString>, anyhow::Error> {
+        if let Some(client) = &self.client {
+            let keys = client.keys(format!("{}*", prefix)).await?;
+            Ok(keys)
+        } else {
+            let mut keys = Vec::new();
+            for (key, _) in self.local.iter() {
+                if key.starts_with(prefix) {
+                    keys.push(key.to_compact_string());
+                }
+            }
+            Ok(keys)
+        }
+    }
+
     pub async fn invalidate(&self, key: &str) -> Result<(), anyhow::Error> {
         self.local.invalidate(key).await;
         if let Some(client) = &self.client {

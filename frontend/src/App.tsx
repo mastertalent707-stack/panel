@@ -44,14 +44,13 @@ export default function App({ theme }: { theme: MantineThemeOverride }) {
     let timer: ReturnType<typeof setTimeout>;
 
     const loadData = () => {
-      Promise.all([getSettings(), getLanguages(), getAnnouncements()])
-        .then(([settings, languages, announcements]) => {
+      Promise.all([getSettings(), getLanguages()])
+        .then(([settings, languages]) => {
           if (cancelled) return;
 
           setSettings(settings);
           setLanguages(languages);
           setTimeOffset(Date.now() - new Date(settings.time).getTime());
-          setAnnouncements(announcements);
         })
         .catch((err) => {
           if (cancelled) return;
@@ -65,6 +64,14 @@ export default function App({ theme }: { theme: MantineThemeOverride }) {
           if (retryCount.current < MAX_RETRIES) {
             timer = setTimeout(loadData, Math.min(retryCount.current * 2000, 10000));
           }
+        });
+
+      getAnnouncements()
+        .then((announcements) => {
+          setAnnouncements(announcements);
+        })
+        .catch((err) => {
+          console.error('Failed to load announcements:', err);
         });
     };
 

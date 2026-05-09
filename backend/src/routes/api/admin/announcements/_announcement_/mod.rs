@@ -134,6 +134,10 @@ mod delete {
 
         announcement.delete(&state, ()).await?;
 
+        for key in state.cache.list("announcements::").await? {
+            state.cache.invalidate(&key).await?;
+        }
+
         ApiResponse::new_serialized(Response {}).ok()
     }
 }
@@ -179,12 +183,30 @@ mod patch {
             Err(err) => return ApiResponse::from(err).ok(),
         }
 
+        for key in state.cache.list("announcements::").await? {
+            state.cache.invalidate(&key).await?;
+        }
+
         activity_logger
             .log(
                 "announcement:update",
                 serde_json::json!({
                     "uuid": announcement.uuid,
+
+                    "type": announcement.r#type,
+                    "enabled": announcement.enabled,
+                    "enabled_start": announcement.enabled_start,
+                    "enabled_end": announcement.enabled_end,
+
                     "title": announcement.title,
+                    "title_translations": announcement.title_translations,
+                    "content": announcement.content,
+                    "content_translations": announcement.content_translations,
+
+                    "locations": announcement.locations,
+                    "nodes": announcement.nodes,
+                    "backup_configurations": announcement.backup_configurations,
+                    "eggs": announcement.eggs,
                 }),
             )
             .await;
