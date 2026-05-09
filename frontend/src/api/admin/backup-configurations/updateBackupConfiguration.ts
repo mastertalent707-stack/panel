@@ -11,9 +11,7 @@ export default async (
     ...transformKeysToSnakeCase(data),
     backup_configs: data.backupConfigs
       ? {
-          s3: data.backupConfigs.s3
-            ? transformKeysToSnakeCase(data.backupConfigs.s3)
-            : null,
+          s3: data.backupConfigs.s3 ? transformKeysToSnakeCase(data.backupConfigs.s3) : null,
           restic: data.backupConfigs.restic
             ? {
                 ...transformKeysToSnakeCase(data.backupConfigs.restic),
