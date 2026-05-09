@@ -59,7 +59,7 @@ pub mod user_server_group;
 pub mod user_session;
 pub mod user_ssh_key;
 
-#[derive(ToSchema, Validate, Deserialize)]
+#[derive(ToSchema, Validate, Deserialize, Serialize)]
 pub struct PaginationParams {
     #[garde(range(min = 1))]
     #[schema(minimum = 1)]
@@ -71,7 +71,7 @@ pub struct PaginationParams {
     pub per_page: i64,
 }
 
-#[derive(ToSchema, Validate, Deserialize)]
+#[derive(ToSchema, Validate, Deserialize, Serialize)]
 pub struct PaginationParamsWithSearch {
     #[garde(range(min = 1))]
     #[schema(minimum = 1)]
@@ -90,7 +90,7 @@ pub struct PaginationParamsWithSearch {
     pub search: Option<compact_str::CompactString>,
 }
 
-#[derive(ToSchema, Serialize)]
+#[derive(ToSchema, Deserialize, Serialize)]
 pub struct Pagination<T: Serialize = serde_json::Value> {
     pub total: i64,
     pub per_page: i64,
