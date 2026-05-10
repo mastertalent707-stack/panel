@@ -101,10 +101,7 @@ mod post {
     ) -> ApiResponseResult {
         permissions.has_admin_permission("announcements.create")?;
 
-        let announcement = match Announcement::create(&state, data).await {
-            Ok(announcement) => announcement,
-            Err(err) => return ApiResponse::from(err).ok(),
-        };
+        let announcement = Announcement::create(&state, data).await?;
 
         for key in state.cache.list("announcements::").await? {
             state.cache.invalidate(&key).await?;

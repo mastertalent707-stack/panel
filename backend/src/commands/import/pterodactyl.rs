@@ -701,10 +701,16 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                             )
                             .unwrap_or_default();
 
-                            let config_files: Vec<
-                                shared::models::nest_egg::ProcessConfigurationFile,
-                            > = serde_json::from_value(config_files.unwrap_or_default())
-                                .unwrap_or_default();
+                            let config_files: Vec<_> = shared::deserialize::deserialize_nest_egg_config_files(config_files.unwrap_or_default())
+                                .unwrap_or_default()
+                                .into_iter()
+                                .map(|(file, config)| shared::models::nest_egg::ProcessConfigurationFile {
+                                    file,
+                                    create_new: config.create_new,
+                                    parser: config.parser,
+                                    replace: config.replace,
+                                })
+                                .collect();
                             let mut config_startup: shared::models::nest_egg::NestEggConfigStartup =
                                 serde_json::from_value(config_startup.unwrap_or_default())
                                     .unwrap_or_default();

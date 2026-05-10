@@ -862,11 +862,18 @@ impl shared::extensions::commands::CliCommand<PelicanArgs> for PelicanCommand {
                                 .and_then(|value| serde_json::from_str(value).ok())
                                 .unwrap_or_default();
 
-                            let config_files: Vec<
-                                shared::models::nest_egg::ProcessConfigurationFile,
-                            > = config_files
-                                .and_then(|value| serde_json::from_str(value).ok())
-                                .unwrap_or_default();
+                            let config_files: Vec<_> = shared::deserialize::deserialize_nest_egg_config_files(
+                                serde_json::from_str::<serde_json::Value>(config_files.unwrap_or_default()).unwrap_or_default()
+                            )
+                                .unwrap_or_default()
+                                .into_iter()
+                                .map(|(file, config)| shared::models::nest_egg::ProcessConfigurationFile {
+                                    file,
+                                    create_new: config.create_new,
+                                    parser: config.parser,
+                                    replace: config.replace,
+                                })
+                                .collect();
                             let mut config_startup: shared::models::nest_egg::NestEggConfigStartup =
                                 config_startup
                                     .and_then(|value| serde_json::from_str(value).ok())

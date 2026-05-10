@@ -178,10 +178,7 @@ mod patch {
     ) -> ApiResponseResult {
         permissions.has_admin_permission("announcements.update")?;
 
-        match announcement.update(&state, data).await {
-            Ok(_) => {}
-            Err(err) => return ApiResponse::from(err).ok(),
-        }
+        announcement.update(&state, data).await?;
 
         for key in state.cache.list("announcements::").await? {
             state.cache.invalidate(&key).await?;
