@@ -32,7 +32,7 @@ mod get {
 
         ApiResponse::new_serialized(Response {
             version_history: ResponseVersionHistory {
-                panel: &*state.updates.get_panel_version_history().await,
+                panel: &state.updates.get_panel_version_history().await,
                 extensions: &*state.updates.get_extension_version_history().await,
             },
         })

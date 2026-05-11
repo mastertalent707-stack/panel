@@ -1,9 +1,9 @@
 use super::State;
 use utoipa_axum::{router::OpenApiRouter, routes};
 
+mod history;
 mod nodes;
 mod recheck;
-mod history;
 
 mod get {
     use serde::Serialize;
