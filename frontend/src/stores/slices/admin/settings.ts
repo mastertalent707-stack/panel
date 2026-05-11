@@ -31,6 +31,8 @@ export const createSettingsSlice: StateCreator<AdminStore, [], [], SettingsSlice
     url: '',
     banner: null,
     twoFactorRequirement: 'none',
+    sessionCookie: '',
+    sessionDurationSeconds: 3600,
     telemetryEnabled: true,
     registrationEnabled: true,
   },

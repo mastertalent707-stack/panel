@@ -101,6 +101,7 @@ pub fn router(state: &State) -> OpenApiRouter<State> {
                     settings.app.url.trim_end_matches('/'),
                     oauth_provider.uuid
                 ))?);
+            let session_cookie = settings.app.session_cookie.clone();
 
             drop(settings);
 
@@ -119,7 +120,7 @@ pub fn router(state: &State) -> OpenApiRouter<State> {
                 }
             };
 
-            if let Some(session_id) = cookies.get("session") {
+            if let Some(session_id) = cookies.get(&session_cookie) {
                 if !oauth_provider.user_manageable {
                     return ApiResponse::error("you cannot link with this oauth provider")
                         .with_status(StatusCode::CONFLICT)

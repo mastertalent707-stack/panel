@@ -25,6 +25,9 @@ pub struct AppSettingsApp {
     pub language: compact_str::CompactString,
     pub two_factor_requirement: TwoFactorRequirement,
 
+    pub session_cookie: compact_str::CompactString,
+    pub session_duration_seconds: u64,
+
     pub telemetry_enabled: bool,
     pub registration_enabled: bool,
 }
@@ -48,6 +51,11 @@ impl SettingsSerializeExt for AppSettingsApp {
                     TwoFactorRequirement::AllUsers => "all_users",
                     TwoFactorRequirement::None => "none",
                 },
+            )
+            .write_raw_setting("session_cookie", &*self.session_cookie)
+            .write_raw_setting(
+                "session_duration_seconds",
+                self.session_duration_seconds.to_compact_string(),
             )
             .write_raw_setting(
                 "telemetry_enabled",
@@ -92,6 +100,13 @@ impl SettingsDeserializeExt for AppSettingsAppDeserializer {
                 Some("all_users") => TwoFactorRequirement::AllUsers,
                 _ => TwoFactorRequirement::None,
             },
+            session_cookie: deserializer
+                .take_raw_setting("session_cookie")
+                .unwrap_or_else(|| "calagopus_session".into()),
+            session_duration_seconds: deserializer
+                .take_raw_setting("session_duration_seconds")
+                .and_then(|s| s.parse::<u64>().ok())
+                .unwrap_or(7 * 24 * 3600),
             telemetry_enabled: deserializer
                 .take_raw_setting("telemetry_enabled")
                 .map(|s| s == "true")

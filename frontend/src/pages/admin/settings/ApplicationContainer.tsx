@@ -43,6 +43,8 @@ export default function ApplicationContainer() {
       url: '',
       language: 'en',
       twoFactorRequirement: 'none',
+      sessionCookie: '',
+      sessionDurationSeconds: 3600,
       telemetryEnabled: true,
       registrationEnabled: true,
     },
@@ -162,6 +164,20 @@ export default function ApplicationContainer() {
           />
 
           <TextInput withAsterisk label='URL' placeholder='URL' {...form.getInputProps('url')} />
+
+          <TextInput
+            withAsterisk
+            label='Session Cookie'
+            placeholder='Session Cookie'
+            {...form.getInputProps('sessionCookie')}
+          />
+          <TextInput
+            withAsterisk
+            label='Session Duration (seconds)'
+            placeholder='Session Duration (seconds)'
+            {...form.getInputProps('sessionDurationSeconds')}
+          />
+
           <Select
             withAsterisk
             label='Two-Factor Authentication Requirement'

@@ -10,6 +10,8 @@ export const adminSettingsApplicationSchema = z.object({
   url: z.url({ protocol: /^https?$/ }).max(255),
   language: z.string(),
   twoFactorRequirement: z.enum(['admins', 'all_users', 'none']),
+  sessionCookie: z.string().min(1).max(255),
+  sessionDurationSeconds: z.number().min(60).max(31536000),
   telemetryEnabled: z.boolean(),
   registrationEnabled: z.boolean(),
 });

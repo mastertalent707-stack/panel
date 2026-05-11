@@ -286,11 +286,16 @@ impl User {
             .cached(&format!("user::api_key::{key}"), 5, || async {
                 let row = sqlx::query(&format!(
                     r#"
+                    WITH user_api_keys AS MATERIALIZED (
+                        SELECT * FROM user_api_keys 
+                        WHERE user_api_keys.key_start = $1 
+                        AND (user_api_keys.expires IS NULL OR user_api_keys.expires > NOW())
+                    )
                     SELECT {}, {}
                     FROM users
                     LEFT JOIN roles ON roles.uuid = users.role_uuid
                     JOIN user_api_keys ON user_api_keys.user_uuid = users.uuid
-                    WHERE user_api_keys.key_start = $1 AND user_api_keys.key = crypt($2, user_api_keys.key)
+                    WHERE user_api_keys.key = crypt($2, user_api_keys.key)
                     "#,
                     Self::columns_sql(None),
                     super::user_api_key::UserApiKey::columns_sql(Some("api_key_"))

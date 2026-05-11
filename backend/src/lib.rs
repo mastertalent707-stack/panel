@@ -808,17 +808,20 @@ pub async fn handle_startup() -> (
         utoipa::openapi::Server::new("/"),
         utoipa::openapi::Server::new(settings.app.url.clone()),
     ]);
-    drop(settings);
 
     let components = openapi.components.as_mut().unwrap();
     components.add_security_scheme(
         "cookie",
-        SecurityScheme::ApiKey(ApiKey::Cookie(ApiKeyValue::new("session"))),
+        SecurityScheme::ApiKey(ApiKey::Cookie(ApiKeyValue::new(
+            settings.app.session_cookie.clone(),
+        ))),
     );
     components.add_security_scheme(
         "api_key",
         SecurityScheme::ApiKey(ApiKey::Header(ApiKeyValue::new("Authorization"))),
     );
+
+    drop(settings);
 
     for (original_path, item) in openapi.paths.paths.iter_mut() {
         let operations = [

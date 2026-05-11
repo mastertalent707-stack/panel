@@ -60,6 +60,10 @@ mod put {
         language: Option<compact_str::CompactString>,
         #[garde(skip)]
         two_factor_requirement: Option<shared::settings::app::TwoFactorRequirement>,
+        #[garde(length(chars, min = 1, max = 255))]
+        session_cookie: Option<compact_str::CompactString>,
+        #[garde(range(min = 60, max = 31536000))]
+        session_duration_seconds: Option<u64>,
         #[garde(skip)]
         telemetry_enabled: Option<bool>,
         #[garde(skip)]
@@ -250,6 +254,12 @@ mod put {
             }
             if let Some(two_factor_requirement) = app.two_factor_requirement {
                 settings.app.two_factor_requirement = two_factor_requirement;
+            }
+            if let Some(session_cookie) = app.session_cookie {
+                settings.app.session_cookie = session_cookie;
+            }
+            if let Some(session_duration_seconds) = app.session_duration_seconds {
+                settings.app.session_duration_seconds = session_duration_seconds;
             }
             if let Some(telemetry_enabled) = app.telemetry_enabled {
                 settings.app.telemetry_enabled = telemetry_enabled;

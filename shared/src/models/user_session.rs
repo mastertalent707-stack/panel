@@ -150,13 +150,17 @@ impl UserSession {
         })
     }
 
-    pub async fn delete_unused(database: &crate::database::Database) -> Result<u64, sqlx::Error> {
+    pub async fn delete_unused(
+        database: &crate::database::Database,
+        duration_seconds: i64,
+    ) -> Result<u64, sqlx::Error> {
         Ok(sqlx::query(
             r#"
             DELETE FROM user_sessions
-            WHERE user_sessions.last_used < NOW() - INTERVAL '30 days'
+            WHERE user_sessions.last_used < $1
             "#,
         )
+        .bind(chrono::Utc::now().naive_utc() - chrono::Duration::seconds(duration_seconds))
         .execute(database.write())
         .await?
         .rows_affected())
@@ -202,14 +206,16 @@ impl UserSession {
     ) -> Result<Cookie<'a>, anyhow::Error> {
         let settings = state.settings.get().await?;
 
-        Ok(Cookie::build(("session", key))
+        Ok(Cookie::build((settings.app.session_cookie.clone(), key))
             .http_only(true)
             .same_site(tower_cookies::cookie::SameSite::Lax)
             .secure(settings.app.url.starts_with("https://"))
             .path("/")
             .expires(
                 tower_cookies::cookie::time::OffsetDateTime::now_utc()
-                    + tower_cookies::cookie::time::Duration::days(30),
+                    + tower_cookies::cookie::time::Duration::seconds(
+                        settings.app.session_duration_seconds as i64,
+                    ),
             )
             .build())
     }

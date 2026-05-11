@@ -84,7 +84,13 @@ pub async fn define_background_tasks(
             "delete_expired_sessions",
             cron::Schedule::from_str("0 */5 * * * *").unwrap(),
             async |state| {
-                let deleted_sessions = UserSession::delete_unused(&state.database).await?;
+                let session_duration = state
+                    .settings
+                    .get_as(|s| s.app.session_duration_seconds)
+                    .await?;
+
+                let deleted_sessions =
+                    UserSession::delete_unused(&state.database, session_duration as i64).await?;
                 if deleted_sessions > 0 {
                     tracing::info!("deleted {} expired user sessions", deleted_sessions);
                 }
