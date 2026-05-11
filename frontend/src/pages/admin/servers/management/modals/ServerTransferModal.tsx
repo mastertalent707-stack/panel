@@ -21,8 +21,7 @@ import { archiveFormatLabelMapping, compressionLevelLabelMapping } from '@/lib/e
 import { NODE_AIO_UUID } from '@/lib/node.ts';
 import { queryKeys } from '@/lib/queryKeys.ts';
 import { adminNodeAllocationSchema, adminNodeSchema } from '@/lib/schemas/admin/nodes.ts';
-import { adminServerSchema } from '@/lib/schemas/admin/servers.ts';
-import { serverBackupSchema } from '@/lib/schemas/server/backups.ts';
+import { adminServerBackupSchema, adminServerSchema } from '@/lib/schemas/admin/servers.ts';
 import {
   archiveFormat as archiveFormatEnum,
   compressionLevel as compressionLevelEnum,
@@ -73,7 +72,7 @@ export default function ServerTransferModal({
         : Promise.resolve(getEmptyPaginationSet()),
     deps: [selectedNodeUuid],
   });
-  const backups = useSearchableResource<z.infer<typeof serverBackupSchema>>({
+  const backups = useSearchableResource<z.infer<typeof adminServerBackupSchema>>({
     queryKey: queryKeys.admin.servers.backups(server.uuid),
     fetcher: (search) => getServerBackups(server.uuid, 1, search),
     canRequest: opened,
