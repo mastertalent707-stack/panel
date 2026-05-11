@@ -62,9 +62,17 @@ export const announcementTypeEnum = pgEnum('announcement_type', ['INFO', 'SUCCES
 
 // Tables
 export const settingsTable = pgTable('settings', {
-  key: varchar({ length: 255 }).primaryKey().notNull(),
+  key: varchar({ length: 512 }).primaryKey().notNull(),
   value: text().notNull(),
 });
+
+export const versionHistoryTable = pgTable('version_history', {
+  extension: varchar({ length: 255 }).notNull(),
+  version: varchar({ length: 255 }).notNull(),
+  installed: timestamp().defaultNow().notNull(),
+}, (cols) => [
+  primaryKey({ name: 'version_history_extension_version_pk', columns: [cols.extension, cols.version] }),
+]);
 
 export const announcementsTable = pgTable(
   'announcements',

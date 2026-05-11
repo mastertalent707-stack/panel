@@ -1,33 +1,40 @@
 use super::State;
 use utoipa_axum::{router::OpenApiRouter, routes};
 
-mod nodes;
-mod recheck;
-mod history;
-
 mod get {
+    use std::collections::BTreeMap;
+
     use serde::Serialize;
     use shared::{
-        GetState,
+        ApiError, GetState,
         models::user::GetPermissionManager,
         response::{ApiResponse, ApiResponseResult},
     };
-    use std::sync::Arc;
     use utoipa::ToSchema;
 
     #[derive(ToSchema, Serialize)]
-    struct Response {
-        update_information: Option<Arc<shared::updates::UpdateInformation>>,
+    struct ResponseVersionHistory<'a> {
+        panel: &'a [shared::updates::VersionHistoryEntry],
+        extensions: &'a BTreeMap<&'static str, Vec<shared::updates::VersionHistoryEntry>>,
+    }
+
+    #[derive(ToSchema, Serialize)]
+    struct Response<'a> {
+        version_history: ResponseVersionHistory<'a>,
     }
 
     #[utoipa::path(get, path = "/", responses(
         (status = OK, body = inline(Response)),
+        (status = EXPECTATION_FAILED, body = ApiError),
     ))]
     pub async fn route(state: GetState, permissions: GetPermissionManager) -> ApiResponseResult {
         permissions.has_admin_permission("stats.read")?;
 
         ApiResponse::new_serialized(Response {
-            update_information: state.updates.get_update_information().await,
+            version_history: ResponseVersionHistory {
+                panel: &*state.updates.get_panel_version_history().await,
+                extensions: &*state.updates.get_extension_version_history().await,
+            },
         })
         .ok()
     }
@@ -36,8 +43,5 @@ mod get {
 pub fn router(state: &State) -> OpenApiRouter<State> {
     OpenApiRouter::new()
         .routes(routes!(get::route))
-        .nest("/recheck", recheck::router(state))
-        .nest("/nodes", nodes::router(state))
-        .nest("/history", history::router(state))
         .with_state(state.clone())
 }
