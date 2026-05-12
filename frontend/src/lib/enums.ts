@@ -53,7 +53,7 @@ import { adminBackupConfigurationSchema } from '@/lib/schemas/admin/backupConfig
 import { adminEggConfigurationDeploymentSchema } from '@/lib/schemas/admin/eggConfigurations.ts';
 import { processConfigurationConfigParser } from '@/lib/schemas/admin/eggs.ts';
 import { adminSettingsEmailSchema, adminSettingsStorageSchema } from '@/lib/schemas/admin/settings.ts';
-import { databaseType, streamingArchiveFormat } from '@/lib/schemas/generic.ts';
+import { databaseType, streamingArchiveFormat, transferArchiveFormat } from '@/lib/schemas/generic.ts';
 import { archiveFormat, compressionLevel, fingerprintAlgorithm } from '@/lib/schemas/server/files.ts';
 import {
   serverScheduleComparator,
@@ -166,6 +166,23 @@ export const archiveFormatLabelMapping: Record<z.infer<typeof archiveFormat>, st
   tar_zstd: '.tar.zst',
   zip: '.zip',
   seven_zip: '.7z',
+};
+
+export const transferArchiveFormatLabelMapping: Record<z.infer<typeof transferArchiveFormat>, string> = {
+  tar: '.tar',
+  tar_gz: '.tar.gz',
+  tar_xz: '.tar.xz',
+  tar_lzip: '.tar.lz',
+  tar_bz2: '.tar.bz2',
+  tar_lz4: '.tar.lz4',
+  tar_zstd: '.tar.zst',
+  itaf: '.itaf',
+  itaf_gz: '.itaf.gz',
+  itaf_xz: '.itaf.xz',
+  itaf_lzip: '.itaf.lz',
+  itaf_bz2: '.itaf.bz2',
+  itaf_lz4: '.itaf.lz4',
+  itaf_zstd: '.itaf.zst',
 };
 
 export const streamingArchiveFormatLabelMapping: Record<z.infer<typeof streamingArchiveFormat>, string> = {

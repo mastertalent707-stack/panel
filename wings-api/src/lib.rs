@@ -449,6 +449,20 @@ pub enum TransferArchiveFormat {
     TarLz4,
     #[serde(rename = "tar_zstd")]
     TarZstd,
+    #[serde(rename = "itaf")]
+    Itaf,
+    #[serde(rename = "itaf_gz")]
+    ItafGz,
+    #[serde(rename = "itaf_xz")]
+    ItafXz,
+    #[serde(rename = "itaf_lzip")]
+    ItafLzip,
+    #[serde(rename = "itaf_bz2")]
+    ItafBz2,
+    #[serde(rename = "itaf_lz4")]
+    ItafLz4,
+    #[serde(rename = "itaf_zstd")]
+    ItafZstd,
 }
 
 nestify::nest! {
@@ -2396,48 +2410,7 @@ pub mod update {
     pub mod post {
         use super::*;
 
-        nestify::nest! {
-            #[derive(Debug, ToSchema, Deserialize, Serialize, Clone)] pub struct RequestBody {
-                #[schema(inline)]
-                pub debug: Option<bool>,
-                #[schema(inline)]
-                pub app_name: Option<compact_str::CompactString>,
-                #[schema(inline)]
-                pub api: Option<#[derive(Debug, ToSchema, Deserialize, Serialize, Clone)] pub struct RequestBodyApi {
-                    #[schema(inline)]
-                    pub host: Option<compact_str::CompactString>,
-                    #[schema(inline)]
-                    pub port: Option<u32>,
-                    #[schema(inline)]
-                    pub ssl: Option<#[derive(Debug, ToSchema, Deserialize, Serialize, Clone)] pub struct RequestBodyApiSsl {
-                        #[schema(inline)]
-                        pub enabled: Option<bool>,
-                        #[schema(inline)]
-                        pub cert: Option<compact_str::CompactString>,
-                        #[schema(inline)]
-                        pub key: Option<compact_str::CompactString>,
-                    }>,
-                    #[schema(inline)]
-                    pub upload_limit: Option<MiB>,
-                }>,
-                #[schema(inline)]
-                pub system: Option<#[derive(Debug, ToSchema, Deserialize, Serialize, Clone)] pub struct RequestBodySystem {
-                    #[schema(inline)]
-                    pub sftp: Option<#[derive(Debug, ToSchema, Deserialize, Serialize, Clone)] pub struct RequestBodySystemSftp {
-                        #[schema(inline)]
-                        pub bind_address: Option<compact_str::CompactString>,
-                        #[schema(inline)]
-                        pub bind_port: Option<u32>,
-                    }>,
-                }>,
-                #[schema(inline)]
-                pub allowed_origins: Option<Vec<compact_str::CompactString>>,
-                #[schema(inline)]
-                pub allow_cors_private_network: Option<bool>,
-                #[schema(inline)]
-                pub ignore_panel_config_updates: Option<bool>,
-            }
-        }
+        pub type RequestBody = serde_json::Value;
 
         nestify::nest! {
             #[derive(Debug, ToSchema, Deserialize, Serialize, Clone)] pub struct Response200 {
