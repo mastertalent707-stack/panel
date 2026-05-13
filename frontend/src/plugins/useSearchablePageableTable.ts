@@ -67,7 +67,7 @@ export function useSearchablePaginatedTable<T>({
     queryKey: [...queryKey, ...deps, { page, search: debouncedSearch }],
     queryFn: () => fetcher(page, debouncedSearch),
     placeholderData: keepPreviousData,
-    enabled: canRequest && (!deps.length || deps.every(Boolean)),
+    enabled: canRequest,
   });
 
   useEffect(() => {
