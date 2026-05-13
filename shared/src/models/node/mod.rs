@@ -430,6 +430,31 @@ impl Node {
             .await
     }
 
+    /// Update the configuration of this node
+    ///
+    /// Invalidates the cached configuration.
+    pub async fn update_configuration(
+        &self,
+        database: &crate::database::Database,
+        config_patch: &serde_json::Value,
+    ) -> Result<bool, anyhow::Error> {
+        let response = self
+            .api_client(database)
+            .await?
+            .post_update(config_patch)
+            .await?;
+        if !response.applied {
+            return Ok(false);
+        }
+
+        database
+            .cache
+            .invalidate(&format!("node::{}::configuration", self.uuid))
+            .await?;
+
+        Ok(true)
+    }
+
     /// Fetch the current resource usages of all servers on this node.
     ///
     /// Cached for 15 seconds.

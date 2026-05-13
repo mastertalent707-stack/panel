@@ -14,6 +14,7 @@ use utoipa_axum::{router::OpenApiRouter, routes};
 
 mod allocations;
 mod backups;
+mod config;
 mod mounts;
 mod reset_token;
 mod servers;
@@ -237,6 +238,7 @@ pub fn router(state: &State) -> OpenApiRouter<State> {
         .nest("/servers", servers::router(state))
         .nest("/mounts", mounts::router(state))
         .nest("/backups", backups::router(state))
+        .nest("/config", config::router(state))
         .route_layer(axum::middleware::from_fn_with_state(state.clone(), auth))
         .with_state(state.clone())
 }
