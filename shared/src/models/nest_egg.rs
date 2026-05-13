@@ -695,7 +695,7 @@ impl NestEgg {
             Self::columns_sql(None)
         ))
         .bind(user.uuid)
-        .bind(user.admin || user.role.as_ref().is_some_and(|r| r.admin_permissions.iter().any(|p| p == "servers.read")))
+        .bind(user.role.as_ref().map_or(user.admin, |r| r.admin_permissions.iter().any(|p| p == "servers.read")))
         .bind(search)
         .bind(per_page)
         .bind(offset)

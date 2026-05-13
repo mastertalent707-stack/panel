@@ -519,8 +519,7 @@ impl Server {
                 let mut row = sqlx::query(&query)
                     .bind(user.uuid)
                     .bind(
-                        user.admin
-                            || user.role.as_ref().is_some_and(|r| r.admin_permissions.iter().any(|p| p == "servers.read"))
+                        user.role.as_ref().map_or(user.admin, |r| r.admin_permissions.iter().any(|p| p == "servers.read"))
                     );
                 row = match identifier.len() {
                     8 => row.bind(u32::from_str_radix(identifier, 16)? as i32),

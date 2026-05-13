@@ -29,7 +29,7 @@ function Container({ children, isNormal }: LayoutProps) {
     >
       <div>
         {impersonating && (
-          <Alert icon={<FontAwesomeIcon icon={faUserCheck} />} color='yellow' className='mt-2 mx-2'>
+          <Alert icon={<FontAwesomeIcon icon={faUserCheck} />} color='yellow' className='mt-2 mx-4'>
             {t('elements.container.alert.impersonating', {})}
           </Alert>
         )}
