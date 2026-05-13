@@ -19,7 +19,10 @@ mod post {
     pub struct Payload {
         server_uuid: uuid::Uuid,
 
+        #[serde(default)]
         truncate_directory: bool,
+        #[serde(default)]
+        restore_startup: bool,
     }
 
     #[derive(ToSchema, Serialize)]
@@ -105,7 +108,15 @@ mod post {
 
         if let Err(err) = backup
             .0
-            .restore(&state.database, server, data.truncate_directory)
+            .restore(
+                &state,
+                &mut transaction,
+                server,
+                shared::models::server_backup::ServerBackupRestoreOptions {
+                    truncate_directory: data.truncate_directory,
+                    restore_startup: data.restore_startup,
+                },
+            )
             .await
         {
             transaction.rollback().await?;
@@ -125,6 +136,7 @@ mod post {
 
                     "name": backup_name,
                     "truncate_directory": data.truncate_directory,
+                    "restore_startup": data.restore_startup,
                 }),
             )
             .await;

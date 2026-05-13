@@ -1,6 +1,9 @@
+mod events;
+pub use events::ServerBackupEvent;
+
 use crate::{
     jwt::BasePayload,
-    models::{InsertQueryBuilder, UpdateQueryBuilder},
+    models::{InsertQueryBuilder, UpdateQueryBuilder, server_variable::ServerVariable},
     prelude::*,
     storage::StorageUrlRetriever,
 };
@@ -10,7 +13,7 @@ use reqwest::StatusCode;
 use serde::{Deserialize, Serialize};
 use sqlx::{Row, postgres::PgRow, prelude::Type};
 use std::{
-    collections::BTreeMap,
+    collections::{BTreeMap, HashMap},
     sync::{Arc, LazyLock},
 };
 use utoipa::ToSchema;
@@ -41,6 +44,11 @@ impl BackupDisk {
     }
 }
 
+pub struct ServerBackupRestoreOptions {
+    pub truncate_directory: bool,
+    pub restore_startup: bool,
+}
+
 #[derive(Serialize, Deserialize, Clone)]
 pub struct ServerBackup {
     pub uuid: uuid::Uuid,
@@ -63,6 +71,7 @@ pub struct ServerBackup {
     pub disk: BackupDisk,
     pub upload_id: Option<compact_str::CompactString>,
     pub upload_path: Option<compact_str::CompactString>,
+    pub metadata: serde_json::Value,
 
     pub completed: Option<chrono::NaiveDateTime>,
     pub deleted: Option<chrono::NaiveDateTime>,
@@ -159,6 +168,10 @@ impl BaseModel for ServerBackup {
                 compact_str::format_compact!("{prefix}upload_path"),
             ),
             (
+                "server_backups.metadata",
+                compact_str::format_compact!("{prefix}metadata"),
+            ),
+            (
                 "server_backups.completed",
                 compact_str::format_compact!("{prefix}completed"),
             ),
@@ -206,6 +219,7 @@ impl BaseModel for ServerBackup {
             upload_id: row.try_get(compact_str::format_compact!("{prefix}upload_id").as_str())?,
             upload_path: row
                 .try_get(compact_str::format_compact!("{prefix}upload_path").as_str())?,
+            metadata: row.try_get(compact_str::format_compact!("{prefix}metadata").as_str())?,
             completed: row.try_get(compact_str::format_compact!("{prefix}completed").as_str())?,
             deleted: row.try_get(compact_str::format_compact!("{prefix}deleted").as_str())?,
             created: row.try_get(compact_str::format_compact!("{prefix}created").as_str())?,
@@ -217,7 +231,7 @@ impl BaseModel for ServerBackup {
 impl ServerBackup {
     pub async fn create_raw(
         state: &crate::State,
-        options: CreateServerBackupOptions<'_>,
+        mut options: CreateServerBackupOptions<'_>,
     ) -> Result<Self, anyhow::Error> {
         let backup_configuration = options
             .server
@@ -238,26 +252,35 @@ impl ServerBackup {
             .into());
         }
 
-        let row = sqlx::query(&format!(
-            r#"
-            INSERT INTO server_backups (server_uuid, node_uuid, backup_configuration_uuid, name, ignored_files, bytes, disk, shared)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-            RETURNING {}
-            "#,
-            Self::columns_sql(None)
-        ))
-        .bind(options.server.uuid)
-        .bind(options.server.node.uuid)
-        .bind(backup_configuration.uuid)
-        .bind(options.name)
-        .bind(&options.ignored_files)
-        .bind(0i64)
-        .bind(backup_configuration.backup_disk)
-        .bind(backup_configuration.shared)
-        .fetch_one(state.database.write())
-        .await?;
+        let mut transaction = state.database.write().begin().await?;
 
-        Ok(Self::map(None, &row)?)
+        let mut query_builder = InsertQueryBuilder::new("server_backups");
+
+        Self::run_create_handlers(&mut options, &mut query_builder, state, &mut transaction)
+            .await?;
+
+        query_builder
+            .set("server_uuid", options.server.uuid)
+            .set("node_uuid", options.server.node.uuid)
+            .set("backup_configuration_uuid", backup_configuration.uuid)
+            .set("name", &options.name)
+            .set("ignored_files", &options.ignored_files)
+            .set("bytes", 0i64)
+            .set("disk", backup_configuration.backup_disk)
+            .set("shared", backup_configuration.shared)
+            .set("metadata", &options.metadata);
+
+        let row = query_builder
+            .returning(&Self::columns_sql(None))
+            .fetch_one(&mut *transaction)
+            .await?;
+        let mut backup = Self::map(None, &row)?;
+
+        Self::run_after_create_handlers(&mut backup, &options, state, &mut transaction).await?;
+
+        transaction.commit().await?;
+
+        Ok(backup)
     }
 
     pub async fn by_server_uuid_uuid(
@@ -640,6 +663,29 @@ impl ServerBackup {
         .await
     }
 
+    pub async fn generate_metadata(
+        state: &crate::State,
+        server: &super::server::Server,
+    ) -> Result<serde_json::Value, anyhow::Error> {
+        let mut variables = serde_json::Map::new();
+
+        for variable in ServerVariable::all_by_server_uuid_egg_uuid(
+            &state.database,
+            server.uuid,
+            server.egg.uuid,
+        )
+        .await?
+        {
+            variables.insert(variable.variable.env_variable.into(), variable.value.into());
+        }
+
+        Ok(serde_json::json!({
+            "startup": server.startup,
+            "image": server.image,
+            "variables": variables,
+        }))
+    }
+
     pub async fn download_url(
         &self,
         state: &crate::State,
@@ -733,19 +779,21 @@ impl ServerBackup {
 
     pub async fn restore(
         self,
-        database: &crate::database::Database,
-        server: super::server::Server,
-        truncate_directory: bool,
+        state: &crate::State,
+        transaction: &mut sqlx::Transaction<'_, sqlx::Postgres>,
+        mut server: super::server::Server,
+        options: ServerBackupRestoreOptions,
     ) -> Result<(), anyhow::Error> {
         let backup_configuration = self
             .backup_configuration
+            .as_ref()
             .ok_or_else(|| {
                 crate::response::DisplayError::new(
                     "no backup configuration available, unable to restore backup",
                 )
                 .with_status(StatusCode::EXPECTATION_FAILED)
             })?
-            .fetch_cached(database)
+            .fetch_cached(&state.database)
             .await?;
 
         if backup_configuration.maintenance_enabled {
@@ -756,11 +804,153 @@ impl ServerBackup {
             .into());
         }
 
+        if options.restore_startup {
+            let startup_cmd = self
+                .metadata
+                .get("startup")
+                .and_then(|v| v.as_str())
+                .map(|s| s.to_compact_string());
+            let image_str = self
+                .metadata
+                .get("image")
+                .and_then(|v| v.as_str())
+                .map(|s| s.to_compact_string());
+            let variables = self
+                .metadata
+                .get("variables")
+                .and_then(|v| v.as_object())
+                .cloned()
+                .unwrap_or_default();
+
+            if let Some(startup) = startup_cmd
+                && let Ok(egg_config) = server.egg.configuration(&state.database).await
+            {
+                let is_predefined = server
+                    .egg
+                    .startup_commands
+                    .values()
+                    .any(|cmd| cmd == startup.as_str());
+                let custom_allowed = egg_config
+                    .config_startup
+                    .as_ref()
+                    .is_some_and(|c| c.allow_custom_startup_command);
+                if is_predefined || custom_allowed {
+                    server
+                        .update_with_transaction(
+                            state,
+                            super::server::UpdateServerOptions {
+                                startup: Some(startup),
+                                ..Default::default()
+                            },
+                            transaction,
+                        )
+                        .await?;
+                }
+            }
+
+            if let Some(image) = image_str {
+                let is_valid_image = server
+                    .egg
+                    .docker_images
+                    .values()
+                    .any(|img| img == image.as_str());
+                if is_valid_image {
+                    let current_is_custom = !server
+                        .egg
+                        .docker_images
+                        .values()
+                        .any(|img| img == server.image.as_str());
+                    let allow_overwrite = state
+                        .settings
+                        .get()
+                        .await
+                        .map(|s| s.server.allow_overwriting_custom_docker_image)
+                        .unwrap_or(false);
+                    if !current_is_custom || allow_overwrite {
+                        server
+                            .update_with_transaction(
+                                state,
+                                super::server::UpdateServerOptions {
+                                    image: Some(image),
+                                    ..Default::default()
+                                },
+                                transaction,
+                            )
+                            .await?;
+                    }
+                }
+            }
+
+            if !variables.is_empty() {
+                let existing_variables = ServerVariable::all_by_server_uuid_egg_uuid(
+                    &state.database,
+                    server.uuid,
+                    server.egg.uuid,
+                )
+                .await?;
+
+                let mut validator_variables = HashMap::new();
+                for variable in existing_variables.iter() {
+                    validator_variables.insert(
+                        variable.variable.env_variable.as_str(),
+                        (
+                            variable.variable.rules.as_slice(),
+                            if let Some(value) = variables
+                                .iter()
+                                .find(|v| v.0 == variable.variable.env_variable)
+                                && variable.variable.user_editable
+                                && let Some(value) = value.1.as_str()
+                            {
+                                value
+                            } else {
+                                variable.value.as_str()
+                            },
+                        ),
+                    );
+                }
+
+                let validator = match rule_validator::Validator::new(validator_variables) {
+                    Ok(validator) => validator,
+                    Err(error) => {
+                        return Err(crate::response::DisplayError::new(error)
+                            .with_status(StatusCode::EXPECTATION_FAILED)
+                            .into());
+                    }
+                };
+                if let Err(error) = validator.validate() {
+                    return Err(crate::response::DisplayError::new(error)
+                        .with_status(StatusCode::EXPECTATION_FAILED)
+                        .into());
+                }
+
+                for (env_var, value) in &variables {
+                    let Some(value) = value.as_str() else {
+                        continue;
+                    };
+                    let variable_uuid = match existing_variables
+                        .iter()
+                        .find(|v| v.variable.env_variable == env_var)
+                    {
+                        Some(variable) if variable.variable.user_editable => variable.variable.uuid,
+                        _ => continue,
+                    };
+
+                    ServerVariable::create_with_transaction(
+                        transaction,
+                        server.uuid,
+                        variable_uuid,
+                        value,
+                    )
+                    .await?;
+                }
+            }
+        }
+
         server
             .node
-            .fetch_cached(database)
+            .fetch_cached(&state.database)
             .await?
-            .api_client(database)
+            .api_client(&state.database)
             .await?
             .post_servers_server_backup_backup_restore(
                 server.uuid,
@@ -772,7 +962,7 @@ impl ServerBackup {
                             if let Some(mut s3_configuration) =
                                 backup_configuration.backup_configs.s3
                             {
-                                s3_configuration.decrypt(database).await?;
+                                s3_configuration.decrypt(&state.database).await?;
 
                                 let client = s3_configuration.into_client()?;
                                 let file_path = match &self.upload_path {
@@ -787,10 +977,18 @@ impl ServerBackup {
                         }
                         _ => None,
                     },
-                    truncate_directory,
+                    truncate_directory: options.truncate_directory,
                 },
             )
             .await?;
+
+        Self::get_event_emitter().emit(
+            state.clone(),
+            ServerBackupEvent::RestoreStarted {
+                backup: Box::new(self),
+                server: Box::new(server),
+            },
+        );
 
         Ok(())
     }
@@ -879,6 +1077,7 @@ impl ServerBackup {
             checksum: self.checksum,
             bytes: self.bytes,
             files: self.files,
+            metadata: self.metadata,
             completed: self.completed.map(|dt| dt.and_utc()),
             created: self.created.and_utc(),
         })
@@ -920,6 +1119,7 @@ impl IntoAdminApiObject for ServerBackup {
                 checksum: self.checksum,
                 bytes: self.bytes,
                 files: self.files,
+                metadata: self.metadata,
                 completed: self.completed.map(|dt| dt.and_utc()),
                 created: self.created.and_utc(),
             },
@@ -955,6 +1155,7 @@ impl IntoApiObject for ServerBackup {
                 checksum: self.checksum,
                 bytes: self.bytes,
                 files: self.files,
+                metadata: self.metadata,
                 completed: self.completed.map(|dt| dt.and_utc()),
                 created: self.created.and_utc(),
             },
@@ -974,6 +1175,8 @@ pub struct CreateServerBackupOptions<'a> {
     pub name: compact_str::CompactString,
     #[garde(skip)]
     pub ignored_files: Vec<compact_str::CompactString>,
+    #[garde(skip)]
+    pub metadata: serde_json::Value,
 }
 
 #[async_trait::async_trait]
@@ -1040,7 +1243,8 @@ impl CreatableModel for ServerBackup {
             .set("ignored_files", &options.ignored_files)
             .set("bytes", 0i64)
             .set("disk", backup_configuration.backup_disk)
-            .set("shared", backup_configuration.shared);
+            .set("shared", backup_configuration.shared)
+            .set("metadata", &options.metadata);
 
         let row = query_builder
             .returning(&Self::columns_sql(None))
@@ -1427,6 +1631,8 @@ pub struct AdminApiNodeServerBackup {
     pub bytes: i64,
     pub files: i64,
 
+    pub metadata: serde_json::Value,
+
     pub completed: Option<chrono::DateTime<chrono::Utc>>,
     pub created: chrono::DateTime<chrono::Utc>,
 }
@@ -1453,6 +1659,8 @@ pub struct AdminApiServerBackup {
     pub bytes: i64,
     pub files: i64,
 
+    pub metadata: serde_json::Value,
+
     pub completed: Option<chrono::DateTime<chrono::Utc>>,
     pub created: chrono::DateTime<chrono::Utc>,
 }
@@ -1476,6 +1684,8 @@ pub struct ApiServerBackup {
     pub checksum: Option<compact_str::CompactString>,
     pub bytes: i64,
     pub files: i64,
+
+    pub metadata: serde_json::Value,
 
     pub completed: Option<chrono::DateTime<chrono::Utc>>,
     pub created: chrono::DateTime<chrono::Utc>,

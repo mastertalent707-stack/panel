@@ -92,6 +92,7 @@ mod post {
             server: &server,
             name: data.name.unwrap_or_else(ServerBackup::default_name),
             ignored_files: data.ignored_files,
+            metadata: ServerBackup::generate_metadata(&state, &server).await?,
         };
         let backup = ServerBackup::create_raw(&state, options).await?;
 

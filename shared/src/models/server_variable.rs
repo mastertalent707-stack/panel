@@ -97,6 +97,28 @@ impl ServerVariable {
         Ok(())
     }
 
+    pub async fn create_with_transaction(
+        transaction: &mut sqlx::Transaction<'_, sqlx::Postgres>,
+        server_uuid: uuid::Uuid,
+        variable_uuid: uuid::Uuid,
+        value: &str,
+    ) -> Result<(), crate::database::DatabaseError> {
+        sqlx::query(
+            r#"
+            INSERT INTO server_variables (server_uuid, variable_uuid, value)
+            VALUES ($1, $2, $3)
+            ON CONFLICT (server_uuid, variable_uuid) DO UPDATE SET value = EXCLUDED.value
+            "#,
+        )
+        .bind(server_uuid)
+        .bind(variable_uuid)
+        .bind(value)
+        .execute(&mut **transaction)
+        .await?;
+
+        Ok(())
+    }
+
     pub async fn all_by_server_uuid_egg_uuid(
         database: &crate::database::Database,
         server_uuid: uuid::Uuid,

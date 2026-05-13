@@ -1,4 +1,3 @@
-use anyhow::Context;
 use axum::{
     ServiceExt,
     body::Body,
@@ -142,7 +141,7 @@ async fn handle_aio_wings(state: &shared::State) -> Result<(), anyhow::Error> {
                     serde_norway::from_str(
                         &tokio::fs::read_to_string(config_path)
                             .await
-                            .context("failed to read aio base wings configuration file")?,
+                            .unwrap_or_else(|_| "".into()),
                     )
                     .unwrap_or_else(|_| serde_norway::Mapping::new()),
                 ),

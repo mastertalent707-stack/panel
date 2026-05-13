@@ -2022,6 +2022,9 @@ const baseTranslations = defineTranslations({
             },
             restoreBackup: {
               title: 'Restore Backup',
+              form: {
+                restoreStartup: 'Restore the startup command, image, and variables from this backup.',
+              },
             },
             deleteBackup: {
               title: 'Confirm Backup Deletion',
@@ -2029,6 +2032,9 @@ const baseTranslations = defineTranslations({
               toast: {
                 deleted: 'Backup deleted.',
               },
+            },
+            viewMetadata: {
+              title: 'Backup Metadata',
             },
           },
         },

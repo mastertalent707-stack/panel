@@ -847,6 +847,7 @@ export const serverBackupsTable = pgTable(
     bytes: bigint({ mode: 'number' }).default(0).notNull(),
     files: bigint({ mode: 'number' }).default(0).notNull(),
     disk: backupDiskEnum().notNull(),
+    metadata: jsonb().default({}).notNull(),
     upload_id: text(),
     upload_path: text(),
     completed: timestamp(),
