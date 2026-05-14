@@ -1187,6 +1187,21 @@ pub mod servers_server_files_fingerprints {
         pub type Response = Response200;
     }
 }
+pub mod servers_server_files_largest_directories {
+    use super::*;
+
+    pub mod get {
+        use super::*;
+
+        pub type Response200 = Vec<DirectoryEntry>;
+
+        pub type Response404 = ApiError;
+
+        pub type Response417 = ApiError;
+
+        pub type Response = Response200;
+    }
+}
 pub mod servers_server_files_list {
     use super::*;
 
@@ -1197,6 +1212,8 @@ pub mod servers_server_files_list {
             #[derive(Debug, ToSchema, Deserialize, Serialize, Clone)] pub struct Response200 {
                 #[schema(inline)]
                 pub total: u64,
+                #[schema(inline)]
+                pub filesystem_primary: bool,
                 #[schema(inline)]
                 pub filesystem_writable: bool,
                 #[schema(inline)]

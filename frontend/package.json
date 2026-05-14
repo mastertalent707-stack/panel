@@ -32,6 +32,7 @@
     "@friendlycaptcha/sdk": "^1.0.0",
     "@gfazioli/mantine-window": "^3.1.1",
     "@hcaptcha/react-hcaptcha": "^2.0.2",
+    "@mantine/charts": "^9.2.1",
     "@mantine/core": "^9.2.1",
     "@mantine/dates": "^9.2.1",
     "@mantine/form": "9.0.0-alpha.6",

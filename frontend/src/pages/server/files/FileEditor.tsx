@@ -53,6 +53,7 @@ function FileEditorComponent() {
     editorMinimap,
     editorLineOverflow,
     imageViewerSmoothing,
+    browsingPrimaryFilesystem,
     browsingWritableDirectory,
     browsingDirectory,
     setBrowsingDirectory,
@@ -227,7 +228,7 @@ function FileEditorComponent() {
           <div hidden={!browsingWritableDirectory || params.action === 'image'}>
             {params.action === 'edit' ? (
               <div className='flex flex-row items-center'>
-                {fileName && browsingWritableDirectory && (
+                {fileName && browsingPrimaryFilesystem && (
                   <Tooltip label={t('pages.server.files.tooltip.fileHistory', {})}>
                     <ActionIcon
                       size='sm'

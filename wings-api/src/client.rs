@@ -475,6 +475,22 @@ impl WingsClient {
         .await
     }
 
+    pub async fn get_servers_server_files_largest_directories(
+        &self,
+        server: uuid::Uuid,
+        directory: &str,
+    ) -> Result<super::servers_server_files_largest_directories::get::Response, ApiHttpError> {
+        let directory = urlencoding::encode(directory);
+        request_impl(
+            self,
+            Method::GET,
+            format!("/api/servers/{server}/files/largest-directories?directory={directory}"),
+            None::<&()>,
+            None,
+        )
+        .await
+    }
+
     pub async fn get_servers_server_files_list(
         &self,
         server: uuid::Uuid,

@@ -20,6 +20,7 @@ mod revisions;
 mod search;
 mod upload;
 mod write;
+mod largest_directories;
 
 pub fn router(state: &State) -> OpenApiRouter<State> {
     OpenApiRouter::new()
@@ -37,6 +38,7 @@ pub fn router(state: &State) -> OpenApiRouter<State> {
         .nest("/decompress", decompress::router(state))
         .nest("/delete", delete::router(state))
         .nest("/create-directory", create_directory::router(state))
+        .nest("/largest-directories", largest_directories::router(state))
         .nest("/chmod", chmod::router(state))
         .nest("/search", search::router(state))
         .nest("/pull", pull::router(state))

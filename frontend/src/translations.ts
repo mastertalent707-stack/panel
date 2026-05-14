@@ -1295,6 +1295,7 @@ const baseTranslations = defineTranslations({
           },
           tooltip: {
             fileHistory: 'File History',
+            largestDirectories: 'Analyze directory sizes',
           },
           drawer: {
             revisions: {
@@ -1404,6 +1405,10 @@ const baseTranslations = defineTranslations({
               form: {
                 fileName: 'File Name',
               },
+            },
+            largestDirectories: {
+              title: 'Largest Directories',
+              empty: 'No directories found.',
             },
             searchFiles: {
               title: 'Search Files',
