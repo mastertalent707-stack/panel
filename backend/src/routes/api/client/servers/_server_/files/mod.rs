@@ -12,6 +12,7 @@ mod decompress;
 mod delete;
 mod download;
 mod fingerprint;
+mod largest_directories;
 mod list;
 mod operations;
 mod pull;
@@ -20,7 +21,6 @@ mod revisions;
 mod search;
 mod upload;
 mod write;
-mod largest_directories;
 
 pub fn router(state: &State) -> OpenApiRouter<State> {
     OpenApiRouter::new()
