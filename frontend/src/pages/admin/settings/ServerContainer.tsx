@@ -1,4 +1,4 @@
-import { Group, Stack, Tooltip } from '@mantine/core';
+import { Group, Tooltip } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { zod4Resolver } from 'mantine-form-zod-resolver';
 import { useEffect, useState } from 'react';
@@ -64,59 +64,40 @@ export default function ServerContainer() {
   return (
     <AdminSubContentContainer title='Server Settings' titleOrder={2}>
       <form onSubmit={form.onSubmit(() => doUpdate())}>
-        <Stack>
-          <Group grow>
-            <SizeInput
-              withAsterisk
-              label='Max File Manager View Size'
-              mode='b'
-              min={0}
-              value={form.getValues().maxFileManagerViewSize}
-              onChange={(v) => form.setFieldValue('maxFileManagerViewSize', v)}
-            />
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+          <SizeInput
+            withAsterisk
+            label='Max File Manager View Size'
+            mode='b'
+            min={0}
+            value={form.getValues().maxFileManagerViewSize}
+            onChange={(v) => form.setFieldValue('maxFileManagerViewSize', v)}
+          />
 
-            <NumberInput
-              withAsterisk
-              label='Max Schedule Steps'
-              placeholder='Max Schedule Steps'
-              key={form.key('maxScheduleStepCount')}
-              {...form.getInputProps('maxScheduleStepCount')}
-            />
-          </Group>
+          <NumberInput
+            withAsterisk
+            label='Max Schedule Steps'
+            placeholder='Max Schedule Steps'
+            key={form.key('maxScheduleStepCount')}
+            {...form.getInputProps('maxScheduleStepCount')}
+          />
 
-          <Group grow>
-            <SizeInput
-              withAsterisk
-              label='Max File Manager Content Search Size'
-              mode='b'
-              min={0}
-              value={form.getValues().maxFileManagerContentSearchSize}
-              onChange={(v) => form.setFieldValue('maxFileManagerContentSearchSize', v)}
-            />
+          <SizeInput
+            withAsterisk
+            label='Max File Manager Content Search Size'
+            mode='b'
+            min={0}
+            value={form.getValues().maxFileManagerContentSearchSize}
+            onChange={(v) => form.setFieldValue('maxFileManagerContentSearchSize', v)}
+          />
 
-            <NumberInput
-              withAsterisk
-              label='Max File Manager Search Results'
-              placeholder='Max File Manager Search Results'
-              key={form.key('maxFileManagerSearchResults')}
-              {...form.getInputProps('maxFileManagerSearchResults')}
-            />
-          </Group>
-
-          <Group grow>
-            <Switch
-              label='Allow Overwriting Custom Docker Image'
-              description='If enabled, users will be able to overwrite the Docker image specified in the server configuration using the Eggs list, even if an admin has set a custom Docker image.'
-              key={form.key('allowOverwritingCustomDockerImage')}
-              {...form.getInputProps('allowOverwritingCustomDockerImage', { type: 'checkbox' })}
-            />
-
-            <Switch
-              label='Allow Editing Startup Command'
-              key={form.key('allowEditingStartupCommand')}
-              {...form.getInputProps('allowEditingStartupCommand', { type: 'checkbox' })}
-            />
-          </Group>
+          <NumberInput
+            withAsterisk
+            label='Max File Manager Search Results'
+            placeholder='Max File Manager Search Results'
+            key={form.key('maxFileManagerSearchResults')}
+            {...form.getInputProps('maxFileManagerSearchResults')}
+          />
 
           <NumberInput
             withAsterisk
@@ -124,6 +105,13 @@ export default function ServerContainer() {
             placeholder='Max Subuser Count'
             key={form.key('maxSubuserCount')}
             {...form.getInputProps('maxSubuserCount')}
+          />
+
+          <Switch
+            label='Allow Overwriting Custom Docker Image'
+            description='If enabled, users will be able to overwrite the Docker image specified in the server configuration using the Eggs list, even if an admin has set a custom Docker image.'
+            key={form.key('allowOverwritingCustomDockerImage')}
+            {...form.getInputProps('allowOverwritingCustomDockerImage', { type: 'checkbox' })}
           />
 
           <Switch
@@ -136,6 +124,7 @@ export default function ServerContainer() {
           <Switch
             label='Allow Acknowledging Installation Failure'
             description='If enabled, users will be able to acknowledge installation failures for servers that are in the "Install Failed" state, allowing them to attempt to start the server instead of having to wait for an admin. If disabled, only admins will be able to acknowledge installation failures.'
+            key={form.key('allowAcknowledgingInstallationFailure')}
             {...form.getInputProps('allowAcknowledgingInstallationFailure', { type: 'checkbox' })}
           />
 
@@ -145,7 +134,7 @@ export default function ServerContainer() {
             key={form.key('allowViewingTransferProgress')}
             {...form.getInputProps('allowViewingTransferProgress', { type: 'checkbox' })}
           />
-        </Stack>
+        </div>
 
         <Group mt='md'>
           <AdminCan
