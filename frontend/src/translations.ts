@@ -1210,6 +1210,8 @@ const baseTranslations = defineTranslations({
           titleEditorViewing: 'Viewing {file}',
           titleEditorEditing: 'Editing {file}',
           titleEditorNew: 'New File',
+          titleDiffRevisionVsCurrent: '{file} - Revision #{revision} vs Current',
+          titleDiffRevisionVsRevision: '{file} - Revision #{previousRevision} vs #{revision}',
           table: {
             columns: {
               modified: 'Modified',
@@ -1307,6 +1309,12 @@ const baseTranslations = defineTranslations({
               },
               tooltip: {
                 restore: 'Restore this revision into the editor',
+                viewDiff: 'View diff against current file',
+                compareToPrevious: 'Compare to previous revision',
+              },
+              diff: {
+                original: 'Revision',
+                current: 'Current',
               },
             },
           },
