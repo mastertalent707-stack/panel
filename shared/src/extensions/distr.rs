@@ -841,6 +841,7 @@ pub fn resync_extension_list() -> Result<(), anyhow::Error> {
                 package_name: {}.to_string(),
                 name: {}.to_string(),
                 panel_version: semver::VersionReq::parse({}).unwrap(),
+                license_text: None,
             }},
             package_name: {},
             description: {},
