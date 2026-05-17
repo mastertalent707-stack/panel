@@ -456,7 +456,13 @@ pub trait CreatableModel: BaseModel + Send + Sync + 'static {
     ) -> Result<Self::CreateResult, crate::database::DatabaseError> {
         let mut transaction = state.database.write().begin().await?;
 
-        let result = Self::create_with_transaction(state, options, &mut transaction).await?;
+        let result = match Self::create_with_transaction(state, options, &mut transaction).await {
+            Ok(result) => result,
+            Err(err) => {
+                transaction.rollback().await?;
+                return Err(err);
+            }
+        };
 
         transaction.commit().await?;
 
@@ -623,8 +629,13 @@ pub trait UpdatableModel: BaseModel + Send + Sync + 'static {
     ) -> Result<(), crate::database::DatabaseError> {
         let mut transaction = state.database.write().begin().await?;
 
-        self.update_with_transaction(state, options, &mut transaction)
-            .await?;
+        if let Err(err) = self
+            .update_with_transaction(state, options, &mut transaction)
+            .await
+        {
+            transaction.rollback().await?;
+            return Err(err);
+        }
 
         transaction.commit().await?;
 
@@ -790,8 +801,13 @@ pub trait DeletableModel: BaseModel + Send + Sync + 'static {
     ) -> Result<(), anyhow::Error> {
         let mut transaction = state.database.write().begin().await?;
 
-        self.delete_with_transaction(state, options, &mut transaction)
-            .await?;
+        if let Err(err) = self
+            .delete_with_transaction(state, options, &mut transaction)
+            .await
+        {
+            transaction.rollback().await?;
+            return Err(err);
+        }
 
         transaction.commit().await?;
 

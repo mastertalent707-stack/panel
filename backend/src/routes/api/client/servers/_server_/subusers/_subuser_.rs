@@ -184,7 +184,7 @@ mod patch {
         if let Some(permissions) = &data.permissions
             && !user.admin
             && let Some(subuser_permissions) = &server.subuser_permissions
-            && !permissions.iter().all(|p| subuser_permissions.contains(p))
+            && permissions.iter().any(|p| !subuser_permissions.contains(p))
         {
             return ApiResponse::error("permissions: more permissions than self")
                 .with_status(StatusCode::BAD_REQUEST)
