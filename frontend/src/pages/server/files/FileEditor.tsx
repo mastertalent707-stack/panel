@@ -238,19 +238,21 @@ function FileEditorComponent() {
           <div hidden={!browsingWritableDirectory || params.action === 'image'}>
             {params.action === 'edit' ? (
               <div className='flex flex-row items-center'>
-                {fileName && browsingPrimaryFilesystem && (
-                  <Tooltip label={t('pages.server.files.tooltip.fileHistory', {})}>
-                    <ActionIcon
-                      size='sm'
-                      variant='subtle'
-                      color='gray'
-                      onClick={() => setRevisionsOpen(true)}
-                      className='mr-2'
-                    >
-                      <FontAwesomeIcon icon={faClockRotateLeft} />
-                    </ActionIcon>
-                  </Tooltip>
-                )}
+                <ServerCan action='files.read-content'>
+                  {fileName && browsingPrimaryFilesystem && (
+                    <Tooltip label={t('pages.server.files.tooltip.fileHistory', {})}>
+                      <ActionIcon
+                        size='sm'
+                        variant='subtle'
+                        color='gray'
+                        onClick={() => setRevisionsOpen(true)}
+                        className='mr-2'
+                      >
+                        <FontAwesomeIcon icon={faClockRotateLeft} />
+                      </ActionIcon>
+                    </Tooltip>
+                  )}
+                </ServerCan>
                 <ServerCan action='files.update'>
                   <Button loading={saving} onClick={() => saveFile()}>
                     {t('common.button.save', {})}

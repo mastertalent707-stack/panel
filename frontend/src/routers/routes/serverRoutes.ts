@@ -50,7 +50,7 @@ const routes: ServerRouteDefinition[] = [
     name: undefined,
     path: '/files/diff',
     element: FileRevisionDiff,
-    permission: 'files.read',
+    permission: 'files.read-content',
   },
   {
     name: undefined,
