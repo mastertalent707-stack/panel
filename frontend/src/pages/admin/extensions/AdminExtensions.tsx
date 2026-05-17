@@ -1,6 +1,6 @@
 import { faFileText, faRefresh, faUpload } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Group, Stack, Title } from '@mantine/core';
+import { Group, Title } from '@mantine/core';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { z } from 'zod';
 import getAdminExtensions from '@/api/admin/extensions/getAdminExtensions.ts';
@@ -11,11 +11,8 @@ import removeExtension from '@/api/admin/extensions/manage/removeExtension.ts';
 import { httpErrorToHuman } from '@/api/axios.ts';
 import Button from '@/elements/Button.tsx';
 import { AdminCan } from '@/elements/Can.tsx';
-import Code from '@/elements/Code.tsx';
 import ConditionalTooltip from '@/elements/ConditionalTooltip.tsx';
 import AdminContentContainer from '@/elements/containers/AdminContentContainer.tsx';
-import Switch from '@/elements/input/Switch.tsx';
-import { Modal, ModalFooter } from '@/elements/modals/Modal.tsx';
 import Spinner from '@/elements/Spinner.tsx';
 import { adminBackendExtensionSchema } from '@/lib/schemas/admin/backendExtension.ts';
 import { useImportDragAndDrop } from '@/plugins/useImportDragAndDrop.ts';
@@ -23,6 +20,8 @@ import { useToast } from '@/providers/ToastProvider.tsx';
 import ExtensionCard from './ExtensionCard.tsx';
 import ExtensionInstallOverlay from './ExtensionInstallOverlay.tsx';
 import BuildLogsModal from './modals/BuildLogsModal.tsx';
+import LicenseModal from './modals/LicenseModal.tsx';
+import RemoveExtensionModal from './modals/RemoveExtensionModal.tsx';
 
 export default function AdminExtensions() {
   const { addToast } = useToast();
@@ -32,8 +31,11 @@ export default function AdminExtensions() {
   );
   const [extensionStatus, setExtensionStatus] = useState<ExtensionStatus | null>(null);
   const [removalExtension, setRemovalExtension] = useState<z.infer<typeof adminBackendExtensionSchema> | null>(null);
+  const [pendingLicense, setPendingLicense] = useState<{
+    file: File;
+    extension: Awaited<ReturnType<typeof addExtension>>['extension'];
+  } | null>(null);
   const [openModal, setOpenModal] = useState<'logs' | null>(null);
-  const [removeMigrations, setRemoveMigrations] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const statusIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -100,7 +102,7 @@ export default function AdminExtensions() {
       });
   };
 
-  const handleRemove = (backendExtension: z.infer<typeof adminBackendExtensionSchema>) => {
+  const handleRemove = (backendExtension: z.infer<typeof adminBackendExtensionSchema>, removeMigrations: boolean) => {
     removeExtension(backendExtension.metadataToml.packageName, removeMigrations)
       .then(() => {
         setExtensionStatus((prev) =>
@@ -127,40 +129,54 @@ export default function AdminExtensions() {
       });
   };
 
-  const handleAdd = (file: File) => {
-    addExtension(file)
-      .then((extension) => {
-        setExtensionStatus((prev) => {
-          if (!prev) return prev;
+  const applyExtension = (extension: Awaited<ReturnType<typeof addExtension>>['extension']) => {
+    setExtensionStatus((prev) => {
+      if (!prev) return prev;
 
-          const appliedMatch = backendExtensions?.find(
-            (e) => e.metadataToml.packageName === extension.metadataToml.packageName && e.version === extension.version,
-          );
+      const appliedMatch = backendExtensions?.find(
+        (e) => e.metadataToml.packageName === extension.metadataToml.packageName && e.version === extension.version,
+      );
 
-          return {
-            ...prev,
-            pendingExtensions: appliedMatch
-              ? prev.pendingExtensions.filter((e) => e.metadataToml.packageName !== extension.metadataToml.packageName)
-              : [
-                  ...prev.pendingExtensions.filter(
-                    (e) => e.metadataToml.packageName !== extension.metadataToml.packageName,
-                  ),
-                  extension,
-                ],
-            removedExtensions: prev.removedExtensions.filter(
-              (e) => e.metadataToml.packageName !== extension.metadataToml.packageName,
-            ),
-          };
-        });
-        addToast(`Extension \`${extension.metadataToml.packageName}\` added successfully.`.md(), 'success');
+      return {
+        ...prev,
+        pendingExtensions: appliedMatch
+          ? prev.pendingExtensions.filter((e) => e.metadataToml.packageName !== extension.metadataToml.packageName)
+          : [
+              ...prev.pendingExtensions.filter(
+                (e) => e.metadataToml.packageName !== extension.metadataToml.packageName,
+              ),
+              extension,
+            ],
+        removedExtensions: prev.removedExtensions.filter(
+          (e) => e.metadataToml.packageName !== extension.metadataToml.packageName,
+        ),
+      };
+    });
+    addToast(`Extension \`${extension.metadataToml.packageName}\` added successfully.`.md(), 'success');
+  };
+
+  const handleAdd = (file: File, acceptLicense = false) => {
+    addExtension(file, acceptLicense)
+      .then(({ extension, needsLicenseAcceptance }) => {
+        if (needsLicenseAcceptance) {
+          setPendingLicense({ file, extension });
+          return;
+        }
+        applyExtension(extension);
       })
       .catch((msg) => {
         addToast(httpErrorToHuman(msg), 'error');
       });
   };
 
+  const handleLicenseAccept = () => {
+    if (!pendingLicense) return;
+    setPendingLicense(null);
+    handleAdd(pendingLicense.file, true);
+  };
+
   const { isDragging } = useImportDragAndDrop({
-    onDrop: (files) => Promise.all(files.map(handleAdd)),
+    onDrop: (files) => Promise.all(files.map((file) => handleAdd(file))),
     enabled: extensionStatus ? !extensionStatus.isBuilding : false,
     filterFile: (file) => file.name.toLowerCase().endsWith('.zip'),
   });
@@ -213,30 +229,23 @@ export default function AdminExtensions() {
       }
     >
       <BuildLogsModal opened={openModal === 'logs'} onClose={() => setOpenModal(null)} />
-      <Modal opened={!!removalExtension} onClose={() => setRemovalExtension(null)} title='Remove extension'>
-        <p>
-          Are you sure you want to remove the extension <Code>{removalExtension?.metadataToml.packageName}</Code>? This
-          action cannot be undone.
-        </p>
-
-        <Stack mt='md'>
-          <Switch
-            label='Do you want to remove & rollback the database migrations of this extension?'
-            name='remove_migrations'
-            defaultChecked={removeMigrations}
-            onChange={(e) => setRemoveMigrations(e.target.checked)}
-          />
-        </Stack>
-
-        <ModalFooter>
-          <Button color='red' onClick={() => handleRemove(removalExtension!)}>
-            Delete
-          </Button>
-          <Button variant='default' onClick={() => setRemovalExtension(null)}>
-            Close
-          </Button>
-        </ModalFooter>
-      </Modal>
+      {pendingLicense && (
+        <LicenseModal
+          opened
+          packageName={pendingLicense.extension.metadataToml.packageName}
+          licenseText={pendingLicense.extension.metadataToml.licenseText ?? ''}
+          onAccept={handleLicenseAccept}
+          onClose={() => setPendingLicense(null)}
+        />
+      )}
+      {removalExtension && (
+        <RemoveExtensionModal
+          opened
+          extension={removalExtension}
+          onRemove={(removeMigrations) => handleRemove(removalExtension, removeMigrations)}
+          onClose={() => setRemovalExtension(null)}
+        />
+      )}
 
       <ExtensionInstallOverlay visible={isDragging} />
 
@@ -340,7 +349,7 @@ export default function AdminExtensions() {
                   key={extension.metadataToml.packageName}
                   backendExtension={extension}
                   isPending
-                  onRemove={extensionStatus ? () => handleRemove(extension) : undefined}
+                  onRemove={extensionStatus ? () => handleRemove(extension, false) : undefined}
                 />
               ))}
             </div>

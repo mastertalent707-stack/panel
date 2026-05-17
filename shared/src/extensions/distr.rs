@@ -16,6 +16,8 @@ pub struct MetadataToml {
     pub name: String,
     #[schema(value_type = String)]
     pub panel_version: semver::VersionReq,
+
+    pub license_text: Option<String>,
 }
 
 impl MetadataToml {

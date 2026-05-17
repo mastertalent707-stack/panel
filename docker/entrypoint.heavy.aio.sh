@@ -108,7 +108,7 @@ execute_build() {
     # Ignore if no files match the glob
     [ -e "$ext_file" ] || continue
     echo "Adding extension: $ext_file"
-    /app/repo/target/$PROFILE_PATH/panel-rs-aio extensions add "$ext_file" --skip-version-check >> "$EXTENSION_LOG" 2>&1
+    /app/repo/target/$PROFILE_PATH/panel-rs-aio extensions add "$ext_file" --skip-version-check --accept-license >> "$EXTENSION_LOG" 2>&1
   done
 
   # resync internal extension list

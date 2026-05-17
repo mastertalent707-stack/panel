@@ -2,10 +2,10 @@ use super::State;
 use utoipa_axum::{router::OpenApiRouter, routes};
 
 mod put {
-    use axum::http::StatusCode;
+    use axum::{extract::Query, http::StatusCode};
     use compact_str::ToCompactString;
     use futures_util::TryStreamExt;
-    use serde::Serialize;
+    use serde::{Deserialize, Serialize};
     use shared::{
         GetState,
         models::user::GetPermissionManager,
@@ -16,14 +16,28 @@ mod put {
     #[derive(ToSchema, Serialize)]
     struct Response {
         extension: shared::extensions::PendingExtension,
+        needs_license_acceptance: bool,
+    }
+
+    #[derive(Deserialize)]
+    pub struct Params {
+        #[serde(default)]
+        accept_license: bool,
     }
 
     #[utoipa::path(put, path = "/", responses(
         (status = OK, body = inline(Response)),
+    ), params(
+        (
+            "accept_license" = bool, Query,
+            description = "Whether to accept the extension's license (if there is one).",
+            example = "true",
+        ),
     ))]
     pub async fn route(
         state: GetState,
         permissions: GetPermissionManager,
+        Query(params): Query<Params>,
         body: axum::body::Body,
     ) -> ApiResponseResult {
         if !state.container_type.is_heavy() {
@@ -67,6 +81,28 @@ mod put {
             .ok();
         }
 
+        if distr.metadata_toml.license_text.is_some() && !params.accept_license {
+            let _ = shared::heavy::remove_extension(&distr.metadata_toml.package_name).await;
+
+            return ApiResponse::new_serialized(Response {
+                extension: shared::extensions::PendingExtension {
+                    package_name: distr.metadata_toml.package_name.to_compact_string(),
+                    metadata_toml: distr.metadata_toml,
+                    description: distr.cargo_toml.package.description.into(),
+                    authors: distr
+                        .cargo_toml
+                        .package
+                        .authors
+                        .into_iter()
+                        .map(|a| a.into())
+                        .collect(),
+                    version: distr.cargo_toml.package.version,
+                },
+                needs_license_acceptance: true,
+            })
+            .ok();
+        }
+
         ApiResponse::new_serialized(Response {
             extension: shared::extensions::PendingExtension {
                 package_name: distr.metadata_toml.package_name.to_compact_string(),
@@ -81,6 +117,7 @@ mod put {
                     .collect(),
                 version: distr.cargo_toml.package.version,
             },
+            needs_license_acceptance: false,
         })
         .ok()
     }
