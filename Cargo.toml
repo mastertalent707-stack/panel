@@ -82,6 +82,7 @@ minijinja = "2.15.1"
 dialoguer = "0.12.0"
 hex = "0.4.3"
 zstd = "0.13.3"
+parking_lot = "0.12.5"
 
 [patch.crates-io]
 compact_str = { git = "https://github.com/ParkMyCar/compact_str.git" }

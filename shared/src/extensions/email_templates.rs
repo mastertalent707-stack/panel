@@ -1,7 +1,4 @@
-use std::{
-    borrow::Cow,
-    sync::{Arc, RwLock, RwLockReadGuard},
-};
+use std::{borrow::Cow, sync::Arc};
 
 pub struct EmailTemplate {
     pub identifier: &'static str,
@@ -143,26 +140,25 @@ impl ExtensionEmailTemplateBuilder {
 }
 
 pub struct EmailTemplateManager {
-    pub(super) templates: RwLock<Vec<Arc<EmailTemplate>>>,
+    pub(super) templates: parking_lot::RwLock<Vec<Arc<EmailTemplate>>>,
 }
 
 impl Default for EmailTemplateManager {
     fn default() -> Self {
         Self {
-            templates: RwLock::new(vec![]),
+            templates: parking_lot::RwLock::new(vec![]),
         }
     }
 }
 
 impl EmailTemplateManager {
-    pub fn get_templates(&self) -> RwLockReadGuard<'_, Vec<Arc<EmailTemplate>>> {
-        self.templates.read().unwrap()
+    pub fn get_templates(&self) -> parking_lot::RwLockReadGuard<'_, Vec<Arc<EmailTemplate>>> {
+        self.templates.read()
     }
 
     pub fn get_template(&self, identifier: &str) -> Result<Arc<EmailTemplate>, anyhow::Error> {
         self.templates
             .read()
-            .unwrap()
             .iter()
             .find(|t| t.identifier == identifier)
             .cloned()

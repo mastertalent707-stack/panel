@@ -60,7 +60,7 @@ impl BaseModel for UserActivity {
 
     fn get_extension_list() -> &'static super::ModelExtensionList {
         static EXTENSIONS: LazyLock<super::ModelExtensionList> =
-            LazyLock::new(|| std::sync::RwLock::new(Vec::new()));
+            LazyLock::new(|| parking_lot::RwLock::new(Vec::new()));
 
         &EXTENSIONS
     }

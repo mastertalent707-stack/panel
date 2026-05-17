@@ -6048,6 +6048,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "garde",
+ "parking_lot",
  "serde",
  "serde_json",
  "utoipa",
@@ -6619,6 +6620,7 @@ dependencies = [
  "moka",
  "mongodb",
  "nestify",
+ "parking_lot",
  "rand 0.10.1",
  "regex",
  "reqwest 0.13.3",

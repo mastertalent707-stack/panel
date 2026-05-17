@@ -474,8 +474,8 @@ impl SettingsSerializeExt for AppSettings {
 }
 
 pub(crate) static SETTINGS_DESER_EXTENSIONS: LazyLock<
-    std::sync::RwLock<HashMap<&'static str, ExtensionSettingsDeserializer>>,
-> = LazyLock::new(|| std::sync::RwLock::new(HashMap::new()));
+    parking_lot::RwLock<HashMap<&'static str, ExtensionSettingsDeserializer>>,
+> = LazyLock::new(|| parking_lot::RwLock::new(HashMap::new()));
 
 pub struct AppSettingsDeserializer;
 
@@ -488,7 +488,7 @@ impl SettingsDeserializeExt for AppSettingsDeserializer {
         let mut extensions = HashMap::new();
 
         let extension_deserializers = {
-            let ext_deser_lock = SETTINGS_DESER_EXTENSIONS.read().unwrap();
+            let ext_deser_lock = SETTINGS_DESER_EXTENSIONS.read();
 
             ext_deser_lock
                 .iter()

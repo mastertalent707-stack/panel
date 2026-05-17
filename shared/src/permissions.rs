@@ -1,9 +1,6 @@
 use indexmap::IndexMap;
 use serde::Serialize;
-use std::{
-    collections::HashSet,
-    sync::{LazyLock, RwLock, RwLockReadGuard},
-};
+use std::{collections::HashSet, sync::LazyLock};
 use utoipa::ToSchema;
 
 #[derive(ToSchema, Serialize, Clone)]
@@ -189,12 +186,12 @@ pub(crate) static BASE_USER_PERMISSIONS: LazyLock<IndexMap<&'static str, Permiss
         ])
     });
 
-pub(crate) static USER_PERMISSIONS: LazyLock<RwLock<PermissionMap>> =
-    LazyLock::new(|| RwLock::new(PermissionMap::new()));
+pub(crate) static USER_PERMISSIONS: LazyLock<parking_lot::RwLock<PermissionMap>> =
+    LazyLock::new(|| parking_lot::RwLock::new(PermissionMap::new()));
 
 #[inline]
-pub fn get_user_permissions() -> RwLockReadGuard<'static, PermissionMap> {
-    USER_PERMISSIONS.read().unwrap()
+pub fn get_user_permissions() -> parking_lot::RwLockReadGuard<'static, PermissionMap> {
+    USER_PERMISSIONS.read()
 }
 
 #[inline]
@@ -499,12 +496,12 @@ pub(crate) static BASE_ADMIN_PERMISSIONS: LazyLock<IndexMap<&'static str, Permis
         ])
     });
 
-pub(crate) static ADMIN_PERMISSIONS: LazyLock<RwLock<PermissionMap>> =
-    LazyLock::new(|| RwLock::new(PermissionMap::new()));
+pub(crate) static ADMIN_PERMISSIONS: LazyLock<parking_lot::RwLock<PermissionMap>> =
+    LazyLock::new(|| parking_lot::RwLock::new(PermissionMap::new()));
 
 #[inline]
-pub fn get_admin_permissions() -> RwLockReadGuard<'static, PermissionMap> {
-    ADMIN_PERMISSIONS.read().unwrap()
+pub fn get_admin_permissions() -> parking_lot::RwLockReadGuard<'static, PermissionMap> {
+    ADMIN_PERMISSIONS.read()
 }
 
 #[inline]
@@ -726,12 +723,12 @@ pub(crate) static BASE_SERVER_PERMISSIONS: LazyLock<IndexMap<&'static str, Permi
         ])
     });
 
-pub(crate) static SERVER_PERMISSIONS: LazyLock<RwLock<PermissionMap>> =
-    LazyLock::new(|| RwLock::new(PermissionMap::new()));
+pub(crate) static SERVER_PERMISSIONS: LazyLock<parking_lot::RwLock<PermissionMap>> =
+    LazyLock::new(|| parking_lot::RwLock::new(PermissionMap::new()));
 
 #[inline]
-pub fn get_server_permissions() -> RwLockReadGuard<'static, PermissionMap> {
-    SERVER_PERMISSIONS.read().unwrap()
+pub fn get_server_permissions() -> parking_lot::RwLockReadGuard<'static, PermissionMap> {
+    SERVER_PERMISSIONS.read()
 }
 
 #[inline]

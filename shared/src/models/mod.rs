@@ -155,7 +155,7 @@ impl<T: Serialize> Pagination<T> {
     }
 }
 
-pub type ModelExtensionList = std::sync::RwLock<Vec<Box<dyn ModelExtension + Send + Sync>>>;
+pub type ModelExtensionList = parking_lot::RwLock<Vec<Box<dyn ModelExtension + Send + Sync>>>;
 pub type ModelExtensionData = Vec<(compact_str::CompactString, Vec<u8>)>;
 pub type ModelExtensionMapType = Box<dyn erased_serde::Serialize>;
 
@@ -185,7 +185,7 @@ pub trait BaseModel: Serialize + DeserializeOwned {
 
     /// Registers a model extension. If an extension with the same name is already registered, this function will do nothing.
     fn register_model_extension(extension: impl ModelExtension + Send + Sync + 'static) {
-        let mut extensions = Self::get_extension_list().write().unwrap();
+        let mut extensions = Self::get_extension_list().write();
 
         if extensions
             .iter()
@@ -224,17 +224,15 @@ pub trait BaseModel: Serialize + DeserializeOwned {
 
     fn base_columns(prefix: Option<&str>) -> BTreeMap<&'static str, compact_str::CompactString>;
     fn columns(prefix: Option<&str>) -> BTreeMap<&'static str, compact_str::CompactString> {
-        if let Ok(extensions) = Self::get_extension_list().read() {
-            let mut columns = Self::base_columns(prefix);
+        let extensions = Self::get_extension_list().read();
 
-            for extension in extensions.iter() {
-                columns.extend(extension.extended_columns(prefix.unwrap_or_default()));
-            }
+        let mut columns = Self::base_columns(prefix);
 
-            columns
-        } else {
-            Self::base_columns(prefix)
+        for extension in extensions.iter() {
+            columns.extend(extension.extended_columns(prefix.unwrap_or_default()));
         }
+
+        columns
     }
 
     #[inline]
@@ -251,16 +249,15 @@ pub trait BaseModel: Serialize + DeserializeOwned {
     ) -> Result<ModelExtensionData, crate::database::DatabaseError> {
         let mut data = Vec::new();
 
-        if let Ok(extensions) = Self::get_extension_list().read() {
-            for extension in extensions.iter() {
-                let value = extension.map_extended(prefix, row)?;
-                let serialized = rmp_serde::to_vec(&value).map_err(anyhow::Error::new)?;
+        let extensions = Self::get_extension_list().read();
+        for extension in extensions.iter() {
+            let value = extension.map_extended(prefix, row)?;
+            let serialized = rmp_serde::to_vec(&value).map_err(anyhow::Error::new)?;
 
-                data.push((
-                    compact_str::CompactString::const_new(extension.extension_name()),
-                    serialized,
-                ));
-            }
+            data.push((
+                compact_str::CompactString::const_new(extension.extension_name()),
+                serialized,
+            ));
         }
 
         Ok(data)
