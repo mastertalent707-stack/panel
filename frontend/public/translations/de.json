@@ -238,7 +238,9 @@
           "stopImpersonating": "Impersonierung beenden",
           "openInVirtualWindow": "In virtuellem Fenster öffnen",
           "openInPopup": "In Popup öffnen",
-          "openInNewTab": "In neuem Tab öffnen"
+          "openInNewTab": "In neuem Tab öffnen",
+          "switchToDark": "Zum dunklen Modus wechseln",
+          "switchToLight": "Zum hellen Modus wechseln"
         }
       },
       "permissionSelector": {
@@ -1213,6 +1215,8 @@
           "titleEditorViewing": "Betrachte {file}",
           "titleEditorEditing": "Bearbeite {file}",
           "titleEditorNew": "Neue Datei",
+          "titleDiffRevisionVsCurrent": "{file} - Revision #{revision} vs Aktuell",
+          "titleDiffRevisionVsRevision": "{file} - Revision #{previousRevision} vs #{revision}",
           "table": {
             "columns": {
               "modified": "Geändert"
@@ -1295,6 +1299,29 @@
             "fileCouldNotBeRenamed": "Datei konnte nicht umbenannt werden.",
             "permissionsUpdated": "Berechtigungen wurden aktualisiert.",
             "fileSaved": "Datei wurde gespeichert."
+          },
+          "tooltip": {
+            "fileHistory": "Dateiverlauf",
+            "largestDirectories": "Verzeichnisgrößen analysieren"
+          },
+          "drawer": {
+            "revisions": {
+              "title": "Dateiverlauf",
+              "noRevisions": "Keine Revisionen für diese Datei gefunden.",
+              "restored": "Revision im Editor wiederhergestellt.",
+              "badge": {
+                "fullSnapshot": "Vollständiger Snapshot"
+              },
+              "tooltip": {
+                "restore": "Diese Revision im Editor wiederherstellen",
+                "viewDiff": "Unterschiede zur aktuellen Datei anzeigen",
+                "compareToPrevious": "Mit vorheriger Revision vergleichen"
+              },
+              "diff": {
+                "original": "Revision",
+                "current": "Aktuell"
+              }
+            }
           },
           "modal": {
             "activeUploads": {
@@ -1389,6 +1416,10 @@
               "form": {
                 "fileName": "Dateiname"
               }
+            },
+            "largestDirectories": {
+              "title": "Größte Verzeichnisse",
+              "empty": "Keine Verzeichnisse gefunden."
             },
             "searchFiles": {
               "title": "Dateien suchen",
@@ -2020,7 +2051,10 @@
               }
             },
             "restoreBackup": {
-              "title": "Backup wiederherstellen"
+              "title": "Backup wiederherstellen",
+              "form": {
+                "restoreStartup": "Startbefehl, Image und Variablen aus diesem Backup wiederherstellen."
+              }
             },
             "deleteBackup": {
               "title": "Löschen des Backups bestätigen",
@@ -2028,6 +2062,9 @@
               "toast": {
                 "deleted": "Backup gelöscht."
               }
+            },
+            "viewMetadata": {
+              "title": "Backup-Metadaten"
             }
           }
         },
