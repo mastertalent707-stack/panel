@@ -4,7 +4,7 @@ use utoipa_axum::{router::OpenApiRouter, routes};
 mod _revision_;
 
 mod get {
-    use axum::extract::Query;
+    use axum::{extract::Query, http::StatusCode};
     use serde::{Deserialize, Serialize};
     use shared::{
         ApiError, GetState,
@@ -58,10 +58,16 @@ mod get {
     pub async fn route(
         state: GetState,
         permissions: GetPermissionManager,
-        server: GetServer,
+        mut server: GetServer,
         Query(params): Query<Params>,
     ) -> ApiResponseResult {
         permissions.has_server_permission("files.read-content")?;
+
+        if server.is_ignored(&params.file, false) {
+            return ApiResponse::error("file not found")
+                .with_status(StatusCode::NOT_FOUND)
+                .ok();
+        }
 
         let response = server
             .node
