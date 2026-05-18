@@ -1,7 +1,7 @@
 use crate::settings::SettingsReadGuard;
 use aws_sdk_s3::{
     Client as S3Client,
-    config::{Config as S3Config, Credentials, Region},
+    config::{Config as S3Config, Credentials, Region, retry::RetryConfig, timeout::TimeoutConfig},
     primitives::ByteStream,
     types::{CompletedMultipartUpload, CompletedPart},
 };
@@ -30,12 +30,18 @@ fn get_s3_client(
 ) -> Result<S3Client, anyhow::Error> {
     let credentials = Credentials::new(access_key, secret_key, None, None, "calagopus-static");
 
+    let timeout_config = TimeoutConfig::builder()
+        .connect_timeout(std::time::Duration::from_secs(10))
+        .build();
+
     let config = S3Config::builder()
         .behavior_version(aws_sdk_s3::config::BehaviorVersion::latest())
         .credentials_provider(credentials)
         .region(Region::new(region.to_string()))
         .endpoint_url(endpoint)
         .force_path_style(path_style)
+        .timeout_config(timeout_config)
+        .retry_config(RetryConfig::standard())
         .build();
 
     Ok(S3Client::from_conf(config))

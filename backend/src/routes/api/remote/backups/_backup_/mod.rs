@@ -49,9 +49,7 @@ mod get {
     use shared::{
         ApiError, GetState,
         models::{
-            ByUuid,
             node::GetNode,
-            server::Server,
             server_backup::{BackupDisk, ServerBackup},
         },
         response::{ApiResponse, ApiResponseResult},
@@ -124,31 +122,19 @@ mod get {
         };
         s3_configuration.decrypt(&state.database).await?;
 
-        let server = match Server::by_uuid_optional(
-            &state.database,
-            match backup.0.server {
-                Some(server) => server.uuid,
-                None => {
-                    return ApiResponse::error("server uuid not found")
-                        .with_status(StatusCode::EXPECTATION_FAILED)
-                        .ok();
-                }
-            },
-        )
-        .await?
-        {
-            Some(server) => server,
+        let server_uuid = match &backup.0.server {
+            Some(server) => server.uuid,
             None => {
-                return ApiResponse::error("server not found")
-                    .with_status(StatusCode::NOT_FOUND)
+                return ApiResponse::error("server uuid not found")
+                    .with_status(StatusCode::EXPECTATION_FAILED)
                     .ok();
             }
         };
 
         let part_size = s3_configuration.part_size;
         let part_count = (params.size as f64 / s3_configuration.part_size as f64).ceil() as usize;
-        if part_count > 10_000_000 {
-            return ApiResponse::error("backup is too large")
+        if part_count > 10_000 {
+            return ApiResponse::error("backup has too many parts to upload to s3")
                 .with_status(StatusCode::EXPECTATION_FAILED)
                 .ok();
         }
@@ -158,7 +144,7 @@ mod get {
 
         let (client, bucket) = s3_configuration.into_client();
 
-        let file_path = ServerBackup::s3_path(server.uuid, backup.0.uuid);
+        let file_path = ServerBackup::s3_path(server_uuid, backup.0.uuid);
         let content_type = ServerBackup::s3_content_type(&file_path);
 
         let multipart = match client

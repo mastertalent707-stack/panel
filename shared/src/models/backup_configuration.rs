@@ -4,7 +4,10 @@ use crate::{
 };
 use aws_sdk_s3::{
     Client as S3Client,
-    config::{BehaviorVersion, Config as S3Config, Credentials, Region},
+    config::{
+        BehaviorVersion, Config as S3Config, Credentials, Region, retry::RetryConfig,
+        timeout::TimeoutConfig,
+    },
 };
 use garde::Validate;
 use indexmap::IndexMap;
@@ -77,12 +80,18 @@ impl BackupConfigsS3 {
             "calagopus-static",
         );
 
+        let timeout_config = TimeoutConfig::builder()
+            .connect_timeout(std::time::Duration::from_secs(10))
+            .build();
+
         let config = S3Config::builder()
             .behavior_version(BehaviorVersion::latest())
             .credentials_provider(credentials)
             .region(Region::new(self.region.to_string()))
             .endpoint_url(self.endpoint)
             .force_path_style(self.path_style)
+            .timeout_config(timeout_config)
+            .retry_config(RetryConfig::standard())
             .build();
 
         (S3Client::from_conf(config), self.bucket)
