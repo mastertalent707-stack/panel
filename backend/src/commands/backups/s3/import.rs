@@ -75,26 +75,35 @@ impl shared::extensions::commands::CliCommand<ImportArgs> for ImportCommand {
 
                 s3.decrypt(&state.database).await?;
 
-                let s3_client = s3.into_client()?;
+                let (s3_client, bucket) = s3.into_client();
                 let storage_url_retriever = state.storage.retrieve_urls().await?;
 
                 let mut imported_count = 0;
                 let mut skipped_count = 0;
                 let mut imported_backups = Vec::new();
-                let mut continuation_token = None;
 
-                loop {
-                    let (objects, _) = s3_client
-                        .list_page("".into(), None, continuation_token, None, Some(1000))
-                        .await?;
+                let mut paginator = s3_client
+                    .list_objects_v2()
+                    .bucket(bucket.as_str())
+                    .max_keys(1000)
+                    .into_paginator()
+                    .send();
 
-                    for object in objects.contents {
-                        let parts: Vec<&str> = object.key.split('/').collect();
+                while let Some(page) = paginator.next().await {
+                    let page = page?;
+
+                    for object in page.contents() {
+                        let Some(key) = object.key() else {
+                            skipped_count += 1;
+                            continue;
+                        };
+
+                        let parts: Vec<&str> = key.split('/').collect();
                         if parts.len() != 2 {
                             println!(
                                 "{} {}",
                                 "skipping object with invalid key:".red(),
-                                object.key.cyan()
+                                key.cyan()
                             );
                             skipped_count += 1;
                             continue;
@@ -106,7 +115,7 @@ impl shared::extensions::commands::CliCommand<ImportArgs> for ImportCommand {
                                 println!(
                                     "{} {}",
                                     "skipping object with invalid server uuid:".red(),
-                                    object.key.cyan()
+                                    key.cyan()
                                 );
                                 skipped_count += 1;
                                 continue;
@@ -120,7 +129,7 @@ impl shared::extensions::commands::CliCommand<ImportArgs> for ImportCommand {
                                 println!(
                                     "{} {}",
                                     "skipping object with invalid backup uuid:".red(),
-                                    object.key.cyan()
+                                    key.cyan()
                                 );
                                 skipped_count += 1;
                                 continue;
@@ -166,6 +175,8 @@ impl shared::extensions::commands::CliCommand<ImportArgs> for ImportCommand {
                                 }
                             };
 
+                        let object_size = object.size().unwrap_or(0).max(0);
+
                         let row = sqlx::query(&format!(
                             r#"
                             INSERT INTO server_backups (uuid, server_uuid, node_uuid, backup_configuration_uuid, name, ignored_files, checksum, successful, bytes, disk, upload_path, completed)
@@ -180,9 +191,9 @@ impl shared::extensions::commands::CliCommand<ImportArgs> for ImportCommand {
                         .bind(backup_configuration.uuid)
                         .bind(compact_str::format_compact!("Imported Backup {}", backup_uuid.to_compact_string()))
                         .bind(&[] as &[&str])
-                        .bind(object.size as i64)
+                        .bind(object_size)
                         .bind(backup_configuration.backup_disk)
-                        .bind(&object.key)
+                        .bind(key)
                         .fetch_one(state.database.write())
                         .await?;
 
@@ -203,12 +214,6 @@ impl shared::extensions::commands::CliCommand<ImportArgs> for ImportCommand {
 
                         imported_count += 1;
                     }
-
-                    if objects.next_continuation_token.is_none() {
-                        break;
-                    }
-
-                    continuation_token = objects.next_continuation_token;
                 }
 
                 if args.json {

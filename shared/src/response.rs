@@ -89,7 +89,7 @@ impl ApiResponse {
                 }
             }
             m if m.essence_str() == mime::TEXT_XML.essence_str() => {
-                let string = serde_xml_rs::to_string(&body).unwrap_or_else(|err| {
+                let string = quick_xml::se::to_string(&body).unwrap_or_else(|err| {
                     tracing::error!("failed to serialize response body to XML: {:?}", err);
                     "<error>serialization failed</error>".to_string()
                 });

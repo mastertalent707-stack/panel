@@ -718,12 +718,8 @@ impl ServerBackup {
         {
             s3_configuration.decrypt(&state.database).await?;
 
-            let client = match s3_configuration.into_client() {
-                Ok(client) => client,
-                Err(err) => {
-                    return Err(anyhow::Error::from(err).context("failed to create s3 client"));
-                }
-            };
+            let (client, bucket) = s3_configuration.into_client();
+
             let file_path = match &self.upload_path {
                 Some(path) => path,
                 None => {
@@ -735,9 +731,17 @@ impl ServerBackup {
                 }
             };
 
-            let url = client.presign_get(file_path, 15 * 60, None).await?;
+            let presigning_config = aws_sdk_s3::presigning::PresigningConfig::expires_in(
+                std::time::Duration::from_mins(15),
+            )?;
+            let presigned = client
+                .get_object()
+                .bucket(bucket)
+                .key(&**file_path)
+                .presigned(presigning_config)
+                .await?;
 
-            return Ok(url);
+            return Ok(presigned.uri().to_string());
         }
 
         #[derive(Serialize)]
@@ -964,13 +968,25 @@ impl ServerBackup {
                             {
                                 s3_configuration.decrypt(&state.database).await?;
 
-                                let client = s3_configuration.into_client()?;
+                                let (client, bucket) = s3_configuration.into_client();
+
                                 let file_path = match &self.upload_path {
                                     Some(path) => path.as_str(),
                                     None => &Self::s3_path(server.uuid, self.uuid),
                                 };
 
-                                Some(client.presign_get(file_path, 60 * 60, None).await?.into())
+                                let presigning_config =
+                                    aws_sdk_s3::presigning::PresigningConfig::expires_in(
+                                        std::time::Duration::from_mins(60),
+                                    )?;
+                                let presigned = client
+                                    .get_object()
+                                    .bucket(bucket)
+                                    .key(file_path)
+                                    .presigned(presigning_config)
+                                    .await?;
+
+                                Some(presigned.uri().to_compact_string())
                             } else {
                                 None
                             }
@@ -1548,9 +1564,8 @@ impl DeletableModel for ServerBackup {
                     if let Some(mut s3_configuration) = backup_configuration.backup_configs.s3 {
                         s3_configuration.decrypt(&state.database).await?;
 
-                        let client = s3_configuration
-                            .into_client()
-                            .map_err(|err| sqlx::Error::Io(std::io::Error::other(err)))?;
+                        let (client, bucket) = s3_configuration.into_client();
+
                         let file_path = match &backup.upload_path {
                             Some(path) => path,
                             None => if let Some(server) = &backup.server {
@@ -1560,7 +1575,7 @@ impl DeletableModel for ServerBackup {
                             }
                         };
 
-                        if let Err(err) = client.delete_object(file_path).await {
+                        if let Err(err) = client.delete_object().bucket(bucket).key(&**file_path).send().await {
                             if options.force {
                                 tracing::error!(server = ?backup.server.as_ref().map(|s| s.uuid), backup = %backup.uuid, "failed to delete S3 backup, ignoring: {:?}", err);
                             } else {

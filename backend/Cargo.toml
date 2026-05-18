@@ -47,7 +47,7 @@ cron = { workspace = true }
 webauthn-rs = { workspace = true }
 openssl = { version = "0.10.73", features = ["vendored"] }
 base64 = { workspace = true }
-rust-s3 = { workspace = true }
+aws-sdk-s3 = { workspace = true }
 dotenvy = { workspace = true }
 oauth2 = { workspace = true }
 human_bytes = "0.4.3"

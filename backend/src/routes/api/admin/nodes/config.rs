@@ -32,9 +32,11 @@ mod patch {
         state: GetState,
         permissions: GetPermissionManager,
         activity_logger: GetAdminActivityLogger,
-        shared::Payload(data): shared::Payload<Payload>,
+        shared::Payload(mut data): shared::Payload<Payload>,
     ) -> ApiResponseResult {
         permissions.has_admin_permission("nodes.update")?;
+
+        wings_api::strip_config_paths(&mut data.config);
 
         let update_node = async |node: uuid::Uuid| -> Result<bool, anyhow::Error> {
             let node = Node::by_uuid_optional_cached(&state.database, node).await?;

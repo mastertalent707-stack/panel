@@ -1,8 +1,15 @@
 use crate::settings::SettingsReadGuard;
+use aws_sdk_s3::{
+    Client as S3Client,
+    config::{Config as S3Config, Credentials, Region},
+    primitives::ByteStream,
+    types::{CompletedMultipartUpload, CompletedPart},
+};
 use compact_str::ToCompactString;
 use serde::{Deserialize, Serialize};
 use std::{path::Path, sync::Arc};
-use tokio::io::AsyncWriteExt;
+use tokio::io::{AsyncReadExt, AsyncWriteExt};
+use tokio_util::bytes::{Bytes, BytesMut};
 use utoipa::ToSchema;
 
 #[derive(ToSchema, Deserialize, Serialize)]
@@ -17,25 +24,21 @@ pub struct StorageAsset {
 fn get_s3_client(
     access_key: &str,
     secret_key: &str,
-    bucket: &str,
     region: &str,
     endpoint: &str,
     path_style: bool,
-) -> Result<Box<s3::Bucket>, anyhow::Error> {
-    let mut bucket = s3::Bucket::new(
-        bucket,
-        s3::Region::Custom {
-            region: region.to_string(),
-            endpoint: endpoint.to_string(),
-        },
-        s3::creds::Credentials::new(Some(access_key), Some(secret_key), None, None, None)?,
-    )?;
+) -> Result<S3Client, anyhow::Error> {
+    let credentials = Credentials::new(access_key, secret_key, None, None, "calagopus-static");
 
-    if path_style {
-        bucket.set_path_style();
-    }
+    let config = S3Config::builder()
+        .behavior_version(aws_sdk_s3::config::BehaviorVersion::latest())
+        .credentials_provider(credentials)
+        .region(Region::new(region.to_string()))
+        .endpoint_url(endpoint)
+        .force_path_style(path_style)
+        .build();
 
-    Ok(bucket)
+    Ok(S3Client::from_conf(config))
 }
 
 pub struct StorageUrlRetriever<'a> {
@@ -89,7 +92,7 @@ impl Storage {
         };
         let path = path.as_ref();
 
-        if path.is_empty() || path.contains("..") || path.starts_with("/") {
+        if path.is_empty() || path.contains("..") || path.starts_with('/') {
             return Err(anyhow::anyhow!("invalid path"));
         }
 
@@ -139,17 +142,17 @@ impl Storage {
                 path_style,
                 ..
             } => {
-                let s3_client = get_s3_client(
-                    access_key,
-                    secret_key,
-                    bucket,
-                    region,
-                    endpoint,
-                    *path_style,
-                )?;
+                let s3_client =
+                    get_s3_client(access_key, secret_key, region, endpoint, *path_style)?;
+                let bucket = bucket.clone();
                 drop(settings);
 
-                s3_client.delete_object(path).await?;
+                s3_client
+                    .delete_object()
+                    .bucket(bucket)
+                    .key(path)
+                    .send()
+                    .await?;
             }
         }
 
@@ -159,13 +162,13 @@ impl Storage {
     pub async fn store(
         &self,
         path: impl AsRef<str>,
-        mut data: impl tokio::io::AsyncRead + Unpin,
+        data: impl tokio::io::AsyncRead + Unpin,
         content_type: impl AsRef<str>,
     ) -> Result<u64, anyhow::Error> {
         let path = path.as_ref();
         let content_type = content_type.as_ref();
 
-        if path.is_empty() || path.contains("..") || path.starts_with("/") {
+        if path.is_empty() || path.contains("..") || path.starts_with('/') {
             return Err(anyhow::anyhow!("invalid path"));
         }
 
@@ -186,6 +189,7 @@ impl Storage {
                 }
 
                 let mut file = base_filesystem.async_create(path).await?;
+                let mut data = data;
                 let bytes = tokio::io::copy(&mut data, &mut file).await?;
 
                 file.shutdown().await?;
@@ -200,20 +204,12 @@ impl Storage {
                 path_style,
                 ..
             } => {
-                let s3_client = get_s3_client(
-                    access_key,
-                    secret_key,
-                    bucket,
-                    region,
-                    endpoint,
-                    *path_style,
-                )?;
+                let s3_client =
+                    get_s3_client(access_key, secret_key, region, endpoint, *path_style)?;
+                let bucket = bucket.clone();
                 drop(settings);
 
-                let response = s3_client
-                    .put_object_stream_with_content_type(&mut data, path, content_type)
-                    .await?;
-                Ok(response.uploaded_bytes() as u64)
+                upload_multipart(&s3_client, &bucket, path, content_type, data).await
             }
         }
     }
@@ -336,14 +332,9 @@ impl Storage {
                 path_style,
                 ..
             } => {
-                let s3_client = get_s3_client(
-                    access_key,
-                    secret_key,
-                    bucket,
-                    region,
-                    endpoint,
-                    *path_style,
-                )?;
+                let s3_client =
+                    get_s3_client(access_key, secret_key, region, endpoint, *path_style)?;
+                let bucket_name = bucket.clone();
                 drop(settings);
 
                 let s3_prefix = if directory.is_empty() {
@@ -353,47 +344,60 @@ impl Storage {
                 };
                 let strip_prefix = format!("{base}/");
 
-                let results = s3_client
-                    .list(s3_prefix.clone(), Some("/".to_string()))
-                    .await?;
-
                 let storage_url_retriever = self.retrieve_urls().await?;
 
-                let mut dirs: Vec<StorageAsset> = Vec::new();
-                let mut files: Vec<StorageAsset> = Vec::new();
+                let mut dirs = Vec::new();
+                let mut files = Vec::new();
 
-                for result in &results {
-                    if let Some(prefixes) = &result.common_prefixes {
-                        for cp in prefixes {
-                            let name = cp
-                                .prefix
-                                .trim_start_matches(&strip_prefix)
-                                .trim_end_matches('/')
-                                .to_compact_string();
-                            dirs.push(StorageAsset {
-                                url: storage_url_retriever.get_url(&cp.prefix),
-                                name,
-                                size: 0,
-                                is_directory: true,
-                                created: chrono::DateTime::<chrono::Utc>::default(),
-                            });
-                        }
+                let mut paginator = s3_client
+                    .list_objects_v2()
+                    .bucket(&*bucket_name)
+                    .prefix(&s3_prefix)
+                    .delimiter("/")
+                    .into_paginator()
+                    .send();
+
+                while let Some(result) = paginator.next().await {
+                    let page = result?;
+
+                    for cp in page.common_prefixes() {
+                        let Some(prefix) = cp.prefix() else { continue };
+                        let name = prefix
+                            .trim_start_matches(&strip_prefix)
+                            .trim_end_matches('/')
+                            .to_compact_string();
+                        dirs.push(StorageAsset {
+                            url: storage_url_retriever.get_url(prefix),
+                            name,
+                            size: 0,
+                            is_directory: true,
+                            created: chrono::DateTime::<chrono::Utc>::default(),
+                        });
                     }
 
-                    for entry in &result.contents {
-                        if entry.key == s3_prefix {
+                    for entry in page.contents() {
+                        let Some(key) = entry.key() else { continue };
+                        if key == s3_prefix {
                             continue;
                         }
-                        let name = entry
-                            .key
-                            .trim_start_matches(&strip_prefix)
-                            .to_compact_string();
+                        let name = key.trim_start_matches(&strip_prefix).to_compact_string();
+                        let size = entry.size().unwrap_or(0).max(0) as u64;
+                        let created = entry
+                            .last_modified()
+                            .and_then(|dt| {
+                                chrono::DateTime::<chrono::Utc>::from_timestamp(
+                                    dt.secs(),
+                                    dt.subsec_nanos(),
+                                )
+                            })
+                            .unwrap_or_default();
+
                         files.push(StorageAsset {
-                            url: storage_url_retriever.get_url(&entry.key),
+                            url: storage_url_retriever.get_url(key),
                             name,
-                            size: entry.size,
+                            size,
                             is_directory: false,
-                            created: entry.last_modified.parse().unwrap_or_default(),
+                            created,
                         });
                     }
                 }
@@ -415,4 +419,138 @@ impl Storage {
             }
         }
     }
+}
+
+const PART_SIZE: usize = 16 * 1024 * 1024;
+
+async fn upload_multipart(
+    client: &S3Client,
+    bucket: &str,
+    key: &str,
+    content_type: &str,
+    mut data: impl tokio::io::AsyncRead + Unpin,
+) -> Result<u64, anyhow::Error> {
+    let first_part = read_part(&mut data, PART_SIZE).await?;
+
+    if first_part.len() < PART_SIZE {
+        let total = first_part.len() as u64;
+        client
+            .put_object()
+            .bucket(bucket)
+            .key(key)
+            .content_type(content_type)
+            .body(ByteStream::from(first_part))
+            .send()
+            .await?;
+        return Ok(total);
+    }
+
+    let create = client
+        .create_multipart_upload()
+        .bucket(bucket)
+        .key(key)
+        .content_type(content_type)
+        .send()
+        .await?;
+
+    let upload_id = create
+        .upload_id()
+        .ok_or_else(|| anyhow::anyhow!("S3 did not return an upload_id"))?
+        .to_string();
+
+    let result = run_multipart(client, bucket, key, &upload_id, &mut data, first_part).await;
+
+    match result {
+        Ok(total) => Ok(total),
+        Err(err) => {
+            if let Err(abort_err) = client
+                .abort_multipart_upload()
+                .bucket(bucket)
+                .key(key)
+                .upload_id(&upload_id)
+                .send()
+                .await
+            {
+                tracing::warn!(
+                    bucket,
+                    key,
+                    upload_id,
+                    "failed to abort multipart upload after error: {:#?}",
+                    abort_err
+                );
+            }
+            Err(err)
+        }
+    }
+}
+
+async fn run_multipart(
+    client: &S3Client,
+    bucket: &str,
+    key: &str,
+    upload_id: &str,
+    data: &mut (impl tokio::io::AsyncRead + Unpin),
+    first_part: Bytes,
+) -> Result<u64, anyhow::Error> {
+    let mut completed = Vec::new();
+    let mut total: u64 = 0;
+    let mut part_number: i32 = 1;
+    let mut current = first_part;
+
+    loop {
+        let part_len = current.len() as u64;
+        let resp = client
+            .upload_part()
+            .bucket(bucket)
+            .key(key)
+            .upload_id(upload_id)
+            .part_number(part_number)
+            .body(ByteStream::from(current))
+            .send()
+            .await?;
+
+        completed.push(
+            CompletedPart::builder()
+                .part_number(part_number)
+                .set_e_tag(resp.e_tag().map(|s| s.to_string()))
+                .build(),
+        );
+        total += part_len;
+        part_number += 1;
+
+        let next = read_part(data, PART_SIZE).await?;
+        if next.is_empty() {
+            break;
+        }
+        current = next;
+    }
+
+    let completed_upload = CompletedMultipartUpload::builder()
+        .set_parts(Some(completed))
+        .build();
+
+    client
+        .complete_multipart_upload()
+        .bucket(bucket)
+        .key(key)
+        .upload_id(upload_id)
+        .multipart_upload(completed_upload)
+        .send()
+        .await?;
+
+    Ok(total)
+}
+
+async fn read_part(
+    data: &mut (impl tokio::io::AsyncRead + Unpin),
+    cap: usize,
+) -> Result<Bytes, std::io::Error> {
+    let mut buf = BytesMut::with_capacity(cap);
+    while buf.len() < cap {
+        let n = data.read_buf(&mut buf).await?;
+        if n == 0 {
+            break;
+        }
+    }
+    Ok(buf.freeze())
 }

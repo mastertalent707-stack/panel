@@ -68,7 +68,7 @@ impl<T: DeserializeOwned> Payload<T> {
                 }
 
                 let value =
-                    serde_xml_rs::from_reader(bytes.as_ref()).map_err(anyhow::Error::from)?;
+                    quick_xml::de::from_reader(bytes.as_ref()).map_err(anyhow::Error::from)?;
                 Ok(Payload(value))
             }
             "application/yaml" => {

@@ -2,6 +2,10 @@ use crate::{
     models::{InsertQueryBuilder, UpdateQueryBuilder},
     prelude::*,
 };
+use aws_sdk_s3::{
+    Client as S3Client,
+    config::{BehaviorVersion, Config as S3Config, Credentials, Region},
+};
 use garde::Validate;
 use indexmap::IndexMap;
 use serde::{Deserialize, Serialize};
@@ -64,28 +68,24 @@ impl BackupConfigsS3 {
         self.secret_key = "".into();
     }
 
-    pub fn into_client(self) -> Result<Box<s3::Bucket>, s3::error::S3Error> {
-        let mut bucket = s3::Bucket::new(
-            &self.bucket,
-            s3::Region::Custom {
-                region: self.region.into(),
-                endpoint: self.endpoint.into(),
-            },
-            s3::creds::Credentials::new(
-                Some(&self.access_key),
-                Some(&self.secret_key),
-                None,
-                None,
-                None,
-            )
-            .unwrap(),
-        )?;
+    pub fn into_client(self) -> (S3Client, compact_str::CompactString) {
+        let credentials = Credentials::new(
+            self.access_key,
+            self.secret_key,
+            None,
+            None,
+            "calagopus-static",
+        );
 
-        if self.path_style {
-            bucket.set_path_style();
-        }
+        let config = S3Config::builder()
+            .behavior_version(BehaviorVersion::latest())
+            .credentials_provider(credentials)
+            .region(Region::new(self.region.to_string()))
+            .endpoint_url(self.endpoint)
+            .force_path_style(self.path_style)
+            .build();
 
-        Ok(bucket)
+        (S3Client::from_conf(config), self.bucket)
     }
 }
 

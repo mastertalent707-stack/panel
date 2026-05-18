@@ -43,6 +43,7 @@ pub async fn auth(
 
 mod get {
     use crate::routes::api::remote::backups::_backup_::GetBackup;
+    use aws_sdk_s3::presigning::PresigningConfig;
     use axum::{extract::Query, http::StatusCode};
     use serde::{Deserialize, Serialize};
     use shared::{
@@ -55,7 +56,7 @@ mod get {
         },
         response::{ApiResponse, ApiResponseResult},
     };
-    use std::collections::HashMap;
+    use std::time::Duration;
     use utoipa::ToSchema;
 
     #[derive(ToSchema, Deserialize)]
@@ -155,27 +156,17 @@ mod get {
         let mut parts = Vec::new();
         parts.reserve_exact(part_count);
 
-        let client = match s3_configuration.into_client() {
-            Ok(client) => client,
-            Err(err) => {
-                tracing::error!(
-                    backup = %backup.0.uuid,
-                    location = %node.0.location.name,
-                    "failed to create S3 client: {:#?}",
-                    err
-                );
-
-                return ApiResponse::error("failed to create S3 client")
-                    .with_status(StatusCode::EXPECTATION_FAILED)
-                    .ok();
-            }
-        };
+        let (client, bucket) = s3_configuration.into_client();
 
         let file_path = ServerBackup::s3_path(server.uuid, backup.0.uuid);
         let content_type = ServerBackup::s3_content_type(&file_path);
 
         let multipart = match client
-            .initiate_multipart_upload(&file_path, content_type)
+            .create_multipart_upload()
+            .bucket(&*bucket)
+            .key(&*file_path)
+            .content_type(content_type)
+            .send()
             .await
         {
             Ok(multipart) => multipart,
@@ -193,27 +184,41 @@ mod get {
             }
         };
 
+        let upload_id = match multipart.upload_id() {
+            Some(id) => id.to_string(),
+            None => {
+                tracing::error!(
+                    backup = %backup.0.uuid,
+                    location = %node.0.location.name,
+                    "S3 did not return an upload_id"
+                );
+
+                return ApiResponse::error("failed to initiate multipart upload")
+                    .with_status(StatusCode::EXPECTATION_FAILED)
+                    .ok();
+            }
+        };
+
+        let presigning_config = PresigningConfig::expires_in(Duration::from_hours(24))?;
+
         for i in 0..part_count {
-            let url = client
-                .presign_put(
-                    &file_path,
-                    60 * 60 * 24,
-                    None,
-                    Some(HashMap::from([
-                        ("partNumber".to_string(), (i + 1).to_string()),
-                        ("uploadId".to_string(), multipart.upload_id.clone()),
-                    ])),
-                )
+            let presigned = client
+                .upload_part()
+                .bucket(&*bucket)
+                .key(&*file_path)
+                .upload_id(&*upload_id)
+                .part_number((i as i32) + 1)
+                .presigned(presigning_config.clone())
                 .await?;
 
-            parts.push(url);
+            parts.push(presigned.uri().to_string());
         }
 
         sqlx::query!(
             "UPDATE server_backups
             SET upload_id = $1, upload_path = $2
             WHERE server_backups.uuid = $3",
-            multipart.upload_id,
+            upload_id,
             &file_path,
             backup.0.uuid
         )
@@ -226,6 +231,7 @@ mod get {
 
 mod post {
     use crate::routes::api::remote::backups::_backup_::GetBackup;
+    use aws_sdk_s3::types::{CompletedMultipartUpload, CompletedPart};
     use axum::http::StatusCode;
     use serde::{Deserialize, Serialize};
     use shared::{
@@ -333,37 +339,33 @@ mod post {
                 }
             };
 
-            let client = match s3_configuration.into_client() {
-                Ok(client) => client,
-                Err(err) => {
-                    tracing::error!(
-                        backup = %backup.uuid,
-                        location = %node.location.name,
-                        "failed to create S3 client: {:#?}",
-                        err
-                    );
-
-                    return ApiResponse::error("failed to create S3 client")
-                        .with_status(StatusCode::EXPECTATION_FAILED)
-                        .ok();
-                }
-            };
+            let (client, bucket) = s3_configuration.into_client();
 
             let file_path = ServerBackup::s3_path(server.uuid, backup.uuid);
 
             if data.successful {
+                let completed_parts: Vec<CompletedPart> = data
+                    .parts
+                    .into_iter()
+                    .map(|p| {
+                        CompletedPart::builder()
+                            .part_number(p.part_number as i32)
+                            .e_tag(p.etag)
+                            .build()
+                    })
+                    .collect();
+
+                let completed_upload = CompletedMultipartUpload::builder()
+                    .set_parts(Some(completed_parts))
+                    .build();
+
                 match client
-                    .complete_multipart_upload(
-                        &file_path,
-                        upload_id,
-                        data.parts
-                            .into_iter()
-                            .map(|p| s3::serde_types::Part {
-                                part_number: p.part_number,
-                                etag: p.etag,
-                            })
-                            .collect(),
-                    )
+                    .complete_multipart_upload()
+                    .bucket(bucket.as_str())
+                    .key(file_path)
+                    .upload_id(&**upload_id)
+                    .multipart_upload(completed_upload)
+                    .send()
                     .await
                 {
                     Ok(_) => {
@@ -385,7 +387,14 @@ mod post {
                     }
                 }
             } else {
-                match client.abort_upload(&file_path, upload_id).await {
+                match client
+                    .abort_multipart_upload()
+                    .bucket(bucket.as_str())
+                    .key(file_path)
+                    .upload_id(&**upload_id)
+                    .send()
+                    .await
+                {
                     Ok(_) => {
                         tracing::info!(
                             backup = %backup.uuid,
