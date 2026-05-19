@@ -12,6 +12,7 @@ import { httpErrorToHuman } from '@/api/axios.ts';
 import Button from '@/elements/Button.tsx';
 import { AdminCan } from '@/elements/Can.tsx';
 import Code from '@/elements/Code.tsx';
+import ConditionalTooltip from '@/elements/ConditionalTooltip.tsx';
 import AdminContentContainer from '@/elements/containers/AdminContentContainer.tsx';
 import Select from '@/elements/input/Select.tsx';
 import Switch from '@/elements/input/Switch.tsx';
@@ -28,7 +29,7 @@ import { useToast } from '@/providers/ToastProvider.tsx';
 import { useGlobalStore } from '@/stores/global.ts';
 
 export default function UserCreateOrUpdate({ contextUser }: { contextUser?: z.infer<typeof adminFullUserSchema> }) {
-  const { doImpersonate } = useAuth();
+  const { user, doImpersonate } = useAuth();
   const { settings, languages } = useGlobalStore();
   const { addToast } = useToast();
   const canReadRoles = useAdminCan('roles.read');
@@ -273,9 +274,16 @@ export default function UserCreateOrUpdate({ contextUser }: { contextUser?: z.in
                 </Button>
               </AdminCan>
               <AdminCan action='users.impersonate'>
-                <Button variant='outline' onClick={() => doImpersonate(contextUser)}>
-                  Impersonate
-                </Button>
+                <ConditionalTooltip enabled={user.uuid === contextUser.uuid} label='You cannot impersonate yourself.'>
+                  <Button
+                    variant='outline'
+                    onClick={() => doImpersonate(contextUser)}
+                    disabled={user.uuid === contextUser.uuid}
+                    loading={loading}
+                  >
+                    Impersonate
+                  </Button>
+                </ConditionalTooltip>
               </AdminCan>
               <AdminCan action='users.delete' cantDelete>
                 <Button color='red' onClick={() => setOpenModal('delete')} loading={loading}>
