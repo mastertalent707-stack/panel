@@ -10,17 +10,13 @@ export default function AssetBreadcrumbs({ directory }: { directory: string }) {
   }));
 
   const items: ReactNode[] = [
-    directory ? (
-      <NavLink
-        key='root'
-        to={`?${createSearchParams({ directory: '' })}`}
-        className='text-(--mantine-color-anchor) hover:underline'
-      >
-        assets
-      </NavLink>
-    ) : (
-      'assets'
-    ),
+    <NavLink
+      key='root'
+      to={`?${createSearchParams({ directory: '' })}`}
+      className='text-(--mantine-color-anchor) hover:underline'
+    >
+      assets
+    </NavLink>,
     ...pathItems.map((item) => (
       <NavLink
         key={item.path}

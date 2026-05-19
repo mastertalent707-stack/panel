@@ -274,11 +274,11 @@ export default function UserCreateOrUpdate({ contextUser }: { contextUser?: z.in
                 </Button>
               </AdminCan>
               <AdminCan action='users.impersonate'>
-                <ConditionalTooltip enabled={user.uuid === contextUser.uuid} label='You cannot impersonate yourself.'>
+                <ConditionalTooltip enabled={user?.uuid === contextUser.uuid} label='You cannot impersonate yourself.'>
                   <Button
                     variant='outline'
                     onClick={() => doImpersonate(contextUser)}
-                    disabled={user.uuid === contextUser.uuid}
+                    disabled={user?.uuid === contextUser.uuid}
                     loading={loading}
                   >
                     Impersonate

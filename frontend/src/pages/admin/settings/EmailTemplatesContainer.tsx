@@ -5,6 +5,7 @@ import getEmailTemplate from '@/api/admin/settings/email-templates/getEmailTempl
 import getEmailTemplates from '@/api/admin/settings/email-templates/getEmailTemplates.ts';
 import updateEmailTemplate from '@/api/admin/settings/email-templates/updateEmailTemplate.ts';
 import { httpErrorToHuman } from '@/api/axios.ts';
+import Alert from '@/elements/Alert.tsx';
 import Anchor from '@/elements/Anchor.tsx';
 import Badge from '@/elements/Badge.tsx';
 import Button from '@/elements/Button.tsx';
@@ -154,7 +155,7 @@ export default function EmailTemplatesContainer() {
         default. This cannot be undone.
       </ConfirmationModal>
 
-      <Paper withBorder radius='md' p='sm'>
+      <Alert>
         <Text size='sm'>
           Templates use the&nbsp;
           <Anchor href='https://github.com/mitsuhiko/minijinja' target='_blank' rel='noopener noreferrer' size='sm'>
@@ -174,7 +175,7 @@ export default function EmailTemplatesContainer() {
           </Text>{' '}
           are supported.
         </Text>
-      </Paper>
+      </Alert>
 
       <div className='mt-4 flex flex-col md:flex-row gap-4'>
         {sidebar}

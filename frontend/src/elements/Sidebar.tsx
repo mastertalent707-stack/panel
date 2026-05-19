@@ -220,8 +220,10 @@ function Footer() {
 
   return (
     <>
-      <div
-        className='border border-(--mantine-color-default-border) rounded-lg p-2 flex flex-row justify-between items-center min-h-fit'
+      <Card
+        className='flex flex-row! justify-between items-center min-h-fit'
+        p='xs'
+        hoverable
         id='sidebar-account-card'
       >
         <NavLink
@@ -273,7 +275,7 @@ function Footer() {
             </Menu.Item>
           </Menu.Dropdown>
         </Menu>
-      </div>
+      </Card>
     </>
   );
 }
