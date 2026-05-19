@@ -2051,11 +2051,14 @@
               "readOnly": "Salt Okunur"
             }
           },
+          "button": {
+            "attach": "Bağla",
+            "detach": "Ayır"
+          },
           "modal": {
             "attachMount": {
               "title": "Mount Ekle",
               "content": "**{name}** öğesini `{target}` konumuna bağlamak istiyor musunuz?",
-              "confirm": "Bağla",
               "toast": {
                 "attached": "{name} sunucunuza bağlandı."
               }
@@ -2063,7 +2066,6 @@
             "detachMount": {
               "title": "Mount Kaldır",
               "content": "**{name}** öğesini `{target}` konumundan ayırmak istiyor musunuz?",
-              "confirm": "Ayır",
               "toast": {
                 "detached": "{name} sunucunuzdan kaldırıldı."
               }

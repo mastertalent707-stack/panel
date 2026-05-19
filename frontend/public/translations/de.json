@@ -2140,11 +2140,14 @@
               "readOnly": "Schreibgeschützt"
             }
           },
+          "button": {
+            "attach": "Einbinden",
+            "detach": "Trennen"
+          },
           "modal": {
             "attachMount": {
               "title": "Mount einbinden",
               "content": "Möchtest du **{name}** in `{target}` einbinden?",
-              "confirm": "Einbinden",
               "toast": {
                 "attached": "{name} wurde in deinen Server eingebunden."
               }
@@ -2152,7 +2155,6 @@
             "detachMount": {
               "title": "Mount trennen",
               "content": "Möchtest du **{name}** von `{target}` trennen?",
-              "confirm": "Trennen",
               "toast": {
                 "detached": "{name} wurde von deinem Server getrennt."
               }

@@ -2069,11 +2069,14 @@
               "readOnly": "Solo lectura"
             }
           },
+          "button": {
+            "attach": "Adjuntar",
+            "detach": "Desmontar"
+          },
           "modal": {
             "attachMount": {
               "title": "Adjuntar montaje",
               "content": "¿Quieres adjuntar **{name}** a `{target}`?",
-              "confirm": "Adjuntar",
               "toast": {
                 "attached": "{name} se ha montado en tu servidor."
               }
@@ -2081,7 +2084,6 @@
             "detachMount": {
               "title": "Desmontar montaje",
               "content": "¿Quieres desmontar **{name}** de `{target}`?",
-              "confirm": "Desmontar",
               "toast": {
                 "detached": "{name} se ha eliminado de tu servidor."
               }

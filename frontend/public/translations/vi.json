@@ -2038,11 +2038,14 @@
               "readOnly": "Chỉ Đọc"
             }
           },
+          "button": {
+            "attach": "Gắn",
+            "detach": "Tháo"
+          },
           "modal": {
             "attachMount": {
               "title": "Gắn Điểm Gắn",
               "content": "Bạn có muốn gắn **{name}** vào `{target}` không?",
-              "confirm": "Gắn",
               "toast": {
                 "attached": "{name} đã được gắn vào máy chủ của bạn."
               }
@@ -2050,7 +2053,6 @@
             "detachMount": {
               "title": "Tháo Điểm Gắn",
               "content": "Bạn có muốn tháo **{name}** từ `{target}` không?",
-              "confirm": "Tháo",
               "toast": {
                 "detached": "{name} đã được xóa khỏi máy chủ của bạn."
               }

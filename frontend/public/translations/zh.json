@@ -2103,11 +2103,14 @@
               "readOnly": "唯讀"
             }
           },
+          "button": {
+            "attach": "附加",
+            "detach": "卸離"
+          },
           "modal": {
             "attachMount": {
               "title": "附加掛載",
               "content": "你要將 **{name}** 附加到 `{target}` 嗎？",
-              "confirm": "附加",
               "toast": {
                 "attached": "{name} 已掛載到你的伺服器。"
               }
@@ -2115,7 +2118,6 @@
             "detachMount": {
               "title": "卸離掛載",
               "content": "你要將 **{name}** 從 `{target}` 卸離嗎？",
-              "confirm": "卸離",
               "toast": {
                 "detached": "{name} 已從你的伺服器移除。"
               }

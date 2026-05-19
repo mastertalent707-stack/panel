@@ -2069,11 +2069,14 @@
               "readOnly": "قراءة فقط"
             }
           },
+          "button": {
+            "attach": "تثبيت نقطة",
+            "detach": "فك نقطة"
+          },
           "modal": {
             "attachMount": {
               "title": "تثبيت نقطة",
               "content": "هل تريد تثبيت **{name}** على `{target}`؟",
-              "confirm": "تثبيت",
               "toast": {
                 "attached": "تم تثبيت {name} على خادمك."
               }
@@ -2081,7 +2084,6 @@
             "detachMount": {
               "title": "فك نقطة",
               "content": "هل تريد فك **{name}** من `{target}`؟",
-              "confirm": "فك",
               "toast": {
                 "detached": "تم إزالة {name} من خادمك."
               }

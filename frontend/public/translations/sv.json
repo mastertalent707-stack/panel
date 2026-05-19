@@ -2074,11 +2074,14 @@
               "readOnly": "Skrivskyddad"
             }
           },
+          "button": {
+            "attach": "Bifoga",
+            "detach": "Lösgör"
+          },
           "modal": {
             "attachMount": {
               "title": "Bifoga Mount",
               "content": "Vill du bifoga **{name}** till `{target}`?",
-              "confirm": "Bifoga",
               "toast": {
                 "attached": "{name} har blivit monterad på din server."
               }
@@ -2086,7 +2089,6 @@
             "detachMount": {
               "title": "Lösgör Mount",
               "content": "Vill du lösgöra **{name}** från `{target}`?",
-              "confirm": "Lösgör",
               "toast": {
                 "detached": "{name} har blivit borttagen från din server."
               }
