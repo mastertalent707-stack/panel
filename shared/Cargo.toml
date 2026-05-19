@@ -63,7 +63,7 @@ ignore = { version = "0.4.23", features = ["simd-accel"] }
 futures-util = { workspace = true }
 cap-std = "4.0.0"
 semver = { workspace = true }
-git2 = "0.20.2"
+git2 = "0.21.0"
 tempfile = { workspace = true }
 compact_str = { workspace = true }
 nestify = { workspace = true }
@@ -74,7 +74,7 @@ moka = { version = "0.12.12", features = ["future"] }
 serde_with = { workspace = true }
 minijinja = { workspace = true }
 sntpc-net-tokio = "1.0.1"
-sntpc = { version = "0.9.0", features = ["std"] }
+sntpc = { version = "0.10.1", features = ["std"] }
 xxhash-rust = { version = "0.8.15", features = ["xxh3"] }
 hex = { workspace = true }
 tower = "0.5.3"

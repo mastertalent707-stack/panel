@@ -17,7 +17,7 @@ export default function TwoFactorContainer() {
       icon={<FontAwesomeIcon icon={faMobilePhone} />}
       className='h-full order-30'
     >
-      <div>
+      <div className='flex flex-col'>
         {user!.totpEnabled
           ? t('pages.account.account.containers.twoFactor.twoFactorEnabled', {}).md()
           : t('pages.account.account.containers.twoFactor.twoFactorDisabled', {}).md()}

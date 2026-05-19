@@ -39,6 +39,7 @@ const baseTranslations = defineTranslations({
         selectAll: 'Select All',
         deselectAll: 'Deselect All',
         restore: 'Restore',
+        discard: 'Discard',
         download: 'Download',
         downloadAs: 'Download as {format}',
         export: 'Export',
@@ -1336,6 +1337,12 @@ const baseTranslations = defineTranslations({
               button: {
                 leave: 'Leave Page',
               },
+            },
+            draftRestore: {
+              title: 'Restore Draft',
+              content: 'A draft of this file was found in your browser. Would you like to restore it?',
+              contentHashMismatch:
+                'The file has been modified on the server since this draft was saved. Restoring the draft may overwrite those changes.',
             },
             createArchive: {
               title: 'Create Archive',

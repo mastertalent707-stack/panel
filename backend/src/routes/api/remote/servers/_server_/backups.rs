@@ -54,6 +54,12 @@ mod post {
                 .ok();
         }
 
+        if server.destination_node.is_some() {
+            return ApiResponse::error("server is transferring")
+                .with_status(StatusCode::EXPECTATION_FAILED)
+                .ok();
+        }
+
         let backups_lock = state
             .cache
             .lock(

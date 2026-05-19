@@ -1505,6 +1505,8 @@ pub mod servers_server_files_write {
 
         nestify::nest! {
             #[derive(Debug, ToSchema, Deserialize, Serialize, Clone)] pub struct Response200 {
+                #[schema(inline)]
+                pub revision_id: Option<i64>,
             }
         }
 
@@ -2086,8 +2088,6 @@ pub mod system_config {
                         pub keep_chains: u64,
                         #[schema(inline)]
                         pub file_size_cap: u64,
-                        #[schema(inline)]
-                        pub per_file_size_cap: u64,
                         #[schema(inline)]
                         pub per_file_disk_budget: u64,
                         #[schema(inline)]

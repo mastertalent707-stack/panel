@@ -1,4 +1,4 @@
-import { faClockRotateLeft } from '@fortawesome/free-solid-svg-icons';
+import { faClockRotateLeft, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Group, Title } from '@mantine/core';
 import { type OnMount } from '@monaco-editor/react';
@@ -10,11 +10,13 @@ import { httpErrorToHuman } from '@/api/axios.ts';
 import getFileContent from '@/api/server/files/getFileContent.ts';
 import saveFileContent from '@/api/server/files/saveFileContent.ts';
 import ActionIcon from '@/elements/ActionIcon.tsx';
+import Alert from '@/elements/Alert.tsx';
 import Button from '@/elements/Button.tsx';
 import { ServerCan } from '@/elements/Can.tsx';
 import ServerContentContainer from '@/elements/containers/ServerContentContainer.tsx';
 import MonacoEditor from '@/elements/MonacoEditor.tsx';
 import ConfirmationModal from '@/elements/modals/ConfirmationModal.tsx';
+import { Modal, ModalFooter } from '@/elements/modals/Modal.tsx';
 import ScreenBlock from '@/elements/ScreenBlock.tsx';
 import Spinner from '@/elements/Spinner.tsx';
 import Tooltip from '@/elements/Tooltip.tsx';
@@ -30,6 +32,41 @@ import FileBreadcrumbs from './FileBreadcrumbs.tsx';
 import FileEditorSettings from './FileEditorSettings.tsx';
 import FileImageViewerSettings from './FileImageViewerSettings.tsx';
 import FileNameModal from './modals/FileNameModal.tsx';
+
+interface FileDraft {
+  content: string;
+  originalHash: string;
+  savedAt: number;
+}
+
+const DRAFT_KEY_PREFIX = 'panel:file-draft:';
+const DRAFT_TTL_MS = 3 * 24 * 60 * 60 * 1000;
+
+function hashContent(s: string): string {
+  let h = 5381;
+  for (let i = 0; i < s.length; i++) {
+    h = ((h << 5) + h + s.charCodeAt(i)) | 0;
+  }
+  return (h >>> 0).toString(16);
+}
+
+function draftKey(serverUuid: string, filePath: string): string {
+  return `${DRAFT_KEY_PREFIX}${serverUuid}:${filePath}`;
+}
+
+function purgeExpiredDrafts(): void {
+  const now = Date.now();
+  for (let i = localStorage.length - 1; i >= 0; i--) {
+    const key = localStorage.key(i);
+    if (!key?.startsWith(DRAFT_KEY_PREFIX)) continue;
+    try {
+      const draft: FileDraft = JSON.parse(localStorage.getItem(key)!);
+      if (now - draft.savedAt > DRAFT_TTL_MS) localStorage.removeItem(key);
+    } catch {
+      localStorage.removeItem(key);
+    }
+  }
+}
 
 function FileEditorComponent() {
   const params = useParams<'action'>();
@@ -70,9 +107,11 @@ function FileEditorComponent() {
   const [fileName, setFileName] = useState('');
   const [content, setContent] = useState('');
   const [blobContent, setBlobContent] = useState(new Blob());
+  const [pendingDraft, setPendingDraft] = useState<{ content: string; hashMismatch: boolean } | null>(null);
 
   const editorRef = useRef<Parameters<OnMount>[0]>(null);
   const contentRef = useRef(content);
+  const originalHashRef = useRef('');
   const blocker = useBlocker(dirty, false, (tx) => {
     if (!tx.location.pathname.includes('/files/diff')) return true;
     return new URLSearchParams(tx.location.search).has('previousRevision');
@@ -83,6 +122,10 @@ function FileEditorComponent() {
     setBrowsingDirectory(searchParams.get('directory') || '/');
     setFileName(searchParams.get('file') || '');
   }, [searchParams]);
+
+  useEffect(() => {
+    purgeExpiredDrafts();
+  }, []);
 
   useEffect(() => {
     if (location.state?.openRevisions) {
@@ -111,6 +154,21 @@ function FileEditorComponent() {
         startTransition(() => {
           if (typeof content === 'string') {
             setContent(content);
+
+            if (params.action === 'edit') {
+              const hash = hashContent(content);
+              originalHashRef.current = hash;
+              const key = draftKey(server.uuid, join(browsingDirectory, fileName));
+              const stored = localStorage.getItem(key);
+              if (stored) {
+                try {
+                  const draft: FileDraft = JSON.parse(stored);
+                  setPendingDraft({ content: draft.content, hashMismatch: draft.originalHash !== hash });
+                } catch {
+                  localStorage.removeItem(key);
+                }
+              }
+            }
           } else {
             setBlobContent(content);
           }
@@ -127,6 +185,16 @@ function FileEditorComponent() {
   useEffect(() => {
     contentRef.current = content;
   }, [content]);
+
+  useEffect(() => {
+    if (!dirty || !fileName || !browsingDirectory || params.action !== 'edit') return;
+    const key = draftKey(server.uuid, join(browsingDirectory, fileName));
+    const timer = setTimeout(() => {
+      const draft: FileDraft = { content, originalHash: originalHashRef.current, savedAt: Date.now() };
+      localStorage.setItem(key, JSON.stringify(draft));
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [content, dirty]);
 
   useEffect(() => {
     const el = editorContainerRef.current;
@@ -180,6 +248,7 @@ function FileEditorComponent() {
           setNameModalOpen(false);
         });
 
+        localStorage.removeItem(draftKey(server.uuid, join(browsingDirectory, name ?? fileName)));
         addToast(t('pages.server.files.toast.fileSaved', {}), 'success');
 
         if (name) {
@@ -270,11 +339,54 @@ function FileEditorComponent() {
         )}
       </div>
 
+      <Modal
+        title={t('pages.server.files.modal.draftRestore.title', {})}
+        opened={pendingDraft !== null}
+        onClose={() => {
+          localStorage.removeItem(draftKey(server.uuid, join(browsingDirectory, fileName)));
+          setPendingDraft(null);
+        }}
+      >
+        <p>{t('pages.server.files.modal.draftRestore.content', {})}</p>
+
+        {pendingDraft?.hashMismatch && (
+          <Alert mt='sm' color='yellow' icon={<FontAwesomeIcon icon={faTriangleExclamation} />}>
+            {t('pages.server.files.modal.draftRestore.contentHashMismatch', {})}
+          </Alert>
+        )}
+
+        <ModalFooter>
+          <Button
+            onClick={() => {
+              if (pendingDraft) {
+                editorRef.current?.setValue(pendingDraft.content);
+                setDirty(true);
+              }
+              setPendingDraft(null);
+            }}
+          >
+            {t('common.button.restore', {})}
+          </Button>
+          <Button
+            variant='default'
+            onClick={() => {
+              localStorage.removeItem(draftKey(server.uuid, join(browsingDirectory, fileName)));
+              setPendingDraft(null);
+            }}
+          >
+            {t('common.button.discard', {})}
+          </Button>
+        </ModalFooter>
+      </Modal>
+
       <ConfirmationModal
         title={t('pages.server.files.modal.unsavedChanges.title', {})}
         opened={blocker.state === 'blocked'}
         onClose={() => blocker.reset()}
-        onConfirmed={() => blocker.proceed()}
+        onConfirmed={() => {
+          localStorage.removeItem(draftKey(server.uuid, join(browsingDirectory, fileName)));
+          blocker.proceed();
+        }}
         confirm={t('pages.server.files.modal.unsavedChanges.button.leave', {})}
         zIndex={300}
       >

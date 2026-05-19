@@ -56,7 +56,7 @@ mod post {
                 .ok();
         }
 
-        match server
+        let revision_id = match server
             .node
             .fetch_cached(&state.database)
             .await?
@@ -65,7 +65,7 @@ mod post {
             .post_servers_server_files_write(server.uuid, &params.file, user.uuid, body.into())
             .await
         {
-            Ok(_) => {}
+            Ok(data) => data.revision_id,
             Err(wings_api::client::ApiHttpError::Http(StatusCode::NOT_FOUND, err)) => {
                 return ApiResponse::new_serialized(ApiError::new_wings_value(err))
                     .with_status(StatusCode::NOT_FOUND)
@@ -84,6 +84,7 @@ mod post {
                 "server:file.write",
                 serde_json::json!({
                     "file": params.file,
+                    "revision_id": revision_id,
                 }),
             )
             .await;
