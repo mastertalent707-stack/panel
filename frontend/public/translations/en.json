@@ -1151,7 +1151,8 @@
             "nodeMaintenance": "Your Server is on a node that is currently under maintenance.",
             "transferring": "Your Server is currently being transferred to another node.",
             "restoringBackup": "Your Server is currently restoring from a backup. Please wait...",
-            "installing": "Your Server is currently being installed. Please wait..."
+            "installing": "Your Server is currently being installed. Please wait...",
+            "pendingRestart": "Your Server has pending changes that require a restart. Please restart your server to apply these changes."
           },
           "message": {
             "serverMarkedAs": "Server marked as {state}...",

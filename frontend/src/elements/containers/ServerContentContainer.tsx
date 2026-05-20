@@ -66,6 +66,7 @@ function ServerContentContainer(props: Props) {
     server,
     serverAnnouncements,
     updateServer,
+    pendingRestart,
     backupRestoreProgress,
     transferProgressArchive,
     backupRestoreTotal,
@@ -203,7 +204,11 @@ function ServerContentContainer(props: Props) {
         </div>
       ) : server.nodeMaintenanceEnabled ? (
         <div className='mt-2 px-4 lg:px-6 mb-4'>
-          <Notification>{t('pages.server.console.notification.nodeMaintenance', {})}</Notification>
+          <Notification color='yellow'>{t('pages.server.console.notification.nodeMaintenance', {})}</Notification>
+        </div>
+      ) : pendingRestart ? (
+        <div className='mt-2 px-4 lg:px-6 mb-4'>
+          <Notification color='yellow'>{t('pages.server.console.notification.pendingRestart', {})}</Notification>
         </div>
       ) : null}
 
