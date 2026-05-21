@@ -569,9 +569,12 @@ impl NodeAllocation {
             SELECT {}, COUNT(*) OVER() AS total_count
             FROM node_allocations
             LEFT JOIN server_allocations ON server_allocations.allocation_uuid = node_allocations.uuid
-            WHERE
-                ($2 IS NULL OR host(node_allocations.ip) || ':' || node_allocations.port ILIKE '%' || $2 || '%')
-                AND (node_allocations.node_uuid = $1 AND server_allocations.uuid IS NULL)
+            WHERE node_allocations.node_uuid = $1 AND server_allocations.uuid IS NULL
+                AND (
+                    $2 IS NULL
+                    OR host(node_allocations.ip) || ':' || node_allocations.port ILIKE '%' || $2 || '%'
+                    OR (node_allocations.ip_alias IS NOT NULL AND node_allocations.ip_alias || ':' || node_allocations.port ILIKE '%' || $2 || '%')
+                )
             ORDER BY node_allocations.ip, node_allocations.port
             LIMIT $3 OFFSET $4
             "#,
@@ -611,7 +614,12 @@ impl NodeAllocation {
             SELECT {}, server_allocations.server_uuid, COUNT(*) OVER() AS total_count
             FROM node_allocations
             LEFT JOIN server_allocations ON server_allocations.allocation_uuid = node_allocations.uuid
-            WHERE node_allocations.node_uuid = $1 AND ($2 IS NULL OR host(node_allocations.ip) || ':' || node_allocations.port ILIKE '%' || $2 || '%')
+            WHERE node_allocations.node_uuid = $1
+                AND (
+                    $2 IS NULL OR host(node_allocations.ip) || ':' || node_allocations.port ILIKE '%' || $2 || '%'
+                    OR (node_allocations.ip_alias IS NOT NULL AND node_allocations.ip_alias || ':' || node_allocations.port ILIKE '%' || $2 || '%')
+                    OR server_allocations.notes ILIKE '%' || $2 || '%'
+                )
             ORDER BY node_allocations.ip, node_allocations.port
             LIMIT $3 OFFSET $4
             "#,

@@ -194,7 +194,12 @@ impl ServerAllocation {
             FROM server_allocations
             JOIN node_allocations ON server_allocations.allocation_uuid = node_allocations.uuid
             WHERE server_allocations.server_uuid = $1
-                AND ($2 IS NULL OR host(node_allocations.ip) || ':' || node_allocations.port ILIKE '%' || $2 || '%' OR server_allocations.notes ILIKE '%' || $2 || '%')
+                AND (
+                    $2 IS NULL
+                    OR host(node_allocations.ip) || ':' || node_allocations.port ILIKE '%' || $2 || '%'
+                    OR (node_allocations.ip_alias IS NOT NULL AND node_allocations.ip_alias || ':' || node_allocations.port ILIKE '%' || $2 || '%')
+                    OR server_allocations.notes ILIKE '%' || $2 || '%')
+                )
             ORDER BY server_allocations.created
             LIMIT $3 OFFSET $4
             "#,
