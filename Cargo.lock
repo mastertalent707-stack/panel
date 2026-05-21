@@ -5058,7 +5058,6 @@ dependencies = [
  "backend",
  "colored",
  "futures-util",
- "reqwest",
  "serde",
  "serde_json",
  "serde_norway",
@@ -5070,6 +5069,7 @@ dependencies = [
  "tower",
  "tower-http",
  "tracing",
+ "ureq",
  "zstd",
 ]
 
