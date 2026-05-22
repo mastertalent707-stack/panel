@@ -198,7 +198,7 @@ impl ServerAllocation {
                     $2 IS NULL
                     OR host(node_allocations.ip) || ':' || node_allocations.port ILIKE '%' || $2 || '%'
                     OR (node_allocations.ip_alias IS NOT NULL AND node_allocations.ip_alias || ':' || node_allocations.port ILIKE '%' || $2 || '%')
-                    OR server_allocations.notes ILIKE '%' || $2 || '%')
+                    OR server_allocations.notes ILIKE '%' || $2 || '%'
                 )
             ORDER BY server_allocations.created
             LIMIT $3 OFFSET $4

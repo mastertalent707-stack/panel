@@ -66,6 +66,7 @@ rc_ulimit="-n 4096"
 
 respawn_delay=5
 respawn_max=30
+respawn_period=180
 
 depend() {{
     need net
