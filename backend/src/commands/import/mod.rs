@@ -5,7 +5,11 @@ use openssl::symm::Cipher;
 use serde::Deserialize;
 use shared::extensions::commands::CliCommandGroupBuilder;
 use sqlx::Row;
-use std::collections::HashMap;
+use sqlx::any::AnyPoolOptions;
+use std::{
+    collections::HashMap,
+    path::{Path, PathBuf},
+};
 
 mod pelican;
 mod pterodactyl;
@@ -22,6 +26,182 @@ fn collect_mappings<K: std::hash::Hash + Eq>(
     mappings: Vec<HashMap<K, uuid::Uuid>>,
 ) -> HashMap<K, uuid::Uuid> {
     mappings.into_iter().flatten().collect()
+}
+
+pub(super) type SourcePool = sqlx::AnyPool;
+pub(super) type SourceRow = sqlx::any::AnyRow;
+
+pub(super) async fn connect_source_database_any(
+    environment_path: &str,
+) -> Result<SourcePool, anyhow::Error> {
+    sqlx::any::install_default_drivers();
+
+    let connection = std::env::var("DB_CONNECTION")
+        .unwrap_or_else(|_| "mysql".to_string())
+        .trim_matches('"')
+        .to_ascii_lowercase();
+
+    let database_url = match connection.as_str() {
+        "mysql" | "mariadb" => {
+            let source_database_host =
+                std::env::var("DB_HOST").context("failed to read source environment DB_HOST")?;
+            let source_database_port = std::env::var("DB_PORT")
+                .unwrap_or_else(|_| "3306".to_string())
+                .parse::<u16>()
+                .context("failed to parse source environment DB_PORT")?;
+            let source_database_database = std::env::var("DB_DATABASE")
+                .context("failed to read source environment DB_DATABASE")?;
+            let source_database_username = std::env::var("DB_USERNAME")
+                .context("failed to read source environment DB_USERNAME")?;
+            let source_database_password = std::env::var("DB_PASSWORD")
+                .context("failed to read source environment DB_PASSWORD")?;
+
+            let mut url = reqwest::Url::parse("mysql://localhost")
+                .context("failed to construct source mysql database url")?;
+            url.set_host(Some(source_database_host.trim_matches('"')))
+                .context("failed to set source mysql database host")?;
+            url.set_port(Some(source_database_port))
+                .map_err(|_| anyhow::anyhow!("failed to set source mysql database port"))?;
+            url.set_username(source_database_username.trim_matches('"'))
+                .map_err(|_| anyhow::anyhow!("failed to set source mysql database username"))?;
+            url.set_password(Some(source_database_password.trim_matches('"')))
+                .map_err(|_| anyhow::anyhow!("failed to set source mysql database password"))?;
+            url.set_path(source_database_database.trim_matches('"'));
+            url.to_string()
+        }
+        "sqlite" | "sqlite3" => {
+            let source_database_database = std::env::var("DB_DATABASE")
+                .context("failed to read source environment DB_DATABASE")?;
+            let source_database_database = source_database_database.trim_matches('"');
+
+            match source_database_database {
+                ":memory:" | "file::memory:" => {
+                    return Err(anyhow::anyhow!(
+                        "refusing to import from an in-memory sqlite database"
+                    ));
+                }
+                _ => {
+                    let source_database_database = Path::new(source_database_database);
+                    let source_database_database: PathBuf =
+                        if source_database_database.is_absolute() {
+                            source_database_database.to_path_buf()
+                        } else {
+                            Path::new(environment_path)
+                                .parent()
+                                .unwrap_or_else(|| Path::new("."))
+                                .join(source_database_database)
+                        };
+
+                    format!("sqlite://{}", source_database_database.to_string_lossy())
+                }
+            }
+        }
+        _ => {
+            return Err(anyhow::anyhow!(
+                "unsupported source database driver `{connection}`; expected mysql, mariadb, sqlite, or sqlite3"
+            ));
+        }
+    };
+
+    AnyPoolOptions::new()
+        .connect(&database_url)
+        .await
+        .with_context(|| format!("failed to connect to source database using `{connection}`"))
+}
+
+fn source_text(row: &SourceRow, column: &str) -> Result<String, anyhow::Error> {
+    row.try_get::<String, _>(column)
+        .or_else(|_| {
+            row.try_get::<Vec<u8>, _>(column)
+                .map(|b| String::from_utf8_lossy(&b).into_owned())
+        })
+        .with_context(|| format!("failed to read source text column `{column}`"))
+}
+
+fn source_optional_text(row: &SourceRow, column: &str) -> Result<Option<String>, anyhow::Error> {
+    if let Ok(v) = row.try_get::<Option<String>, _>(column) {
+        return Ok(v);
+    }
+    if let Ok(Some(b)) = row.try_get::<Option<Vec<u8>>, _>(column) {
+        return Ok(Some(String::from_utf8_lossy(&b).into_owned()));
+    }
+    Ok(None)
+}
+
+fn source_uuid(row: &SourceRow, column: &str) -> Result<uuid::Uuid, anyhow::Error> {
+    row.try_get::<String, _>(column)
+        .with_context(|| format!("failed to read source uuid column `{column}`"))?
+        .parse::<uuid::Uuid>()
+        .with_context(|| format!("failed to parse source uuid column `{column}`"))
+}
+
+fn source_datetime(
+    row: &SourceRow,
+    column: &str,
+) -> Result<chrono::DateTime<chrono::Utc>, anyhow::Error> {
+    let value: String = row
+        .try_get(column)
+        .with_context(|| format!("failed to read source datetime column `{column}`"))?;
+
+    chrono::DateTime::parse_from_rfc3339(&value)
+        .map(|value| value.with_timezone(&chrono::Utc))
+        .or_else(|_| {
+            chrono::NaiveDateTime::parse_from_str(&value, "%Y-%m-%d %H:%M:%S%.f")
+                .map(|value| value.and_utc())
+        })
+        .or_else(|_| {
+            chrono::NaiveDateTime::parse_from_str(&value, "%Y-%m-%d %H:%M:%S")
+                .map(|value| value.and_utc())
+        })
+        .with_context(|| format!("failed to parse source datetime column `{column}`"))
+}
+
+fn source_optional_datetime(
+    row: &SourceRow,
+    column: &str,
+) -> Result<Option<chrono::DateTime<chrono::Utc>>, anyhow::Error> {
+    let value = row
+        .try_get::<Option<String>, _>(column)
+        .with_context(|| format!("failed to read source datetime column `{column}`"))?;
+
+    value
+        .map(|value| {
+            chrono::DateTime::parse_from_rfc3339(&value)
+                .map(|value| value.with_timezone(&chrono::Utc))
+                .or_else(|_| {
+                    chrono::NaiveDateTime::parse_from_str(&value, "%Y-%m-%d %H:%M:%S%.f")
+                        .map(|value| value.and_utc())
+                })
+                .or_else(|_| {
+                    chrono::NaiveDateTime::parse_from_str(&value, "%Y-%m-%d %H:%M:%S")
+                        .map(|value| value.and_utc())
+                })
+                .with_context(|| format!("failed to parse source datetime column `{column}`"))
+        })
+        .transpose()
+}
+
+fn source_bool(row: &SourceRow, column: &str) -> Result<bool, anyhow::Error> {
+    if let Ok(value) = row.try_get::<bool, _>(column) {
+        return Ok(value);
+    }
+
+    if let Ok(value) = row.try_get::<i64, _>(column) {
+        return Ok(value != 0);
+    }
+
+    if let Ok(value) = row.try_get::<i32, _>(column) {
+        return Ok(value != 0);
+    }
+
+    let value: String = row
+        .try_get(column)
+        .with_context(|| format!("failed to read source bool column `{column}`"))?;
+
+    Ok(matches!(
+        value.trim().to_ascii_lowercase().as_str(),
+        "1" | "true" | "yes" | "on"
+    ))
 }
 
 fn extract_php_serialized_string(
@@ -177,7 +357,7 @@ where
                         "datetime" | "timestamp" | "date" | "time" | "year" => {
                             format!("CAST(`{name}` AS CHAR) AS `{name}`")
                         }
-                        "tinyint" | "bit" => {
+                        "tinyint" | "smallint" | "mediumint" | "bit" => {
                             format!("CAST(`{name}` AS SIGNED) AS `{name}`")
                         }
                         "tinytext" | "text" | "mediumtext" | "longtext" | "tinyblob" | "blob"
