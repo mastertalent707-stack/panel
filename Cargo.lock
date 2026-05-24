@@ -989,7 +989,7 @@ dependencies = [
  "chrono-tz",
  "clap",
  "colored",
- "compact_str",
+ "compact_str 0.9.0 (git+https://github.com/0x7d8/compact_str.git?branch=add-garde-feature)",
  "cron",
  "database-migrator",
  "dialoguer",
@@ -1605,10 +1605,26 @@ dependencies = [
 [[package]]
 name = "compact_str"
 version = "0.9.0"
-source = "git+https://github.com/0x7d8/compact_str.git#dbc0bc8a3ccef4a6143128e31ac060f630fd74ff"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3fdb1325a1cece981e8a296ab8f0f9b63ae357bd0784a9faaf548cc7b480707a"
 dependencies = [
  "castaway",
  "cfg-if",
+ "itoa",
+ "rustversion",
+ "ryu",
+ "serde",
+ "static_assertions",
+]
+
+[[package]]
+name = "compact_str"
+version = "0.9.0"
+source = "git+https://github.com/0x7d8/compact_str.git?branch=add-garde-feature#8536f4379332960ad6caa847c0787ac12dc0480b"
+dependencies = [
+ "castaway",
+ "cfg-if",
+ "garde",
  "itoa",
  "rustversion",
  "ryu",
@@ -2792,11 +2808,12 @@ dependencies = [
 
 [[package]]
 name = "garde"
-version = "0.22.1"
-source = "git+https://github.com/0x7d8/garde.git#83bc3971d295672f8a2ca090038cb826b2e812c1"
+version = "0.23.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5d7f479d28d1daedf23970890723b8774d120aa627abcb33c1d7c93d0965e6c3"
 dependencies = [
  "card-validate",
- "compact_str",
+ "compact_str 0.9.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "garde_derive",
  "idna",
  "once_cell",
@@ -2810,8 +2827,9 @@ dependencies = [
 
 [[package]]
 name = "garde_derive"
-version = "0.22.1"
-source = "git+https://github.com/0x7d8/garde.git#83bc3971d295672f8a2ca090038cb826b2e812c1"
+version = "0.23.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7b0252cacdca8e6f30a900e6d436fbf294e23f674b9288ca4a5bd35976bef87c"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -5948,7 +5966,7 @@ version = "1.0.7"
 dependencies = [
  "chrono",
  "chrono-tz",
- "compact_str",
+ "compact_str 0.9.0 (git+https://github.com/0x7d8/compact_str.git?branch=add-garde-feature)",
  "garde",
  "regex",
  "reqwest",
@@ -6886,7 +6904,7 @@ dependencies = [
  "cidr",
  "clap",
  "colored",
- "compact_str",
+ "compact_str 0.9.0 (git+https://github.com/0x7d8/compact_str.git?branch=add-garde-feature)",
  "constant_time_eq 0.5.0",
  "cron",
  "dotenvy",
@@ -8908,7 +8926,7 @@ version = "1.0.7"
 dependencies = [
  "anyhow",
  "chrono",
- "compact_str",
+ "compact_str 0.9.0 (git+https://github.com/0x7d8/compact_str.git?branch=add-garde-feature)",
  "cron",
  "futures-util",
  "garde",

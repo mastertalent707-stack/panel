@@ -44,7 +44,7 @@ async-trait = "0.1.89"
 anyhow = "1.0.98"
 utoipa = { version = "5.3.1", features = ["axum_extras", "preserve_order", "chrono", "indexmap", "uuid", "rc_schema"] }
 utoipa-axum = "0.2.0"
-garde = { git = "https://github.com/0x7d8/garde.git", version = "0.22.1", features = ["full"] }
+garde = { version = "0.23.0", features = ["full"] }
 serde = { version = "1.0.218", features = ["derive", "rc"] }
 serde_json = { version = "1.0.140", features = ["preserve_order"] }
 serde_norway = "0.9.42"
@@ -74,7 +74,7 @@ dotenvy = "0.15.7"
 oauth2 = { version = "5.0.0", default-features = false }
 semver = { version = "1.0.27", features = ["serde"] }
 tempfile = "3.23.0"
-compact_str = { version = "0.9.0", features = ["serde", "utoipa", "sqlx", "sqlx-postgres", "sqlx-mysql"] }
+compact_str = { version = "0.9.0", git = "https://github.com/0x7d8/compact_str.git", branch = "add-garde-feature", features = ["serde", "utoipa", "garde", "sqlx", "sqlx-postgres", "sqlx-mysql"] }
 nestify = "0.3.3"
 sysinfo = "0.39.0"
 serde_with = "3.16.1"
@@ -83,9 +83,6 @@ dialoguer = "0.12.0"
 hex = "0.4.3"
 zstd = "0.13.3"
 parking_lot = "0.12.5"
-
-[patch.crates-io]
-compact_str = { git = "https://github.com/0x7d8/compact_str.git" }
 
 # dev (for development)
 [profile.dev.package."*"]
