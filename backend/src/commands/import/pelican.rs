@@ -239,6 +239,7 @@ impl shared::extensions::commands::CliCommand<PelicanArgs> for PelicanCommand {
                             mapping.insert(id, uuid);
 
                             let admin_user_ids = admin_user_ids.clone();
+                            let source_app_key = source_app_key.clone();
                             let database = database.clone();
                             futures.push(async move {
                                 let external_id: Option<String> = source_optional_text(&row, "external_id")?;
@@ -250,7 +251,7 @@ impl shared::extensions::commands::CliCommand<PelicanArgs> for PelicanCommand {
                                 let created = source_datetime(&row, "created_at")?;
                                 let (name_first, name_last) = derive_name_parts(&username);
                                 let admin = admin_user_ids.contains(&id);
-                                let totp_secret = mfa_app_secret.map(compact_str::CompactString::from);
+                                let totp_secret = mfa_app_secret.and_then(|s| decrypt_laravel_value(&s, &source_app_key).ok());
                                 let totp_enabled = totp_secret.is_some();
 
                                 sqlx::query(
