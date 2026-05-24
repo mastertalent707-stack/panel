@@ -7,6 +7,7 @@ touch /tmp/rebuild_trigger
 
 export EXTENSION_LOG="/tmp/extension_build.log"
 export EXTENSION_BUILD_LOCK="/tmp/extension_build.lock"
+export SQLX_OFFLINE=true
 
 if [ ! -d "/app/binaries" ]; then
   echo "Error: /app/binaries directory is missing. Please mount the binaries volume. read https://calagopus.com/docs/panel/extensions/switching-to-the-heavy-image"
