@@ -452,7 +452,7 @@ impl DatabaseHost {
     ) -> Result<super::Pagination<Self>, crate::database::DatabaseError> {
         let offset = (page - 1) * per_page;
 
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}, COUNT(*) OVER() AS total_count
             FROM database_hosts
@@ -461,7 +461,7 @@ impl DatabaseHost {
             LIMIT $2 OFFSET $3
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(search)
         .bind(per_page)
         .bind(offset)
@@ -486,7 +486,7 @@ impl DatabaseHost {
         location_uuid: uuid::Uuid,
         uuid: uuid::Uuid,
     ) -> Result<Option<Self>, crate::database::DatabaseError> {
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM database_hosts
@@ -494,7 +494,7 @@ impl DatabaseHost {
             WHERE database_hosts.uuid = $2
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(location_uuid)
         .bind(uuid)
         .fetch_optional(database.read())
@@ -576,14 +576,14 @@ impl ByUuid for DatabaseHost {
         database: &crate::database::Database,
         uuid: uuid::Uuid,
     ) -> Result<Self, crate::database::DatabaseError> {
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM database_hosts
             WHERE database_hosts.uuid = $1
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(uuid)
         .fetch_one(database.read())
         .await?;
@@ -595,14 +595,14 @@ impl ByUuid for DatabaseHost {
         transaction: &mut sqlx::Transaction<'_, sqlx::Postgres>,
         uuid: uuid::Uuid,
     ) -> Result<Self, crate::database::DatabaseError> {
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM database_hosts
             WHERE database_hosts.uuid = $1
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(uuid)
         .fetch_one(&mut **transaction)
         .await?;

@@ -141,7 +141,7 @@ impl ServerAllocation {
         database: &crate::database::Database,
         uuid: uuid::Uuid,
     ) -> Result<Option<Self>, crate::database::DatabaseError> {
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM server_allocations
@@ -149,7 +149,7 @@ impl ServerAllocation {
             WHERE server_allocations.uuid = $1
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(uuid)
         .fetch_optional(database.read())
         .await?;
@@ -162,7 +162,7 @@ impl ServerAllocation {
         server_uuid: uuid::Uuid,
         allocation_uuid: uuid::Uuid,
     ) -> Result<Option<Self>, crate::database::DatabaseError> {
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM server_allocations
@@ -170,7 +170,7 @@ impl ServerAllocation {
             WHERE server_allocations.server_uuid = $1 AND server_allocations.uuid = $2
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(server_uuid)
         .bind(allocation_uuid)
         .fetch_optional(database.read())
@@ -188,7 +188,7 @@ impl ServerAllocation {
     ) -> Result<super::Pagination<Self>, crate::database::DatabaseError> {
         let offset = (page - 1) * per_page;
 
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}, COUNT(*) OVER() AS total_count
             FROM server_allocations
@@ -204,7 +204,7 @@ impl ServerAllocation {
             LIMIT $3 OFFSET $4
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(server_uuid)
         .bind(search)
         .bind(per_page)
@@ -229,7 +229,7 @@ impl ServerAllocation {
         database: &crate::database::Database,
         server_uuid: uuid::Uuid,
     ) -> Result<Vec<Self>, crate::database::DatabaseError> {
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM server_allocations
@@ -238,7 +238,7 @@ impl ServerAllocation {
             ORDER BY server_allocations.created
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(server_uuid)
         .fetch_all(database.read())
         .await?;

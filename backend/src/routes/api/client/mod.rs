@@ -22,6 +22,39 @@ mod account;
 mod permissions;
 pub mod servers;
 
+fn can_impersonate(impersonator: &User, target: &User) -> bool {
+    if impersonator.admin {
+        return true;
+    }
+    if target.admin {
+        return false;
+    }
+
+    let imp_admin = impersonator
+        .role
+        .as_ref()
+        .map(|r| r.admin_permissions.as_slice())
+        .unwrap_or(&[]);
+    let imp_server = impersonator
+        .role
+        .as_ref()
+        .map(|r| r.server_permissions.as_slice())
+        .unwrap_or(&[]);
+    let tgt_admin = target
+        .role
+        .as_ref()
+        .map(|r| r.admin_permissions.as_slice())
+        .unwrap_or(&[]);
+    let tgt_server = target
+        .role
+        .as_ref()
+        .map(|r| r.server_permissions.as_slice())
+        .unwrap_or(&[]);
+
+    tgt_admin.iter().all(|p| imp_admin.contains(p))
+        && tgt_server.iter().all(|p| imp_server.contains(p))
+}
+
 pub async fn auth(
     state: GetState,
     ip: shared::GetIp,
@@ -111,6 +144,14 @@ pub async fn auth(
                 }
                 Err(err) => return Ok(ApiResponse::from(err).into_response()),
             };
+
+            if !can_impersonate(&auth_user, &user) {
+                return Ok(
+                    ApiResponse::error("cannot impersonate a user with more permissions")
+                        .with_status(StatusCode::FORBIDDEN)
+                        .into_response(),
+                );
+            }
 
             req.extensions_mut().insert(PermissionManager::new(&user));
             req.extensions_mut().insert(UserActivityLogger {
@@ -214,6 +255,14 @@ pub async fn auth(
                 Err(err) => return Ok(ApiResponse::from(err).into_response()),
             };
 
+            if !can_impersonate(&auth_user, &user) {
+                return Ok(
+                    ApiResponse::error("cannot impersonate a user with more permissions")
+                        .with_status(StatusCode::FORBIDDEN)
+                        .into_response(),
+                );
+            }
+
             req.extensions_mut().insert(PermissionManager::new(&user));
             req.extensions_mut().insert(UserActivityLogger {
                 state: Arc::clone(&state),
@@ -315,6 +364,14 @@ pub async fn auth(
                 }
                 Err(err) => return Ok(ApiResponse::from(err).into_response()),
             };
+
+            if !can_impersonate(&auth_user, &user) {
+                return Ok(
+                    ApiResponse::error("cannot impersonate a user with more permissions")
+                        .with_status(StatusCode::FORBIDDEN)
+                        .into_response(),
+                );
+            }
 
             req.extensions_mut().insert(PermissionManager::new(&user));
             req.extensions_mut().insert(UserActivityLogger {

@@ -114,7 +114,7 @@ impl ServerDatabase {
         server_uuid: uuid::Uuid,
         uuid: uuid::Uuid,
     ) -> Result<Option<Self>, crate::database::DatabaseError> {
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM server_databases
@@ -122,7 +122,7 @@ impl ServerDatabase {
             WHERE server_databases.server_uuid = $1 AND server_databases.uuid = $2
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(server_uuid)
         .bind(uuid)
         .fetch_optional(database.read())
@@ -140,7 +140,7 @@ impl ServerDatabase {
     ) -> Result<super::Pagination<Self>, crate::database::DatabaseError> {
         let offset = (page - 1) * per_page;
 
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}, COUNT(*) OVER() AS total_count
             FROM server_databases
@@ -150,7 +150,7 @@ impl ServerDatabase {
             LIMIT $3 OFFSET $4
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(database_host_uuid)
         .bind(search)
         .bind(per_page)
@@ -180,7 +180,7 @@ impl ServerDatabase {
     ) -> Result<super::Pagination<Self>, crate::database::DatabaseError> {
         let offset = (page - 1) * per_page;
 
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}, COUNT(*) OVER() AS total_count
             FROM server_databases
@@ -190,7 +190,7 @@ impl ServerDatabase {
             LIMIT $3 OFFSET $4
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(server_uuid)
         .bind(search)
         .bind(per_page)
@@ -215,7 +215,7 @@ impl ServerDatabase {
         database: &crate::database::Database,
         server_uuid: uuid::Uuid,
     ) -> Result<Vec<Self>, crate::database::DatabaseError> {
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM server_databases
@@ -223,7 +223,7 @@ impl ServerDatabase {
             WHERE server_databases.server_uuid = $1
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(server_uuid)
         .fetch_all(database.read())
         .await?;
@@ -273,18 +273,18 @@ impl ServerDatabase {
 
         match self.database_host.get_connection(database).await? {
             crate::models::database_host::DatabasePool::Mysql(pool) => {
-                sqlx::query(&format!(
+                sqlx::query(sqlx::AssertSqlSafe(format!(
                     "ALTER USER '{}'@'%' IDENTIFIED BY '{}'",
                     self.username, new_password
-                ))
+                )))
                 .execute(&pool)
                 .await?;
             }
             crate::models::database_host::DatabasePool::Postgres(pool) => {
-                sqlx::query(&format!(
+                sqlx::query(sqlx::AssertSqlSafe(format!(
                     "ALTER USER \"{}\" WITH PASSWORD '{}'",
                     self.username, new_password
-                ))
+                )))
                 .execute(&pool)
                 .await?;
             }
@@ -358,21 +358,27 @@ impl ServerDatabase {
         let mut run_recreate = async || {
             match self.database_host.get_connection(database).await? {
                 crate::models::database_host::DatabasePool::Mysql(pool) => {
-                    sqlx::query(&format!("DROP DATABASE IF EXISTS `{}`", self.name))
-                        .execute(&pool)
-                        .await?;
-                    sqlx::query(&format!("CREATE DATABASE `{}` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;", self.name))
+                    sqlx::query(sqlx::AssertSqlSafe(format!(
+                        "DROP DATABASE IF EXISTS `{}`",
+                        self.name
+                    )))
+                    .execute(&pool)
+                    .await?;
+                    sqlx::query(sqlx::AssertSqlSafe(format!("CREATE DATABASE `{}` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;", self.name)))
                         .execute(&pool)
                         .await?;
                 }
                 crate::models::database_host::DatabasePool::Postgres(pool) => {
-                    sqlx::query(&format!("DROP DATABASE IF EXISTS \"{}\"", self.name))
-                        .execute(&pool)
-                        .await?;
-                    sqlx::query(&format!(
+                    sqlx::query(sqlx::AssertSqlSafe(format!(
+                        "DROP DATABASE IF EXISTS \"{}\"",
+                        self.name
+                    )))
+                    .execute(&pool)
+                    .await?;
+                    sqlx::query(sqlx::AssertSqlSafe(format!(
                         "CREATE DATABASE \"{}\" WITH OWNER \"{}\" ENCODING 'UTF8'",
                         self.name, self.username
-                    ))
+                    )))
                     .execute(&pool)
                     .await?;
                 }
@@ -524,7 +530,7 @@ impl ByUuid for ServerDatabase {
         database: &crate::database::Database,
         uuid: uuid::Uuid,
     ) -> Result<Self, crate::database::DatabaseError> {
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM server_databases
@@ -532,7 +538,7 @@ impl ByUuid for ServerDatabase {
             WHERE server_databases.uuid = $1
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(uuid)
         .fetch_one(database.read())
         .await?;
@@ -544,7 +550,7 @@ impl ByUuid for ServerDatabase {
         transaction: &mut sqlx::Transaction<'_, sqlx::Postgres>,
         uuid: uuid::Uuid,
     ) -> Result<Self, crate::database::DatabaseError> {
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM server_databases
@@ -552,7 +558,7 @@ impl ByUuid for ServerDatabase {
             WHERE server_databases.uuid = $1
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(uuid)
         .fetch_one(&mut **transaction)
         .await?;
@@ -609,17 +615,17 @@ impl CreatableModel for ServerDatabase {
             crate::models::database_host::DatabasePool::Mysql(pool) => {
                 let mut transaction = pool.begin().await?;
 
-                sqlx::query(&format!(
+                sqlx::query(sqlx::AssertSqlSafe(format!(
                     "CREATE USER IF NOT EXISTS '{username}'@'%' IDENTIFIED BY '{password}'"
-                ))
+                )))
                 .execute(&mut *transaction)
                 .await?;
-                sqlx::query(&format!("CREATE DATABASE IF NOT EXISTS `{name}` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"))
+                sqlx::query(sqlx::AssertSqlSafe(format!("CREATE DATABASE IF NOT EXISTS `{name}` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;")))
                     .execute(&mut *transaction)
                     .await?;
-                sqlx::query(&format!(
+                sqlx::query(sqlx::AssertSqlSafe(format!(
                     "GRANT ALL PRIVILEGES ON `{name}`.* TO '{username}'@'%' WITH GRANT OPTION"
-                ))
+                )))
                 .execute(&mut *transaction)
                 .await?;
 
@@ -628,14 +634,14 @@ impl CreatableModel for ServerDatabase {
             crate::models::database_host::DatabasePool::Postgres(pool) => {
                 let transaction = pool.begin().await?;
 
-                sqlx::query(&format!(
+                sqlx::query(sqlx::AssertSqlSafe(format!(
                     "CREATE USER \"{username}\" WITH PASSWORD '{password}'"
-                ))
+                )))
                 .execute(&pool)
                 .await?;
-                sqlx::query(&format!(
+                sqlx::query(sqlx::AssertSqlSafe(format!(
                     "CREATE DATABASE \"{name}\" WITH OWNER \"{username}\" ENCODING 'UTF8'"
-                ))
+                )))
                 .execute(&pool)
                 .await?;
 
@@ -685,8 +691,8 @@ impl CreatableModel for ServerDatabase {
                         let drop_user = format!("DROP USER IF EXISTS \"{username}\"");
 
                         let (_, _) = tokio::join!(
-                            sqlx::query(&drop_database).execute(&pool),
-                            sqlx::query(&drop_user).execute(&pool)
+                            sqlx::query(sqlx::AssertSqlSafe(drop_database)).execute(&pool),
+                            sqlx::query(sqlx::AssertSqlSafe(drop_user)).execute(&pool)
                         );
                     }
                     DatabaseTransaction::Mongodb(client) => {
@@ -844,20 +850,32 @@ impl DeletableModel for ServerDatabase {
             let run_delete = async || {
                 match connection {
                     crate::models::database_host::DatabasePool::Mysql(pool) => {
-                        sqlx::query(&format!("DROP DATABASE IF EXISTS `{}`", database_name))
-                            .execute(&pool)
-                            .await?;
-                        sqlx::query(&format!("DROP USER IF EXISTS '{}'@'%'", database_username))
-                            .execute(&pool)
-                            .await?;
+                        sqlx::query(sqlx::AssertSqlSafe(format!(
+                            "DROP DATABASE IF EXISTS `{}`",
+                            database_name
+                        )))
+                        .execute(&pool)
+                        .await?;
+                        sqlx::query(sqlx::AssertSqlSafe(format!(
+                            "DROP USER IF EXISTS '{}'@'%'",
+                            database_username
+                        )))
+                        .execute(&pool)
+                        .await?;
                     }
                     crate::models::database_host::DatabasePool::Postgres(pool) => {
-                        sqlx::query(&format!("DROP DATABASE IF EXISTS \"{}\"", database_name))
-                            .execute(&pool)
-                            .await?;
-                        sqlx::query(&format!("DROP USER IF EXISTS \"{}\"", database_username))
-                            .execute(&pool)
-                            .await?;
+                        sqlx::query(sqlx::AssertSqlSafe(format!(
+                            "DROP DATABASE IF EXISTS \"{}\"",
+                            database_name
+                        )))
+                        .execute(&pool)
+                        .await?;
+                        sqlx::query(sqlx::AssertSqlSafe(format!(
+                            "DROP USER IF EXISTS \"{}\"",
+                            database_username
+                        )))
+                        .execute(&pool)
+                        .await?;
                     }
                     crate::models::database_host::DatabasePool::Mongodb(client) => {
                         let db = client.database(&database_name);

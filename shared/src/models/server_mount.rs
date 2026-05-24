@@ -77,14 +77,14 @@ impl ServerMount {
         server_uuid: uuid::Uuid,
         mount_uuid: uuid::Uuid,
     ) -> Result<Option<Self>, crate::database::DatabaseError> {
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM server_mounts
             WHERE server_mounts.server_uuid = $1 AND server_mounts.mount_uuid = $2
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(server_uuid)
         .bind(mount_uuid)
         .fetch_optional(database.read())
@@ -102,7 +102,7 @@ impl ServerMount {
     ) -> Result<super::Pagination<Self>, crate::database::DatabaseError> {
         let offset = (page - 1) * per_page;
 
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}, COUNT(*) OVER() AS total_count
             FROM server_mounts
@@ -112,7 +112,7 @@ impl ServerMount {
             LIMIT $3 OFFSET $4
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(server_uuid)
         .bind(search)
         .bind(per_page)
@@ -142,7 +142,7 @@ impl ServerMount {
     ) -> Result<super::Pagination<Self>, crate::database::DatabaseError> {
         let offset = (page - 1) * per_page;
 
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}, mounts.uuid AS alt_mount_uuid, COUNT(*) OVER() AS total_count
             FROM mounts
@@ -154,7 +154,7 @@ impl ServerMount {
             LIMIT $5 OFFSET $6
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(server.node.uuid)
         .bind(server.egg.uuid)
         .bind(server.uuid)
@@ -187,7 +187,7 @@ impl ServerMount {
     ) -> Result<super::Pagination<Self>, crate::database::DatabaseError> {
         let offset = (page - 1) * per_page;
 
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}, mounts.uuid AS alt_mount_uuid, COUNT(*) OVER() AS total_count
             FROM mounts
@@ -199,7 +199,7 @@ impl ServerMount {
             LIMIT $5 OFFSET $6
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(server.node.uuid)
         .bind(server.egg.uuid)
         .bind(server.uuid)
@@ -232,7 +232,7 @@ impl ServerMount {
     ) -> Result<super::Pagination<Self>, crate::database::DatabaseError> {
         let offset = (page - 1) * per_page;
 
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}, COUNT(*) OVER() AS total_count
             FROM server_mounts
@@ -242,7 +242,7 @@ impl ServerMount {
             LIMIT $3 OFFSET $4
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(mount_uuid)
         .bind(search)
         .bind(per_page)

@@ -75,7 +75,7 @@ impl LocationDatabaseHost {
         location_uuid: uuid::Uuid,
         database_host_uuid: uuid::Uuid,
     ) -> Result<Option<Self>, crate::database::DatabaseError> {
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM location_database_hosts
@@ -83,7 +83,7 @@ impl LocationDatabaseHost {
             WHERE location_database_hosts.location_uuid = $1 AND location_database_hosts.database_host_uuid = $2
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(location_uuid)
         .bind(database_host_uuid)
         .fetch_optional(database.read())
@@ -97,7 +97,7 @@ impl LocationDatabaseHost {
         location_uuid: uuid::Uuid,
         database_host_uuid: uuid::Uuid,
     ) -> Result<Option<Self>, crate::database::DatabaseError> {
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM location_database_hosts
@@ -105,7 +105,7 @@ impl LocationDatabaseHost {
             WHERE location_database_hosts.location_uuid = $1 AND location_database_hosts.database_host_uuid = $2
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(location_uuid)
         .bind(database_host_uuid)
         .fetch_optional(&mut **transaction)
@@ -123,7 +123,7 @@ impl LocationDatabaseHost {
     ) -> Result<super::Pagination<Self>, crate::database::DatabaseError> {
         let offset = (page - 1) * per_page;
 
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}, COUNT(*) OVER() AS total_count
             FROM location_database_hosts
@@ -133,7 +133,7 @@ impl LocationDatabaseHost {
             LIMIT $3 OFFSET $4
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(location_uuid)
         .bind(search)
         .bind(per_page)
@@ -158,7 +158,7 @@ impl LocationDatabaseHost {
         database: &crate::database::Database,
         location_uuid: uuid::Uuid,
     ) -> Result<Vec<Self>, crate::database::DatabaseError> {
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM location_database_hosts
@@ -167,7 +167,7 @@ impl LocationDatabaseHost {
             ORDER BY location_database_hosts.created DESC
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(location_uuid)
         .fetch_all(database.read())
         .await?;

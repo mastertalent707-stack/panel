@@ -312,7 +312,7 @@ pub async fn process_table<DB, T, Fut: Future<Output = Result<T, anyhow::Error>>
 ) -> Result<Vec<T>, anyhow::Error>
 where
     DB: sqlx::Database,
-    for<'q> <DB as sqlx::Database>::Arguments<'q>: sqlx::IntoArguments<'q, DB>,
+    for<'q> <DB as sqlx::Database>::Arguments: sqlx::IntoArguments<DB>,
     for<'c> &'c sqlx::Pool<DB>: sqlx::Executor<'c, Database = DB>,
     for<'r> &'r str: sqlx::ColumnIndex<DB::Row>,
     usize: sqlx::ColumnIndex<DB::Row>,
@@ -321,7 +321,7 @@ where
 {
     let projection = if is_sqlite_source() {
         let pragma_query = format!("PRAGMA table_info(`{table}`)");
-        let columns: Vec<DB::Row> = sqlx::query::<DB>(&pragma_query)
+        let columns: Vec<DB::Row> = sqlx::query::<DB>(sqlx::AssertSqlSafe(pragma_query))
             .fetch_all(source_database)
             .await?;
         columns
@@ -339,10 +339,10 @@ where
     } else {
         let info_query = format!(
             "SELECT COLUMN_NAME, DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS \
-             WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = '{table}' \
-             ORDER BY ORDINAL_POSITION"
+            WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = '{table}' \
+            ORDER BY ORDINAL_POSITION"
         );
-        let columns: Vec<DB::Row> = sqlx::query::<DB>(&info_query)
+        let columns: Vec<DB::Row> = sqlx::query::<DB>(sqlx::AssertSqlSafe(info_query))
             .fetch_all(source_database)
             .await?;
         if columns.is_empty() {
@@ -372,14 +372,14 @@ where
         }
     };
 
-    let total: i64 = sqlx::query_scalar::<DB, i64>(&format!(
+    let total: i64 = sqlx::query_scalar::<DB, i64>(sqlx::AssertSqlSafe(format!(
         "SELECT COUNT(*) FROM `{table}` {}",
         if let Some(where_clause) = sql_where {
             format!("WHERE {where_clause}")
         } else {
             String::new()
         }
-    ))
+    )))
     .fetch_one(source_database)
     .await
     .context("failed to count total rows for table")?;
@@ -392,7 +392,7 @@ where
             String::new()
         }
     );
-    let mut query_rows = sqlx::query::<DB>(&query).fetch(source_database);
+    let mut query_rows = sqlx::query::<DB>(sqlx::AssertSqlSafe(query)).fetch(source_database);
 
     let mut processed_rows: usize = 0;
     let mut results = Vec::new();

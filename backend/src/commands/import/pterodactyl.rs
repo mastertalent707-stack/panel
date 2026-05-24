@@ -281,10 +281,10 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                                         let rsa = pkey.rsa()?;
 
                                         russh::keys::ssh_key::public::KeyData::Rsa(
-                                            russh::keys::ssh_key::public::RsaPublicKey {
-                                                e: rsa.e().to_vec().as_slice().try_into()?,
-                                                n: rsa.n().to_vec().as_slice().try_into()?,
-                                            },
+                                            russh::keys::ssh_key::public::RsaPublicKey::new(
+                                                rsa.e().to_vec().as_slice().try_into()?,
+                                                rsa.n().to_vec().as_slice().try_into()?,
+                                            )?,
                                         )
                                     }
                                     openssl::pkey::Id::ED25519 => {

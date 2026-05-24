@@ -261,7 +261,7 @@ impl NodeAllocation {
         ip: &sqlx::types::ipnetwork::IpNetwork,
         port: i32,
     ) -> Result<Option<Self>, crate::database::DatabaseError> {
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM node_allocations
@@ -269,7 +269,7 @@ impl NodeAllocation {
             WHERE node_allocations.node_uuid = $1 AND node_allocations.ip = $2 AND node_allocations.port = $3 AND server_allocations.uuid IS NULL
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(node_uuid)
         .bind(ip)
         .bind(port)
@@ -539,14 +539,14 @@ impl NodeAllocation {
         node_uuid: uuid::Uuid,
         uuid: uuid::Uuid,
     ) -> Result<Option<Self>, crate::database::DatabaseError> {
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM node_allocations
             WHERE node_allocations.node_uuid = $1 AND node_allocations.uuid = $2
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(node_uuid)
         .bind(uuid)
         .fetch_optional(database.read())
@@ -564,7 +564,7 @@ impl NodeAllocation {
     ) -> Result<super::Pagination<Self>, crate::database::DatabaseError> {
         let offset = (page - 1) * per_page;
 
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}, COUNT(*) OVER() AS total_count
             FROM node_allocations
@@ -579,7 +579,7 @@ impl NodeAllocation {
             LIMIT $3 OFFSET $4
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(node_uuid)
         .bind(search)
         .bind(per_page)
@@ -609,7 +609,7 @@ impl NodeAllocation {
     ) -> Result<super::Pagination<Self>, crate::database::DatabaseError> {
         let offset = (page - 1) * per_page;
 
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}, server_allocations.server_uuid, COUNT(*) OVER() AS total_count
             FROM node_allocations
@@ -624,7 +624,7 @@ impl NodeAllocation {
             LIMIT $3 OFFSET $4
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(node_uuid)
         .bind(search)
         .bind(per_page)

@@ -88,14 +88,14 @@ impl UserServerGroup {
         user_uuid: uuid::Uuid,
         uuid: uuid::Uuid,
     ) -> Result<Option<Self>, crate::database::DatabaseError> {
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM user_server_groups
             WHERE user_server_groups.user_uuid = $1 AND user_server_groups.uuid = $2
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(user_uuid)
         .bind(uuid)
         .fetch_optional(database.read())
@@ -108,7 +108,7 @@ impl UserServerGroup {
         database: &crate::database::Database,
         user_uuid: uuid::Uuid,
     ) -> Result<Vec<Self>, crate::database::DatabaseError> {
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM user_server_groups
@@ -116,7 +116,7 @@ impl UserServerGroup {
             ORDER BY user_server_groups.order_, user_server_groups.created
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(user_uuid)
         .fetch_all(database.read())
         .await?;

@@ -241,14 +241,14 @@ impl NestEggVariable {
         egg_uuid: uuid::Uuid,
         uuid: uuid::Uuid,
     ) -> Result<Option<Self>, crate::database::DatabaseError> {
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM nest_egg_variables
             WHERE nest_egg_variables.egg_uuid = $1 AND nest_egg_variables.uuid = $2
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(egg_uuid)
         .bind(uuid)
         .fetch_optional(database.read())
@@ -261,7 +261,7 @@ impl NestEggVariable {
         database: &crate::database::Database,
         egg_uuid: uuid::Uuid,
     ) -> Result<Vec<Self>, crate::database::DatabaseError> {
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM nest_egg_variables
@@ -269,7 +269,7 @@ impl NestEggVariable {
             ORDER BY nest_egg_variables.order_, nest_egg_variables.created
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(egg_uuid)
         .fetch_all(database.read())
         .await?;

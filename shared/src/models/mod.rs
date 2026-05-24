@@ -1210,7 +1210,7 @@ impl<'a> InsertQueryBuilder<'a> {
         executor: impl sqlx::Executor<'a, Database = Postgres>,
     ) -> Result<sqlx::postgres::PgQueryResult, sqlx::Error> {
         let sql = self.build_sql();
-        sqlx::query_with(&sql, self.arguments)
+        sqlx::query_with(sqlx::AssertSqlSafe(sql), self.arguments)
             .execute(executor)
             .await
     }
@@ -1220,14 +1220,14 @@ impl<'a> InsertQueryBuilder<'a> {
         executor: impl sqlx::Executor<'a, Database = Postgres>,
     ) -> Result<sqlx::postgres::PgRow, sqlx::Error> {
         let sql = self.build_sql();
-        sqlx::query_with(&sql, self.arguments)
+        sqlx::query_with(sqlx::AssertSqlSafe(sql), self.arguments)
             .fetch_one(executor)
             .await
     }
 }
 
 pub struct UpdateQueryBuilder<'a> {
-    builder: QueryBuilder<'a, Postgres>,
+    builder: QueryBuilder<Postgres>,
     updated_fields: HashSet<&'a str>,
     has_set_fields: bool,
     has_where: bool,

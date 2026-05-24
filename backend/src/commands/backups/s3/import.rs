@@ -177,14 +177,14 @@ impl shared::extensions::commands::CliCommand<ImportArgs> for ImportCommand {
 
                         let object_size = object.size().unwrap_or(0).max(0);
 
-                        let row = sqlx::query(&format!(
+                        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
                             r#"
                             INSERT INTO server_backups (uuid, server_uuid, node_uuid, backup_configuration_uuid, name, ignored_files, checksum, successful, bytes, disk, upload_path, completed)
                             VALUES ($1, $2, $3, $4, $5, $6, 'sha1:unknown', true, $7, $8, $9, NOW())
                             RETURNING {}
                             "#,
                             ServerBackup::columns_sql(None)
-                        ))
+                        )))
                         .bind(backup_uuid)
                         .bind(server.uuid)
                         .bind(server.node.uuid)

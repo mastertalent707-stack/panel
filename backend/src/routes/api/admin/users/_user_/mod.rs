@@ -190,7 +190,7 @@ mod patch {
         models::{
             UpdatableModel,
             admin_activity::GetAdminActivityLogger,
-            user::{GetPermissionManager, UpdateUserOptions},
+            user::{GetPermissionManager, GetUser, UpdateUserOptions},
         },
         response::{ApiResponse, ApiResponseResult},
     };
@@ -214,11 +214,25 @@ mod patch {
     pub async fn route(
         state: GetState,
         permissions: GetPermissionManager,
+        caller: GetUser,
         mut user: GetParamUser,
         activity_logger: GetAdminActivityLogger,
         shared::Payload(data): shared::Payload<UpdateUserOptions>,
     ) -> ApiResponseResult {
         permissions.has_admin_permission("users.update")?;
+
+        if !caller.admin {
+            if data.admin.unwrap_or(false) {
+                return ApiResponse::error("you cannot grant admin status")
+                    .with_status(StatusCode::FORBIDDEN)
+                    .ok();
+            }
+            if data.role_uuid.flatten().is_some() {
+                return ApiResponse::error("you cannot assign roles")
+                    .with_status(StatusCode::FORBIDDEN)
+                    .ok();
+            }
+        }
 
         match user.update(&state, data).await {
             Ok(_) => {}

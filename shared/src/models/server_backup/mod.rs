@@ -288,14 +288,14 @@ impl ServerBackup {
         server_uuid: uuid::Uuid,
         uuid: uuid::Uuid,
     ) -> Result<Option<Self>, crate::database::DatabaseError> {
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM server_backups
             WHERE server_backups.server_uuid = $1 AND server_backups.uuid = $2
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(server_uuid)
         .bind(uuid)
         .fetch_optional(database.read())
@@ -309,14 +309,14 @@ impl ServerBackup {
         node_uuid: uuid::Uuid,
         uuid: uuid::Uuid,
     ) -> Result<Option<Self>, crate::database::DatabaseError> {
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM server_backups
             WHERE server_backups.node_uuid = $1 AND server_backups.uuid = $2
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(node_uuid)
         .bind(uuid)
         .fetch_optional(database.read())
@@ -334,7 +334,7 @@ impl ServerBackup {
     ) -> Result<super::Pagination<Self>, crate::database::DatabaseError> {
         let offset = (page - 1) * per_page;
 
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}, COUNT(*) OVER() AS total_count
             FROM server_backups
@@ -346,7 +346,7 @@ impl ServerBackup {
             LIMIT $3 OFFSET $4
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(server_uuid)
         .bind(search)
         .bind(per_page)
@@ -377,7 +377,7 @@ impl ServerBackup {
     ) -> Result<super::Pagination<Self>, crate::database::DatabaseError> {
         let offset = (page - 1) * per_page;
 
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}, COUNT(*) OVER() AS total_count
             FROM server_backups
@@ -390,7 +390,7 @@ impl ServerBackup {
             LIMIT $4 OFFSET $5
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(server_uuid)
         .bind(node_uuid)
         .bind(search)
@@ -422,7 +422,7 @@ impl ServerBackup {
     ) -> Result<super::Pagination<Self>, crate::database::DatabaseError> {
         let offset = (page - 1) * per_page;
 
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}, COUNT(*) OVER() AS total_count
             FROM server_backups
@@ -435,7 +435,7 @@ impl ServerBackup {
             LIMIT $4 OFFSET $5
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(server_uuid)
         .bind(node_uuid)
         .bind(search)
@@ -466,7 +466,7 @@ impl ServerBackup {
     ) -> Result<super::Pagination<Self>, crate::database::DatabaseError> {
         let offset = (page - 1) * per_page;
 
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}, COUNT(*) OVER() AS total_count
             FROM server_backups
@@ -478,7 +478,7 @@ impl ServerBackup {
             LIMIT $3 OFFSET $4
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(node_uuid)
         .bind(search)
         .bind(per_page)
@@ -508,7 +508,7 @@ impl ServerBackup {
     ) -> Result<super::Pagination<Self>, crate::database::DatabaseError> {
         let offset = (page - 1) * per_page;
 
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}, COUNT(*) OVER() AS total_count
             FROM server_backups
@@ -520,7 +520,7 @@ impl ServerBackup {
             LIMIT $3 OFFSET $4
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(backup_configuration_uuid)
         .bind(search)
         .bind(per_page)
@@ -550,7 +550,7 @@ impl ServerBackup {
     ) -> Result<super::Pagination<Self>, crate::database::DatabaseError> {
         let offset = (page - 1) * per_page;
 
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}, COUNT(*) OVER() AS total_count
             FROM server_backups
@@ -563,7 +563,7 @@ impl ServerBackup {
             LIMIT $3 OFFSET $4
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(node_uuid)
         .bind(search)
         .bind(per_page)
@@ -630,14 +630,14 @@ impl ServerBackup {
         database: &crate::database::Database,
         server_uuid: uuid::Uuid,
     ) -> Result<Vec<Self>, crate::database::DatabaseError> {
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM server_backups
             WHERE server_backups.server_uuid = $1 AND server_backups.deleted IS NULL
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(server_uuid)
         .fetch_all(database.read())
         .await?;
@@ -1014,7 +1014,7 @@ impl ServerBackup {
         state: &crate::State,
         server: &super::server::Server,
     ) -> Result<(), anyhow::Error> {
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM server_backups
@@ -1026,7 +1026,7 @@ impl ServerBackup {
             LIMIT 1
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(server.uuid)
         .fetch_optional(state.database.read())
         .await?;
@@ -1419,14 +1419,14 @@ impl ByUuid for ServerBackup {
         database: &crate::database::Database,
         uuid: uuid::Uuid,
     ) -> Result<Self, crate::database::DatabaseError> {
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM server_backups
             WHERE server_backups.uuid = $1
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(uuid)
         .fetch_one(database.read())
         .await?;
@@ -1438,14 +1438,14 @@ impl ByUuid for ServerBackup {
         transaction: &mut sqlx::Transaction<'_, sqlx::Postgres>,
         uuid: uuid::Uuid,
     ) -> Result<Self, crate::database::DatabaseError> {
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM server_backups
             WHERE server_backups.uuid = $1
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(uuid)
         .fetch_one(&mut **transaction)
         .await?;

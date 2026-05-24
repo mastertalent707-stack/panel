@@ -612,14 +612,14 @@ impl NestEgg {
     pub async fn all(
         database: &crate::database::Database,
     ) -> Result<Vec<Self>, crate::database::DatabaseError> {
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM nest_eggs
             ORDER BY nest_eggs.created
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .fetch_all(database.read())
         .await?;
 
@@ -637,7 +637,7 @@ impl NestEgg {
     ) -> Result<super::Pagination<Self>, crate::database::DatabaseError> {
         let offset = (page - 1) * per_page;
 
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}, COUNT(*) OVER() AS total_count
             FROM nest_eggs
@@ -646,7 +646,7 @@ impl NestEgg {
             LIMIT $3 OFFSET $4
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(nest_uuid)
         .bind(search)
         .bind(per_page)
@@ -676,7 +676,7 @@ impl NestEgg {
     ) -> Result<super::Pagination<Self>, crate::database::DatabaseError> {
         let offset = (page - 1) * per_page;
 
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT *, COUNT(*) OVER() AS total_count
             FROM (
@@ -693,7 +693,7 @@ impl NestEgg {
             LIMIT $4 OFFSET $5
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(user.uuid)
         .bind(user.role.as_ref().map_or(user.admin, |r| r.admin_permissions.iter().any(|p| p == "servers.read")))
         .bind(search)
@@ -720,14 +720,14 @@ impl NestEgg {
         nest_uuid: uuid::Uuid,
         uuid: uuid::Uuid,
     ) -> Result<Option<Self>, crate::database::DatabaseError> {
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM nest_eggs
             WHERE nest_eggs.nest_uuid = $1 AND nest_eggs.uuid = $2
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(nest_uuid)
         .bind(uuid)
         .fetch_optional(database.read())
@@ -741,14 +741,14 @@ impl NestEgg {
         nest_uuid: uuid::Uuid,
         name: &str,
     ) -> Result<Option<Self>, crate::database::DatabaseError> {
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM nest_eggs
             WHERE nest_eggs.nest_uuid = $1 AND nest_eggs.name = $2
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(nest_uuid)
         .bind(name)
         .fetch_optional(database.read())
@@ -925,14 +925,14 @@ impl ByUuid for NestEgg {
         database: &crate::database::Database,
         uuid: uuid::Uuid,
     ) -> Result<Self, crate::database::DatabaseError> {
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM nest_eggs
             WHERE nest_eggs.uuid = $1
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(uuid)
         .fetch_one(database.read())
         .await?;
@@ -944,14 +944,14 @@ impl ByUuid for NestEgg {
         transaction: &mut sqlx::Transaction<'_, sqlx::Postgres>,
         uuid: uuid::Uuid,
     ) -> Result<Self, crate::database::DatabaseError> {
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM nest_eggs
             WHERE nest_eggs.uuid = $1
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(uuid)
         .fetch_one(&mut **transaction)
         .await?;

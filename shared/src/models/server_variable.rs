@@ -124,7 +124,7 @@ impl ServerVariable {
         server_uuid: uuid::Uuid,
         egg_uuid: uuid::Uuid,
     ) -> Result<Vec<Self>, crate::database::DatabaseError> {
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM nest_egg_variables
@@ -133,7 +133,7 @@ impl ServerVariable {
             ORDER BY nest_egg_variables.order_, nest_egg_variables.created
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(server_uuid)
         .bind(egg_uuid)
         .fetch_all(database.read())

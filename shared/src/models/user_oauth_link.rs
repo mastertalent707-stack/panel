@@ -94,14 +94,14 @@ impl UserOAuthLink {
         oauth_provider_uuid: uuid::Uuid,
         identifier: &str,
     ) -> Result<Option<Self>, crate::database::DatabaseError> {
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM user_oauth_links
             WHERE user_oauth_links.oauth_provider_uuid = $1 AND user_oauth_links.identifier = $2
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(oauth_provider_uuid)
         .bind(identifier)
         .fetch_optional(database.read())
@@ -115,14 +115,14 @@ impl UserOAuthLink {
         oauth_provider_uuid: uuid::Uuid,
         uuid: uuid::Uuid,
     ) -> Result<Option<Self>, crate::database::DatabaseError> {
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM user_oauth_links
             WHERE user_oauth_links.oauth_provider_uuid = $1 AND user_oauth_links.uuid = $2
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(oauth_provider_uuid)
         .bind(uuid)
         .fetch_optional(database.read())
@@ -136,14 +136,14 @@ impl UserOAuthLink {
         user_uuid: uuid::Uuid,
         uuid: uuid::Uuid,
     ) -> Result<Option<Self>, crate::database::DatabaseError> {
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM user_oauth_links
             WHERE user_oauth_links.user_uuid = $1 AND user_oauth_links.uuid = $2
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(user_uuid)
         .bind(uuid)
         .fetch_optional(database.read())
@@ -161,7 +161,7 @@ impl UserOAuthLink {
     ) -> Result<super::Pagination<Self>, crate::database::DatabaseError> {
         let offset = (page - 1) * per_page;
 
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}, COUNT(*) OVER() AS total_count
             FROM user_oauth_links
@@ -170,7 +170,7 @@ impl UserOAuthLink {
             LIMIT $3 OFFSET $4
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(user_uuid)
         .bind(search)
         .bind(per_page)
@@ -199,7 +199,7 @@ impl UserOAuthLink {
     ) -> Result<super::Pagination<Self>, crate::database::DatabaseError> {
         let offset = (page - 1) * per_page;
 
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}, COUNT(*) OVER() AS total_count
             FROM user_oauth_links
@@ -209,7 +209,7 @@ impl UserOAuthLink {
             LIMIT $2 OFFSET $3
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(user_uuid)
         .bind(per_page)
         .bind(offset)
@@ -238,7 +238,7 @@ impl UserOAuthLink {
     ) -> Result<super::Pagination<Self>, crate::database::DatabaseError> {
         let offset = (page - 1) * per_page;
 
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}, COUNT(*) OVER() AS total_count
             FROM user_oauth_links
@@ -247,7 +247,7 @@ impl UserOAuthLink {
             LIMIT $3 OFFSET $4
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(oauth_provider_uuid)
         .bind(search)
         .bind(per_page)

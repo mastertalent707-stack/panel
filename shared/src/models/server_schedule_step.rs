@@ -97,14 +97,14 @@ impl ServerScheduleStep {
         schedule_uuid: uuid::Uuid,
         uuid: uuid::Uuid,
     ) -> Result<Option<Self>, crate::database::DatabaseError> {
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM server_schedule_steps
             WHERE server_schedule_steps.schedule_uuid = $1 AND server_schedule_steps.uuid = $2
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(schedule_uuid)
         .bind(uuid)
         .fetch_optional(database.read())
@@ -117,7 +117,7 @@ impl ServerScheduleStep {
         database: &crate::database::Database,
         schedule_uuid: uuid::Uuid,
     ) -> Result<Vec<Self>, crate::database::DatabaseError> {
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM server_schedule_steps
@@ -125,7 +125,7 @@ impl ServerScheduleStep {
             ORDER BY server_schedule_steps.order_, server_schedule_steps.created
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(schedule_uuid)
         .fetch_all(database.read())
         .await?;

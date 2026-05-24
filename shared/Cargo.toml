@@ -79,3 +79,4 @@ xxhash-rust = { version = "0.8.15", features = ["xxh3"] }
 hex = { workspace = true }
 tower = "0.5.3"
 parking_lot = { workspace = true }
+ipnetwork = { version = "0.21.1", features = ["serde"] }

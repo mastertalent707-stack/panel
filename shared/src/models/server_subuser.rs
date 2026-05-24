@@ -92,7 +92,7 @@ impl ServerSubuser {
         server_uuid: uuid::Uuid,
         user_uuid: uuid::Uuid,
     ) -> Result<Option<Self>, crate::database::DatabaseError> {
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM server_subusers
@@ -101,7 +101,7 @@ impl ServerSubuser {
             WHERE server_subusers.server_uuid = $1 AND server_subusers.user_uuid = $2
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(server_uuid)
         .bind(user_uuid)
         .fetch_optional(database.read())
@@ -119,7 +119,7 @@ impl ServerSubuser {
     ) -> Result<super::Pagination<Self>, crate::database::DatabaseError> {
         let offset = (page - 1) * per_page;
 
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}, COUNT(*) OVER() AS total_count
             FROM server_subusers
@@ -130,7 +130,7 @@ impl ServerSubuser {
             LIMIT $3 OFFSET $4
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(server_uuid)
         .bind(search)
         .bind(per_page)
@@ -344,7 +344,7 @@ impl CreatableModel for ServerSubuser {
 
         query_builder.execute(&mut **transaction).await?;
 
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM server_subusers
@@ -353,7 +353,7 @@ impl CreatableModel for ServerSubuser {
             WHERE server_subusers.server_uuid = $1 AND users.username = $2
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(server_uuid)
         .bind(username.as_str())
         .fetch_one(&mut **transaction)

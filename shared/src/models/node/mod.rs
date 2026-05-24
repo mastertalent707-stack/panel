@@ -9,6 +9,7 @@ use compact_str::ToCompactString;
 use garde::Validate;
 use rand::distr::SampleString;
 use serde::{Deserialize, Serialize};
+use sha2::Digest;
 use sqlx::{Row, postgres::PgRow};
 use std::{
     collections::{BTreeMap, HashMap},
@@ -171,35 +172,42 @@ impl Node {
     ) -> Result<Option<Self>, anyhow::Error> {
         database
             .cache
-            .cached(&format!("node::token::{token_id}.{token}"), 10, || async {
-                let row = sqlx::query(&format!(
-                    r#"
-                    SELECT {}
-                    FROM nodes
-                    JOIN locations ON locations.uuid = nodes.location_uuid
-                    WHERE nodes.token_id = $1
-                    "#,
-                    Self::columns_sql(None)
-                ))
-                .bind(token_id)
-                .fetch_optional(database.read())
-                .await?;
+            .cached(
+                &format!(
+                    "node::token::{token_id}.{}",
+                    hex::encode(sha2::Sha256::digest(token.as_bytes()))
+                ),
+                10,
+                || async {
+                    let row = sqlx::query(sqlx::AssertSqlSafe(format!(
+                        r#"
+                        SELECT {}
+                        FROM nodes
+                        JOIN locations ON locations.uuid = nodes.location_uuid
+                        WHERE nodes.token_id = $1
+                        "#,
+                        Self::columns_sql(None)
+                    )))
+                    .bind(token_id)
+                    .fetch_optional(database.read())
+                    .await?;
 
-                Ok::<_, anyhow::Error>(
-                    if let Some(node) = row.try_map(|row| Self::map(None, &row))? {
-                        if constant_time_eq::constant_time_eq(
-                            database.decrypt(node.token.clone()).await?.as_bytes(),
-                            token.as_bytes(),
-                        ) {
-                            Some(node)
+                    Ok::<_, anyhow::Error>(
+                        if let Some(node) = row.try_map(|row| Self::map(None, &row))? {
+                            if constant_time_eq::constant_time_eq(
+                                database.decrypt(node.token.clone()).await?.as_bytes(),
+                                token.as_bytes(),
+                            ) {
+                                Some(node)
+                            } else {
+                                None
+                            }
                         } else {
                             None
-                        }
-                    } else {
-                        None
-                    },
-                )
-            })
+                        },
+                    )
+                },
+            )
             .await
     }
 
@@ -212,7 +220,7 @@ impl Node {
     ) -> Result<super::Pagination<Self>, crate::database::DatabaseError> {
         let offset = (page - 1) * per_page;
 
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}, COUNT(*) OVER() AS total_count
             FROM nodes
@@ -222,7 +230,7 @@ impl Node {
             LIMIT $3 OFFSET $4
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(location_uuid)
         .bind(search)
         .bind(per_page)
@@ -252,7 +260,7 @@ impl Node {
     ) -> Result<super::Pagination<Self>, crate::database::DatabaseError> {
         let offset = (page - 1) * per_page;
 
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}, COUNT(*) OVER() AS total_count
             FROM nodes
@@ -262,7 +270,7 @@ impl Node {
             LIMIT $3 OFFSET $4
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(backup_configuration_uuid)
         .bind(search)
         .bind(per_page)
@@ -291,7 +299,7 @@ impl Node {
     ) -> Result<super::Pagination<Self>, crate::database::DatabaseError> {
         let offset = (page - 1) * per_page;
 
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}, COUNT(*) OVER() AS total_count
             FROM nodes
@@ -301,7 +309,7 @@ impl Node {
             LIMIT $2 OFFSET $3
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(search)
         .bind(per_page)
         .bind(offset)
@@ -327,7 +335,7 @@ impl Node {
         limits: super::server::AdminApiServerLimits,
         allow_overallocation: bool,
     ) -> Result<Vec<Self>, crate::database::DatabaseError> {
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             WITH server_usage AS (
                 SELECT
@@ -360,7 +368,7 @@ impl Node {
                 )
             "#,
             Self::columns_sql(None),
-        ))
+        )))
         .bind(location_uuids)
         .bind(limits.memory)
         .bind(limits.disk)
@@ -377,7 +385,7 @@ impl Node {
         database: &crate::database::Database,
         name: &str,
     ) -> Result<Option<Self>, crate::database::DatabaseError> {
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM nodes
@@ -385,7 +393,7 @@ impl Node {
             WHERE nodes.name = $1
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(name)
         .fetch_optional(database.read())
         .await?;
@@ -569,11 +577,8 @@ impl Node {
         database: &crate::database::Database,
         jwt: &crate::jwt::Jwt,
         payload: &T,
-    ) -> Result<String, jsonwebtoken::errors::Error> {
-        jwt.create_custom(
-            database.blocking_decrypt(&self.token).unwrap().as_bytes(),
-            payload,
-        )
+    ) -> Result<String, anyhow::Error> {
+        Ok(jwt.create_custom(database.blocking_decrypt(&self.token)?.as_bytes(), payload)?)
     }
 }
 
@@ -646,7 +651,7 @@ impl ByUuid for Node {
         database: &crate::database::Database,
         uuid: uuid::Uuid,
     ) -> Result<Self, crate::database::DatabaseError> {
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}, {}
             FROM nodes
@@ -655,7 +660,7 @@ impl ByUuid for Node {
             "#,
             Self::columns_sql(None),
             super::location::Location::columns_sql(Some("location_")),
-        ))
+        )))
         .bind(uuid)
         .fetch_one(database.read())
         .await?;
@@ -667,7 +672,7 @@ impl ByUuid for Node {
         transaction: &mut sqlx::Transaction<'_, sqlx::Postgres>,
         uuid: uuid::Uuid,
     ) -> Result<Self, crate::database::DatabaseError> {
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}, {}
             FROM nodes
@@ -676,7 +681,7 @@ impl ByUuid for Node {
             "#,
             Self::columns_sql(None),
             super::location::Location::columns_sql(Some("location_")),
-        ))
+        )))
         .bind(uuid)
         .fetch_one(&mut **transaction)
         .await?;

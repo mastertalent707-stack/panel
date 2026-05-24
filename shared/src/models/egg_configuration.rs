@@ -268,7 +268,7 @@ impl EggConfiguration {
     ) -> Result<super::Pagination<Self>, crate::database::DatabaseError> {
         let offset = (page - 1) * per_page;
 
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}, COUNT(*) OVER() AS total_count
             FROM egg_configurations
@@ -277,7 +277,7 @@ impl EggConfiguration {
             LIMIT $2 OFFSET $3
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(search)
         .bind(per_page)
         .bind(offset)
@@ -301,7 +301,7 @@ impl EggConfiguration {
         database: &crate::database::Database,
         egg_uuid: uuid::Uuid,
     ) -> Result<MergedEggConfiguration, crate::database::DatabaseError> {
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM egg_configurations
@@ -309,7 +309,7 @@ impl EggConfiguration {
             ORDER BY egg_configurations.order_, egg_configurations.created
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(egg_uuid)
         .fetch_all(database.read())
         .await?;
@@ -400,14 +400,14 @@ impl ByUuid for EggConfiguration {
         database: &crate::database::Database,
         uuid: uuid::Uuid,
     ) -> Result<Self, crate::database::DatabaseError> {
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM egg_configurations
             WHERE egg_configurations.uuid = $1
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(uuid)
         .fetch_one(database.read())
         .await?;
@@ -419,14 +419,14 @@ impl ByUuid for EggConfiguration {
         transaction: &mut sqlx::Transaction<'_, sqlx::Postgres>,
         uuid: uuid::Uuid,
     ) -> Result<Self, crate::database::DatabaseError> {
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM egg_configurations
             WHERE egg_configurations.uuid = $1
             "#,
             Self::columns_sql(None)
-        ))
+        )))
         .bind(uuid)
         .fetch_one(&mut **transaction)
         .await?;

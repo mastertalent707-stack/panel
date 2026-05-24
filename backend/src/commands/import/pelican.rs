@@ -328,10 +328,10 @@ impl shared::extensions::commands::CliCommand<PelicanArgs> for PelicanCommand {
                                         let rsa = pkey.rsa()?;
 
                                         russh::keys::ssh_key::public::KeyData::Rsa(
-                                            russh::keys::ssh_key::public::RsaPublicKey {
-                                                e: rsa.e().to_vec().as_slice().try_into()?,
-                                                n: rsa.n().to_vec().as_slice().try_into()?,
-                                            },
+                                            russh::keys::ssh_key::public::RsaPublicKey::new(
+                                                rsa.e().to_vec().as_slice().try_into()?,
+                                                rsa.n().to_vec().as_slice().try_into()?,
+                                            )?,
                                         )
                                     }
                                     openssl::pkey::Id::ED25519 => {
@@ -448,9 +448,9 @@ impl shared::extensions::commands::CliCommand<PelicanArgs> for PelicanCommand {
 
                 let location_mappings = match async {
                     let cast_as = if is_sqlite_source() { "TEXT" } else { "CHAR" };
-                    let rows: Vec<SourceRow> = sqlx::query(&format!(
+                    let rows: Vec<SourceRow> = sqlx::query(sqlx::AssertSqlSafe(format!(
                         "SELECT `id`, CAST(`tags` AS {cast_as}) AS `tags`, CAST(`created_at` AS {cast_as}) AS `created_at` FROM `nodes`"
-                    ))
+                    )))
                     .fetch_all(&source_database)
                     .await?;
                     let mut mapping = HashMap::with_capacity(rows.len());
@@ -597,9 +597,9 @@ impl shared::extensions::commands::CliCommand<PelicanArgs> for PelicanCommand {
 
                 let nest_mappings = match async {
                     let cast_as = if is_sqlite_source() { "TEXT" } else { "CHAR" };
-                    let rows: Vec<SourceRow> = sqlx::query(&format!(
+                    let rows: Vec<SourceRow> = sqlx::query(sqlx::AssertSqlSafe(format!(
                         "SELECT `id`, `author`, CAST(`tags` AS {cast_as}) AS `tags`, CAST(`created_at` AS {cast_as}) AS `created_at` FROM `eggs`"
-                    ))
+                    )))
                     .fetch_all(&source_database)
                     .await?;
                     let mut mapping = HashMap::with_capacity(rows.len());
