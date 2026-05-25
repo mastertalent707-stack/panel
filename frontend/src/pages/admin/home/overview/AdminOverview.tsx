@@ -25,7 +25,6 @@ import getGeneralStats, { type GeneralStats } from '@/api/admin/stats/getGeneral
 import getOverview, { AdminSystemOverview } from '@/api/admin/system/getOverview.ts';
 import { httpErrorToHuman } from '@/api/axios.ts';
 import Alert from '@/elements/Alert.tsx';
-import Anchor from '@/elements/Anchor.tsx';
 import { AdminCan } from '@/elements/Can.tsx';
 import Card from '@/elements/Card.tsx';
 import Spinner from '@/elements/Spinner.tsx';
@@ -34,10 +33,12 @@ import { bytesToString } from '@/lib/size.ts';
 import { parseVersion } from '@/lib/version.ts';
 import { useAdminCan } from '@/plugins/usePermissions.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';
+import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import { useAdminStore } from '@/stores/admin.tsx';
 
 export default function AdminOverview() {
   const { addToast } = useToast();
+  const { t } = useTranslations();
   const { updateInformation } = useAdminStore();
   const canReadStats = useAdminCan('stats.read');
 
@@ -63,17 +64,31 @@ export default function AdminOverview() {
       });
   }, []);
 
+  const containerTypeLabel = (type: AdminSystemOverview['containerType']) => {
+    switch (type) {
+      case 'unknown':
+        return t('pages.admin.home.containerType.unknown', {});
+      case 'none':
+        return t('pages.admin.home.containerType.none', {});
+      case 'official':
+        return t('pages.admin.home.containerType.official', {});
+      case 'official-aio':
+        return t('pages.admin.home.containerType.officialAio', {});
+      default:
+        return t('pages.admin.home.containerType.officialHeavy', {});
+    }
+  };
+
   return (
     <>
       {updateInformation &&
         parseVersion(updateInformation.latestPanelVersion).isNewerThan(updateInformation.panelVersion) && (
           <Alert className='mb-4' color='yellow'>
-            A new version is available for the panel! You are currently on {updateInformation.panelVersion} and the
-            latest version is {updateInformation.latestPanelVersion}. You may want to consider upgrading.{' '}
-            <Anchor href='https://calagopus.com/docs/panel/updating' target='_blank'>
-              Click here
-            </Anchor>{' '}
-            to view upgrade instructions.
+            {t('pages.admin.home.alert.newPanelVersion', {
+              current: updateInformation.panelVersion,
+              latest: updateInformation.latestPanelVersion,
+              upgradeUrl: 'https://calagopus.com/docs/panel/updating',
+            }).md()}
           </Alert>
         )}
 
@@ -81,12 +96,15 @@ export default function AdminOverview() {
         action='stats.read'
         renderOnCant={
           <Text>
-            You do not have permission to read the statistics that would have been here otherwise. For now, enjoy this
-            bird <FontAwesomeIcon icon={faArrowRightLong} /> <FontAwesomeIcon icon={faCrow} />
+            {t('pages.admin.home.permissionDenied', {})} <FontAwesomeIcon icon={faArrowRightLong} />{' '}
+            <FontAwesomeIcon icon={faCrow} />
           </Text>
         }
       >
-        <TitleCard title='System Overview' icon={<FontAwesomeIcon icon={faStethoscope} />}>
+        <TitleCard
+          title={t('pages.admin.home.card.systemOverview', {})}
+          icon={<FontAwesomeIcon icon={faStethoscope} />}
+        >
           {!systemOverview ? (
             <Spinner.Centered />
           ) : (
@@ -96,15 +114,20 @@ export default function AdminOverview() {
                   <Title order={3}>
                     <FontAwesomeIcon icon={faMicrochip} /> {systemOverview.cpu.brand}
                   </Title>
-                  CPU
+                  {t('pages.admin.home.system.cpu', {})}
                 </Card>
                 <Card className='flex col-span-2'>
                   <Title order={3}>
-                    <FontAwesomeIcon icon={faMemory} /> {bytesToString(systemOverview.memory.usedBytes)} /{' '}
-                    {bytesToString(systemOverview.memory.totalBytes)} (
-                    {((systemOverview.memory.usedBytes / systemOverview.memory.totalBytes) * 100).toFixed(2)}%)
+                    <FontAwesomeIcon icon={faMemory} />{' '}
+                    {t('pages.admin.home.system.memoryValue', {
+                      used: bytesToString(systemOverview.memory.usedBytes),
+                      total: bytesToString(systemOverview.memory.totalBytes),
+                      percent: ((systemOverview.memory.usedBytes / systemOverview.memory.totalBytes) * 100).toFixed(2),
+                    })}
                   </Title>
-                  Memory Usage ({bytesToString(systemOverview.memory.usedBytesProcess)} used by Panel)
+                  {t('pages.admin.home.system.memoryUsage', {
+                    process: bytesToString(systemOverview.memory.usedBytesProcess),
+                  })}
                 </Card>
               </div>
 
@@ -113,7 +136,7 @@ export default function AdminOverview() {
                   <Title order={3}>
                     <FontAwesomeIcon icon={faServer} /> {systemOverview.kernelVersion}
                   </Title>
-                  Kernel Version ({systemOverview.architecture})
+                  {t('pages.admin.home.system.kernelVersion', { architecture: systemOverview.architecture })}
                 </Card>
                 <Card className='flex'>
                   <Title order={3}>
@@ -126,56 +149,57 @@ export default function AdminOverview() {
                             : faCheck
                       }
                     />{' '}
-                    {systemOverview.containerType === 'unknown'
-                      ? 'Unknown'
-                      : systemOverview.containerType === 'none'
-                        ? 'None detected'
-                        : systemOverview.containerType === 'official'
-                          ? 'Official'
-                          : systemOverview.containerType === 'official-aio'
-                            ? 'Official AIO'
-                            : 'Official Heavy'}
+                    {containerTypeLabel(systemOverview.containerType)}
                   </Title>
-                  Container Type
+                  {t('pages.admin.home.system.containerType', {})}
                 </Card>
                 <Card className='flex'>
                   <Title order={3}>
                     <FontAwesomeIcon icon={faDatabase} /> PostgreSQL {systemOverview.database.version}
                   </Title>
-                  Database Version ({bytesToString(systemOverview.database.sizeBytes)})
+                  {t('pages.admin.home.system.databaseVersion', {
+                    size: bytesToString(systemOverview.database.sizeBytes),
+                  })}
                 </Card>
                 <Card className='flex'>
                   <Title order={3}>
                     <FontAwesomeIcon icon={faDatabase} /> {systemOverview.cache.version}
                   </Title>
-                  Cache Version
+                  {t('pages.admin.home.system.cacheVersion', {})}
                 </Card>
               </div>
 
               <div className='grid grid-cols-2 xl:grid-cols-4 gap-4 mt-4'>
                 <Card className='flex'>
                   <Title order={3}>{systemOverview.cache.totalCalls}</Title>
-                  Cache Calls
+                  {t('pages.admin.home.system.cacheCalls', {})}
                 </Card>
                 <Card className='flex'>
                   <Title order={3}>{systemOverview.cache.totalHits}</Title>
-                  Cache Hits ({((systemOverview.cache.totalHits / systemOverview.cache.totalCalls) * 100).toFixed(2)}%)
+                  {t('pages.admin.home.system.cacheHits', {
+                    percent: ((systemOverview.cache.totalHits / systemOverview.cache.totalCalls) * 100).toFixed(2),
+                  })}
                 </Card>
                 <Card className='flex'>
                   <Title order={3}>{systemOverview.cache.totalMisses}</Title>
-                  Cache Misses (
-                  {((systemOverview.cache.totalMisses / systemOverview.cache.totalCalls) * 100).toFixed(2)}%)
+                  {t('pages.admin.home.system.cacheMisses', {
+                    percent: ((systemOverview.cache.totalMisses / systemOverview.cache.totalCalls) * 100).toFixed(2),
+                  })}
                 </Card>
                 <Card className='flex'>
                   <Title order={3}>{(systemOverview.cache.averageCallLatencyNs / 1_000 / 1_000).toFixed(2)} ms</Title>
-                  Avg. Cached Call Latency
+                  {t('pages.admin.home.system.avgCachedCallLatency', {})}
                 </Card>
               </div>
             </>
           )}
         </TitleCard>
 
-        <TitleCard title='General Statistics' icon={<FontAwesomeIcon icon={faChartBar} />} className='mt-4'>
+        <TitleCard
+          title={t('pages.admin.home.card.generalStatistics', {})}
+          icon={<FontAwesomeIcon icon={faChartBar} />}
+          className='mt-4'
+        >
           {!generalStats ? (
             <Spinner.Centered />
           ) : (
@@ -184,157 +208,185 @@ export default function AdminOverview() {
                 <Title order={3}>
                   <FontAwesomeIcon icon={faUsers} /> {generalStats.users}
                 </Title>
-                Users
+                {t('pages.admin.home.stats.users', {})}
               </Card>
               <Card className='flex'>
                 <Title order={3}>
                   <FontAwesomeIcon icon={faComputer} /> {generalStats.servers}
                 </Title>
-                Servers
+                {t('pages.admin.home.stats.servers', {})}
               </Card>
               <Card className='flex'>
                 <Title order={3}>
                   <FontAwesomeIcon icon={faEarth} /> {generalStats.locations}
                 </Title>
-                Locations
+                {t('pages.admin.home.stats.locations', {})}
               </Card>
               <Card className='flex'>
                 <Title order={3}>
                   <FontAwesomeIcon icon={faServer} /> {generalStats.nodes}
                 </Title>
-                Nodes
+                {t('pages.admin.home.stats.nodes', {})}
               </Card>
               <Card className='flex'>
                 <Title order={3}>
                   <FontAwesomeIcon icon={faEgg} /> {generalStats.nestEggs}
                 </Title>
-                Nest Eggs
+                {t('pages.admin.home.stats.nestEggs', {})}
               </Card>
               <Card className='flex'>
                 <Title order={3}>
                   <FontAwesomeIcon icon={faDatabase} /> {generalStats.databaseHosts}
                 </Title>
-                Database Hosts
+                {t('pages.admin.home.stats.databaseHosts', {})}
               </Card>
               <Card className='flex'>
                 <Title order={3}>
                   <FontAwesomeIcon icon={faArchive} /> {generalStats.backupConfigurations}
                 </Title>
-                Backup Configurations
+                {t('pages.admin.home.stats.backupConfigurations', {})}
               </Card>
               <Card className='flex'>
                 <Title order={3}>
                   <FontAwesomeIcon icon={faScroll} /> {generalStats.roles}
                 </Title>
-                Roles
+                {t('pages.admin.home.stats.roles', {})}
               </Card>
             </div>
           )}
         </TitleCard>
 
-        <TitleCard title='Backup Statistics' icon={<FontAwesomeIcon icon={faArchive} />} className='mt-4'>
+        <TitleCard
+          title={t('pages.admin.home.card.backupStatistics', {})}
+          icon={<FontAwesomeIcon icon={faArchive} />}
+          className='mt-4'
+        >
           {!backupStats ? (
             <Spinner.Centered />
           ) : (
             <div className='grid grid-cols-2 xl:grid-cols-5 gap-4'>
               <Card className='col-span-2 xl:col-span-1'>
-                <Title order={3}>All Time</Title>
+                <Title order={3}>{t('pages.admin.home.backup.allTime', {})}</Title>
               </Card>
 
               <Card className='flex'>
                 <Title order={3}>{backupStats.allTime.total}</Title>
-                Total backups all time
+                {t('pages.admin.home.backup.totalAllTime', {})}
               </Card>
               <Card className='flex'>
                 <Title order={3}>
-                  {backupStats.allTime.successful} ({bytesToString(backupStats.allTime.successfulBytes)})
+                  {t('pages.admin.home.backup.successfulValue', {
+                    count: backupStats.allTime.successful,
+                    size: bytesToString(backupStats.allTime.successfulBytes),
+                  })}
                 </Title>
-                Successful backups all time
+                {t('pages.admin.home.backup.successfulAllTime', {})}
               </Card>
               <Card className='flex'>
                 <Title order={3}>{backupStats.allTime.failed}</Title>
-                Failed backups all time
+                {t('pages.admin.home.backup.failedAllTime', {})}
               </Card>
               <Card className='flex'>
                 <Title order={3}>
-                  {backupStats.allTime.deleted} ({bytesToString(backupStats.allTime.deletedBytes)})
+                  {t('pages.admin.home.backup.deletedValue', {
+                    count: backupStats.allTime.deleted,
+                    size: bytesToString(backupStats.allTime.deletedBytes),
+                  })}
                 </Title>
-                Deleted backups all time
+                {t('pages.admin.home.backup.deletedAllTime', {})}
               </Card>
 
               <Card className='col-span-2 xl:col-span-1'>
-                <Title order={3}>Today</Title>
+                <Title order={3}>{t('pages.admin.home.backup.today', {})}</Title>
               </Card>
 
               <Card className='flex'>
                 <Title order={3}>{backupStats.today.total}</Title>
-                Total backups today
+                {t('pages.admin.home.backup.totalToday', {})}
               </Card>
               <Card className='flex'>
                 <Title order={3}>
-                  {backupStats.today.successful} ({bytesToString(backupStats.today.successfulBytes)})
+                  {t('pages.admin.home.backup.successfulValue', {
+                    count: backupStats.today.successful,
+                    size: bytesToString(backupStats.today.successfulBytes),
+                  })}
                 </Title>
-                Successful backups today
+                {t('pages.admin.home.backup.successfulToday', {})}
               </Card>
               <Card className='flex'>
                 <Title order={3}>{backupStats.today.failed}</Title>
-                Failed backups today
+                {t('pages.admin.home.backup.failedToday', {})}
               </Card>
               <Card className='flex'>
                 <Title order={3}>
-                  {backupStats.today.deleted} ({bytesToString(backupStats.today.deletedBytes)})
+                  {t('pages.admin.home.backup.deletedValue', {
+                    count: backupStats.today.deleted,
+                    size: bytesToString(backupStats.today.deletedBytes),
+                  })}
                 </Title>
-                Deleted backups today
+                {t('pages.admin.home.backup.deletedToday', {})}
               </Card>
 
               <Card className='col-span-2 xl:col-span-1'>
-                <Title order={3}>This Week</Title>
+                <Title order={3}>{t('pages.admin.home.backup.week', {})}</Title>
               </Card>
 
               <Card className='flex'>
                 <Title order={3}>{backupStats.week.total}</Title>
-                Total backups this week
+                {t('pages.admin.home.backup.totalWeek', {})}
               </Card>
               <Card className='flex'>
                 <Title order={3}>
-                  {backupStats.week.successful} ({bytesToString(backupStats.week.successfulBytes)})
+                  {t('pages.admin.home.backup.successfulValue', {
+                    count: backupStats.week.successful,
+                    size: bytesToString(backupStats.week.successfulBytes),
+                  })}
                 </Title>
-                Successful backups this week
+                {t('pages.admin.home.backup.successfulWeek', {})}
               </Card>
               <Card className='flex'>
                 <Title order={3}>{backupStats.week.failed}</Title>
-                Failed backups this week
+                {t('pages.admin.home.backup.failedWeek', {})}
               </Card>
               <Card className='flex'>
                 <Title order={3}>
-                  {backupStats.week.deleted} ({bytesToString(backupStats.week.deletedBytes)})
+                  {t('pages.admin.home.backup.deletedValue', {
+                    count: backupStats.week.deleted,
+                    size: bytesToString(backupStats.week.deletedBytes),
+                  })}
                 </Title>
-                Deleted backups this week
+                {t('pages.admin.home.backup.deletedWeek', {})}
               </Card>
 
               <Card className='col-span-2 xl:col-span-1'>
-                <Title order={3}>This Month</Title>
+                <Title order={3}>{t('pages.admin.home.backup.month', {})}</Title>
               </Card>
 
               <Card className='flex'>
                 <Title order={3}>{backupStats.month.total}</Title>
-                Total backups this month
+                {t('pages.admin.home.backup.totalMonth', {})}
               </Card>
               <Card className='flex'>
                 <Title order={3}>
-                  {backupStats.month.successful} ({bytesToString(backupStats.month.successfulBytes)})
+                  {t('pages.admin.home.backup.successfulValue', {
+                    count: backupStats.month.successful,
+                    size: bytesToString(backupStats.month.successfulBytes),
+                  })}
                 </Title>
-                Successful backups this month
+                {t('pages.admin.home.backup.successfulMonth', {})}
               </Card>
               <Card className='flex'>
                 <Title order={3}>{backupStats.month.failed}</Title>
-                Failed backups this month
+                {t('pages.admin.home.backup.failedMonth', {})}
               </Card>
               <Card className='flex'>
                 <Title order={3}>
-                  {backupStats.month.deleted} ({bytesToString(backupStats.month.deletedBytes)})
+                  {t('pages.admin.home.backup.deletedValue', {
+                    count: backupStats.month.deleted,
+                    size: bytesToString(backupStats.month.deletedBytes),
+                  })}
                 </Title>
-                Deleted backups this month
+                {t('pages.admin.home.backup.deletedMonth', {})}
               </Card>
             </div>
           )}

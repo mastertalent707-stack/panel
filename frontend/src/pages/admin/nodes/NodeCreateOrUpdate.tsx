@@ -290,12 +290,7 @@ export default function NodeCreateOrUpdate({ contextNode }: { contextNode?: z.in
                 </Button>
               </AdminCan>
               <AdminCan action='nodes.delete' cantDelete>
-                <Button
-                  color='red'
-                  onClick={() => setOpenModal('delete')}
-                  loading={loading}
-                  disabled={isNodeAIO(contextNode)}
-                >
+                <Button color='red' onClick={() => setOpenModal('delete')} loading={loading}>
                   Delete
                 </Button>
               </AdminCan>

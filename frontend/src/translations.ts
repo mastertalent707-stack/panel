@@ -1110,7 +1110,182 @@ const baseTranslations = defineTranslations({
           title: 'Activity',
         },
       },
-      admin: {},
+      admin: {
+        home: {
+          title: 'Home',
+          tabs: {
+            overview: 'Overview',
+            updates: 'Updates',
+            health: 'Health',
+          },
+          alert: {
+            newPanelVersion:
+              'A new version is available for the panel! You are currently on {current} and the latest version is {latest}. You may want to consider upgrading. [Click here]({upgradeUrl}) to view upgrade instructions.',
+            extensionUpdateErrors: 'There were errors checking for updates for some extensions.',
+          },
+          permissionDenied:
+            'You do not have permission to read the statistics that would have been here otherwise. For now, enjoy this bird',
+          card: {
+            systemOverview: 'System Overview',
+            generalStatistics: 'General Statistics',
+            backupStatistics: 'Backup Statistics',
+            panelVersion: 'Panel Version',
+            versionHistory: 'Version History',
+            outdatedExtensions: 'Outdated Extensions',
+            outdatedNodes: 'Outdated Nodes',
+            generalHealth: 'General Health',
+            extensionMigrationHealth: 'Extension Migration Health',
+            desyncNodes: 'Desync Nodes',
+          },
+          system: {
+            cpu: 'CPU',
+            memoryUsage: 'Memory Usage ({process} used by Panel)',
+            memoryValue: '{used} / {total} ({percent}%)',
+            kernelVersion: 'Kernel Version ({architecture})',
+            containerType: 'Container Type',
+            databaseVersion: 'Database Version ({size})',
+            cacheVersion: 'Cache Version',
+            cacheCalls: 'Cache Calls',
+            cacheHits: 'Cache Hits ({percent}%)',
+            cacheMisses: 'Cache Misses ({percent}%)',
+            avgCachedCallLatency: 'Avg. Cached Call Latency',
+          },
+          containerType: {
+            unknown: 'Unknown',
+            none: 'None detected',
+            official: 'Official',
+            officialAio: 'Official AIO',
+            officialHeavy: 'Official Heavy',
+          },
+          stats: {
+            users: 'Users',
+            servers: 'Servers',
+            locations: 'Locations',
+            nodes: 'Nodes',
+            nestEggs: 'Nest Eggs',
+            databaseHosts: 'Database Hosts',
+            backupConfigurations: 'Backup Configurations',
+            roles: 'Roles',
+          },
+          backup: {
+            allTime: 'All Time',
+            today: 'Today',
+            week: 'This Week',
+            month: 'This Month',
+            totalAllTime: 'Total backups all time',
+            successfulAllTime: 'Successful backups all time',
+            failedAllTime: 'Failed backups all time',
+            deletedAllTime: 'Deleted backups all time',
+            totalToday: 'Total backups today',
+            successfulToday: 'Successful backups today',
+            failedToday: 'Failed backups today',
+            deletedToday: 'Deleted backups today',
+            totalWeek: 'Total backups this week',
+            successfulWeek: 'Successful backups this week',
+            failedWeek: 'Failed backups this week',
+            deletedWeek: 'Deleted backups this week',
+            totalMonth: 'Total backups this month',
+            successfulMonth: 'Successful backups this month',
+            failedMonth: 'Failed backups this month',
+            deletedMonth: 'Deleted backups this month',
+            successfulValue: '{count} ({size})',
+            deletedValue: '{count} ({size})',
+          },
+          updates: {
+            panelVersion:
+              'Your panel is currently running version `{current}`. The latest available version is `{latest}`.',
+            unknown: 'unknown',
+            button: { recheck: 'Recheck for Updates' },
+            toast: { recheckComplete: 'Recheck complete' },
+            selectHistory: 'Select an update history to view',
+            historyPanel: 'Panel',
+            historyExtension: 'Extension: {name}',
+            extensionsUpToDate: 'All extensions are up to date.',
+            extensionsOutdated: 'Some extensions are outdated or had errors when checking for updates.',
+            noChangelog: 'No changelog',
+            nodesUpToDate: 'Seems like all nodes are up to date. ({failed} failed to check)',
+            nodesOutdated:
+              'Some nodes are outdated, the latest available version is `{latest}`. ({outdated} outdated, {failed} failed to check)',
+            table: {
+              version: 'Version',
+              installed: 'Installed',
+              packageName: 'Package Name',
+              latestVersion: 'Latest Version',
+              changes: 'Changes',
+              error: 'Error',
+            },
+          },
+          health: {
+            appliedMigrations: 'Applied Migrations ({percent}%)',
+            migrationsValue: '{applied} / {total}',
+            avgNtpOffset: 'Avg. NTP Offset',
+            noExtensions: 'No extensions found.',
+            nodesSynced:
+              'Seems like all nodes have a synced clock (within 5 seconds of panel clock). ({failed} failed to check)',
+            nodesDesync:
+              "Some nodes have desync clocks (over 5 seconds off of the panel's clock). This can cause file download/console issues. ({desync} desync, {failed} failed to check)",
+            table: {
+              packageName: 'Package Name',
+              applied: 'Applied',
+              total: 'Total',
+              id: 'ID',
+              desync: 'Desync',
+              appliedValue: '{applied} ({percent}%)',
+            },
+          },
+        },
+        settings: {
+          title: 'Settings',
+        },
+        announcements: {
+          title: 'Announcements',
+        },
+        assets: {
+          title: 'Assets',
+        },
+        extensions: {
+          title: 'Extensions',
+        },
+        users: {
+          title: 'Users',
+        },
+        locations: {
+          title: 'Locations',
+        },
+        nodes: {
+          title: 'Nodes',
+        },
+        servers: {
+          title: 'Servers',
+        },
+        nests: {
+          title: 'Nests',
+        },
+        eggConfigurations: {
+          title: 'Egg Configurations',
+        },
+        eggRepositories: {
+          title: 'Egg Repositories',
+        },
+        databaseHosts: {
+          title: 'Database Hosts',
+        },
+        oAuthProviders: {
+          title: 'OAuth Providers',
+        },
+        backupConfigurations: {
+          title: 'Backup Configs',
+        },
+        mounts: {
+          title: 'Mounts',
+        },
+        roles: {
+          title: 'Roles',
+        },
+        activity: {
+          title: 'Activity',
+        },
+      },
       server: {
         viewAdmin: {
           title: 'View admin',

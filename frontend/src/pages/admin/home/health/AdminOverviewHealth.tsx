@@ -20,10 +20,12 @@ import { queryKeys } from '@/lib/queryKeys.ts';
 import { nodeTableColumns } from '@/lib/tableColumns.ts';
 import { useSearchablePaginatedTable } from '@/plugins/useSearchablePageableTable.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';
+import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import NodeRow from '../../nodes/NodeRow.tsx';
 
 export default function AdminOverviewHealth() {
   const { addToast } = useToast();
+  const { t } = useTranslations();
 
   const [general, setGeneral] = useState<Awaited<ReturnType<typeof getGeneralHealth>> | null>(null);
 
@@ -57,7 +59,7 @@ export default function AdminOverviewHealth() {
   return (
     <>
       <div className='2xl:columns-2 gap-4 space-y-4'>
-        <TitleCard title='General Health' icon={<FontAwesomeIcon icon={faInfoCircle} />}>
+        <TitleCard title={t('pages.admin.home.card.generalHealth', {})} icon={<FontAwesomeIcon icon={faInfoCircle} />}>
           {!general ? (
             <Spinner.Centered />
           ) : (
@@ -65,37 +67,57 @@ export default function AdminOverviewHealth() {
               <div className='grid grid-cols-2 xl:grid-cols-4 gap-4'>
                 <Card className='flex col-span-2'>
                   <Title order={3}>
-                    {general.migrations.applied} / {general.migrations.total}
+                    {t('pages.admin.home.health.migrationsValue', {
+                      applied: general.migrations.applied,
+                      total: general.migrations.total,
+                    })}
                   </Title>
-                  Applied Migrations ({((general.migrations.applied / general.migrations.total) * 100).toFixed(2)}%)
+                  {t('pages.admin.home.health.appliedMigrations', {
+                    percent: ((general.migrations.applied / general.migrations.total) * 100).toFixed(2),
+                  })}
                 </Card>
                 <Card className='flex col-span-2'>
                   <Title order={3} c={avgNtpOffset > 100 ? 'yellow' : 'white'}>
                     {avgNtpOffset.toFixed(2)} ms
                   </Title>
-                  Avg. NTP Offset
+                  {t('pages.admin.home.health.avgNtpOffset', {})}
                 </Card>
               </div>
             </>
           )}
         </TitleCard>
-        <TitleCard title='Extension Migration Health' icon={<FontAwesomeIcon icon={faPuzzlePiece} />}>
+        <TitleCard
+          title={t('pages.admin.home.card.extensionMigrationHealth', {})}
+          icon={<FontAwesomeIcon icon={faPuzzlePiece} />}
+        >
           {!general ? (
             <Spinner.Centered />
           ) : !Object.keys(general.migrations.extensions).length ? (
-            <>No extensions found.</>
+            <>{t('pages.admin.home.health.noExtensions', {})}</>
           ) : (
             <>
               {Object.keys(general.migrations.extensions).length > 0 && (
-                <Table columns={['Package Name', 'Applied', 'Total']} loading={loading}>
+                <Table
+                  columns={[
+                    t('pages.admin.home.health.table.packageName', {}),
+                    t('pages.admin.home.health.table.applied', {}),
+                    t('pages.admin.home.health.table.total', {}),
+                  ]}
+                  loading={loading}
+                >
                   {Object.entries(general.migrations.extensions).map(([identifier, migrations]) => (
                     <TableRow key={identifier}>
                       <TableData>
                         <Code>{identifier}</Code>
                       </TableData>
                       <TableData>
-                        {migrations.applied} (
-                        {(migrations.total === 0 ? 100 : (migrations.applied / migrations.total) * 100).toFixed(2)}%)
+                        {t('pages.admin.home.health.table.appliedValue', {
+                          applied: migrations.applied,
+                          percent: (migrations.total === 0
+                            ? 100
+                            : (migrations.applied / migrations.total) * 100
+                          ).toFixed(2),
+                        })}
                       </TableData>
                       <TableData>{migrations.total}</TableData>
                     </TableRow>
@@ -105,22 +127,29 @@ export default function AdminOverviewHealth() {
             </>
           )}
         </TitleCard>
-        <TitleCard title='Desync Nodes' icon={<FontAwesomeIcon icon={faServer} />}>
+        <TitleCard title={t('pages.admin.home.card.desyncNodes', {})} icon={<FontAwesomeIcon icon={faServer} />}>
           {loading || !nodes?.desyncNodes ? (
             <Spinner.Centered />
           ) : !nodes?.desyncNodes.total ? (
             <>
-              <FontAwesomeIcon icon={faCheck} /> Seems like all nodes have a synced clock (within 5 seconds of panel
-              clock). ({nodes?.failedNodes} failed to check)
+              <FontAwesomeIcon icon={faCheck} />{' '}
+              {t('pages.admin.home.health.nodesSynced', { failed: nodes?.failedNodes ?? 0 })}
             </>
           ) : (
             <>
-              <FontAwesomeIcon icon={faExclamationTriangle} /> Some nodes have desync clocks (over 5 seconds off of the
-              panel's clock). This can cause file download/console issues. ({nodes?.desyncNodes.total} desync,{' '}
-              {nodes?.failedNodes} failed to check)
+              <FontAwesomeIcon icon={faExclamationTriangle} />{' '}
+              {t('pages.admin.home.health.nodesDesync', {
+                desync: nodes?.desyncNodes.total ?? 0,
+                failed: nodes?.failedNodes ?? 0,
+              })}
               <div className='mt-4' />
               <Table
-                columns={['', 'ID', 'Desync', ...nodeTableColumns.slice(2)]}
+                columns={[
+                  '',
+                  t('pages.admin.home.health.table.id', {}),
+                  t('pages.admin.home.health.table.desync', {}),
+                  ...nodeTableColumns.slice(2),
+                ]}
                 loading={loading}
                 pagination={nodes.desyncNodes}
                 onPageSelect={setPage}
