@@ -1,4 +1,5 @@
 import {
+  faBug,
   faCheck,
   faExclamationTriangle,
   faInfoCircle,
@@ -8,9 +9,14 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Title } from '@mantine/core';
 import { useEffect, useState } from 'react';
+import getDebugMode from '@/api/admin/system/debug/getDebugMode.ts';
+import setDebugMode from '@/api/admin/system/debug/setDebugMode.ts';
 import getGeneralHealth from '@/api/admin/system/health/getGeneralHealth.ts';
 import getNodesHealth from '@/api/admin/system/health/getNodesHealth.ts';
 import { httpErrorToHuman } from '@/api/axios.ts';
+import Badge from '@/elements/Badge.tsx';
+import Button from '@/elements/Button.tsx';
+import { AdminCan } from '@/elements/Can.tsx';
 import Card from '@/elements/Card.tsx';
 import Code from '@/elements/Code.tsx';
 import Spinner from '@/elements/Spinner.tsx';
@@ -18,6 +24,7 @@ import Table, { TableData, TableRow } from '@/elements/Table.tsx';
 import TitleCard from '@/elements/TitleCard.tsx';
 import { queryKeys } from '@/lib/queryKeys.ts';
 import { nodeTableColumns } from '@/lib/tableColumns.ts';
+import { useAdminCan } from '@/plugins/usePermissions.ts';
 import { useSearchablePaginatedTable } from '@/plugins/useSearchablePageableTable.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
@@ -25,9 +32,12 @@ import NodeRow from '../../nodes/NodeRow.tsx';
 
 export default function AdminOverviewHealth() {
   const { addToast } = useToast();
-  const { t } = useTranslations();
+  const { t, tReact } = useTranslations();
 
   const [general, setGeneral] = useState<Awaited<ReturnType<typeof getGeneralHealth>> | null>(null);
+  const [debugMode, setDebugModeState] = useState<Awaited<ReturnType<typeof getDebugMode>> | null>(null);
+  const [debugLoading, setDebugLoading] = useState(false);
+  const canReadSettings = useAdminCan('settings.read');
 
   const {
     data: nodes,
@@ -45,7 +55,33 @@ export default function AdminOverviewHealth() {
       .catch((err) => {
         addToast(httpErrorToHuman(err), 'error');
       });
+
+    if (canReadSettings) {
+      getDebugMode()
+        .then(setDebugModeState)
+        .catch((err) => {
+          addToast(httpErrorToHuman(err), 'error');
+        });
+    }
   }, []);
+
+  const handleToggleDebug = (enabled: boolean) => {
+    setDebugLoading(true);
+    setDebugMode(enabled)
+      .then(() => {
+        setDebugModeState((prev) => prev && { ...prev, enabled });
+        addToast(
+          enabled
+            ? t('pages.admin.home.health.toast.debugEnabled', {})
+            : t('pages.admin.home.health.toast.debugDisabled', {}),
+          'success',
+        );
+      })
+      .catch((err) => {
+        addToast(httpErrorToHuman(err), 'error');
+      })
+      .finally(() => setDebugLoading(false));
+  };
 
   const avgNtpOffset =
     general && general.ntpOffsets
@@ -127,6 +163,48 @@ export default function AdminOverviewHealth() {
             </>
           )}
         </TitleCard>
+        <AdminCan action='settings.read'>
+          <TitleCard title={t('pages.admin.home.card.debugMode', {})} icon={<FontAwesomeIcon icon={faBug} />}>
+            {!debugMode ? (
+              <Spinner.Centered />
+            ) : (
+              <div className='flex flex-row justify-between'>
+                <span>
+                  <FontAwesomeIcon icon={debugMode.enabled ? faExclamationTriangle : faCheck} />{' '}
+                  {debugMode.enabled
+                    ? t('pages.admin.home.health.debugEnabled', {})
+                    : t('pages.admin.home.health.debugDisabled', {})}
+                  <br />
+                  <span className='text-sm text-gray-400'>
+                    {tReact('pages.admin.home.health.debugResetNote', {
+                      default: (
+                        <Badge color={debugMode.default ? 'green' : 'red'} size='xs'>
+                          {debugMode.default ? t('common.badge.enabled', {}) : t('common.badge.disabled', {})}
+                        </Badge>
+                      ),
+                    })}
+                  </span>
+                </span>
+                <AdminCan action='settings.update'>
+                  {debugMode.enabled ? (
+                    <Button
+                      color='red'
+                      loading={debugLoading}
+                      onClick={() => handleToggleDebug(false)}
+                      className='min-w-fit'
+                    >
+                      {t('pages.admin.home.health.button.disableDebug', {})}
+                    </Button>
+                  ) : (
+                    <Button loading={debugLoading} onClick={() => handleToggleDebug(true)} className='min-w-fit'>
+                      {t('pages.admin.home.health.button.enableDebug', {})}
+                    </Button>
+                  )}
+                </AdminCan>
+              </div>
+            )}
+          </TitleCard>
+        </AdminCan>
         <TitleCard title={t('pages.admin.home.card.desyncNodes', {})} icon={<FontAwesomeIcon icon={faServer} />}>
           {loading || !nodes?.desyncNodes ? (
             <Spinner.Centered />

@@ -408,7 +408,7 @@
             "lastNamePlaceholder": "Turing",
             "password": "Passwort",
             "passwordPlaceholder": "Gib ein sicheres Passwort ein",
-            "confirmPassword": "Passwort pflichtig bestätigen",
+            "confirmPassword": "Passwort bestätigen",
             "confirmPasswordPlaceholder": "Gib dein Passwort erneut ein"
           },
           "button": {

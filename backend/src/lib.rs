@@ -179,8 +179,8 @@ pub async fn handle_startup() -> (
     let debug = *matches.get_one::<bool>("debug").unwrap();
 
     if debug && let Ok((env, _)) = &env {
-        env.app_debug
-            .store(true, std::sync::atomic::Ordering::Relaxed);
+        env.set_debug(true)
+            .expect("failed to set debug mode from cli argument");
     }
 
     match matches.remove_subcommand() {

@@ -1136,6 +1136,7 @@ const baseTranslations = defineTranslations({
             generalHealth: 'General Health',
             extensionMigrationHealth: 'Extension Migration Health',
             desyncNodes: 'Desync Nodes',
+            debugMode: 'Debug Mode',
           },
           system: {
             cpu: 'CPU',
@@ -1224,6 +1225,10 @@ const baseTranslations = defineTranslations({
               'Seems like all nodes have a synced clock (within 5 seconds of panel clock). ({failed} failed to check)',
             nodesDesync:
               "Some nodes have desync clocks (over 5 seconds off of the panel's clock). This can cause file download/console issues. ({desync} desync, {failed} failed to check)",
+            debugEnabled: 'Debug mode is currently enabled.',
+            debugDisabled: 'Debug mode is currently disabled.',
+            debugResetNote: 'This setting will be reset to the default ({default}) when the application restarts.',
+
             table: {
               packageName: 'Package Name',
               applied: 'Applied',
@@ -1231,6 +1236,14 @@ const baseTranslations = defineTranslations({
               id: 'ID',
               desync: 'Desync',
               appliedValue: '{applied} ({percent}%)',
+            },
+            button: {
+              enableDebug: 'Enable Debug Mode',
+              disableDebug: 'Disable Debug Mode',
+            },
+            toast: {
+              debugEnabled: 'Debug mode enabled.',
+              debugDisabled: 'Debug mode disabled.',
             },
           },
         },
