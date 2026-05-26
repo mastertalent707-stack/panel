@@ -96,7 +96,23 @@
         "host": "Host",
         "username": "Benutzername",
         "server": "Server",
-        "truncateDirectory": "Möchtest du alle Dateien dieses Servers löschen, bevor diese Aktion ausgeführt wird? Dies kann nicht rückgängig gemacht werden."
+        "truncateDirectory": "Möchtest du alle Dateien dieses Servers löschen, bevor diese Aktion ausgeführt wird? Dies kann nicht rückgängig gemacht werden.",
+        "url": "URL",
+        "email": "E-Mail",
+        "path": "Pfad",
+        "port": "Port",
+        "provider": "Anbieter",
+        "command": "Befehl",
+        "fromAddress": "Absenderadresse",
+        "fromName": "Absendername",
+        "siteKey": "Site-Key",
+        "secretKey": "Secret-Key",
+        "apiKey": "API-Key",
+        "accessKey": "Access-Key",
+        "bucket": "Bucket",
+        "region": "Region",
+        "endpoint": "Endpunkt",
+        "publicUrl": "Öffentliche URL"
       },
       "table": {
         "pagination": {
@@ -1140,7 +1156,8 @@
             "outdatedNodes": "Veraltete Nodes",
             "generalHealth": "Allgemeiner Zustand",
             "extensionMigrationHealth": "Erweiterungsmigrations-Zustand",
-            "desyncNodes": "Asynchrone Nodes"
+            "desyncNodes": "Asynchrone Nodes",
+            "debugMode": "Debug-Modus"
           },
           "system": {
             "cpu": "CPU",
@@ -1236,11 +1253,309 @@
               "id": "ID",
               "desync": "Asynchron",
               "appliedValue": "{applied} ({percent}%)"
+            },
+            "debugEnabled": "Der Debug-Modus ist derzeit aktiviert. Im Debug-Modus werden zusätzliche Informationen protokolliert, die bei der Fehlersuche helfen können. Du solltest den Debug-Modus in der Produktion nicht aktiviert lassen.",
+            "debugDisabled": "Der Debug-Modus ist derzeit deaktiviert. Aktiviere den Debug-Modus nur, wenn du Probleme untersuchst.",
+            "debugResetNote": "Hinweis: Diese Einstellung wird beim nächsten Neustart der Anwendung auf den Standardwert ({default}) zurückgesetzt.",
+            "button": {
+              "enableDebug": "Debug-Modus aktivieren",
+              "disableDebug": "Debug-Modus deaktivieren"
+            },
+            "toast": {
+              "debugEnabled": "Debug-Modus aktiviert.",
+              "debugDisabled": "Debug-Modus deaktiviert."
             }
           }
         },
         "settings": {
-          "title": "Einstellungen"
+          "title": "Einstellungen",
+          "tabs": {
+            "application": {
+              "title": "Anwendung",
+              "page": {
+                "title": "Anwendungseinstellungen",
+                "form": {
+                  "language": "Sprache",
+                  "icon": "Symbol",
+                  "banner": "Banner",
+                  "sessionCookie": "Session-Cookie",
+                  "sessionDurationSeconds": "Sitzungsdauer (Sekunden)",
+                  "twoFactorRequirement": "Zwei-Faktor-Authentifizierung-Anforderung",
+                  "telemetryEnabled": "Telemetrie aktivieren",
+                  "telemetryEnabledDescription": "Erlaube Calagopus, begrenzte und anonyme Nutzungsdaten zu sammeln, um die Anwendung zu verbessern.",
+                  "registrationEnabled": "Registrierung aktivieren"
+                },
+                "enum": {
+                  "twoFactorRequirement": {
+                    "admins": "Admins",
+                    "allUsers": "Alle Benutzer",
+                    "none": "Keine"
+                  }
+                },
+                "button": {
+                  "previewTelemetry": "Telemetrie-Vorschau"
+                },
+                "toast": {
+                  "updated": "Anwendungseinstellungen aktualisiert."
+                },
+                "modal": {
+                  "disableTelemetry": {
+                    "title": "Telemetrie-Deaktivierung bestätigen",
+                    "content": "Bist du sicher, dass du die Telemetrie deaktivieren möchtest? Telemetrie hilft uns, Calagopus durch anonyme Nutzungsdaten zu verbessern. Das Deaktivieren der Telemetrie verhindert, dass irgendwelche Daten gesendet werden.",
+                    "button": {
+                      "confirm": "Deaktivieren"
+                    }
+                  },
+                  "enableRegistration": {
+                    "title": "Registrierungs-Aktivierung bestätigen",
+                    "content": "Bist du sicher, dass du die Registrierung aktivieren möchtest? Das Aktivieren der Registrierung erlaubt es jedem, ein Konto in diesem Panel zu erstellen. Wenn du kein Captcha konfiguriert hast, könnte dies ein Fehler sein.",
+                    "button": {
+                      "confirm": "Aktivieren"
+                    }
+                  },
+                  "telemetryPreview": {
+                    "title": "Telemetrie-Vorschau"
+                  }
+                }
+              }
+            },
+            "storage": {
+              "title": "Speicher",
+              "page": {
+                "title": "Speichereinstellungen",
+                "form": {
+                  "driver": "Treiber"
+                },
+                "toast": {
+                  "updated": "Speichereinstellungen aktualisiert."
+                },
+                "modal": {
+                  "changeStorageType": {
+                    "title": "Speichertyp-Änderung bestätigen",
+                    "content": "Bist du sicher, dass du den Speichertyp ändern möchtest? Das Ändern des Speichertyps führt dazu, dass die Anwendung Assets (z. B. Profilbilder) an einem anderen Ort sucht, was zu fehlenden Assets führen kann, wenn sie nicht manuell an den neuen Ort verschoben werden.",
+                    "button": {
+                      "confirm": "Aktualisieren"
+                    }
+                  }
+                },
+                "s3": {
+                  "alert": {
+                    "permissionsTitle": "Hinweis zu Berechtigungen",
+                    "permissionsIntro": "Um sicherzustellen, dass das Speicher-Backend korrekt funktioniert, stelle bitte sicher, dass die folgenden Unterverzeichnisse über die von dir angegebene „Öffentliche URL“ öffentlich zugänglich sind:",
+                    "permissionsAssets": "Hier werden alle Admin-Assets (z. B. Symbole) gespeichert.",
+                    "permissionsAvatars": "Hier werden alle Benutzeravatare gespeichert.",
+                    "permissionsPublicData": "Hier können Erweiterungen öffentliche Daten (z. B. Bilder) speichern."
+                  },
+                  "form": {
+                    "pathStyleOn": "Pfad-Stil-URLs verwenden",
+                    "pathStyleOff": "Virtual-Hosted-Stil-URLs verwenden"
+                  }
+                },
+                "enum": {
+                  "driver": {
+                    "filesystem": "Dateisystem",
+                    "s3": "S3"
+                  }
+                }
+              }
+            },
+            "mail": {
+              "title": "E-Mail",
+              "page": {
+                "title": "E-Mail-Einstellungen",
+                "button": {
+                  "sendTestEmail": "Test-E-Mail senden"
+                },
+                "toast": {
+                  "updated": "E-Mail-Einstellungen aktualisiert."
+                },
+                "modal": {
+                  "sendTestEmail": {
+                    "title": "Test-E-Mail senden",
+                    "button": {
+                      "submit": "Test-E-Mail senden"
+                    },
+                    "toast": {
+                      "sent": "Test-E-Mail wurde erfolgreich versendet."
+                    }
+                  }
+                },
+                "smtp": {
+                  "form": {
+                    "useTls": "TLS verwenden",
+                    "skipCertValidation": "Zertifikatsvalidierung überspringen"
+                  }
+                },
+                "enum": {
+                  "provider": {
+                    "none": "Keine",
+                    "smtp": "SMTP",
+                    "sendmail": "Sendmail-Befehl",
+                    "filesystem": "Dateisystem"
+                  }
+                }
+              }
+            },
+            "mailTemplates": {
+              "title": "E-Mail-Vorlagen",
+              "page": {
+                "title": "E-Mail-Vorlagen-Einstellungen",
+                "sidebar": {
+                  "templates": "Vorlagen",
+                  "loading": "Wird geladen…",
+                  "availableVariables": "Verfügbare Variablen"
+                },
+                "alert": {
+                  "syntaxBefore": "Vorlagen verwenden die",
+                  "syntaxLink": "MiniJinja",
+                  "syntaxMiddle": "Templating-Syntax. Variablen werden referenziert mit",
+                  "syntaxAnd": "und Kontrollstrukturen wie",
+                  "syntaxOr": "und",
+                  "syntaxAfter": "werden unterstützt."
+                },
+                "empty": "Wähle eine Vorlage aus der Seitenleiste zum Bearbeiten aus",
+                "loadingTemplate": "Vorlage wird geladen…",
+                "form": {
+                  "subject": "Betreff",
+                  "enabled": "Aktiviert"
+                },
+                "button": {
+                  "resetToDefault": "Auf Standard zurücksetzen"
+                },
+                "toast": {
+                  "saved": "E-Mail-Vorlage gespeichert.",
+                  "reset": "E-Mail-Vorlage auf Standard zurückgesetzt."
+                },
+                "modal": {
+                  "reset": {
+                    "title": "Auf Standard zurücksetzen",
+                    "content": "Dies verwirft deine benutzerdefinierte Vorlage für **{identifier}** und stellt den eingebauten Standard wieder her. Dies kann nicht rückgängig gemacht werden.",
+                    "button": {
+                      "confirm": "Zurücksetzen"
+                    }
+                  }
+                }
+              }
+            },
+            "captcha": {
+              "title": "Captcha",
+              "page": {
+                "title": "Captcha-Einstellungen",
+                "toast": {
+                  "updated": "Captcha-Einstellungen aktualisiert."
+                },
+                "recaptcha": {
+                  "form": {
+                    "v3": "V3"
+                  }
+                }
+              }
+            },
+            "webauthn": {
+              "title": "Webauthn",
+              "page": {
+                "title": "Webauthn-Einstellungen",
+                "form": {
+                  "rpId": "RP-Id",
+                  "rpOrigin": "RP-Origin"
+                },
+                "button": {
+                  "autofill": "Automatisch ausfüllen"
+                },
+                "toast": {
+                  "updated": "Webauthn-Einstellungen aktualisiert.",
+                  "ipNotAllowed": "Webauthn kann nicht mit einer IP-Adresse verwendet werden"
+                },
+                "modal": {
+                  "changeRpId": {
+                    "title": "Änderung der RP-Id bestätigen",
+                    "content": "Bist du sicher, dass du die RP-Id ändern möchtest? Das Ändern der RP-Id macht alle bestehenden Webauthn-Anmeldedaten ungültig und erfordert, dass Benutzer ihre Geräte erneut registrieren. Dies kann erhebliche Folgen haben, bitte stelle daher sicher, dass du die Auswirkungen verstehst, bevor du fortfährst.",
+                    "button": {
+                      "confirm": "Aktualisieren"
+                    }
+                  }
+                }
+              }
+            },
+            "server": {
+              "title": "Server",
+              "page": {
+                "title": "Server-Einstellungen",
+                "form": {
+                  "maxFileManagerViewSize": "Max. Anzeigegröße im Dateimanager",
+                  "maxScheduleStepCount": "Max. Zeitplan-Schritte",
+                  "maxFileManagerContentSearchSize": "Max. Inhaltssuchgröße im Dateimanager",
+                  "maxFileManagerSearchResults": "Max. Suchergebnisse im Dateimanager",
+                  "maxSubuserCount": "Max. Anzahl Subbenutzer",
+                  "allowOverwritingCustomDockerImage": "Überschreiben des benutzerdefinierten Docker-Images erlauben",
+                  "allowOverwritingCustomDockerImageDescription": "Wenn aktiviert, können Benutzer das in der Server-Konfiguration angegebene Docker-Image über die Eggs-Liste überschreiben, selbst wenn ein Admin ein benutzerdefiniertes Docker-Image festgelegt hat.",
+                  "allowViewingInstallationLogs": "Anzeigen von Installationsprotokollen erlauben",
+                  "allowViewingInstallationLogsDescription": "Wenn aktiviert, können Benutzer mit Lesezugriff auf die Konsole auch Installationsprotokolle über die WebSocket-Verbindung sehen. Wenn deaktiviert, sind Installationsprotokolle nur für Admins verfügbar.",
+                  "allowAcknowledgingInstallationFailure": "Bestätigen von Installationsfehlern erlauben",
+                  "allowAcknowledgingInstallationFailureDescription": "Wenn aktiviert, können Benutzer Installationsfehler für Server bestätigen, die sich im Zustand „Install Failed“ befinden, und versuchen, den Server zu starten, anstatt auf einen Admin warten zu müssen. Wenn deaktiviert, können nur Admins Installationsfehler bestätigen.",
+                  "allowViewingTransferProgress": "Anzeigen des Übertragungsfortschritts erlauben",
+                  "allowViewingTransferProgressDescription": "Wenn aktiviert, können Benutzer mit Lesezugriff auf die Konsole auch Übertragungsfortschritts-Protokolle über die WebSocket-Verbindung sehen. Wenn deaktiviert, sind Übertragungsfortschritts-Protokolle nur für Admins verfügbar."
+                },
+                "toast": {
+                  "updated": "Server-Einstellungen aktualisiert."
+                }
+              }
+            },
+            "user": {
+              "title": "Benutzer",
+              "page": {
+                "title": "Benutzereinstellungen",
+                "form": {
+                  "maxServerGroupCount": "Max. Server-Gruppen",
+                  "maxApiKeyCount": "Max. API-Schlüssel",
+                  "maxCommandSnippetCount": "Max. Befehls-Snippets",
+                  "maxSecurityKeyCount": "Max. Sicherheitsschlüssel",
+                  "maxSshKeyCount": "Max. SSH-Schlüssel",
+                  "allowChangingLanguage": "Sprache ändern erlauben",
+                  "allowChangingLanguageDescription": "Wenn aktiviert, können Benutzer ihre Spracheinstellungen ändern."
+                },
+                "toast": {
+                  "updated": "Benutzereinstellungen aktualisiert."
+                }
+              }
+            },
+            "activity": {
+              "title": "Aktivität",
+              "page": {
+                "title": "Aktivitätseinstellungen",
+                "form": {
+                  "adminLogRetentionDays": "Aufbewahrungstage für Admin-Aktivität",
+                  "userLogRetentionDays": "Aufbewahrungstage für Benutzer-Aktivität",
+                  "serverLogRetentionDays": "Aufbewahrungstage für Server-Aktivität",
+                  "adminLogRetentionCount": "Aufbewahrungsanzahl für Admin-Aktivität",
+                  "userLogRetentionCount": "Aufbewahrungsanzahl für Benutzer-Aktivität",
+                  "serverLogRetentionCount": "Aufbewahrungsanzahl für Server-Aktivität",
+                  "serverLogAdminActivity": "Server-Admin-Aktivität protokollieren",
+                  "serverLogAdminActivityDescription": "Aktiviere oder deaktiviere das Protokollieren der Admin-Aktivität auf Servern, bei denen der Admin weder Besitzer noch Subbenutzer ist.",
+                  "serverLogScheduleActivity": "Server-Zeitplan-Aktivität protokollieren",
+                  "serverLogScheduleActivityDescription": "Aktiviere oder deaktiviere das Protokollieren von Aktivitäten, die durch Server-Zeitpläne ausgeführt werden."
+                },
+                "toast": {
+                  "updated": "Aktivitätseinstellungen aktualisiert."
+                }
+              }
+            },
+            "ratelimits": {
+              "title": "Ratenbegrenzungen",
+              "page": {
+                "title": "Ratenbegrenzungs-Einstellungen",
+                "form": {
+                  "hits": "Treffer",
+                  "hitsDescription": "Max. Anfragen",
+                  "windowSeconds": "Fenster",
+                  "windowSecondsDescription": "Sekunden"
+                },
+                "toast": {
+                  "updated": "Ratenbegrenzungs-Einstellungen aktualisiert."
+                }
+              }
+            }
+          }
         },
         "announcements": {
           "title": "Ankündigungen"

@@ -21,12 +21,14 @@ import { adminSettingsApplicationSchema } from '@/lib/schemas/admin/settings.ts'
 import { useAdminCan } from '@/plugins/usePermissions.ts';
 import { useSearchableResource } from '@/plugins/useSearchableResource.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';
+import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import { useAdminStore } from '@/stores/admin.tsx';
 import { useGlobalStore } from '@/stores/global.ts';
 import TelemetryPreviewModal from './modals/TelemetryPreviewModal.tsx';
 
 export default function ApplicationContainer() {
   const { addToast } = useToast();
+  const { t, tReact } = useTranslations();
   const { app, updateSettings: updateAdminSettings } = useAdminStore();
   const { languages, settings, updateSettings } = useGlobalStore();
 
@@ -68,7 +70,7 @@ export default function ApplicationContainer() {
     setLoading(true);
     updateApplicationSettings(adminSettingsApplicationSchema.parse(form.getValues()))
       .then(() => {
-        addToast('Application settings updated.', 'success');
+        addToast(t('pages.admin.settings.tabs.application.page.toast.updated', {}), 'success');
         updateSettings({ app: { ...settings.app, ...form.getValues() } });
         updateAdminSettings({ app: adminSettingsApplicationSchema.parse(form.getValues()) });
       })
@@ -92,7 +94,7 @@ export default function ApplicationContainer() {
   };
 
   return (
-    <AdminSubContentContainer title='Application Settings' titleOrder={2}>
+    <AdminSubContentContainer title={t('pages.admin.settings.tabs.application.page.title', {})} titleOrder={2}>
       <TelemetryPreviewModal
         telemetry={telemetryData}
         opened={telemetryData !== null}
@@ -101,43 +103,41 @@ export default function ApplicationContainer() {
       <ConfirmationModal
         opened={openModal === 'disableTelemetry'}
         onClose={() => setOpenModal(null)}
-        title='Confirm Disabling Telemetry'
-        confirm='Disable'
+        title={t('pages.admin.settings.tabs.application.page.modal.disableTelemetry.title', {})}
+        confirm={t('pages.admin.settings.tabs.application.page.modal.disableTelemetry.button.confirm', {})}
         onConfirmed={() => {
           form.setFieldValue('telemetryEnabled', false);
           setOpenModal(null);
         }}
       >
-        Are you sure you want to disable telemetry? Telemetry helps us improve Calagopus by providing anonymous usage
-        data. Disabling telemetry will prevent any data from being sent.
+        {tReact('pages.admin.settings.tabs.application.page.modal.disableTelemetry.content', {})}
       </ConfirmationModal>
       <ConfirmationModal
         opened={openModal === 'enableRegistration'}
         onClose={() => setOpenModal(null)}
-        title='Confirm Enabling Registration'
-        confirm='Enable'
+        title={t('pages.admin.settings.tabs.application.page.modal.enableRegistration.title', {})}
+        confirm={t('pages.admin.settings.tabs.application.page.modal.enableRegistration.button.confirm', {})}
         onConfirmed={() => {
           form.setFieldValue('registrationEnabled', true);
           setOpenModal(null);
         }}
       >
-        Are you sure you want to enable registration? Enabling registration allows anyone to create an account on this
-        panel. If you do not have a captcha configured, this may be a mistake.
+        {tReact('pages.admin.settings.tabs.application.page.modal.enableRegistration.content', {})}
       </ConfirmationModal>
 
       <form onSubmit={form.onSubmit(() => doUpdate())}>
         <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
           <TextInput
             withAsterisk
-            label='Name'
-            placeholder='Name'
+            label={t('common.form.name', {})}
+            placeholder={t('common.form.name', {})}
             key={form.key('name')}
             {...form.getInputProps('name')}
           />
           <Select
             withAsterisk
-            label='Language'
-            placeholder='Language'
+            label={t('pages.admin.settings.tabs.application.page.form.language', {})}
+            placeholder={t('pages.admin.settings.tabs.application.page.form.language', {})}
             data={languages.map((language) => ({
               label: new Intl.DisplayNames([language], { type: 'language' }).of(language) ?? language,
               value: language,
@@ -149,50 +149,64 @@ export default function ApplicationContainer() {
 
           <Autocomplete
             withAsterisk
-            label='Icon'
-            placeholder='Icon'
+            label={t('pages.admin.settings.tabs.application.page.form.icon', {})}
+            placeholder={t('pages.admin.settings.tabs.application.page.form.icon', {})}
             data={assets.items.map((asset) => asset.url)}
             key={form.key('icon')}
             {...form.getInputProps('icon')}
           />
           <Autocomplete
-            label='Banner'
-            placeholder='Banner'
+            label={t('pages.admin.settings.tabs.application.page.form.banner', {})}
+            placeholder={t('pages.admin.settings.tabs.application.page.form.banner', {})}
             data={assets.items.map((asset) => asset.url)}
             key={form.key('banner')}
             {...form.getInputProps('banner')}
           />
 
-          <TextInput withAsterisk label='URL' placeholder='URL' {...form.getInputProps('url')} />
+          <TextInput
+            withAsterisk
+            label={t('common.form.url', {})}
+            placeholder={t('common.form.url', {})}
+            {...form.getInputProps('url')}
+          />
 
           <TextInput
             withAsterisk
-            label='Session Cookie'
-            placeholder='Session Cookie'
+            label={t('pages.admin.settings.tabs.application.page.form.sessionCookie', {})}
+            placeholder={t('pages.admin.settings.tabs.application.page.form.sessionCookie', {})}
             {...form.getInputProps('sessionCookie')}
           />
           <TextInput
             withAsterisk
-            label='Session Duration (seconds)'
-            placeholder='Session Duration (seconds)'
+            label={t('pages.admin.settings.tabs.application.page.form.sessionDurationSeconds', {})}
+            placeholder={t('pages.admin.settings.tabs.application.page.form.sessionDurationSeconds', {})}
             {...form.getInputProps('sessionDurationSeconds')}
           />
 
           <Select
             withAsterisk
-            label='Two-Factor Authentication Requirement'
+            label={t('pages.admin.settings.tabs.application.page.form.twoFactorRequirement', {})}
             data={[
-              { label: 'Admins', value: 'admins' },
-              { label: 'All Users', value: 'all_users' },
-              { label: 'None', value: 'none' },
+              {
+                label: t('pages.admin.settings.tabs.application.page.enum.twoFactorRequirement.admins', {}),
+                value: 'admins',
+              },
+              {
+                label: t('pages.admin.settings.tabs.application.page.enum.twoFactorRequirement.allUsers', {}),
+                value: 'all_users',
+              },
+              {
+                label: t('pages.admin.settings.tabs.application.page.enum.twoFactorRequirement.none', {}),
+                value: 'none',
+              },
             ]}
             key={form.key('twoFactorRequirement')}
             {...form.getInputProps('twoFactorRequirement')}
           />
 
           <Switch
-            label='Enable Telemetry'
-            description='Allow Calagopus to collect limited and anonymous usage data to help improve the application.'
+            label={t('pages.admin.settings.tabs.application.page.form.telemetryEnabled', {})}
+            description={t('pages.admin.settings.tabs.application.page.form.telemetryEnabledDescription', {})}
             key={form.key('telemetryEnabled')}
             {...form.getInputProps('telemetryEnabled', { type: 'checkbox' })}
             onChange={(e) => {
@@ -204,7 +218,7 @@ export default function ApplicationContainer() {
             }}
           />
           <Switch
-            label='Enable Registration'
+            label={t('pages.admin.settings.tabs.application.page.form.registrationEnabled', {})}
             name='registrationEnabled'
             key={form.key('registrationEnabled')}
             {...form.getInputProps('registrationEnabled', { type: 'checkbox' })}
@@ -221,12 +235,12 @@ export default function ApplicationContainer() {
         <Group mt='md'>
           <AdminCan action='settings.update' cantSave>
             <Button type='submit' disabled={!form.isValid()} loading={loading}>
-              Save
+              {t('common.button.save', {})}
             </Button>
           </AdminCan>
           <AdminCan action='stats.read'>
             <Button variant='outline' loading={loading} onClick={doPreviewTelemetry}>
-              Preview Telemetry
+              {t('pages.admin.settings.tabs.application.page.button.previewTelemetry', {})}
             </Button>
           </AdminCan>
         </Group>

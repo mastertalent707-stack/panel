@@ -144,16 +144,16 @@ export const backupDiskLabelMapping: Record<z.infer<typeof adminBackupConfigurat
   restic: 'Restic',
 };
 
-export const storageDriverTypeLabelMapping: Record<z.infer<typeof adminSettingsStorageSchema>['type'], string> = {
-  filesystem: 'Filesystem',
-  s3: 'S3',
+export const storageDriverTypeLabelMapping: Record<z.infer<typeof adminSettingsStorageSchema>['type'], () => string> = {
+  filesystem: () => getTranslations().t('pages.admin.settings.tabs.storage.page.enum.driver.filesystem', {}),
+  s3: () => getTranslations().t('pages.admin.settings.tabs.storage.page.enum.driver.s3', {}),
 };
 
-export const mailModeTypeLabelMapping: Record<z.infer<typeof adminSettingsEmailSchema>['type'], string> = {
-  none: 'None',
-  smtp: 'SMTP',
-  sendmail: 'Sendmail Command',
-  filesystem: 'Filesystem',
+export const mailModeTypeLabelMapping: Record<z.infer<typeof adminSettingsEmailSchema>['type'], () => string> = {
+  none: () => getTranslations().t('pages.admin.settings.tabs.mail.page.enum.provider.none', {}),
+  smtp: () => getTranslations().t('pages.admin.settings.tabs.mail.page.enum.provider.smtp', {}),
+  sendmail: () => getTranslations().t('pages.admin.settings.tabs.mail.page.enum.provider.sendmail', {}),
+  filesystem: () => getTranslations().t('pages.admin.settings.tabs.mail.page.enum.provider.filesystem', {}),
 };
 
 export const archiveFormatLabelMapping: Record<z.infer<typeof archiveFormat>, string> = {

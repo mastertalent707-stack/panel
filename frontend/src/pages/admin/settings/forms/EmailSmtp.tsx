@@ -7,8 +7,11 @@ import PasswordInput from '@/elements/input/PasswordInput.tsx';
 import Switch from '@/elements/input/Switch.tsx';
 import TextInput from '@/elements/input/TextInput.tsx';
 import { adminSettingsEmailSmtpSchema } from '@/lib/schemas/admin/settings.ts';
+import { useTranslations } from '@/providers/TranslationProvider.tsx';
 
 export default function EmailSmtp({ form }: { form: UseFormReturnType<z.infer<typeof adminSettingsEmailSmtpSchema>> }) {
+  const { t } = useTranslations();
+
   useEffect(() => {
     form.setValues({
       host: form.values.host ?? '',
@@ -26,15 +29,15 @@ export default function EmailSmtp({ form }: { form: UseFormReturnType<z.infer<ty
       <Group grow>
         <TextInput
           withAsterisk
-          label='Host'
-          placeholder='Host'
+          label={t('common.form.host', {})}
+          placeholder={t('common.form.host', {})}
           key={form.key('host')}
           {...form.getInputProps('host')}
         />
         <NumberInput
           withAsterisk
-          label='Port'
-          placeholder='Port'
+          label={t('common.form.port', {})}
+          placeholder={t('common.form.port', {})}
           min={0}
           key={form.key('port')}
           {...form.getInputProps('port')}
@@ -42,9 +45,13 @@ export default function EmailSmtp({ form }: { form: UseFormReturnType<z.infer<ty
       </Group>
 
       <Group grow>
-        <Switch label='Use TLS' key={form.key('useTls')} {...form.getInputProps('useTls', { type: 'checkbox' })} />
         <Switch
-          label='Skip Certificate Validation'
+          label={t('pages.admin.settings.tabs.mail.page.smtp.form.useTls', {})}
+          key={form.key('useTls')}
+          {...form.getInputProps('useTls', { type: 'checkbox' })}
+        />
+        <Switch
+          label={t('pages.admin.settings.tabs.mail.page.smtp.form.skipCertValidation', {})}
           key={form.key('skipCertValidation')}
           {...form.getInputProps('skipCertValidation', { type: 'checkbox' })}
         />
@@ -52,14 +59,14 @@ export default function EmailSmtp({ form }: { form: UseFormReturnType<z.infer<ty
 
       <Group grow>
         <TextInput
-          label='Username'
-          placeholder='Username'
+          label={t('common.form.username', {})}
+          placeholder={t('common.form.username', {})}
           key={form.key('username')}
           {...form.getInputProps('username')}
         />
         <PasswordInput
-          label='Password'
-          placeholder='Password'
+          label={t('common.form.password', {})}
+          placeholder={t('common.form.password', {})}
           key={form.key('password')}
           {...form.getInputProps('password')}
         />
@@ -68,14 +75,14 @@ export default function EmailSmtp({ form }: { form: UseFormReturnType<z.infer<ty
       <Group grow>
         <TextInput
           withAsterisk
-          label='From Address'
-          placeholder='From Address'
+          label={t('common.form.fromAddress', {})}
+          placeholder={t('common.form.fromAddress', {})}
           key={form.key('fromAddress')}
           {...form.getInputProps('fromAddress')}
         />
         <TextInput
-          label='From Name'
-          placeholder='From Name'
+          label={t('common.form.fromName', {})}
+          placeholder={t('common.form.fromName', {})}
           key={form.key('fromName')}
           {...form.getInputProps('fromName')}
         />

@@ -1,4 +1,4 @@
-import { Group, Stack, Tooltip } from '@mantine/core';
+import { Group, Stack } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { zod4Resolver } from 'mantine-form-zod-resolver';
 import { useEffect, useState } from 'react';
@@ -12,10 +12,12 @@ import NumberInput from '@/elements/input/NumberInput.tsx';
 import Switch from '@/elements/input/Switch.tsx';
 import { adminSettingsActivitySchema } from '@/lib/schemas/admin/settings.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';
+import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import { useAdminStore } from '@/stores/admin.tsx';
 
 export default function ActivityContainer() {
   const { addToast } = useToast();
+  const { t } = useTranslations();
   const { activity, updateSettings } = useAdminStore();
 
   const [loading, setLoading] = useState(false);
@@ -46,7 +48,7 @@ export default function ActivityContainer() {
 
     updateActivitySettings(adminSettingsActivitySchema.parse(form.getValues()))
       .then(() => {
-        addToast('Activity settings updated.', 'success');
+        addToast(t('pages.admin.settings.tabs.activity.page.toast.updated', {}), 'success');
         updateSettings({ activity: adminSettingsActivitySchema.parse(form.getValues()) });
       })
       .catch((msg) => {
@@ -56,30 +58,30 @@ export default function ActivityContainer() {
   };
 
   return (
-    <AdminSubContentContainer title='Activity Settings' titleOrder={2}>
+    <AdminSubContentContainer title={t('pages.admin.settings.tabs.activity.page.title', {})} titleOrder={2}>
       <form onSubmit={form.onSubmit(() => doUpdate())}>
         <Stack>
           <Group grow>
             <NumberInput
               withAsterisk
-              label='Admin Activity Retention Days'
-              placeholder='Admin Activity Retention Days'
+              label={t('pages.admin.settings.tabs.activity.page.form.adminLogRetentionDays', {})}
+              placeholder={t('pages.admin.settings.tabs.activity.page.form.adminLogRetentionDays', {})}
               key={form.key('adminLogRetentionDays')}
               {...form.getInputProps('adminLogRetentionDays')}
             />
 
             <NumberInput
               withAsterisk
-              label='User Activity Retention Days'
-              placeholder='User Activity Retention Days'
+              label={t('pages.admin.settings.tabs.activity.page.form.userLogRetentionDays', {})}
+              placeholder={t('pages.admin.settings.tabs.activity.page.form.userLogRetentionDays', {})}
               key={form.key('userLogRetentionDays')}
               {...form.getInputProps('userLogRetentionDays')}
             />
 
             <NumberInput
               withAsterisk
-              label='Server Activity Retention Days'
-              placeholder='Server Activity Retention Days'
+              label={t('pages.admin.settings.tabs.activity.page.form.serverLogRetentionDays', {})}
+              placeholder={t('pages.admin.settings.tabs.activity.page.form.serverLogRetentionDays', {})}
               key={form.key('serverLogRetentionDays')}
               {...form.getInputProps('serverLogRetentionDays')}
             />
@@ -87,22 +89,22 @@ export default function ActivityContainer() {
 
           <Group grow>
             <NumberInput
-              label='Admin Activity Retention Count'
-              placeholder='Admin Activity Retention Count'
+              label={t('pages.admin.settings.tabs.activity.page.form.adminLogRetentionCount', {})}
+              placeholder={t('pages.admin.settings.tabs.activity.page.form.adminLogRetentionCount', {})}
               key={form.key('adminLogRetentionCount')}
               {...form.getInputProps('adminLogRetentionCount')}
             />
 
             <NumberInput
-              label='User Activity Retention Count'
-              placeholder='User Activity Retention Count'
+              label={t('pages.admin.settings.tabs.activity.page.form.userLogRetentionCount', {})}
+              placeholder={t('pages.admin.settings.tabs.activity.page.form.userLogRetentionCount', {})}
               key={form.key('userLogRetentionCount')}
               {...form.getInputProps('userLogRetentionCount')}
             />
 
             <NumberInput
-              label='Server Activity Retention Count'
-              placeholder='Server Activity Retention Count'
+              label={t('pages.admin.settings.tabs.activity.page.form.serverLogRetentionCount', {})}
+              placeholder={t('pages.admin.settings.tabs.activity.page.form.serverLogRetentionCount', {})}
               key={form.key('serverLogRetentionCount')}
               {...form.getInputProps('serverLogRetentionCount')}
             />
@@ -110,15 +112,15 @@ export default function ActivityContainer() {
 
           <Group grow>
             <Switch
-              label='Log Server Admin Activity'
-              description="Enable or disable logging of admin activity on servers where the admin isn't an owner or subuser."
+              label={t('pages.admin.settings.tabs.activity.page.form.serverLogAdminActivity', {})}
+              description={t('pages.admin.settings.tabs.activity.page.form.serverLogAdminActivityDescription', {})}
               key={form.key('serverLogAdminActivity')}
               {...form.getInputProps('serverLogAdminActivity', { type: 'checkbox' })}
             />
 
             <Switch
-              label='Log Server Schedule Activity'
-              description='Enable or disable logging of activity done by server schedules.'
+              label={t('pages.admin.settings.tabs.activity.page.form.serverLogScheduleActivity', {})}
+              description={t('pages.admin.settings.tabs.activity.page.form.serverLogScheduleActivityDescription', {})}
               key={form.key('serverLogScheduleActivity')}
               {...form.getInputProps('serverLogScheduleActivity', { type: 'checkbox' })}
             />
@@ -126,16 +128,9 @@ export default function ActivityContainer() {
         </Stack>
 
         <Group mt='md'>
-          <AdminCan
-            action='settings.update'
-            renderOnCant={
-              <Tooltip label='You do not have permission to update settings.'>
-                <Button disabled>Save</Button>
-              </Tooltip>
-            }
-          >
+          <AdminCan action='settings.update' cantSave>
             <Button type='submit' disabled={!form.isValid()} loading={loading}>
-              Save
+              {t('common.button.save', {})}
             </Button>
           </AdminCan>
         </Group>

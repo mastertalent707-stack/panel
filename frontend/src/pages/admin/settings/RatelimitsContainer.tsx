@@ -11,9 +11,9 @@ import Card from '@/elements/Card.tsx';
 import Code from '@/elements/Code.tsx';
 import AdminSubContentContainer from '@/elements/containers/AdminSubContentContainer.tsx';
 import NumberInput from '@/elements/input/NumberInput.tsx';
-import Tooltip from '@/elements/Tooltip.tsx';
 import { adminSettingsRatelimitsSchema } from '@/lib/schemas/admin/settings.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';
+import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import { useAdminStore } from '@/stores/admin.tsx';
 
 type RatelimitsSchema = z.infer<typeof adminSettingsRatelimitsSchema>;
@@ -42,6 +42,7 @@ const DEFAULT_VALUES: RatelimitsSchema = Object.fromEntries(
 
 export default function RatelimitsContainer() {
   const { addToast } = useToast();
+  const { t } = useTranslations();
   const { ratelimits, updateSettings } = useAdminStore();
   const [loading, setLoading] = useState(false);
 
@@ -61,7 +62,7 @@ export default function RatelimitsContainer() {
     setLoading(true);
     updateRatelimitSettings(adminSettingsRatelimitsSchema.parse(form.getValues()))
       .then(() => {
-        addToast('Rate limit settings updated.', 'success');
+        addToast(t('pages.admin.settings.tabs.ratelimits.page.toast.updated', {}), 'success');
         updateSettings({ ratelimits: adminSettingsRatelimitsSchema.parse(form.getValues()) });
       })
       .catch((msg) => {
@@ -71,7 +72,7 @@ export default function RatelimitsContainer() {
   };
 
   return (
-    <AdminSubContentContainer title='Ratelimit Settings' titleOrder={2}>
+    <AdminSubContentContainer title={t('pages.admin.settings.tabs.ratelimits.page.title', {})} titleOrder={2}>
       <form onSubmit={form.onSubmit(() => doUpdate())}>
         <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2'>
           {ENDPOINTS.map(({ label, key }) => (
@@ -83,15 +84,15 @@ export default function RatelimitsContainer() {
                 <Group grow>
                   <NumberInput
                     withAsterisk
-                    label='Hits'
-                    description='Max requests'
+                    label={t('pages.admin.settings.tabs.ratelimits.page.form.hits', {})}
+                    description={t('pages.admin.settings.tabs.ratelimits.page.form.hitsDescription', {})}
                     key={form.key(`${key}.hits`)}
                     {...form.getInputProps(`${key}.hits`)}
                   />
                   <NumberInput
                     withAsterisk
-                    label='Window'
-                    description='Seconds'
+                    label={t('pages.admin.settings.tabs.ratelimits.page.form.windowSeconds', {})}
+                    description={t('pages.admin.settings.tabs.ratelimits.page.form.windowSecondsDescription', {})}
                     key={form.key(`${key}.windowSeconds`)}
                     {...form.getInputProps(`${key}.windowSeconds`)}
                   />
@@ -102,16 +103,9 @@ export default function RatelimitsContainer() {
         </div>
 
         <Group mt='md'>
-          <AdminCan
-            action='settings.update'
-            renderOnCant={
-              <Tooltip label='You do not have permission to update settings.'>
-                <Button disabled>Save</Button>
-              </Tooltip>
-            }
-          >
+          <AdminCan action='settings.update' cantSave>
             <Button type='submit' disabled={!form.isValid()} loading={loading}>
-              Save
+              {t('common.button.save', {})}
             </Button>
           </AdminCan>
         </Group>

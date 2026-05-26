@@ -20,6 +20,7 @@ import MonacoEditor from '@/elements/MonacoEditor.tsx';
 import ConfirmationModal from '@/elements/modals/ConfirmationModal.tsx';
 import { queryKeys } from '@/lib/queryKeys.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';
+import { useTranslations } from '@/providers/TranslationProvider.tsx';
 
 const templateFormSchema = z.object({
   subject: z.string().min(1).max(255),
@@ -28,6 +29,7 @@ const templateFormSchema = z.object({
 
 export default function EmailTemplatesContainer() {
   const { addToast } = useToast();
+  const { t, tReact } = useTranslations();
   const queryClient = useQueryClient();
 
   const [selectedIdentifier, setSelectedIdentifier] = useState<string | null>(null);
@@ -92,7 +94,7 @@ export default function EmailTemplatesContainer() {
     updateEmailTemplate(selectedIdentifier, payload)
       .then(() => {
         queryClient.invalidateQueries({ queryKey: queryKeys.admin.emailTemplates.detail(selectedIdentifier!) });
-        addToast('Email template saved.', 'success');
+        addToast(t('pages.admin.settings.tabs.mailTemplates.page.toast.saved', {}), 'success');
       })
       .catch((err) => addToast(httpErrorToHuman(err), 'error'))
       .finally(() => setSaving(false));
@@ -111,7 +113,7 @@ export default function EmailTemplatesContainer() {
       .then(() => {
         queryClient.invalidateQueries({ queryKey: queryKeys.admin.emailTemplates.detail(selectedIdentifier!) });
         setEditorContent('');
-        addToast('Email template reset to default.', 'success');
+        addToast(t('pages.admin.settings.tabs.mailTemplates.page.toast.reset', {}), 'success');
       })
       .catch((err) => addToast(httpErrorToHuman(err), 'error'))
       .finally(() => setSaving(false));
@@ -121,7 +123,7 @@ export default function EmailTemplatesContainer() {
     <Paper withBorder radius='md' className='flex flex-col overflow-hidden shrink-0 md:w-72 w-full md:h-full'>
       <div className='px-3 py-2.5 bg-(--mantine-color-default)'>
         <Text size='xs' fw={600} c='dimmed' tt='uppercase' style={{ letterSpacing: '0.05em' }}>
-          Templates
+          {t('pages.admin.settings.tabs.mailTemplates.page.sidebar.templates', {})}
         </Text>
       </div>
       <Divider />
@@ -129,15 +131,15 @@ export default function EmailTemplatesContainer() {
         <Stack gap={0} p='xs'>
           {templatesLoading && (
             <Text size='sm' c='dimmed' p='xs'>
-              Loading...
+              {t('pages.admin.settings.tabs.mailTemplates.page.sidebar.loading', {})}
             </Text>
           )}
-          {templates?.map((t) => (
+          {templates?.map((tpl) => (
             <NavLink
-              key={t.identifier}
-              label={t.identifier}
-              active={selectedIdentifier === t.identifier}
-              onClick={() => handleSelect(t.identifier)}
+              key={tpl.identifier}
+              label={tpl.identifier}
+              active={selectedIdentifier === tpl.identifier}
+              onClick={() => handleSelect(tpl.identifier)}
               styles={{
                 label: {
                   fontSize: 'var(--mantine-font-size-sm)',
@@ -154,7 +156,7 @@ export default function EmailTemplatesContainer() {
           <Divider />
           <div className='px-3 py-2.5 bg-(--mantine-color-default)'>
             <Text size='xs' fw={600} c='dimmed' tt='uppercase' style={{ letterSpacing: '0.05em' }}>
-              Available Variables
+              {t('pages.admin.settings.tabs.mailTemplates.page.sidebar.availableVariables', {})}
             </Text>
           </div>
           <Divider />
@@ -178,37 +180,40 @@ export default function EmailTemplatesContainer() {
   );
 
   return (
-    <AdminSubContentContainer title='Email Template Settings' titleOrder={2}>
+    <AdminSubContentContainer title={t('pages.admin.settings.tabs.mailTemplates.page.title', {})} titleOrder={2}>
       <ConfirmationModal
-        title='Reset to default'
+        title={t('pages.admin.settings.tabs.mailTemplates.page.modal.reset.title', {})}
         opened={confirmReset}
         onClose={() => setConfirmReset(false)}
         onConfirmed={doReset}
-        confirm='Reset'
+        confirm={t('pages.admin.settings.tabs.mailTemplates.page.modal.reset.button.confirm', {})}
       >
-        This will discard your custom template for <strong>{selectedIdentifier}</strong> and restore the built-in
-        default. This cannot be undone.
+        {tReact('pages.admin.settings.tabs.mailTemplates.page.modal.reset.content', {
+          identifier: selectedIdentifier ?? '',
+        })}
       </ConfirmationModal>
 
       <Alert>
         <Text size='sm'>
-          Templates use the&nbsp;
+          {t('pages.admin.settings.tabs.mailTemplates.page.alert.syntaxBefore', {})}
+          &nbsp;
           <Anchor href='https://github.com/mitsuhiko/minijinja' target='_blank' rel='noopener noreferrer' size='sm'>
-            MiniJinja
+            {t('pages.admin.settings.tabs.mailTemplates.page.alert.syntaxLink', {})}
           </Anchor>
-          &nbsp; templating syntax. Variables are referenced with{' '}
+          &nbsp;
+          {t('pages.admin.settings.tabs.mailTemplates.page.alert.syntaxMiddle', {})}{' '}
           <Text span ff='monospace' size='sm'>
             {'{{ variable }}'}
           </Text>{' '}
-          and control structures like{' '}
+          {t('pages.admin.settings.tabs.mailTemplates.page.alert.syntaxAnd', {})}{' '}
           <Text span ff='monospace' size='sm'>
             {'{% if %}'}
           </Text>{' '}
-          and{' '}
+          {t('pages.admin.settings.tabs.mailTemplates.page.alert.syntaxOr', {})}{' '}
           <Text span ff='monospace' size='sm'>
             {'{% for %}'}
           </Text>{' '}
-          are supported.
+          {t('pages.admin.settings.tabs.mailTemplates.page.alert.syntaxAfter', {})}
         </Text>
       </Alert>
 
@@ -219,13 +224,13 @@ export default function EmailTemplatesContainer() {
           {selectedIdentifier === null ? (
             <div className='flex items-center justify-center h-64'>
               <Text c='dimmed' size='sm'>
-                Select a template from the sidebar to edit it
+                {t('pages.admin.settings.tabs.mailTemplates.page.empty', {})}
               </Text>
             </div>
           ) : templateLoading ? (
             <div className='flex items-center justify-center h-64'>
               <Text c='dimmed' size='sm'>
-                Loading template...
+                {t('pages.admin.settings.tabs.mailTemplates.page.loadingTemplate', {})}
               </Text>
             </div>
           ) : template ? (
@@ -239,11 +244,11 @@ export default function EmailTemplatesContainer() {
                   </Group>
                   <Group gap='xs'>
                     <Button size='xs' variant='subtle' onClick={() => setConfirmReset(true)} disabled={saving}>
-                      Reset to default
+                      {t('pages.admin.settings.tabs.mailTemplates.page.button.resetToDefault', {})}
                     </Button>
                     <AdminCan action='settings.update' cantSave>
                       <Button size='xs' loading={saving} disabled={!isContentDirty && !form.isDirty()} onClick={doSave}>
-                        Save
+                        {t('common.button.save', {})}
                       </Button>
                     </AdminCan>
                   </Group>
@@ -253,14 +258,14 @@ export default function EmailTemplatesContainer() {
               <Stack gap='md' p='md'>
                 <Group align='flex-start'>
                   <TextInput
-                    label='Subject'
+                    label={t('pages.admin.settings.tabs.mailTemplates.page.form.subject', {})}
                     className='flex-1'
                     required
                     key={form.key('subject')}
                     {...form.getInputProps('subject')}
                   />
                   <Switch
-                    label='Enabled'
+                    label={t('pages.admin.settings.tabs.mailTemplates.page.form.enabled', {})}
                     mt='xl'
                     key={form.key('enabled')}
                     {...form.getInputProps('enabled', { type: 'checkbox' })}

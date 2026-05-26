@@ -71,6 +71,22 @@ const baseTranslations = defineTranslations({
         host: 'Host',
         username: 'Username',
         server: 'Server',
+        url: 'URL',
+        email: 'Email',
+        path: 'Path',
+        port: 'Port',
+        provider: 'Provider',
+        command: 'Command',
+        fromAddress: 'From Address',
+        fromName: 'From Name',
+        siteKey: 'Site Key',
+        secretKey: 'Secret Key',
+        apiKey: 'API Key',
+        accessKey: 'Access Key',
+        bucket: 'Bucket',
+        region: 'Region',
+        endpoint: 'Endpoint',
+        publicUrl: 'Public URL',
         truncateDirectory:
           'Do you want to delete all files of this server before performing this action? This cannot be undone.',
       },
@@ -1249,6 +1265,297 @@ const baseTranslations = defineTranslations({
         },
         settings: {
           title: 'Settings',
+          tabs: {
+            application: {
+              title: 'Application',
+              page: {
+                title: 'Application Settings',
+                form: {
+                  language: 'Language',
+                  icon: 'Icon',
+                  banner: 'Banner',
+                  sessionCookie: 'Session Cookie',
+                  sessionDurationSeconds: 'Session Duration (seconds)',
+                  twoFactorRequirement: 'Two-Factor Authentication Requirement',
+                  telemetryEnabled: 'Enable Telemetry',
+                  telemetryEnabledDescription:
+                    'Allow Calagopus to collect limited and anonymous usage data to help improve the application.',
+                  registrationEnabled: 'Enable Registration',
+                },
+                enum: {
+                  twoFactorRequirement: {
+                    admins: 'Admins',
+                    allUsers: 'All Users',
+                    none: 'None',
+                  },
+                },
+                button: {
+                  previewTelemetry: 'Preview Telemetry',
+                },
+                toast: {
+                  updated: 'Application settings updated.',
+                },
+                modal: {
+                  disableTelemetry: {
+                    title: 'Confirm Disabling Telemetry',
+                    content:
+                      'Are you sure you want to disable telemetry? Telemetry helps us improve Calagopus by providing anonymous usage data. Disabling telemetry will prevent any data from being sent.',
+                    button: { confirm: 'Disable' },
+                  },
+                  enableRegistration: {
+                    title: 'Confirm Enabling Registration',
+                    content:
+                      'Are you sure you want to enable registration? Enabling registration allows anyone to create an account on this panel. If you do not have a captcha configured, this may be a mistake.',
+                    button: { confirm: 'Enable' },
+                  },
+                  telemetryPreview: {
+                    title: 'Telemetry Preview',
+                  },
+                },
+              },
+            },
+            storage: {
+              title: 'Storage',
+              page: {
+                title: 'Storage Settings',
+                form: {
+                  driver: 'Driver',
+                },
+                enum: {
+                  driver: {
+                    filesystem: 'Filesystem',
+                    s3: 'S3',
+                  },
+                },
+                toast: {
+                  updated: 'Storage settings updated.',
+                },
+                modal: {
+                  changeStorageType: {
+                    title: 'Confirm Changing Storage Type',
+                    content:
+                      'Are you sure you want to change the storage type? Changing the storage type will cause the application to look for assets (e.g. profile pictures) in a different location, which may result in missing assets if they are not moved to the new location manually.',
+                    button: { confirm: 'Update' },
+                  },
+                },
+                s3: {
+                  alert: {
+                    permissionsTitle: 'Note on Permissions',
+                    permissionsIntro:
+                      'To ensure that the storage backend works correctly, please make sure the following subdirectories are publicly accessible over the "Public URL" you provided:',
+                    permissionsAssets: 'This is where all admin assets (e.g., icons) will be stored.',
+                    permissionsAvatars: 'This is where all user avatars will be stored.',
+                    permissionsPublicData: 'This is where extensions can store public data (e.g., images).',
+                  },
+                  form: {
+                    pathStyleOn: 'Using path-style URLs',
+                    pathStyleOff: 'Using virtual-hosted-style URLs',
+                  },
+                },
+              },
+            },
+            mail: {
+              title: 'Mail',
+              page: {
+                title: 'Email Settings',
+                enum: {
+                  provider: {
+                    none: 'None',
+                    smtp: 'SMTP',
+                    sendmail: 'Sendmail Command',
+                    filesystem: 'Filesystem',
+                  },
+                },
+                button: {
+                  sendTestEmail: 'Send Test Email',
+                },
+                toast: {
+                  updated: 'Email settings updated.',
+                },
+                modal: {
+                  sendTestEmail: {
+                    title: 'Send Test Email',
+                    button: {
+                      submit: 'Send Test Email',
+                    },
+                    toast: {
+                      sent: 'Test email has been sent successfully.',
+                    },
+                  },
+                },
+                smtp: {
+                  form: {
+                    useTls: 'Use TLS',
+                    skipCertValidation: 'Skip Certificate Validation',
+                  },
+                },
+              },
+            },
+            mailTemplates: {
+              title: 'Mail Templates',
+              page: {
+                title: 'Email Template Settings',
+                sidebar: {
+                  templates: 'Templates',
+                  loading: 'Loading...',
+                  availableVariables: 'Available Variables',
+                },
+                alert: {
+                  syntaxBefore: 'Templates use the',
+                  syntaxLink: 'MiniJinja',
+                  syntaxMiddle: 'templating syntax. Variables are referenced with',
+                  syntaxAnd: 'and control structures like',
+                  syntaxOr: 'and',
+                  syntaxAfter: 'are supported.',
+                },
+                empty: 'Select a template from the sidebar to edit it',
+                loadingTemplate: 'Loading template...',
+                form: {
+                  subject: 'Subject',
+                  enabled: 'Enabled',
+                },
+                button: {
+                  resetToDefault: 'Reset to default',
+                },
+                toast: {
+                  saved: 'Email template saved.',
+                  reset: 'Email template reset to default.',
+                },
+                modal: {
+                  reset: {
+                    title: 'Reset to default',
+                    content:
+                      'This will discard your custom template for **{identifier}** and restore the built-in default. This cannot be undone.',
+                    button: { confirm: 'Reset' },
+                  },
+                },
+              },
+            },
+            captcha: {
+              title: 'Captcha',
+              page: {
+                title: 'Captcha Settings',
+                toast: {
+                  updated: 'Captcha settings updated.',
+                },
+                recaptcha: {
+                  form: {
+                    v3: 'V3',
+                  },
+                },
+              },
+            },
+            webauthn: {
+              title: 'Webauthn',
+              page: {
+                title: 'Webauthn Settings',
+                form: {
+                  rpId: 'RP Id',
+                  rpOrigin: 'RP Origin',
+                },
+                button: {
+                  autofill: 'Autofill',
+                },
+                toast: {
+                  updated: 'Webauthn settings updated.',
+                  ipNotAllowed: 'Cannot use Webauthn on an IP Address',
+                },
+                modal: {
+                  changeRpId: {
+                    title: 'Confirm Changing RP Id',
+                    content:
+                      'Are you sure you want to change the RP Id? Changing the RP Id will break all existing Webauthn credentials and require users to re-register their devices. This can have significant consequences, so please make sure you understand the implications before proceeding.',
+                    button: { confirm: 'Update' },
+                  },
+                },
+              },
+            },
+            server: {
+              title: 'Server',
+              page: {
+                title: 'Server Settings',
+                form: {
+                  maxFileManagerViewSize: 'Max File Manager View Size',
+                  maxScheduleStepCount: 'Max Schedule Steps',
+                  maxFileManagerContentSearchSize: 'Max File Manager Content Search Size',
+                  maxFileManagerSearchResults: 'Max File Manager Search Results',
+                  maxSubuserCount: 'Max Subuser Count',
+                  allowOverwritingCustomDockerImage: 'Allow Overwriting Custom Docker Image',
+                  allowOverwritingCustomDockerImageDescription:
+                    'If enabled, users will be able to overwrite the Docker image specified in the server configuration using the Eggs list, even if an admin has set a custom Docker image.',
+                  allowViewingInstallationLogs: 'Allow Viewing Installation Logs',
+                  allowViewingInstallationLogsDescription:
+                    'If enabled, users with console read permissions will also be able to view installation logs via the websocket connection. If disabled, installation logs will only be available for admins.',
+                  allowAcknowledgingInstallationFailure: 'Allow Acknowledging Installation Failure',
+                  allowAcknowledgingInstallationFailureDescription:
+                    'If enabled, users will be able to acknowledge installation failures for servers that are in the "Install Failed" state, allowing them to attempt to start the server instead of having to wait for an admin. If disabled, only admins will be able to acknowledge installation failures.',
+                  allowViewingTransferProgress: 'Allow Viewing Transfer Progress',
+                  allowViewingTransferProgressDescription:
+                    'If enabled, users with console read permissions will also be able to view transfer progress logs via the websocket connection. If disabled, transfer progress logs will only be available for admins.',
+                },
+                toast: {
+                  updated: 'Server settings updated.',
+                },
+              },
+            },
+            user: {
+              title: 'User',
+              page: {
+                title: 'User Settings',
+                form: {
+                  maxServerGroupCount: 'Max Server Groups',
+                  maxApiKeyCount: 'Max API Keys',
+                  maxCommandSnippetCount: 'Max Command Snippets',
+                  maxSecurityKeyCount: 'Max Security Keys',
+                  maxSshKeyCount: 'Max SSH Keys',
+                  allowChangingLanguage: 'Allow Changing Language',
+                  allowChangingLanguageDescription:
+                    'If enabled, users will be able to change their language preferences.',
+                },
+                toast: {
+                  updated: 'User settings updated.',
+                },
+              },
+            },
+            activity: {
+              title: 'Activity',
+              page: {
+                title: 'Activity Settings',
+                form: {
+                  adminLogRetentionDays: 'Admin Activity Retention Days',
+                  userLogRetentionDays: 'User Activity Retention Days',
+                  serverLogRetentionDays: 'Server Activity Retention Days',
+                  adminLogRetentionCount: 'Admin Activity Retention Count',
+                  userLogRetentionCount: 'User Activity Retention Count',
+                  serverLogRetentionCount: 'Server Activity Retention Count',
+                  serverLogAdminActivity: 'Log Server Admin Activity',
+                  serverLogAdminActivityDescription:
+                    "Enable or disable logging of admin activity on servers where the admin isn't an owner or subuser.",
+                  serverLogScheduleActivity: 'Log Server Schedule Activity',
+                  serverLogScheduleActivityDescription:
+                    'Enable or disable logging of activity done by server schedules.',
+                },
+                toast: {
+                  updated: 'Activity settings updated.',
+                },
+              },
+            },
+            ratelimits: {
+              title: 'Ratelimits',
+              page: {
+                title: 'Ratelimit Settings',
+                form: {
+                  hits: 'Hits',
+                  hitsDescription: 'Max requests',
+                  windowSeconds: 'Window',
+                  windowSecondsDescription: 'Seconds',
+                },
+                toast: {
+                  updated: 'Rate limit settings updated.',
+                },
+              },
+            },
+          },
         },
         announcements: {
           title: 'Announcements',

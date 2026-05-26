@@ -17,6 +17,7 @@ import {
   adminSettingsEmailSmtpSchema,
 } from '@/lib/schemas/admin/settings.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';
+import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import { useAdminStore } from '@/stores/admin.tsx';
 import EmailFile from './forms/EmailFile.tsx';
 import EmailSendmail from './forms/EmailSendmail.tsx';
@@ -25,6 +26,7 @@ import EmailSendTestModal from './modals/EmailSendTestModal.tsx';
 
 export default function EmailContainer() {
   const { addToast } = useToast();
+  const { t } = useTranslations();
   const { mailMode, updateSettings } = useAdminStore();
 
   const [loading, setLoading] = useState(false);
@@ -48,7 +50,7 @@ export default function EmailContainer() {
     setLoading(true);
     updateEmailSettings(adminSettingsEmailSchema.parse(form.getValues()))
       .then(() => {
-        addToast('Email settings updated.', 'success');
+        addToast(t('pages.admin.settings.tabs.mail.page.toast.updated', {}), 'success');
         updateSettings({ mailMode: adminSettingsEmailSchema.parse(form.getValues()) });
       })
       .catch((msg) => {
@@ -58,15 +60,15 @@ export default function EmailContainer() {
   };
 
   return (
-    <AdminSubContentContainer title='Email Settings' titleOrder={2}>
+    <AdminSubContentContainer title={t('pages.admin.settings.tabs.mail.page.title', {})} titleOrder={2}>
       <EmailSendTestModal opened={openModal === 'sendTestEmail'} onClose={() => setOpenModal(null)} />
 
       <form onSubmit={form.onSubmit(() => doUpdate())}>
         <Select
-          label='Provider'
+          label={t('common.form.provider', {})}
           data={Object.entries(mailModeTypeLabelMapping).map(([value, label]) => ({
             value,
-            label,
+            label: label(),
           }))}
           key={form.key('type')}
           {...form.getInputProps('type')}
@@ -83,12 +85,12 @@ export default function EmailContainer() {
         <Group mt='md'>
           <AdminCan action='settings.update' cantSave>
             <Button type='submit' disabled={!form.isValid()} loading={loading}>
-              Save
+              {t('common.button.save', {})}
             </Button>
           </AdminCan>
           <AdminCan action='settings.read'>
             <Button variant='outline' loading={loading} onClick={() => setOpenModal('sendTestEmail')}>
-              Send Test Email
+              {t('pages.admin.settings.tabs.mail.page.button.sendTestEmail', {})}
             </Button>
           </AdminCan>
         </Group>

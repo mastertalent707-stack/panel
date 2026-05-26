@@ -8,7 +8,6 @@ use tracing_subscriber::{
     filter::LevelFilter,
     fmt::writer::MakeWriterExt,
     layer::{Layered, SubscriberExt},
-    reload,
     util::SubscriberInitExt,
 };
 
@@ -37,7 +36,10 @@ pub struct EnvGuard(
     pub tracing_appender::non_blocking::WorkerGuard,
 );
 
-type ReloadHandle = reload::Handle<LevelFilter, Layered<LevelFilter, tracing_subscriber::Registry>>;
+type ReloadHandle = tracing_subscriber::reload::Handle<
+    LevelFilter,
+    Layered<LevelFilter, tracing_subscriber::Registry>,
+>;
 
 pub struct Env {
     log_reload_handle: ReloadHandle,
@@ -157,10 +159,13 @@ impl Env {
         } else {
             LevelFilter::INFO
         };
-        let (reload_layer, log_reload_handle) = reload::Layer::new(initial_level);
+        let (reload_layer, log_reload_handle) =
+            tracing_subscriber::reload::Layer::new(initial_level);
 
         let fmt_layer = tracing_subscriber::fmt::layer()
-            .with_timer(tracing_subscriber::fmt::time::ChronoLocal::rfc_3339())
+            .with_timer(tracing_subscriber::fmt::time::ChronoLocal::new(
+                "%Y-%m-%d %H:%M:%S %z".to_string(),
+            ))
             .with_target(false)
             .with_level(true)
             .with_file(true)
