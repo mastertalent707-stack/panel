@@ -1015,8 +1015,7 @@
           },
           "table": {
             "columns": {
-              "providerName": "Leverantörens namn",
-              "identifier": "Identifierare"
+              "providerName": "Leverantörens namn"
             }
           },
           "modal": {

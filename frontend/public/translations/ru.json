@@ -1006,8 +1006,7 @@
           },
           "table": {
             "columns": {
-              "providerName": "Название провайдера",
-              "identifier": "Идентификатор"
+              "providerName": "Название провайдера"
             }
           },
           "modal": {

@@ -1011,8 +1011,7 @@
           },
           "table": {
             "columns": {
-              "providerName": "اسم الموفر",
-              "identifier": "المعرف"
+              "providerName": "اسم الموفر"
             }
           },
           "modal": {
