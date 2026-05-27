@@ -1,3 +1,5 @@
+use crate::commands::import::convert_der_public_key;
+
 use super::{
     BASE64_ENGINE, SourceRow, collect_mappings, connect_source_database_any, decrypt_laravel_value,
     is_postgres_source, is_sqlite_source, process_table, source_bool, source_datetime,
@@ -345,31 +347,17 @@ impl shared::extensions::commands::CliCommand<PelicanArgs> for PelicanCommand {
                                     .replace("\n", "");
                                 let base64_data = BASE64_ENGINE.decode(base64_data)?;
 
-                                let pkey = openssl::pkey::PKey::public_key_from_der(&base64_data)?;
-                                let public_key = russh::keys::PublicKey::from(match pkey.id() {
-                                    openssl::pkey::Id::RSA => {
-                                        let rsa = pkey.rsa()?;
-
-                                        russh::keys::ssh_key::public::KeyData::Rsa(
-                                            russh::keys::ssh_key::public::RsaPublicKey::new(
-                                                rsa.e().to_vec().as_slice().try_into()?,
-                                                rsa.n().to_vec().as_slice().try_into()?,
-                                            )?,
-                                        )
+                                let public_key = match convert_der_public_key(&base64_data) {
+                                    Ok(key) => key,
+                                    Err(err) => {
+                                        tracing::warn!(
+                                            user_id = user_id,
+                                            "failed to parse SSH public key for user: {:?}",
+                                            err
+                                        );
+                                        return Ok(());
                                     }
-                                    openssl::pkey::Id::ED25519 => {
-                                        let data = pkey.raw_public_key()?;
-
-                                        russh::keys::ssh_key::public::KeyData::Ed25519(
-                                            russh::keys::ssh_key::public::Ed25519PublicKey(
-                                                data.try_into().map_err(|_| {
-                                                    anyhow::anyhow!("invalid ed25519 public key length")
-                                                })?,
-                                            ),
-                                        )
-                                    }
-                                    _ => return Ok(()),
-                                });
+                                };
 
                                 sqlx::query(
                                     r#"

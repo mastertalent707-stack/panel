@@ -24,7 +24,7 @@ clap = { workspace = true }
 include_dir = { workspace = true }
 tower-cookies = { workspace = true }
 cron = { workspace = true }
-lettre = { version = "0.11.17", default-features = false, features = ["tokio1-native-tls", "builder", "pool", "smtp-transport", "sendmail-transport", "file-transport"] }
+lettre = { version = "0.11.17", default-features = false, features = ["tokio1-rustls-tls", "builder", "pool", "smtp-transport", "sendmail-transport", "file-transport"] }
 zip = { version = "8.0.0", default-features = false, features = ["deflate"] }
 toml = "1.0.1"
 serde = { workspace = true }

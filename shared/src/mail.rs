@@ -63,8 +63,7 @@ impl Mail {
                                 host.to_string(),
                             )
                             .dangerous_accept_invalid_certs(*skip_cert_validation)
-                            .build_native()
-                            .unwrap(),
+                            .build_rustls()?,
                         )
                     } else {
                         lettre::transport::smtp::client::Tls::None

@@ -1,9 +1,11 @@
+use aes::cipher::{BlockModeDecrypt, KeyIvInit, block_padding::Pkcs7};
 use anyhow::Context;
 use base64::Engine;
 use futures_util::StreamExt;
-use openssl::symm::Cipher;
+use rsa::{pkcs1::DecodeRsaPublicKey, traits::PublicKeyParts};
 use serde::Deserialize;
 use shared::extensions::commands::CliCommandGroupBuilder;
+use spki::der::Decode;
 use sqlx::Row;
 use sqlx::any::AnyPoolOptions;
 use std::{
@@ -293,15 +295,68 @@ fn decrypt_laravel_value(
 
     let payload: LaravelEncrypted = serde_json::from_slice(&decoded)?;
 
-    let iv = BASE64_ENGINE.decode(&payload.iv)?;
-    let value = BASE64_ENGINE.decode(&payload.value)?;
+    let decoded_iv = BASE64_ENGINE.decode(&payload.iv)?;
+    let mut value = BASE64_ENGINE.decode(&payload.value)?;
 
-    let key = &decoded_key[0..32];
-    let decrypted = openssl::symm::decrypt(Cipher::aes_256_cbc(), key, Some(&iv), &value)?;
+    let Ok(key) = <&[u8; 32]>::try_from(decoded_key) else {
+        return Err(anyhow::anyhow!(
+            "decoded key must be at least 32 bytes, got {}",
+            decoded_key.len()
+        ));
+    };
+    let Ok(iv) = <&[u8; 16]>::try_from(decoded_iv.as_slice()) else {
+        return Err(anyhow::anyhow!(
+            "IV must be 16 bytes for AES-256-CBC, got {}",
+            decoded_iv.len()
+        ));
+    };
+
+    let decrypted = cbc::Decryptor::<aes::Aes256>::new(key.into(), iv.into())
+        .decrypt_padded::<Pkcs7>(&mut value)
+        .map_err(|e| anyhow::anyhow!("AES-256-CBC decryption failed: {e}"))?;
 
     let result = compact_str::CompactString::from_utf8(decrypted)?;
 
     extract_php_serialized_string(&result)
+}
+
+const OID_RSA: spki::ObjectIdentifier = spki::ObjectIdentifier::new_unwrap("1.2.840.113549.1.1.1");
+const OID_ED25519: spki::ObjectIdentifier = spki::ObjectIdentifier::new_unwrap("1.3.101.112");
+
+fn convert_der_public_key(
+    der_data: &[u8],
+) -> Result<russh::keys::ssh_key::PublicKey, anyhow::Error> {
+    let spki = spki::SubjectPublicKeyInfoOwned::from_der(der_data)?;
+    let inner = spki
+        .subject_public_key
+        .as_bytes()
+        .ok_or_else(|| anyhow::anyhow!("SPKI bit string not byte-aligned"))?;
+
+    if spki.algorithm.oid == OID_RSA {
+        let rsa_pk = rsa::RsaPublicKey::from_pkcs1_der(inner)?;
+
+        Ok(russh::keys::ssh_key::public::KeyData::Rsa(
+            russh::keys::ssh_key::public::RsaPublicKey::new(
+                rsa_pk.e().to_bytes_be().as_slice().try_into()?,
+                rsa_pk.n().to_bytes_be().as_slice().try_into()?,
+            )?,
+        )
+        .into())
+    } else if spki.algorithm.oid == OID_ED25519 {
+        Ok(russh::keys::ssh_key::public::KeyData::Ed25519(
+            russh::keys::ssh_key::public::Ed25519PublicKey(
+                inner
+                    .try_into()
+                    .map_err(|_| anyhow::anyhow!("invalid ed25519 public key length"))?,
+            ),
+        )
+        .into())
+    } else {
+        Err(anyhow::anyhow!(
+            "unsupported public key algorithm with OID {}",
+            spki.algorithm.oid
+        ))
+    }
 }
 
 #[inline]

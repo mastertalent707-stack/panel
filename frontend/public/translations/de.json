@@ -1308,7 +1308,7 @@
                   },
                   "enableRegistration": {
                     "title": "Registrierungs-Aktivierung bestätigen",
-                    "content": "Bist du sicher, dass du die Registrierung aktivieren möchtest? Das Aktivieren der Registrierung erlaubt es jedem, ein Konto in diesem Panel zu erstellen. Wenn du kein Captcha konfiguriert hast, könnte dies ein Fehler sein.",
+                    "content": "Bist du sicher, dass du die Registrierung aktivieren möchtest? Das Aktivieren der Registrierung erlaubt es jedem, ein Konto in diesem Panel zu erstellen. Wenn du keine Captcha konfiguriert hast, könnte dies ein Fehler sein.",
                     "button": {
                       "confirm": "Aktivieren"
                     }
