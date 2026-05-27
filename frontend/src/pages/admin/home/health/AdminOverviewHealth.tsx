@@ -72,8 +72,8 @@ export default function AdminOverviewHealth() {
         setDebugModeState((prev) => prev && { ...prev, enabled });
         addToast(
           enabled
-            ? t('pages.admin.home.health.toast.debugEnabled', {})
-            : t('pages.admin.home.health.toast.debugDisabled', {}),
+            ? t('pages.admin.home.tabs.health.page.toast.debugEnabled', {})
+            : t('pages.admin.home.tabs.health.page.toast.debugDisabled', {}),
           'success',
         );
       })
@@ -95,7 +95,10 @@ export default function AdminOverviewHealth() {
   return (
     <>
       <div className='2xl:columns-2 gap-4 space-y-4'>
-        <TitleCard title={t('pages.admin.home.card.generalHealth', {})} icon={<FontAwesomeIcon icon={faInfoCircle} />}>
+        <TitleCard
+          title={t('pages.admin.home.tabs.health.page.card.generalHealth', {})}
+          icon={<FontAwesomeIcon icon={faInfoCircle} />}
+        >
           {!general ? (
             <Spinner.Centered />
           ) : (
@@ -103,12 +106,12 @@ export default function AdminOverviewHealth() {
               <div className='grid grid-cols-2 xl:grid-cols-4 gap-4'>
                 <Card className='flex col-span-2'>
                   <Title order={3}>
-                    {t('pages.admin.home.health.migrationsValue', {
+                    {t('pages.admin.home.tabs.health.page.migrationsValue', {
                       applied: general.migrations.applied,
                       total: general.migrations.total,
                     })}
                   </Title>
-                  {t('pages.admin.home.health.appliedMigrations', {
+                  {t('pages.admin.home.tabs.health.page.appliedMigrations', {
                     percent: ((general.migrations.applied / general.migrations.total) * 100).toFixed(2),
                   })}
                 </Card>
@@ -116,28 +119,28 @@ export default function AdminOverviewHealth() {
                   <Title order={3} c={avgNtpOffset > 100 ? 'yellow' : 'white'}>
                     {avgNtpOffset.toFixed(2)} ms
                   </Title>
-                  {t('pages.admin.home.health.avgNtpOffset', {})}
+                  {t('pages.admin.home.tabs.health.page.avgNtpOffset', {})}
                 </Card>
               </div>
             </>
           )}
         </TitleCard>
         <TitleCard
-          title={t('pages.admin.home.card.extensionMigrationHealth', {})}
+          title={t('pages.admin.home.tabs.health.page.card.extensionMigrationHealth', {})}
           icon={<FontAwesomeIcon icon={faPuzzlePiece} />}
         >
           {!general ? (
             <Spinner.Centered />
           ) : !Object.keys(general.migrations.extensions).length ? (
-            <>{t('pages.admin.home.health.noExtensions', {})}</>
+            <>{t('pages.admin.home.tabs.health.page.noExtensions', {})}</>
           ) : (
             <>
               {Object.keys(general.migrations.extensions).length > 0 && (
                 <Table
                   columns={[
-                    t('pages.admin.home.health.table.packageName', {}),
-                    t('pages.admin.home.health.table.applied', {}),
-                    t('pages.admin.home.health.table.total', {}),
+                    t('pages.admin.home.tabs.health.page.table.packageName', {}),
+                    t('pages.admin.home.tabs.health.page.table.applied', {}),
+                    t('pages.admin.home.tabs.health.page.table.total', {}),
                   ]}
                   loading={loading}
                 >
@@ -147,7 +150,7 @@ export default function AdminOverviewHealth() {
                         <Code>{identifier}</Code>
                       </TableData>
                       <TableData>
-                        {t('pages.admin.home.health.table.appliedValue', {
+                        {t('pages.admin.home.tabs.health.page.table.appliedValue', {
                           applied: migrations.applied,
                           percent: (migrations.total === 0
                             ? 100
@@ -164,7 +167,10 @@ export default function AdminOverviewHealth() {
           )}
         </TitleCard>
         <AdminCan action='settings.read'>
-          <TitleCard title={t('pages.admin.home.card.debugMode', {})} icon={<FontAwesomeIcon icon={faBug} />}>
+          <TitleCard
+            title={t('pages.admin.home.tabs.health.page.card.debugMode', {})}
+            icon={<FontAwesomeIcon icon={faBug} />}
+          >
             {!debugMode ? (
               <Spinner.Centered />
             ) : (
@@ -172,11 +178,11 @@ export default function AdminOverviewHealth() {
                 <span>
                   <FontAwesomeIcon icon={debugMode.enabled ? faExclamationTriangle : faCheck} />{' '}
                   {debugMode.enabled
-                    ? t('pages.admin.home.health.debugEnabled', {})
-                    : t('pages.admin.home.health.debugDisabled', {})}
+                    ? t('pages.admin.home.tabs.health.page.debugEnabled', {})
+                    : t('pages.admin.home.tabs.health.page.debugDisabled', {})}
                   <br />
                   <span className='text-sm text-gray-400'>
-                    {tReact('pages.admin.home.health.debugResetNote', {
+                    {tReact('pages.admin.home.tabs.health.page.debugResetNote', {
                       default: (
                         <Badge color={debugMode.default ? 'green' : 'red'} size='xs'>
                           {debugMode.default ? t('common.badge.enabled', {}) : t('common.badge.disabled', {})}
@@ -193,11 +199,11 @@ export default function AdminOverviewHealth() {
                       onClick={() => handleToggleDebug(false)}
                       className='min-w-fit'
                     >
-                      {t('pages.admin.home.health.button.disableDebug', {})}
+                      {t('pages.admin.home.tabs.health.page.button.disableDebug', {})}
                     </Button>
                   ) : (
                     <Button loading={debugLoading} onClick={() => handleToggleDebug(true)} className='min-w-fit'>
-                      {t('pages.admin.home.health.button.enableDebug', {})}
+                      {t('pages.admin.home.tabs.health.page.button.enableDebug', {})}
                     </Button>
                   )}
                 </AdminCan>
@@ -205,18 +211,21 @@ export default function AdminOverviewHealth() {
             )}
           </TitleCard>
         </AdminCan>
-        <TitleCard title={t('pages.admin.home.card.desyncNodes', {})} icon={<FontAwesomeIcon icon={faServer} />}>
+        <TitleCard
+          title={t('pages.admin.home.tabs.health.page.card.desyncNodes', {})}
+          icon={<FontAwesomeIcon icon={faServer} />}
+        >
           {loading || !nodes?.desyncNodes ? (
             <Spinner.Centered />
           ) : !nodes?.desyncNodes.total ? (
             <>
               <FontAwesomeIcon icon={faCheck} />{' '}
-              {t('pages.admin.home.health.nodesSynced', { failed: nodes?.failedNodes ?? 0 })}
+              {t('pages.admin.home.tabs.health.page.nodesSynced', { failed: nodes?.failedNodes ?? 0 })}
             </>
           ) : (
             <>
               <FontAwesomeIcon icon={faExclamationTriangle} />{' '}
-              {t('pages.admin.home.health.nodesDesync', {
+              {t('pages.admin.home.tabs.health.page.nodesDesync', {
                 desync: nodes?.desyncNodes.total ?? 0,
                 failed: nodes?.failedNodes ?? 0,
               })}
@@ -224,9 +233,9 @@ export default function AdminOverviewHealth() {
               <Table
                 columns={[
                   '',
-                  t('pages.admin.home.health.table.id', {}),
-                  t('pages.admin.home.health.table.desync', {}),
-                  ...nodeTableColumns.slice(2),
+                  t('pages.admin.home.tabs.health.page.table.id', {}),
+                  t('pages.admin.home.tabs.health.page.table.desync', {}),
+                  ...nodeTableColumns().slice(2),
                 ]}
                 loading={loading}
                 pagination={nodes.desyncNodes}

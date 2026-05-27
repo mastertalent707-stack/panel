@@ -265,7 +265,7 @@ export default function EmailTemplatesContainer() {
                     {...form.getInputProps('subject')}
                   />
                   <Switch
-                    label={t('pages.admin.settings.tabs.mailTemplates.page.form.enabled', {})}
+                    label={t('common.form.enabled', {})}
                     mt='xl'
                     key={form.key('enabled')}
                     {...form.getInputProps('enabled', { type: 'checkbox' })}

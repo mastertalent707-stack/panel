@@ -99,7 +99,7 @@ function NodesContainer() {
     deps: [nodes?.data],
   });
 
-  const columns = ['', ...nodeTableColumns];
+  const columns = ['', ...nodeTableColumns()];
 
   return (
     <>

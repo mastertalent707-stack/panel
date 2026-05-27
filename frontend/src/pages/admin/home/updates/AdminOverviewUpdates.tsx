@@ -86,13 +86,13 @@ export default function AdminOverviewUpdates() {
       .then((updateInformation) => {
         setUpdateInformation(updateInformation);
         refetch();
-        addToast(t('pages.admin.home.updates.toast.recheckComplete', {}), 'success');
+        addToast(t('pages.admin.home.tabs.updates.page.toast.recheckComplete', {}), 'success');
       })
       .catch((msg) => addToast(httpErrorToHuman(msg), 'error'))
       .finally(() => setRecheckLoading(false));
   };
 
-  const unknownLabel = t('pages.admin.home.updates.unknown', {});
+  const unknownLabel = t('pages.admin.home.tabs.updates.page.unknown', {});
 
   return (
     <>
@@ -108,7 +108,10 @@ export default function AdminOverviewUpdates() {
         )}
 
       <div className='2xl:columns-2 gap-4 space-y-4'>
-        <TitleCard title={t('pages.admin.home.card.panelVersion', {})} icon={<FontAwesomeIcon icon={faInfoCircle} />}>
+        <TitleCard
+          title={t('pages.admin.home.tabs.updates.page.card.panelVersion', {})}
+          icon={<FontAwesomeIcon icon={faInfoCircle} />}
+        >
           <div className='flex flex-row justify-between'>
             <span>
               <FontAwesomeIcon
@@ -119,7 +122,7 @@ export default function AdminOverviewUpdates() {
                     : faCheck
                 }
               />{' '}
-              {t('pages.admin.home.updates.panelVersion', {
+              {t('pages.admin.home.tabs.updates.page.panelVersion', {
                 current: updateInformation?.panelVersion || unknownLabel,
                 latest: updateInformation?.latestPanelVersion || unknownLabel,
               }).md()}
@@ -131,23 +134,23 @@ export default function AdminOverviewUpdates() {
               loading={recheckLoading}
               className='min-w-fit'
             >
-              {t('pages.admin.home.updates.button.recheck', {})}
+              {t('pages.admin.home.tabs.updates.page.button.recheck', {})}
             </Button>
           </div>
         </TitleCard>
         <TitleCard
-          title={t('pages.admin.home.card.versionHistory', {})}
+          title={t('pages.admin.home.tabs.updates.page.card.versionHistory', {})}
           icon={<FontAwesomeIcon icon={faClockRotateLeft} />}
           rightSection={
             <Select
-              placeholder={t('pages.admin.home.updates.selectHistory', {})}
+              placeholder={t('pages.admin.home.tabs.updates.page.selectHistory', {})}
               value={selectedUpdateHistory || ''}
               onChange={(value) => setSelectedUpdateHistory(value || null)}
               data={[
-                { label: t('pages.admin.home.updates.historyPanel', {}), value: '' },
+                { label: t('pages.admin.home.tabs.updates.page.historyPanel', {}), value: '' },
                 ...(updateHistory
                   ? Object.keys(updateHistory.extensions).map((ext) => ({
-                      label: t('pages.admin.home.updates.historyExtension', { name: ext }),
+                      label: t('pages.admin.home.tabs.updates.page.historyExtension', { name: ext }),
                       value: ext,
                     }))
                   : []),
@@ -164,8 +167,8 @@ export default function AdminOverviewUpdates() {
             <>
               <Table
                 columns={[
-                  t('pages.admin.home.updates.table.version', {}),
-                  t('pages.admin.home.updates.table.installed', {}),
+                  t('pages.admin.home.tabs.updates.page.table.version', {}),
+                  t('pages.admin.home.tabs.updates.page.table.installed', {}),
                 ]}
               >
                 {(!selectedUpdateHistory
@@ -186,27 +189,28 @@ export default function AdminOverviewUpdates() {
           )}
         </TitleCard>
         <TitleCard
-          title={t('pages.admin.home.card.outdatedExtensions', {})}
+          title={t('pages.admin.home.tabs.updates.page.card.outdatedExtensions', {})}
           icon={<FontAwesomeIcon icon={faPuzzlePiece} />}
         >
           {!updateInformation ? (
             <Spinner.Centered />
           ) : !extensionUpdates.length && !extensionUpdateErrors.length ? (
             <>
-              <FontAwesomeIcon icon={faCheck} /> {t('pages.admin.home.updates.extensionsUpToDate', {})}
+              <FontAwesomeIcon icon={faCheck} /> {t('pages.admin.home.tabs.updates.page.extensionsUpToDate', {})}
             </>
           ) : (
             <>
-              <FontAwesomeIcon icon={faExclamationTriangle} /> {t('pages.admin.home.updates.extensionsOutdated', {})}
+              <FontAwesomeIcon icon={faExclamationTriangle} />{' '}
+              {t('pages.admin.home.tabs.updates.page.extensionsOutdated', {})}
               {extensionUpdates.length > 0 && (
                 <>
                   <div className='mt-4' />
                   <Table
                     columns={[
-                      t('pages.admin.home.updates.table.packageName', {}),
-                      t('pages.admin.home.updates.table.version', {}),
-                      t('pages.admin.home.updates.table.latestVersion', {}),
-                      t('pages.admin.home.updates.table.changes', {}),
+                      t('pages.admin.home.tabs.updates.page.table.packageName', {}),
+                      t('pages.admin.home.tabs.updates.page.table.version', {}),
+                      t('pages.admin.home.tabs.updates.page.table.latestVersion', {}),
+                      t('pages.admin.home.tabs.updates.page.table.changes', {}),
                     ]}
                     loading={loading}
                   >
@@ -227,7 +231,9 @@ export default function AdminOverviewUpdates() {
                               <li key={index}>{change}</li>
                             ))}
                           </ul>
-                          {!update.changes.length && <span>{t('pages.admin.home.updates.noChangelog', {})}</span>}
+                          {!update.changes.length && (
+                            <span>{t('pages.admin.home.tabs.updates.page.noChangelog', {})}</span>
+                          )}
                         </TableData>
                       </TableRow>
                     ))}
@@ -238,13 +244,13 @@ export default function AdminOverviewUpdates() {
                 <>
                   <Alert className='my-4' color='red'>
                     <FontAwesomeIcon icon={faExclamationTriangle} />{' '}
-                    {t('pages.admin.home.alert.extensionUpdateErrors', {})}
+                    {t('pages.admin.home.tabs.updates.page.alert.extensionUpdateErrors', {})}
                   </Alert>
 
                   <Table
                     columns={[
-                      t('pages.admin.home.updates.table.packageName', {}),
-                      t('pages.admin.home.updates.table.error', {}),
+                      t('pages.admin.home.tabs.updates.page.table.packageName', {}),
+                      t('pages.admin.home.tabs.updates.page.table.error', {}),
                     ]}
                     loading={loading}
                   >
@@ -264,25 +270,28 @@ export default function AdminOverviewUpdates() {
             </>
           )}
         </TitleCard>
-        <TitleCard title={t('pages.admin.home.card.outdatedNodes', {})} icon={<FontAwesomeIcon icon={faServer} />}>
+        <TitleCard
+          title={t('pages.admin.home.tabs.updates.page.card.outdatedNodes', {})}
+          icon={<FontAwesomeIcon icon={faServer} />}
+        >
           {loading || !nodes?.outdatedNodes ? (
             <Spinner.Centered />
           ) : !nodes?.outdatedNodes.total ? (
             <>
               <FontAwesomeIcon icon={faCheck} />{' '}
-              {t('pages.admin.home.updates.nodesUpToDate', { failed: nodes?.failedNodes ?? 0 })}
+              {t('pages.admin.home.tabs.updates.page.nodesUpToDate', { failed: nodes?.failedNodes ?? 0 })}
             </>
           ) : (
             <>
               <FontAwesomeIcon icon={faExclamationTriangle} />{' '}
-              {t('pages.admin.home.updates.nodesOutdated', {
+              {t('pages.admin.home.tabs.updates.page.nodesOutdated', {
                 latest: updateInformation?.latestWingsVersion || unknownLabel,
                 outdated: nodes?.outdatedNodes.total ?? 0,
                 failed: nodes?.failedNodes ?? 0,
               }).md()}
               <div className='mt-4' />
               <Table
-                columns={nodeTableColumns}
+                columns={nodeTableColumns()}
                 loading={loading}
                 pagination={nodes.outdatedNodes}
                 onPageSelect={setPage}

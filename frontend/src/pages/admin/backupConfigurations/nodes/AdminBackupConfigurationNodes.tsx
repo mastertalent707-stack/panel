@@ -26,7 +26,12 @@ export default function AdminBackupConfigurationNodes({
 
   return (
     <AdminSubContentContainer title={`Backup Config Nodes`} titleOrder={2} search={search} setSearch={setSearch}>
-      <Table columns={nodeTableColumns} loading={loading} pagination={backupConfigurationNodes} onPageSelect={setPage}>
+      <Table
+        columns={nodeTableColumns()}
+        loading={loading}
+        pagination={backupConfigurationNodes}
+        onPageSelect={setPage}
+      >
         {backupConfigurationNodes?.data.map((node) => (
           <NodeRow key={node.uuid} node={node} />
         ))}

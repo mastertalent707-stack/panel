@@ -267,7 +267,7 @@ export default function AnnouncementCreateOrUpdate({
           />
 
           <Switch
-            label={t('pages.admin.announcements.form.enabled', {})}
+            label={t('common.form.enabled', {})}
             key={form.key('enabled')}
             {...form.getInputProps('enabled', { type: 'checkbox' })}
           />

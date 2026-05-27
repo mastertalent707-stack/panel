@@ -88,6 +88,11 @@ const baseTranslations = defineTranslations({
         region: 'Region',
         endpoint: 'Endpoint',
         publicUrl: 'Public URL',
+        firstName: 'First Name',
+        lastName: 'Last Name',
+        language: 'Language',
+        identifier: 'Identifier',
+        enabled: 'Enabled',
         truncateDirectory:
           'Do you want to delete all files of this server before performing this action? This cannot be undone.',
       },
@@ -112,7 +117,11 @@ const baseTranslations = defineTranslations({
           ip: 'IP',
           when: 'When',
           command: 'Command',
+          location: 'Location',
         },
+      },
+      tabs: {
+        general: 'General',
       },
       badge: {
         active: 'Active',
@@ -1068,7 +1077,6 @@ const baseTranslations = defineTranslations({
           table: {
             columns: {
               providerName: 'Provider Name',
-              identifier: 'Identifier',
             },
           },
           modal: {
@@ -1141,137 +1149,151 @@ const baseTranslations = defineTranslations({
       admin: {
         home: {
           title: 'Home',
-          tabs: {
-            overview: 'Overview',
-            updates: 'Updates',
-            health: 'Health',
-          },
           alert: {
             newPanelVersion:
               'A new version is available for the panel! You are currently on {current} and the latest version is {latest}. You may want to consider upgrading. [Click here]({upgradeUrl}) to view upgrade instructions.',
-            extensionUpdateErrors: 'There were errors checking for updates for some extensions.',
           },
-          permissionDenied:
-            'You do not have permission to read the statistics that would have been here otherwise. For now, enjoy this bird',
-          card: {
-            systemOverview: 'System Overview',
-            generalStatistics: 'General Statistics',
-            backupStatistics: 'Backup Statistics',
-            panelVersion: 'Panel Version',
-            versionHistory: 'Version History',
-            outdatedExtensions: 'Outdated Extensions',
-            outdatedNodes: 'Outdated Nodes',
-            generalHealth: 'General Health',
-            extensionMigrationHealth: 'Extension Migration Health',
-            desyncNodes: 'Desync Nodes',
-            debugMode: 'Debug Mode',
-          },
-          system: {
-            cpu: 'CPU',
-            memoryUsage: 'Memory Usage ({process} used by Panel)',
-            memoryValue: '{used} / {total} ({percent}%)',
-            kernelVersion: 'Kernel Version ({architecture})',
-            containerType: 'Container Type',
-            databaseVersion: 'Database Version ({size})',
-            cacheVersion: 'Cache Version',
-            cacheCalls: 'Cache Calls',
-            cacheHits: 'Cache Hits ({percent}%)',
-            cacheMisses: 'Cache Misses ({percent}%)',
-            avgCachedCallLatency: 'Avg. Cached Call Latency',
-          },
-          containerType: {
-            unknown: 'Unknown',
-            none: 'None detected',
-            official: 'Official',
-            officialAio: 'Official AIO',
-            officialHeavy: 'Official Heavy',
-          },
-          stats: {
-            users: 'Users',
-            servers: 'Servers',
-            locations: 'Locations',
-            nodes: 'Nodes',
-            nestEggs: 'Nest Eggs',
-            databaseHosts: 'Database Hosts',
-            backupConfigurations: 'Backup Configurations',
-            roles: 'Roles',
-          },
-          backup: {
-            allTime: 'All Time',
-            today: 'Today',
-            week: 'This Week',
-            month: 'This Month',
-            totalAllTime: 'Total backups all time',
-            successfulAllTime: 'Successful backups all time',
-            failedAllTime: 'Failed backups all time',
-            deletedAllTime: 'Deleted backups all time',
-            totalToday: 'Total backups today',
-            successfulToday: 'Successful backups today',
-            failedToday: 'Failed backups today',
-            deletedToday: 'Deleted backups today',
-            totalWeek: 'Total backups this week',
-            successfulWeek: 'Successful backups this week',
-            failedWeek: 'Failed backups this week',
-            deletedWeek: 'Deleted backups this week',
-            totalMonth: 'Total backups this month',
-            successfulMonth: 'Successful backups this month',
-            failedMonth: 'Failed backups this month',
-            deletedMonth: 'Deleted backups this month',
-            successfulValue: '{count} ({size})',
-            deletedValue: '{count} ({size})',
-          },
-          updates: {
-            panelVersion:
-              'Your panel is currently running version `{current}`. The latest available version is `{latest}`.',
-            unknown: 'unknown',
-            button: { recheck: 'Recheck for Updates' },
-            toast: { recheckComplete: 'Recheck complete' },
-            selectHistory: 'Select an update history to view',
-            historyPanel: 'Panel',
-            historyExtension: 'Extension: {name}',
-            extensionsUpToDate: 'All extensions are up to date.',
-            extensionsOutdated: 'Some extensions are outdated or had errors when checking for updates.',
-            noChangelog: 'No changelog',
-            nodesUpToDate: 'Seems like all nodes are up to date. ({failed} failed to check)',
-            nodesOutdated:
-              'Some nodes are outdated, the latest available version is `{latest}`. ({outdated} outdated, {failed} failed to check)',
-            table: {
-              version: 'Version',
-              installed: 'Installed',
-              packageName: 'Package Name',
-              latestVersion: 'Latest Version',
-              changes: 'Changes',
-              error: 'Error',
+          tabs: {
+            overview: {
+              title: 'Overview',
+              page: {
+                permissionDenied:
+                  'You do not have permission to read the statistics that would have been here otherwise. For now, enjoy this bird',
+                card: {
+                  systemOverview: 'System Overview',
+                  generalStatistics: 'General Statistics',
+                  backupStatistics: 'Backup Statistics',
+                },
+                system: {
+                  cpu: 'CPU',
+                  memoryUsage: 'Memory Usage ({process} used by Panel)',
+                  memoryValue: '{used} / {total} ({percent}%)',
+                  kernelVersion: 'Kernel Version ({architecture})',
+                  containerType: 'Container Type',
+                  databaseVersion: 'Database Version ({size})',
+                  cacheVersion: 'Cache Version',
+                  cacheCalls: 'Cache Calls',
+                  cacheHits: 'Cache Hits ({percent}%)',
+                  cacheMisses: 'Cache Misses ({percent}%)',
+                  avgCachedCallLatency: 'Avg. Cached Call Latency',
+                },
+                containerType: {
+                  unknown: 'Unknown',
+                  none: 'None detected',
+                  official: 'Official',
+                  officialAio: 'Official AIO',
+                  officialHeavy: 'Official Heavy',
+                },
+                stats: {
+                  users: 'Users',
+                  servers: 'Servers',
+                  locations: 'Locations',
+                  nodes: 'Nodes',
+                  nestEggs: 'Nest Eggs',
+                  databaseHosts: 'Database Hosts',
+                  backupConfigurations: 'Backup Configurations',
+                  roles: 'Roles',
+                },
+                backup: {
+                  allTime: 'All Time',
+                  today: 'Today',
+                  week: 'This Week',
+                  month: 'This Month',
+                  totalAllTime: 'Total backups all time',
+                  successfulAllTime: 'Successful backups all time',
+                  failedAllTime: 'Failed backups all time',
+                  deletedAllTime: 'Deleted backups all time',
+                  totalToday: 'Total backups today',
+                  successfulToday: 'Successful backups today',
+                  failedToday: 'Failed backups today',
+                  deletedToday: 'Deleted backups today',
+                  totalWeek: 'Total backups this week',
+                  successfulWeek: 'Successful backups this week',
+                  failedWeek: 'Failed backups this week',
+                  deletedWeek: 'Deleted backups this week',
+                  totalMonth: 'Total backups this month',
+                  successfulMonth: 'Successful backups this month',
+                  failedMonth: 'Failed backups this month',
+                  deletedMonth: 'Deleted backups this month',
+                  successfulValue: '{count} ({size})',
+                  deletedValue: '{count} ({size})',
+                },
+              },
             },
-          },
-          health: {
-            appliedMigrations: 'Applied Migrations ({percent}%)',
-            migrationsValue: '{applied} / {total}',
-            avgNtpOffset: 'Avg. NTP Offset',
-            noExtensions: 'No extensions found.',
-            nodesSynced:
-              'Seems like all nodes have a synced clock (within 5 seconds of panel clock). ({failed} failed to check)',
-            nodesDesync:
-              "Some nodes have desync clocks (over 5 seconds off of the panel's clock). This can cause file download/console issues. ({desync} desync, {failed} failed to check)",
-            debugEnabled: 'Debug mode is currently enabled.',
-            debugDisabled: 'Debug mode is currently disabled.',
-            debugResetNote: 'This setting will be reset to the default ({default}) when the application restarts.',
+            updates: {
+              title: 'Updates',
+              page: {
+                alert: {
+                  extensionUpdateErrors: 'There were errors checking for updates for some extensions.',
+                },
+                card: {
+                  panelVersion: 'Panel Version',
+                  versionHistory: 'Version History',
+                  outdatedExtensions: 'Outdated Extensions',
+                  outdatedNodes: 'Outdated Nodes',
+                },
+                panelVersion:
+                  'Your panel is currently running version `{current}`. The latest available version is `{latest}`.',
+                unknown: 'unknown',
+                button: { recheck: 'Recheck for Updates' },
+                toast: { recheckComplete: 'Recheck complete.' },
+                selectHistory: 'Select an update history to view',
+                historyPanel: 'Panel',
+                historyExtension: 'Extension: {name}',
+                extensionsUpToDate: 'All extensions are up to date.',
+                extensionsOutdated: 'Some extensions are outdated or had errors when checking for updates.',
+                noChangelog: 'No changelog',
+                nodesUpToDate: 'Seems like all nodes are up to date. ({failed} failed to check)',
+                nodesOutdated:
+                  'Some nodes are outdated, the latest available version is `{latest}`. ({outdated} outdated, {failed} failed to check)',
+                table: {
+                  version: 'Version',
+                  installed: 'Installed',
+                  packageName: 'Package Name',
+                  latestVersion: 'Latest Version',
+                  changes: 'Changes',
+                  error: 'Error',
+                },
+              },
+            },
+            health: {
+              title: 'Health',
+              page: {
+                card: {
+                  generalHealth: 'General Health',
+                  extensionMigrationHealth: 'Extension Migration Health',
+                  desyncNodes: 'Desync Nodes',
+                  debugMode: 'Debug Mode',
+                },
+                appliedMigrations: 'Applied Migrations ({percent}%)',
+                migrationsValue: '{applied} / {total}',
+                avgNtpOffset: 'Avg. NTP Offset',
+                noExtensions: 'No extensions found.',
+                nodesSynced:
+                  'Seems like all nodes have a synced clock (within 5 seconds of panel clock). ({failed} failed to check)',
+                nodesDesync:
+                  "Some nodes have desync clocks (over 5 seconds off of the panel's clock). This can cause file download/console issues. ({desync} desync, {failed} failed to check)",
+                debugEnabled: 'Debug mode is currently enabled.',
+                debugDisabled: 'Debug mode is currently disabled.',
+                debugResetNote: 'This setting will be reset to the default ({default}) when the application restarts.',
 
-            table: {
-              packageName: 'Package Name',
-              applied: 'Applied',
-              total: 'Total',
-              id: 'ID',
-              desync: 'Desync',
-              appliedValue: '{applied} ({percent}%)',
-            },
-            button: {
-              enableDebug: 'Enable Debug Mode',
-              disableDebug: 'Disable Debug Mode',
-            },
-            toast: {
-              debugEnabled: 'Debug mode enabled.',
-              debugDisabled: 'Debug mode disabled.',
+                table: {
+                  packageName: 'Package Name',
+                  applied: 'Applied',
+                  total: 'Total',
+                  id: 'ID',
+                  desync: 'Desync',
+                  appliedValue: '{applied} ({percent}%)',
+                },
+                button: {
+                  enableDebug: 'Enable Debug Mode',
+                  disableDebug: 'Disable Debug Mode',
+                },
+                toast: {
+                  debugEnabled: 'Debug mode enabled.',
+                  debugDisabled: 'Debug mode disabled.',
+                },
+              },
             },
           },
         },
@@ -1424,7 +1446,6 @@ const baseTranslations = defineTranslations({
                 loadingTemplate: 'Loading template...',
                 form: {
                   subject: 'Subject',
-                  enabled: 'Enabled',
                 },
                 button: {
                   resetToDefault: 'Reset to default',
@@ -1470,7 +1491,7 @@ const baseTranslations = defineTranslations({
                 },
                 toast: {
                   updated: 'Webauthn settings updated.',
-                  ipNotAllowed: 'Cannot use Webauthn on an IP Address',
+                  ipNotAllowed: 'Cannot use WebAuthn on an IP address.',
                 },
                 modal: {
                   changeRpId: {
@@ -1572,9 +1593,6 @@ const baseTranslations = defineTranslations({
         announcements: {
           title: 'Announcements',
           resourceName: 'Announcement',
-          tabs: {
-            general: 'General',
-          },
           modal: {
             delete: {
               title: 'Confirm Announcement Deletion',
@@ -1596,7 +1614,6 @@ const baseTranslations = defineTranslations({
             backupConfigurationsDescription: 'Leave empty to apply to all backup configurations.',
             eggs: 'Eggs',
             eggsPlaceholder: 'Select Eggs',
-            enabled: 'Enabled',
             dismissible: 'Dismissible',
           },
           enum: {
@@ -1653,9 +1670,167 @@ const baseTranslations = defineTranslations({
         },
         extensions: {
           title: 'Extensions',
+          unknownExtension: 'Unknown Extension',
+          unknown: 'Unknown',
+          alert: {
+            noExtensions: 'No extensions installed.',
+            heavyImageMissing:
+              "You don't seem to be using the heavy image required to install extensions, see [here]({docsUrl}) on how to switch to it.",
+          },
+          button: {
+            viewBuildLogs: 'View build logs',
+            install: 'Install extension',
+            rebuild: 'Rebuild extensions',
+            configure: 'Configure',
+            back: 'Back to Extensions',
+            accept: 'Accept',
+            decline: 'Decline',
+          },
+          tooltip: {
+            building: 'The panel is currently building extension code. Please wait.',
+            noPendingBuild: 'No pending extensions to build.',
+            noBackend: 'Backend extension is required to configure this extension.',
+            noConfigurationPage: 'This extension does not have a configuration page defined.',
+            removeExtension: 'Remove extension',
+          },
+          badge: {
+            frontendMissing: 'Frontend missing',
+            backendMissing: 'Backend missing',
+            pendingBuild: 'Pending build',
+            pendingRemoval: 'Pending removal',
+          },
+          card: {
+            version: 'Version',
+            authors: 'Authors',
+          },
+          section: {
+            pendingExtensions: 'Pending extensions',
+            noPendingExtensions: 'No pending extensions.',
+          },
+          dropzone: {
+            title: 'Drop some files here to install as Extensions',
+            subtitle: 'Release to start installing',
+          },
+          toast: {
+            buildStarted: 'Extension rebuild started successfully.',
+            buildCompleted: 'Extension build completed. You may need to refresh the page.',
+            added: 'Extension `{packageName}` added successfully.',
+            removed: 'Extension `{packageName}` removed successfully.',
+          },
+          notFound: {
+            title: 'Extension Not Found',
+            content: 'Extension with package name "{packageName}" not found.',
+          },
+          configure: {
+            title: 'Configure {packageName}',
+            noConfigurationPage: 'This extension does not have a configuration page.',
+          },
+          modal: {
+            buildLogs: {
+              title: 'Build Logs',
+              empty: 'No logs found.',
+            },
+            license: {
+              title: 'License agreement',
+              description:
+                'The extension `{packageName}` requires you to accept the following license before it can be installed.',
+            },
+            remove: {
+              title: 'Remove extension',
+              content: 'Are you sure you want to remove the extension `{packageName}`? This action cannot be undone.',
+              form: {
+                removeMigrations: 'Do you want to remove & rollback the database migrations of this extension?',
+              },
+            },
+          },
         },
         users: {
           title: 'Users',
+          resourceName: 'User',
+          tooltip: {
+            admin: 'Admin',
+            twoFactorEnabled: '2FA Enabled',
+            twoFactorDisabled: '2FA Disabled',
+            cannotImpersonateSelf: 'You cannot impersonate yourself.',
+          },
+          tabs: {
+            servers: 'Servers',
+            oauthLinks: 'OAuth Links',
+            activity: 'Activity',
+          },
+          button: {
+            disableTwoFactor: 'Disable Two Factor',
+            sendPasswordResetEmail: 'Send Password Reset Email',
+            impersonate: 'Impersonate',
+          },
+          form: {
+            admin: 'Admin',
+            role: 'Role',
+            externalId: 'External ID',
+          },
+          table: {
+            columns: {
+              role: 'Role',
+            },
+          },
+          modal: {
+            delete: {
+              title: 'Confirm User Deletion',
+              content: 'Are you sure you want to delete **{username}**?',
+            },
+            disableTwoFactor: {
+              title: 'Disable User Two Factor',
+              content: 'Are you sure you want to remove the two factor of **{username}**?',
+              button: {
+                confirm: 'Disable',
+              },
+              toast: {
+                disabled: 'User two factor disabled.',
+              },
+            },
+            sendPasswordResetEmail: {
+              title: 'Send Password Reset Email',
+              content: 'Are you sure you want to send a password reset email to **{email}**?',
+              button: {
+                confirm: 'Send',
+              },
+              toast: {
+                sent: 'Password reset email sent.',
+              },
+            },
+          },
+          create: {
+            title: 'Create User',
+          },
+          update: {
+            title: 'Update User',
+          },
+          activity: {
+            title: 'User Activity',
+          },
+          servers: {
+            title: 'User Servers',
+            showOwnedOnly: "Only show users' owned servers",
+          },
+          oauthLinks: {
+            title: 'User OAuth Links',
+            toast: {
+              added: 'OAuth Link added.',
+              removed: 'OAuth Link removed.',
+            },
+            modal: {
+              add: {
+                title: 'Add OAuth Link',
+                form: {
+                  oauthProvider: 'OAuth Provider',
+                },
+              },
+              delete: {
+                title: 'Confirm OAuth Link Deletion',
+                content: 'Are you sure you want to delete the **{provider}** connection from **{username}**?',
+              },
+            },
+          },
         },
         locations: {
           title: 'Locations',

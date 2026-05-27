@@ -25,7 +25,7 @@ export default function AnnouncementView() {
         baseUrl={`/admin/announcements/${params.id}`}
         items={[
           {
-            name: t('pages.admin.announcements.tabs.general', {}),
+            name: t('common.tabs.general', {}),
             icon: faCog,
             path: '/',
             element: <AnnouncementCreateOrUpdate contextAnnouncement={announcement} />,

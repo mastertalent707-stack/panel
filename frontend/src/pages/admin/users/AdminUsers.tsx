@@ -10,12 +10,14 @@ import { queryKeys } from '@/lib/queryKeys.ts';
 import { userTableColumns } from '@/lib/tableColumns.ts';
 import UserView from '@/pages/admin/users/UserView.tsx';
 import { useSearchablePaginatedTable } from '@/plugins/useSearchablePageableTable.ts';
+import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import AdminPermissionGuard from '@/routers/guards/AdminPermissionGuard.tsx';
 import UserCreateOrUpdate from './UserCreateOrUpdate.tsx';
 import UserRow from './UserRow.tsx';
 
 function UsersContainer() {
   const navigate = useNavigate();
+  const { t } = useTranslations();
 
   const {
     data: users,
@@ -30,7 +32,7 @@ function UsersContainer() {
 
   return (
     <AdminContentContainer
-      title='Users'
+      title={t('pages.admin.users.title', {})}
       search={search}
       setSearch={setSearch}
       contentRight={
@@ -40,12 +42,12 @@ function UsersContainer() {
             color='blue'
             leftSection={<FontAwesomeIcon icon={faPlus} />}
           >
-            Create
+            {t('common.button.create', {})}
           </Button>
         </AdminCan>
       }
     >
-      <Table columns={userTableColumns} loading={loading} pagination={users} onPageSelect={setPage}>
+      <Table columns={userTableColumns()} loading={loading} pagination={users} onPageSelect={setPage}>
         {users?.data.map((user) => (
           <UserRow key={user.uuid} user={user} />
         ))}

@@ -26,16 +26,27 @@ export default function AdminUserActivity({ user }: { user: z.infer<typeof fullU
   });
 
   return (
-    <AdminSubContentContainer title='User Activity' titleOrder={2} search={search} setSearch={setSearch}>
+    <AdminSubContentContainer
+      title={t('pages.admin.users.activity.title', {})}
+      titleOrder={2}
+      search={search}
+      setSearch={setSearch}
+    >
       <Table
-        columns={['Actor', 'Event', 'IP', 'When', '']}
+        columns={[
+          t('common.table.columns.actor', {}),
+          t('common.table.columns.event', {}),
+          t('common.table.columns.ip', {}),
+          t('common.table.columns.when', {}),
+          '',
+        ]}
         loading={loading}
         pagination={userActivity}
         onPageSelect={setPage}
       >
         {userActivity?.data.map((activity) => (
           <TableRow key={activity.created.toString()}>
-            <TableData>{activity.isApi ? 'API' : 'Web'}</TableData>
+            <TableData>{activity.isApi ? t('common.api', {}) : t('common.web', {})}</TableData>
 
             <TableData>
               <Code>{activity.event}</Code>

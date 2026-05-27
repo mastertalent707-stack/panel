@@ -22,7 +22,7 @@ export default function AdminLocationNodes({ location }: { location: z.infer<typ
 
   return (
     <AdminSubContentContainer title='Location Nodes' titleOrder={2} search={search} setSearch={setSearch}>
-      <Table columns={nodeTableColumns} loading={loading} pagination={locationNodes} onPageSelect={setPage}>
+      <Table columns={nodeTableColumns()} loading={loading} pagination={locationNodes} onPageSelect={setPage}>
         {locationNodes?.data.map((node) => (
           <NodeRow key={node.uuid} node={node} />
         ))}

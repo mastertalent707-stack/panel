@@ -120,7 +120,12 @@
         "bucket": "Bucket",
         "region": "Region",
         "endpoint": "Endpunkt",
-        "publicUrl": "Öffentliche URL"
+        "publicUrl": "Öffentliche URL",
+        "firstName": "Vorname",
+        "lastName": "Nachname",
+        "language": "Sprache",
+        "identifier": "Kennung",
+        "enabled": "Aktiviert"
       },
       "table": {
         "pagination": {
@@ -142,7 +147,8 @@
           "id": "ID",
           "type": "Typ",
           "title": "Titel",
-          "enabled": "Aktiviert"
+          "enabled": "Aktiviert",
+          "location": "Standort"
         }
       },
       "badge": {
@@ -230,7 +236,10 @@
       "custom": "Benutzerdefiniert",
       "system": "System",
       "schedule": "Zeitplan",
-      "impersonatedBy": "Impersoniert von {username}"
+      "impersonatedBy": "Impersoniert von {username}",
+      "tabs": {
+        "general": "Allgemein"
+      }
     },
     "elements": {
       "errorBoundary": {
@@ -1082,8 +1091,7 @@
           },
           "table": {
             "columns": {
-              "providerName": "Anbieter Name",
-              "identifier": "Kennung (Identifier)"
+              "providerName": "Anbieter Name"
             }
           },
           "modal": {
@@ -1155,134 +1163,148 @@
       "admin": {
         "home": {
           "title": "Startseite",
-          "tabs": {
-            "overview": "Übersicht",
-            "updates": "Updates",
-            "health": "Systemzustand"
-          },
           "alert": {
-            "newPanelVersion": "Eine neue Version für das Panel ist verfügbar! Du nutzt aktuell {current} und die neueste Version ist {latest}. Du solltest ein Upgrade in Betracht ziehen. [Klicke hier]({upgradeUrl}), um die Upgrade-Anweisungen anzuzeigen.",
-            "extensionUpdateErrors": "Beim Überprüfen auf Updates für einige Erweiterungen sind Fehler aufgetreten."
+            "newPanelVersion": "Eine neue Version für das Panel ist verfügbar! Du nutzt aktuell {current} und die neueste Version ist {latest}. Du solltest ein Upgrade in Betracht ziehen. [Klicke hier]({upgradeUrl}), um die Upgrade-Anweisungen anzuzeigen."
           },
-          "permissionDenied": "Du hast keine Berechtigung, die Statistiken zu lesen, die andernfalls hier wären. Genieße stattdessen diesen Vogel",
-          "card": {
-            "systemOverview": "Systemübersicht",
-            "generalStatistics": "Allgemeine Statistiken",
-            "backupStatistics": "Backup-Statistiken",
-            "panelVersion": "Panel-Version",
-            "versionHistory": "Versionsverlauf",
-            "outdatedExtensions": "Veraltete Erweiterungen",
-            "outdatedNodes": "Veraltete Nodes",
-            "generalHealth": "Allgemeiner Zustand",
-            "extensionMigrationHealth": "Erweiterungsmigrations-Zustand",
-            "desyncNodes": "Asynchrone Nodes",
-            "debugMode": "Debug-Modus"
-          },
-          "system": {
-            "cpu": "CPU",
-            "memoryUsage": "Arbeitsspeichernutzung ({process} vom Panel verwendet)",
-            "memoryValue": "{used} / {total} ({percent}%)",
-            "kernelVersion": "Kernel-Version ({architecture})",
-            "containerType": "Container-Typ",
-            "databaseVersion": "Datenbank-Version ({size})",
-            "cacheVersion": "Cache-Version",
-            "cacheCalls": "Cache-Aufrufe",
-            "cacheHits": "Cache-Treffer ({percent}%)",
-            "cacheMisses": "Cache-Fehlversuche ({percent}%)",
-            "avgCachedCallLatency": "Durchschnittliche Cache-Aufruflatenz"
-          },
-          "containerType": {
-            "unknown": "Unbekannt",
-            "none": "Keine erkannt",
-            "official": "Offiziell",
-            "officialAio": "Offiziell (AIO)",
-            "officialHeavy": "Offiziell (Heavy)"
-          },
-          "stats": {
-            "users": "Benutzer",
-            "servers": "Server",
-            "locations": "Standorte",
-            "nodes": "Nodes",
-            "nestEggs": "Nest Eggs",
-            "databaseHosts": "Datenbank-Hosts",
-            "backupConfigurations": "Backup-Konfigurationen",
-            "roles": "Rollen"
-          },
-          "backup": {
-            "allTime": "Gesamtzeit",
-            "today": "Heute",
-            "week": "Diese Woche",
-            "month": "Diesen Monat",
-            "totalAllTime": "Backups insgesamt (Gesamtzeit)",
-            "successfulAllTime": "Erfolgreiche Backups (Gesamtzeit)",
-            "failedAllTime": "Fehlgeschlagene Backups (Gesamtzeit)",
-            "deletedAllTime": "Gelöschte Backups (Gesamtzeit)",
-            "totalToday": "Backups insgesamt (Heute)",
-            "successfulToday": "Erfolgreiche Backups (Heute)",
-            "failedToday": "Fehlgeschlagene Backups (Heute)",
-            "deletedToday": "Gelöschte Backups (Heute)",
-            "totalWeek": "Backups insgesamt (Diese Woche)",
-            "successfulWeek": "Erfolgreiche Backups (Diese Woche)",
-            "failedWeek": "Fehlgeschlagene Backups (Diese Woche)",
-            "deletedWeek": "Gelöschte Backups (Diese Woche)",
-            "totalMonth": "Backups insgesamt (Diesen Monat)",
-            "successfulMonth": "Erfolgreiche Backups (Diesen Monat)",
-            "failedMonth": "Fehlgeschlagene Backups (Diesen Monat)",
-            "deletedMonth": "Gelöschte Backups (Diesen Monat)",
-            "successfulValue": "{count} ({size})",
-            "deletedValue": "{count} ({size})"
-          },
-          "updates": {
-            "panelVersion": "Dein Panel läuft derzeit auf Version `{current}`. Die neueste verfügbare Version ist `{latest}`.",
-            "unknown": "unbekannt",
-            "button": {
-              "recheck": "Erneut auf Updates prüfen"
+          "tabs": {
+            "overview": {
+              "title": "Übersicht",
+              "page": {
+                "permissionDenied": "Du hast keine Berechtigung, die Statistiken zu lesen, die andernfalls hier wären. Genieße stattdessen diesen Vogel",
+                "card": {
+                  "systemOverview": "Systemübersicht",
+                  "generalStatistics": "Allgemeine Statistiken",
+                  "backupStatistics": "Backup-Statistiken"
+                },
+                "system": {
+                  "cpu": "CPU",
+                  "memoryUsage": "Arbeitsspeichernutzung ({process} vom Panel verwendet)",
+                  "memoryValue": "{used} / {total} ({percent}%)",
+                  "kernelVersion": "Kernel-Version ({architecture})",
+                  "containerType": "Container-Typ",
+                  "databaseVersion": "Datenbank-Version ({size})",
+                  "cacheVersion": "Cache-Version",
+                  "cacheCalls": "Cache-Aufrufe",
+                  "cacheHits": "Cache-Treffer ({percent}%)",
+                  "cacheMisses": "Cache-Fehlversuche ({percent}%)",
+                  "avgCachedCallLatency": "Durchschnittliche Cache-Aufruflatenz"
+                },
+                "containerType": {
+                  "unknown": "Unbekannt",
+                  "none": "Keine erkannt",
+                  "official": "Offiziell",
+                  "officialAio": "Offiziell (AIO)",
+                  "officialHeavy": "Offiziell (Heavy)"
+                },
+                "stats": {
+                  "users": "Benutzer",
+                  "servers": "Server",
+                  "locations": "Standorte",
+                  "nodes": "Nodes",
+                  "nestEggs": "Nest Eggs",
+                  "databaseHosts": "Datenbank-Hosts",
+                  "backupConfigurations": "Backup-Konfigurationen",
+                  "roles": "Rollen"
+                },
+                "backup": {
+                  "allTime": "Gesamtzeit",
+                  "today": "Heute",
+                  "week": "Diese Woche",
+                  "month": "Diesen Monat",
+                  "totalAllTime": "Backups insgesamt (Gesamtzeit)",
+                  "successfulAllTime": "Erfolgreiche Backups (Gesamtzeit)",
+                  "failedAllTime": "Fehlgeschlagene Backups (Gesamtzeit)",
+                  "deletedAllTime": "Gelöschte Backups (Gesamtzeit)",
+                  "totalToday": "Backups insgesamt (Heute)",
+                  "successfulToday": "Erfolgreiche Backups (Heute)",
+                  "failedToday": "Fehlgeschlagene Backups (Heute)",
+                  "deletedToday": "Gelöschte Backups (Heute)",
+                  "totalWeek": "Backups insgesamt (Diese Woche)",
+                  "successfulWeek": "Erfolgreiche Backups (Diese Woche)",
+                  "failedWeek": "Fehlgeschlagene Backups (Diese Woche)",
+                  "deletedWeek": "Gelöschte Backups (Diese Woche)",
+                  "totalMonth": "Backups insgesamt (Diesen Monat)",
+                  "successfulMonth": "Erfolgreiche Backups (Diesen Monat)",
+                  "failedMonth": "Fehlgeschlagene Backups (Diesen Monat)",
+                  "deletedMonth": "Gelöschte Backups (Diesen Monat)",
+                  "successfulValue": "{count} ({size})",
+                  "deletedValue": "{count} ({size})"
+                }
+              }
             },
-            "toast": {
-              "recheckComplete": "Prüfung abgeschlossen"
+            "updates": {
+              "title": "Updates",
+              "page": {
+                "alert": {
+                  "extensionUpdateErrors": "Beim Überprüfen auf Updates für einige Erweiterungen sind Fehler aufgetreten."
+                },
+                "card": {
+                  "panelVersion": "Panel-Version",
+                  "versionHistory": "Versionsverlauf",
+                  "outdatedExtensions": "Veraltete Erweiterungen",
+                  "outdatedNodes": "Veraltete Nodes"
+                },
+                "panelVersion": "Dein Panel läuft derzeit auf Version `{current}`. Die neueste verfügbare Version ist `{latest}`.",
+                "unknown": "unbekannt",
+                "button": {
+                  "recheck": "Erneut auf Updates prüfen"
+                },
+                "toast": {
+                  "recheckComplete": "Prüfung abgeschlossen."
+                },
+                "selectHistory": "Wähle einen Update-Verlauf zum Anzeigen aus",
+                "historyPanel": "Panel",
+                "historyExtension": "Erweiterung: {name}",
+                "extensionsUpToDate": "Alle Erweiterungen sind auf dem neuesten Stand.",
+                "extensionsOutdated": "Einige Erweiterungen sind veraltet oder es traten Fehler bei der Update-Prüfung auf.",
+                "noChangelog": "Kein Änderungsprotokoll",
+                "nodesUpToDate": "Es scheint, als wären alle Nodes auf dem neuesten Stand. ({failed} Prüfungen fehlgeschlagen)",
+                "nodesOutdated": "Einige Nodes sind veraltet, die neueste verfügbare Version ist `{latest}`. ({outdated} veraltet, {failed} Prüfungen fehlgeschlagen)",
+                "table": {
+                  "version": "Version",
+                  "installed": "Installiert",
+                  "packageName": "Paketname",
+                  "latestVersion": "Neueste Version",
+                  "changes": "Änderungen",
+                  "error": "Fehler"
+                }
+              }
             },
-            "selectHistory": "Wähle einen Update-Verlauf zum Anzeigen aus",
-            "historyPanel": "Panel",
-            "historyExtension": "Erweiterung: {name}",
-            "extensionsUpToDate": "Alle Erweiterungen sind auf dem neuesten Stand.",
-            "extensionsOutdated": "Einige Erweiterungen sind veraltet oder es traten Fehler bei der Update-Prüfung auf.",
-            "noChangelog": "Kein Änderungsprotokoll",
-            "nodesUpToDate": "Es scheint, als wären alle Nodes auf dem neuesten Stand. ({failed} Prüfungen fehlgeschlagen)",
-            "nodesOutdated": "Einige Nodes sind veraltet, die neueste verfügbare Version ist `{latest}`. ({outdated} veraltet, {failed} Prüfungen fehlgeschlagen)",
-            "table": {
-              "version": "Version",
-              "installed": "Installiert",
-              "packageName": "Paketname",
-              "latestVersion": "Neueste Version",
-              "changes": "Änderungen",
-              "error": "Fehler"
-            }
-          },
-          "health": {
-            "appliedMigrations": "Angewendete Migrationen ({percent}%)",
-            "migrationsValue": "{applied} / {total}",
-            "avgNtpOffset": "Durchschnittliche NTP-Abweichung",
-            "noExtensions": "Keine Erweiterungen gefunden.",
-            "nodesSynced": "Es scheint, als hätten alle Nodes eine synchrone Uhr (innerhalb von 5 Sekunden zur Panel-Uhr). ({failed} Prüfungen fehlgeschlagen)",
-            "nodesDesync": "Einige Nodes haben asynchrone Uhren (mehr als 5 Sekunden Abweichung von der Panel-Uhr). Dies kann zu Problemen beim Dateidownload oder der Konsole führen. ({desync} asynchron, {failed} Prüfungen fehlgeschlagen)",
-            "table": {
-              "packageName": "Paketname",
-              "applied": "Angewendet",
-              "total": "Gesamt",
-              "id": "ID",
-              "desync": "Asynchron",
-              "appliedValue": "{applied} ({percent}%)"
-            },
-            "debugEnabled": "Der Debug-Modus ist derzeit aktiviert. Im Debug-Modus werden zusätzliche Informationen protokolliert, die bei der Fehlersuche helfen können. Du solltest den Debug-Modus in der Produktion nicht aktiviert lassen.",
-            "debugDisabled": "Der Debug-Modus ist derzeit deaktiviert. Aktiviere den Debug-Modus nur, wenn du Probleme untersuchst.",
-            "debugResetNote": "Hinweis: Diese Einstellung wird beim nächsten Neustart der Anwendung auf den Standardwert ({default}) zurückgesetzt.",
-            "button": {
-              "enableDebug": "Debug-Modus aktivieren",
-              "disableDebug": "Debug-Modus deaktivieren"
-            },
-            "toast": {
-              "debugEnabled": "Debug-Modus aktiviert.",
-              "debugDisabled": "Debug-Modus deaktiviert."
+            "health": {
+              "title": "Systemzustand",
+              "page": {
+                "card": {
+                  "generalHealth": "Allgemeiner Zustand",
+                  "extensionMigrationHealth": "Erweiterungsmigrations-Zustand",
+                  "desyncNodes": "Asynchrone Nodes",
+                  "debugMode": "Debug-Modus"
+                },
+                "appliedMigrations": "Angewendete Migrationen ({percent}%)",
+                "migrationsValue": "{applied} / {total}",
+                "avgNtpOffset": "Durchschnittliche NTP-Abweichung",
+                "noExtensions": "Keine Erweiterungen gefunden.",
+                "nodesSynced": "Es scheint, als hätten alle Nodes eine synchrone Uhr (innerhalb von 5 Sekunden zur Panel-Uhr). ({failed} Prüfungen fehlgeschlagen)",
+                "nodesDesync": "Einige Nodes haben asynchrone Uhren (mehr als 5 Sekunden Abweichung von der Panel-Uhr). Dies kann zu Problemen beim Dateidownload oder der Konsole führen. ({desync} asynchron, {failed} Prüfungen fehlgeschlagen)",
+                "table": {
+                  "packageName": "Paketname",
+                  "applied": "Angewendet",
+                  "total": "Gesamt",
+                  "id": "ID",
+                  "desync": "Asynchron",
+                  "appliedValue": "{applied} ({percent}%)"
+                },
+                "debugEnabled": "Der Debug-Modus ist derzeit aktiviert. Im Debug-Modus werden zusätzliche Informationen protokolliert, die bei der Fehlersuche helfen können. Du solltest den Debug-Modus in der Produktion nicht aktiviert lassen.",
+                "debugDisabled": "Der Debug-Modus ist derzeit deaktiviert. Aktiviere den Debug-Modus nur, wenn du Probleme untersuchst.",
+                "debugResetNote": "Hinweis: Diese Einstellung wird beim nächsten Neustart der Anwendung auf den Standardwert ({default}) zurückgesetzt.",
+                "button": {
+                  "enableDebug": "Debug-Modus aktivieren",
+                  "disableDebug": "Debug-Modus deaktivieren"
+                },
+                "toast": {
+                  "debugEnabled": "Debug-Modus aktiviert.",
+                  "debugDisabled": "Debug-Modus deaktiviert."
+                }
+              }
             }
           }
         },
@@ -1435,8 +1457,7 @@
                 "empty": "Wähle eine Vorlage aus der Seitenleiste zum Bearbeiten aus",
                 "loadingTemplate": "Vorlage wird geladen…",
                 "form": {
-                  "subject": "Betreff",
-                  "enabled": "Aktiviert"
+                  "subject": "Betreff"
                 },
                 "button": {
                   "resetToDefault": "Auf Standard zurücksetzen"
@@ -1483,7 +1504,7 @@
                 },
                 "toast": {
                   "updated": "Webauthn-Einstellungen aktualisiert.",
-                  "ipNotAllowed": "Webauthn kann nicht mit einer IP-Adresse verwendet werden"
+                  "ipNotAllowed": "WebAuthn kann nicht mit einer IP-Adresse verwendet werden."
                 },
                 "modal": {
                   "changeRpId": {
@@ -1579,9 +1600,6 @@
         "announcements": {
           "title": "Ankündigungen",
           "resourceName": "Ankündigung",
-          "tabs": {
-            "general": "Allgemein"
-          },
           "modal": {
             "delete": {
               "title": "Ankündigungslöschung bestätigen",
@@ -1603,7 +1621,6 @@
             "backupConfigurationsDescription": "Leer lassen, um auf alle Backup-Konfigurationen anzuwenden.",
             "eggs": "Eggs",
             "eggsPlaceholder": "Eggs auswählen",
-            "enabled": "Aktiviert",
             "dismissible": "Ausblendbar"
           },
           "enum": {
@@ -1659,10 +1676,166 @@
           }
         },
         "extensions": {
-          "title": "Erweiterungen"
+          "title": "Erweiterungen",
+          "unknownExtension": "Unbekannte Erweiterung",
+          "unknown": "Unbekannt",
+          "alert": {
+            "noExtensions": "Keine Erweiterungen installiert.",
+            "heavyImageMissing": "Du scheinst nicht das Heavy-Image zu verwenden, das zum Installieren von Erweiterungen benötigt wird. Siehe [hier]({docsUrl}), wie du dazu wechselst."
+          },
+          "button": {
+            "viewBuildLogs": "Build-Logs anzeigen",
+            "install": "Erweiterung installieren",
+            "rebuild": "Erweiterungen neu erstellen",
+            "configure": "Konfigurieren",
+            "back": "Zurück zu Erweiterungen",
+            "accept": "Akzeptieren",
+            "decline": "Ablehnen"
+          },
+          "tooltip": {
+            "building": "Das Panel erstellt gerade Erweiterungs-Code. Bitte warte.",
+            "noPendingBuild": "Keine ausstehenden Erweiterungen zum Erstellen.",
+            "noBackend": "Eine Backend-Erweiterung ist erforderlich, um diese Erweiterung zu konfigurieren.",
+            "noConfigurationPage": "Diese Erweiterung hat keine Konfigurationsseite definiert.",
+            "removeExtension": "Erweiterung entfernen"
+          },
+          "badge": {
+            "frontendMissing": "Frontend fehlt",
+            "backendMissing": "Backend fehlt",
+            "pendingBuild": "Build ausstehend",
+            "pendingRemoval": "Entfernung ausstehend"
+          },
+          "card": {
+            "version": "Version",
+            "authors": "Autoren"
+          },
+          "section": {
+            "pendingExtensions": "Ausstehende Erweiterungen",
+            "noPendingExtensions": "Keine ausstehenden Erweiterungen."
+          },
+          "dropzone": {
+            "title": "Dateien hier ablegen, um sie als Erweiterungen zu installieren",
+            "subtitle": "Loslassen, um die Installation zu starten"
+          },
+          "toast": {
+            "buildStarted": "Erweiterungs-Build erfolgreich gestartet.",
+            "buildCompleted": "Erweiterungs-Build abgeschlossen. Möglicherweise musst du die Seite neu laden.",
+            "added": "Erweiterung `{packageName}` erfolgreich hinzugefügt.",
+            "removed": "Erweiterung `{packageName}` erfolgreich entfernt."
+          },
+          "notFound": {
+            "title": "Erweiterung nicht gefunden",
+            "content": "Erweiterung mit Paketname \"{packageName}\" nicht gefunden."
+          },
+          "configure": {
+            "title": "{packageName} konfigurieren",
+            "noConfigurationPage": "Diese Erweiterung hat keine Konfigurationsseite."
+          },
+          "modal": {
+            "buildLogs": {
+              "title": "Build-Logs",
+              "empty": "Keine Logs gefunden."
+            },
+            "license": {
+              "title": "Lizenzvereinbarung",
+              "description": "Die Erweiterung `{packageName}` erfordert, dass du die folgende Lizenz akzeptierst, bevor sie installiert werden kann."
+            },
+            "remove": {
+              "title": "Erweiterung entfernen",
+              "content": "Bist du sicher, dass du die Erweiterung `{packageName}` entfernen möchtest? Diese Aktion kann nicht rückgängig gemacht werden.",
+              "form": {
+                "removeMigrations": "Möchtest du die Datenbank-Migrationen dieser Erweiterung entfernen & zurückrollen?"
+              }
+            }
+          }
         },
         "users": {
-          "title": "Benutzer"
+          "title": "Benutzer",
+          "resourceName": "Benutzer",
+          "tooltip": {
+            "admin": "Administrator",
+            "twoFactorEnabled": "2FA aktiviert",
+            "twoFactorDisabled": "2FA deaktiviert",
+            "cannotImpersonateSelf": "Du kannst dich nicht selbst imitieren."
+          },
+          "tabs": {
+            "servers": "Server",
+            "oauthLinks": "OAuth-Verknüpfungen",
+            "activity": "Aktivität"
+          },
+          "button": {
+            "disableTwoFactor": "Zwei-Faktor deaktivieren",
+            "sendPasswordResetEmail": "Passwort-Zurücksetzungs-E-Mail senden",
+            "impersonate": "Imitieren"
+          },
+          "form": {
+            "admin": "Administrator",
+            "role": "Rolle",
+            "externalId": "Externe ID"
+          },
+          "table": {
+            "columns": {
+              "role": "Rolle"
+            }
+          },
+          "modal": {
+            "delete": {
+              "title": "Benutzerlöschung bestätigen",
+              "content": "Bist du sicher, dass du **{username}** löschen möchtest?"
+            },
+            "disableTwoFactor": {
+              "title": "Zwei-Faktor des Benutzers deaktivieren",
+              "content": "Bist du sicher, dass du den Zwei-Faktor von **{username}** entfernen möchtest?",
+              "button": {
+                "confirm": "Deaktivieren"
+              },
+              "toast": {
+                "disabled": "Zwei-Faktor des Benutzers deaktiviert."
+              }
+            },
+            "sendPasswordResetEmail": {
+              "title": "Passwort-Zurücksetzungs-E-Mail senden",
+              "content": "Bist du sicher, dass du eine Passwort-Zurücksetzungs-E-Mail an **{email}** senden möchtest?",
+              "button": {
+                "confirm": "Senden"
+              },
+              "toast": {
+                "sent": "Passwort-Zurücksetzungs-E-Mail gesendet."
+              }
+            }
+          },
+          "create": {
+            "title": "Benutzer erstellen"
+          },
+          "update": {
+            "title": "Benutzer aktualisieren"
+          },
+          "activity": {
+            "title": "Benutzer Aktivität"
+          },
+          "servers": {
+            "title": "Benutzer Server",
+            "showOwnedOnly": "Nur eigene Server des Benutzers anzeigen"
+          },
+          "oauthLinks": {
+            "title": "Benutzer OAuth-Verknüpfungen",
+            "toast": {
+              "added": "OAuth-Verknüpfung hinzugefügt.",
+              "removed": "OAuth-Verknüpfung entfernt."
+            },
+            "modal": {
+              "add": {
+                "title": "OAuth-Verknüpfung hinzufügen",
+                "form": {
+                  "oauthProvider": "OAuth-Anbieter"
+                }
+              },
+              "delete": {
+                "title": "Löschung der OAuth-Verknüpfung bestätigen",
+                "content": "Bist du sicher, dass du die **{provider}**-Verbindung von **{username}** löschen möchtest?"
+              }
+            }
+          }
         },
         "locations": {
           "title": "Standorte"

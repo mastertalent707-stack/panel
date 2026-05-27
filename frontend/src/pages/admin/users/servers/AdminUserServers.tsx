@@ -9,8 +9,10 @@ import { fullUserSchema } from '@/lib/schemas/user.ts';
 import { serverTableColumns } from '@/lib/tableColumns.ts';
 import ServerRow from '@/pages/admin/servers/ServerRow.tsx';
 import { useSearchablePaginatedTable } from '@/plugins/useSearchablePageableTable.ts';
+import { useTranslations } from '@/providers/TranslationProvider.tsx';
 
 export default function AdminUserServers({ user }: { user: z.infer<typeof fullUserSchema> }) {
+  const { t } = useTranslations();
   const [showOwnedUserServers, setShowOwnedUserServers] = useState(false);
 
   const {
@@ -27,13 +29,13 @@ export default function AdminUserServers({ user }: { user: z.infer<typeof fullUs
 
   return (
     <AdminSubContentContainer
-      title='User Servers'
+      title={t('pages.admin.users.servers.title', {})}
       titleOrder={2}
       search={search}
       setSearch={setSearch}
       contentRight={
         <Switch
-          label="Only show users' owned servers"
+          label={t('pages.admin.users.servers.showOwnedOnly', {})}
           checked={showOwnedUserServers}
           onChange={(e) => setShowOwnedUserServers(e.currentTarget.checked)}
         />

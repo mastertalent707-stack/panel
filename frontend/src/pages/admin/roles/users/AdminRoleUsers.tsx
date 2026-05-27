@@ -22,7 +22,7 @@ export default function AdminRoleUsers({ role }: { role: z.infer<typeof roleSche
 
   return (
     <AdminSubContentContainer title='Role Users' titleOrder={2} search={search} setSearch={setSearch}>
-      <Table columns={userTableColumns} loading={loading} pagination={roleUsers} onPageSelect={setPage}>
+      <Table columns={userTableColumns()} loading={loading} pagination={roleUsers} onPageSelect={setPage}>
         {roleUsers?.data.map((user) => (
           <UserRow key={user.uuid} user={user} />
         ))}

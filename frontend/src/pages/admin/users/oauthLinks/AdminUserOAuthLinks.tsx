@@ -11,10 +11,12 @@ import { queryKeys } from '@/lib/queryKeys.ts';
 import { fullUserSchema } from '@/lib/schemas/user.ts';
 import { adminUserOAuthLinkTableColumns } from '@/lib/tableColumns.ts';
 import { useSearchablePaginatedTable } from '@/plugins/useSearchablePageableTable.ts';
+import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import UserOAuthLinkAddModal from './modals/UserOAuthLinkAddModal.tsx';
 import UserOAuthLinkRow from './UserOAuthLinkRow.tsx';
 
 export default function AdminUserOAuthLinks({ user }: { user: z.infer<typeof fullUserSchema> }) {
+  const { t } = useTranslations();
   const [openModal, setOpenModal] = useState<'add' | null>(null);
 
   const {
@@ -30,13 +32,13 @@ export default function AdminUserOAuthLinks({ user }: { user: z.infer<typeof ful
 
   return (
     <AdminSubContentContainer
-      title='User OAuth Links'
+      title={t('pages.admin.users.oauthLinks.title', {})}
       titleOrder={2}
       search={search}
       setSearch={setSearch}
       contentRight={
         <Button onClick={() => setOpenModal('add')} color='blue' leftSection={<FontAwesomeIcon icon={faPlus} />}>
-          Add
+          {t('common.button.add', {})}
         </Button>
       }
     >
@@ -44,7 +46,7 @@ export default function AdminUserOAuthLinks({ user }: { user: z.infer<typeof ful
 
       <ContextMenuProvider>
         <Table
-          columns={adminUserOAuthLinkTableColumns}
+          columns={adminUserOAuthLinkTableColumns()}
           loading={loading}
           pagination={userOAuthLinks}
           onPageSelect={setPage}

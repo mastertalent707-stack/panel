@@ -76,7 +76,7 @@ export default function DashboardOAuthLinks() {
         <Table
           columns={[
             t('pages.account.oauthLinks.table.columns.providerName', {}),
-            t('pages.account.oauthLinks.table.columns.identifier', {}),
+            t('common.form.identifier', {}),
             t('common.table.columns.lastUsed', {}),
             t('common.table.columns.created', {}),
             '',

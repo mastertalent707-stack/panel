@@ -12,6 +12,7 @@ import FormattedTimestamp from '@/elements/time/FormattedTimestamp.tsx';
 import { adminUserOAuthLinkSchema } from '@/lib/schemas/admin/users.ts';
 import { fullUserSchema } from '@/lib/schemas/user.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';
+import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import { useAdminStore } from '@/stores/admin.tsx';
 
 export default function UserOAuthLinkRow({
@@ -22,6 +23,7 @@ export default function UserOAuthLinkRow({
   userOAuthLink: z.infer<typeof adminUserOAuthLinkSchema>;
 }) {
   const { addToast } = useToast();
+  const { t } = useTranslations();
   const { removeUserOAuthLink } = useAdminStore();
 
   const [openModal, setOpenModal] = useState<'edit' | 'delete' | null>(null);
@@ -30,7 +32,7 @@ export default function UserOAuthLinkRow({
     await deleteUserOAuthLink(user.uuid, userOAuthLink.uuid)
       .then(() => {
         removeUserOAuthLink(userOAuthLink);
-        addToast('OAuth Link removed.', 'success');
+        addToast(t('pages.admin.users.oauthLinks.toast.removed', {}), 'success');
       })
       .catch((msg) => {
         addToast(httpErrorToHuman(msg), 'error');
@@ -42,20 +44,21 @@ export default function UserOAuthLinkRow({
       <ConfirmationModal
         opened={openModal === 'delete'}
         onClose={() => setOpenModal(null)}
-        title='Confirm OAuth Link Deletion'
-        confirm='Delete'
+        title={t('pages.admin.users.oauthLinks.modal.delete.title', {})}
+        confirm={t('common.button.delete', {})}
         onConfirmed={doDelete}
       >
-        Are you sure you want to delete the
-        <Code>{userOAuthLink.oauthProvider.name}</Code>
-        connection from <Code>{user.username}</Code>?
+        {t('pages.admin.users.oauthLinks.modal.delete.content', {
+          provider: userOAuthLink.oauthProvider.name,
+          username: user.username,
+        }).md()}
       </ConfirmationModal>
 
       <ContextMenu
         items={[
           {
             icon: faTrash,
-            label: 'Remove',
+            label: t('common.button.remove', {}),
             onClick: () => setOpenModal('delete'),
             color: 'red',
           },
@@ -83,7 +86,7 @@ export default function UserOAuthLinkRow({
             </TableData>
 
             <TableData>
-              {!userOAuthLink.lastUsed ? 'N/A' : <FormattedTimestamp timestamp={userOAuthLink.lastUsed} />}
+              {!userOAuthLink.lastUsed ? t('common.na', {}) : <FormattedTimestamp timestamp={userOAuthLink.lastUsed} />}
             </TableData>
 
             <TableData>

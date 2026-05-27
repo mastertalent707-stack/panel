@@ -109,7 +109,7 @@ export default function AdminMountNodes({ mount }: { mount: z.infer<typeof admin
       />
 
       <ContextMenuProvider>
-        <Table columns={[...nodeTableColumns, '']} loading={loading} pagination={mountNodes} onPageSelect={setPage}>
+        <Table columns={[...nodeTableColumns(), '']} loading={loading} pagination={mountNodes} onPageSelect={setPage}>
           {mountNodes?.data.map((nodeMount) => (
             <MountNodeRow key={nodeMount.node.uuid} node={nodeMount.node} mount={mount} refetch={refetch} />
           ))}

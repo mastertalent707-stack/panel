@@ -17,6 +17,7 @@ import Spinner from '@/elements/Spinner.tsx';
 import { adminBackendExtensionSchema } from '@/lib/schemas/admin/backendExtension.ts';
 import { useImportDragAndDrop } from '@/plugins/useImportDragAndDrop.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';
+import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import ExtensionCard from './ExtensionCard.tsx';
 import ExtensionInstallOverlay from './ExtensionInstallOverlay.tsx';
 import BuildLogsModal from './modals/BuildLogsModal.tsx';
@@ -24,6 +25,7 @@ import LicenseModal from './modals/LicenseModal.tsx';
 import RemoveExtensionModal from './modals/RemoveExtensionModal.tsx';
 
 export default function AdminExtensions() {
+  const { t } = useTranslations();
   const { addToast } = useToast();
 
   const [backendExtensions, setBackendExtensions] = useState<z.infer<typeof adminBackendExtensionSchema>[] | null>(
@@ -52,7 +54,7 @@ export default function AdminExtensions() {
             getAdminExtensions()
               .then((extensions) => {
                 setBackendExtensions(extensions);
-                addToast('Extension build completed. You may need to refresh the page.', 'success');
+                addToast(t('pages.admin.extensions.toast.buildCompleted', {}), 'success');
                 setOpenModal(null);
               })
               .catch((err) => {
@@ -91,7 +93,7 @@ export default function AdminExtensions() {
   const handleRebuild = () => {
     rebuildExtensions()
       .then(() => {
-        addToast('Extension rebuild started successfully.', 'success');
+        addToast(t('pages.admin.extensions.toast.buildStarted', {}), 'success');
         setExtensionStatus((prev) => prev && { ...prev, isBuilding: true });
 
         createStatusInterval();
@@ -121,7 +123,10 @@ export default function AdminExtensions() {
               }
             : prev,
         );
-        addToast(`Extension \`${backendExtension.metadataToml.packageName}\` removed successfully.`.md(), 'success');
+        addToast(
+          t('pages.admin.extensions.toast.removed', { packageName: backendExtension.metadataToml.packageName }).md(),
+          'success',
+        );
         setRemovalExtension(null);
       })
       .catch((msg) => {
@@ -152,7 +157,10 @@ export default function AdminExtensions() {
         ),
       };
     });
-    addToast(`Extension \`${extension.metadataToml.packageName}\` added successfully.`.md(), 'success');
+    addToast(
+      t('pages.admin.extensions.toast.added', { packageName: extension.metadataToml.packageName }).md(),
+      'success',
+    );
   };
 
   const handleAdd = (file: File, acceptLicense = false) => {
@@ -198,7 +206,7 @@ export default function AdminExtensions() {
 
   return (
     <AdminContentContainer
-      title='Extensions'
+      title={t('pages.admin.extensions.title', {})}
       contentRight={
         <AdminCan action='extensions.manage'>
           <Group hidden={!extensionStatus} gap='xs'>
@@ -207,11 +215,11 @@ export default function AdminExtensions() {
               leftSection={<FontAwesomeIcon icon={faFileText} />}
               onClick={() => setOpenModal('logs')}
             >
-              View build logs
+              {t('pages.admin.extensions.button.viewBuildLogs', {})}
             </Button>
             <ConditionalTooltip
               enabled={extensionStatus?.isBuilding || false}
-              label='The panel is currently building extension code. Please wait.'
+              label={t('pages.admin.extensions.tooltip.building', {})}
             >
               <Button
                 color='blue'
@@ -219,7 +227,7 @@ export default function AdminExtensions() {
                 onClick={() => fileInputRef.current?.click()}
                 disabled={extensionStatus?.isBuilding}
               >
-                Install extension
+                {t('pages.admin.extensions.button.install', {})}
               </Button>
             </ConditionalTooltip>
 
@@ -253,19 +261,12 @@ export default function AdminExtensions() {
         <Spinner.Centered />
       ) : installedCount === 0 ? (
         <span>
-          No extensions installed.{' '}
+          {t('pages.admin.extensions.alert.noExtensions', {})}{' '}
           {!extensionStatus && (
             <span>
-              You don't seem to be using the heavy image required to install extensions, see{' '}
-              <a
-                href='https://calagopus.com/docs/panel/extensions/switching-to-the-heavy-image'
-                className='underline text-blue-400'
-                target='_blank'
-                rel='noopener noreferrer'
-              >
-                here
-              </a>{' '}
-              on how to switch to it.
+              {t('pages.admin.extensions.alert.heavyImageMissing', {
+                docsUrl: 'https://calagopus.com/docs/panel/extensions/switching-to-the-heavy-image',
+              }).md()}
             </span>
           )}
         </span>
@@ -310,7 +311,7 @@ export default function AdminExtensions() {
         <section className='mt-10'>
           <div className='mb-4 flex items-center justify-between border-b border-zinc-700/60 pb-3'>
             <Title order={2}>
-              Pending extensions
+              {t('pages.admin.extensions.section.pendingExtensions', {})}
               {extensionStatus.pendingExtensions.length > 0 && (
                 <span className='ml-2 text-xs text-zinc-500'>({extensionStatus.pendingExtensions.length})</span>
               )}
@@ -324,8 +325,8 @@ export default function AdminExtensions() {
                 }
                 label={
                   extensionStatus.isBuilding
-                    ? 'The panel is currently building extension code. Please wait.'
-                    : 'No pending extensions to build.'
+                    ? t('pages.admin.extensions.tooltip.building', {})
+                    : t('pages.admin.extensions.tooltip.noPendingBuild', {})
                 }
               >
                 <Button
@@ -334,14 +335,14 @@ export default function AdminExtensions() {
                   loading={extensionStatus.isBuilding}
                   onClick={handleRebuild}
                 >
-                  Rebuild extensions
+                  {t('pages.admin.extensions.button.rebuild', {})}
                 </Button>
               </ConditionalTooltip>
             </AdminCan>
           </div>
 
           {!extensionStatus.pendingExtensions.length ? (
-            <p className='text-sm text-zinc-500'>No pending extensions.</p>
+            <p className='text-sm text-zinc-500'>{t('pages.admin.extensions.section.noPendingExtensions', {})}</p>
           ) : (
             <div className='grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-3'>
               {extensionStatus.pendingExtensions.map((extension) => (

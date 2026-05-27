@@ -15,20 +15,20 @@ export default function AdminHome() {
         baseUrl='/admin'
         items={[
           {
-            name: t('pages.admin.home.tabs.overview', {}),
+            name: t('pages.admin.home.tabs.overview.title', {}),
             icon: faCog,
             path: `/`,
             element: <AdminOverview />,
           },
           {
-            name: t('pages.admin.home.tabs.updates', {}),
+            name: t('pages.admin.home.tabs.updates.title', {}),
             icon: faRefresh,
             path: `/updates`,
             element: <AdminOverviewUpdates />,
             permission: 'stats.read',
           },
           {
-            name: t('pages.admin.home.tabs.health', {}),
+            name: t('pages.admin.home.tabs.health.title', {}),
             icon: faHeartPulse,
             path: `/health`,
             element: <AdminOverviewHealth />,

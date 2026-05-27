@@ -2,10 +2,10 @@ import { ModalProps, Stack } from '@mantine/core';
 import { useState } from 'react';
 import { z } from 'zod';
 import Button from '@/elements/Button.tsx';
-import Code from '@/elements/Code.tsx';
 import Switch from '@/elements/input/Switch.tsx';
 import { Modal, ModalFooter } from '@/elements/modals/Modal.tsx';
 import { adminBackendExtensionSchema } from '@/lib/schemas/admin/backendExtension.ts';
+import { useTranslations } from '@/providers/TranslationProvider.tsx';
 
 interface Props extends ModalProps {
   extension: z.infer<typeof adminBackendExtensionSchema>;
@@ -13,18 +13,20 @@ interface Props extends ModalProps {
 }
 
 export default function RemoveExtensionModal({ extension, onRemove, onClose, ...rest }: Props) {
+  const { t } = useTranslations();
   const [removeMigrations, setRemoveMigrations] = useState(false);
 
   return (
-    <Modal title='Remove extension' onClose={onClose} {...rest}>
+    <Modal title={t('pages.admin.extensions.modal.remove.title', {})} onClose={onClose} {...rest}>
       <p>
-        Are you sure you want to remove the extension <Code>{extension.metadataToml.packageName}</Code>? This action
-        cannot be undone.
+        {t('pages.admin.extensions.modal.remove.content', {
+          packageName: extension.metadataToml.packageName,
+        }).md()}
       </p>
 
       <Stack mt='md'>
         <Switch
-          label='Do you want to remove & rollback the database migrations of this extension?'
+          label={t('pages.admin.extensions.modal.remove.form.removeMigrations', {})}
           name='remove_migrations'
           defaultChecked={removeMigrations}
           onChange={(e) => setRemoveMigrations(e.target.checked)}
@@ -33,10 +35,10 @@ export default function RemoveExtensionModal({ extension, onRemove, onClose, ...
 
       <ModalFooter>
         <Button color='red' onClick={() => onRemove(removeMigrations)}>
-          Delete
+          {t('common.button.delete', {})}
         </Button>
         <Button variant='default' onClick={() => onClose()}>
-          Close
+          {t('common.button.close', {})}
         </Button>
       </ModalFooter>
     </Modal>
