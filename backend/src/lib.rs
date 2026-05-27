@@ -758,7 +758,7 @@ pub async fn handle_startup() -> (
                                     script-src 'self' blob: {script_csp}; \
                                     frame-src *; \
                                     style-src 'self' 'unsafe-inline' {style_csp}; \
-                                    connect-src *; \
+                                    connect-src * blob:; \
                                     font-src 'self' blob: data:; \
                                     img-src * blob: data:; \
                                     media-src 'self' blob: data:; \
