@@ -5,10 +5,12 @@ import getAnnouncement from '@/api/admin/announcements/getAnnouncement.ts';
 import AdminContentContainer from '@/elements/containers/AdminContentContainer.tsx';
 import Spinner from '@/elements/Spinner.tsx';
 import SubNavigation from '@/elements/SubNavigation.tsx';
+import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import AnnouncementCreateOrUpdate from './AnnouncementCreateOrUpdate.tsx';
 
 export default function AnnouncementView() {
   const params = useParams<'id'>();
+  const { t } = useTranslations();
 
   const { data: announcement, isLoading } = useQuery({
     queryKey: ['admin', 'announcements', { uuid: params.id }],
@@ -23,7 +25,7 @@ export default function AnnouncementView() {
         baseUrl={`/admin/announcements/${params.id}`}
         items={[
           {
-            name: 'General',
+            name: t('pages.admin.announcements.tabs.general', {}),
             icon: faCog,
             path: '/',
             element: <AnnouncementCreateOrUpdate contextAnnouncement={announcement} />,

@@ -1,6 +1,25 @@
-export const announcementTableColumns = ['ID', 'Type', 'Title', 'Enabled', 'Created'];
+import { getTranslations } from '@/providers/TranslationProvider.tsx';
 
-export const assetTableColumns = ['', 'Name', 'Size', 'Created'];
+export const announcementTableColumns = (): string[] => {
+  const { t } = getTranslations();
+  return [
+    t('common.table.columns.id', {}),
+    t('common.table.columns.type', {}),
+    t('common.table.columns.title', {}),
+    t('common.table.columns.enabled', {}),
+    t('common.table.columns.created', {}),
+  ];
+};
+
+export const assetTableColumns = (): string[] => {
+  const { t } = getTranslations();
+  return [
+    '',
+    t('common.table.columns.name', {}),
+    t('common.table.columns.size', {}),
+    t('common.table.columns.created', {}),
+  ];
+};
 
 export const backupConfigurationTableColumns = ['ID', 'Name', 'Disk', 'Created'];
 

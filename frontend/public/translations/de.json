@@ -39,6 +39,14 @@
       "few": "{count} SSH-Schlüssel",
       "many": "{count} SSH-Schlüssel",
       "other": "{count} SSH-Schlüssel"
+    },
+    "asset": {
+      "zero": "{count} Assets",
+      "one": "{count} Asset",
+      "two": "{count} Assets",
+      "few": "{count} Assets",
+      "many": "{count} Assets",
+      "other": "{count} Assets"
     }
   },
   "translations": {
@@ -130,7 +138,11 @@
           "event": "Ereignis",
           "ip": "IP",
           "when": "Wann",
-          "command": "Befehl"
+          "command": "Befehl",
+          "id": "ID",
+          "type": "Typ",
+          "title": "Titel",
+          "enabled": "Aktiviert"
         }
       },
       "badge": {
@@ -282,6 +294,13 @@
         "tooltip": {
           "cantSave": "Du hast keine Berechtigung zum Speichern.",
           "cantDelete": "Du hast keine Berechtigung zum Löschen."
+        }
+      },
+      "resource": {
+        "tooltip": {
+          "created": "{resource} erstellt.",
+          "updated": "{resource} aktualisiert.",
+          "deleted": "{resource} gelöscht."
         }
       },
       "activityInfoButton": {
@@ -1558,10 +1577,86 @@
           }
         },
         "announcements": {
-          "title": "Ankündigungen"
+          "title": "Ankündigungen",
+          "resourceName": "Ankündigung",
+          "tabs": {
+            "general": "Allgemein"
+          },
+          "modal": {
+            "delete": {
+              "title": "Ankündigungslöschung bestätigen",
+              "content": "Möchtest du **{title}** wirklich löschen?"
+            }
+          },
+          "form": {
+            "type": "Typ",
+            "title": "Titel",
+            "content": "Inhalt",
+            "dismissibleEnd": "Ende der Ausblendbarkeit",
+            "enabledStart": "Aktivierungsstart",
+            "enabledEnd": "Aktivierungsende",
+            "locations": "Standorte",
+            "locationsDescription": "Leer lassen, um auf alle Standorte anzuwenden.",
+            "nodes": "Nodes",
+            "nodesDescription": "Leer lassen, um auf alle Nodes anzuwenden.",
+            "backupConfigurations": "Backup-Konfigurationen",
+            "backupConfigurationsDescription": "Leer lassen, um auf alle Backup-Konfigurationen anzuwenden.",
+            "eggs": "Eggs",
+            "eggsPlaceholder": "Eggs auswählen",
+            "enabled": "Aktiviert",
+            "dismissible": "Ausblendbar"
+          },
+          "enum": {
+            "announcementType": {
+              "info": "Info",
+              "success": "Erfolg",
+              "warning": "Warnung",
+              "error": "Fehler"
+            }
+          },
+          "create": {
+            "title": "Ankündigung erstellen"
+          },
+          "update": {
+            "title": "Ankündigung aktualisieren"
+          }
         },
         "assets": {
-          "title": "Assets"
+          "title": "Assets",
+          "button": {
+            "newDirectory": "Neues Verzeichnis",
+            "upload": "Hochladen",
+            "copyLink": "Link kopieren"
+          },
+          "dropzone": {
+            "title": "Dateien hier ablegen zum Hochladen",
+            "subtitle": "Loslassen um den Upload zu starten"
+          },
+          "operations": {
+            "waiting": "Warten: ",
+            "uploading": "Wird hochgeladen: "
+          },
+          "toast": {
+            "assetDeleted": "Asset gelöscht.",
+            "assetsDeleted": "{assets} gelöscht."
+          },
+          "modal": {
+            "createDirectory": {
+              "title": "Neues Verzeichnis",
+              "form": {
+                "directoryName": "Verzeichnisname"
+              },
+              "createdAs": "Wird erstellt unter "
+            },
+            "deleteAssets": {
+              "title": "Asset-Löschung bestätigen",
+              "content": "Bist du sicher, dass du `{count}` Assets löschen möchtest?"
+            },
+            "deleteAsset": {
+              "title": "Asset löschen",
+              "content": "Bist du sicher, dass du dieses Asset löschen möchtest? Diese Aktion kann nicht rückgängig gemacht werden."
+            }
+          }
         },
         "extensions": {
           "title": "Erweiterungen"

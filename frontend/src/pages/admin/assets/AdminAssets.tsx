@@ -19,12 +19,14 @@ import { storageAssetSchema } from '@/lib/schemas/admin/assets.ts';
 import { assetTableColumns } from '@/lib/tableColumns.ts';
 import AssetUpload from '@/pages/admin/assets/AssetUpload.tsx';
 import { useKeyboardShortcuts } from '@/plugins/useKeyboardShortcuts.ts';
+import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import AssetActionBar from './AssetActionBar.tsx';
 import AssetBreadcrumbs from './AssetBreadcrumbs.tsx';
 import AssetRow from './AssetRow.tsx';
 import NewDirectoryModal from './NewDirectoryModal.tsx';
 
 export default function AdminAssets() {
+  const { t } = useTranslations();
   const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -111,7 +113,7 @@ export default function AdminAssets() {
 
   return (
     <AdminContentContainer
-      title='Assets'
+      title={t('pages.admin.assets.title', {})}
       contentRight={
         <AdminCan action='assets.upload'>
           <Button
@@ -120,7 +122,7 @@ export default function AdminAssets() {
             onClick={() => setOpenModal('newDirectory')}
             leftSection={<FontAwesomeIcon icon={faFolderPlus} />}
           >
-            New Directory
+            {t('pages.admin.assets.button.newDirectory', {})}
           </Button>
           <AssetUpload invalidateAssets={invalidateAssets} currentDirectory={currentDirectory} />
         </AdminCan>
@@ -152,7 +154,7 @@ export default function AdminAssets() {
         <SelectionArea onSelectedStart={onSelectedStart} onSelected={onSelected}>
           <ContextMenuProvider>
             <Table
-              columns={assetTableColumns}
+              columns={assetTableColumns()}
               loading={isLoading}
               pagination={data}
               onPageSelect={onPageSelect}

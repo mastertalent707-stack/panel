@@ -8,6 +8,7 @@ import FormModal from '@/elements/modals/FormModal.tsx';
 import { ModalFooter } from '@/elements/modals/Modal.tsx';
 import { assetDirectoryCreateSchema, storageAssetSchema } from '@/lib/schemas/admin/assets.ts';
 import { useModalForm } from '@/plugins/useModalForm.ts';
+import { useTranslations } from '@/providers/TranslationProvider.tsx';
 
 interface NewDirectoryModalProps extends Omit<ModalProps, 'onSubmit'> {
   currentDirectory: string;
@@ -22,6 +23,7 @@ export default function NewDirectoryModal({
   onClose,
   ...props
 }: NewDirectoryModalProps) {
+  const { t } = useTranslations();
   const { form, handleClose, handleSubmit, loading, isDirty } = useModalForm<
     z.infer<typeof assetDirectoryCreateSchema>
   >({
@@ -36,7 +38,7 @@ export default function NewDirectoryModal({
 
   return (
     <FormModal
-      title='New Directory'
+      title={t('pages.admin.assets.modal.createDirectory.title', {})}
       onClose={handleClose}
       onSubmit={handleSubmit}
       isDirty={isDirty}
@@ -45,14 +47,14 @@ export default function NewDirectoryModal({
     >
       <TextInput
         withAsterisk
-        label='Directory name'
-        placeholder='Directory name'
+        label={t('pages.admin.assets.modal.createDirectory.form.directoryName', {})}
+        placeholder={t('pages.admin.assets.modal.createDirectory.form.directoryName', {})}
         data-autofocus
         {...form.getInputProps('name')}
       />
 
       <p className='mt-2 text-sm break-all'>
-        <span>Will be created at </span>
+        <span>{t('pages.admin.assets.modal.createDirectory.createdAs', {})}</span>
         <Code>
           assets/
           <span className='text-cyan-200'>
@@ -63,10 +65,10 @@ export default function NewDirectoryModal({
 
       <ModalFooter>
         <Button type='submit' loading={loading} disabled={!form.isValid()}>
-          Create
+          {t('common.button.create', {})}
         </Button>
         <Button variant='default' onClick={handleClose}>
-          Cancel
+          {t('common.button.cancel', {})}
         </Button>
       </ModalFooter>
     </FormModal>

@@ -17,6 +17,7 @@ import { storageAssetSchema } from '@/lib/schemas/admin/assets.ts';
 import { bytesToString } from '@/lib/size.ts';
 import { useAdminCan } from '@/plugins/usePermissions.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';
+import { useTranslations } from '@/providers/TranslationProvider.tsx';
 
 interface AssetRowProps {
   asset: z.infer<typeof storageAssetSchema>;
@@ -32,6 +33,7 @@ const AssetRow = forwardRef<HTMLTableRowElement, AssetRowProps>(function AssetRo
   { asset, isSelected, addSelectedAsset, removeSelectedAsset, invalidateAssets, onDirectoryClick },
   ref,
 ) {
+  const { t } = useTranslations();
   const { addToast } = useToast();
   const canDeleteAssets = useAdminCan('assets.delete');
 
@@ -45,7 +47,7 @@ const AssetRow = forwardRef<HTMLTableRowElement, AssetRowProps>(function AssetRo
     await deleteAssets([asset.name])
       .then(() => {
         removeSelectedAsset(asset);
-        addToast('Asset deleted successfully', 'success');
+        addToast(t('pages.admin.assets.toast.assetDeleted', {}), 'success');
         invalidateAssets();
       })
       .catch((msg) => {
@@ -87,24 +89,24 @@ const AssetRow = forwardRef<HTMLTableRowElement, AssetRowProps>(function AssetRo
       <ConfirmationModal
         opened={openModal === 'delete'}
         onClose={() => setOpenModal(null)}
-        title='Delete Asset'
-        confirm='Delete'
+        title={t('pages.admin.assets.modal.deleteAsset.title', {})}
+        confirm={t('common.button.delete', {})}
         onConfirmed={doDelete}
       >
-        Are you sure you want to delete this asset? This action cannot be undone.
+        {t('pages.admin.assets.modal.deleteAsset.content', {})}
       </ConfirmationModal>
 
       <ContextMenu
         items={[
           {
             icon: faCopy,
-            label: 'Copy Link',
+            label: t('pages.admin.assets.button.copyLink', {}),
             onClick: () => handleRawCopyToClipboard(asset.url, addToast),
             color: 'gray',
           },
           {
             icon: faTrash,
-            label: 'Delete',
+            label: t('common.button.delete', {}),
             onClick: () => setOpenModal('delete'),
             color: 'red',
             canAccess: canDeleteAssets,

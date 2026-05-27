@@ -13,7 +13,6 @@ import getNodes from '@/api/admin/nodes/getNodes.ts';
 import { httpErrorToHuman } from '@/api/axios.ts';
 import Button from '@/elements/Button.tsx';
 import { AdminCan } from '@/elements/Can.tsx';
-import Code from '@/elements/Code.tsx';
 import AdminContentContainer from '@/elements/containers/AdminContentContainer.tsx';
 import DateTimePicker from '@/elements/input/DateTimePicker.tsx';
 import LocalizedTextArea from '@/elements/input/LocalizedTextArea.tsx';
@@ -34,6 +33,7 @@ import { useAdminCan } from '@/plugins/usePermissions.ts';
 import { useResourceForm } from '@/plugins/useResourceForm.ts';
 import { useSearchableResource } from '@/plugins/useSearchableResource.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';
+import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import { useGlobalStore } from '@/stores/global.ts';
 
 export default function AnnouncementCreateOrUpdate({
@@ -43,6 +43,7 @@ export default function AnnouncementCreateOrUpdate({
 }) {
   const { languages } = useGlobalStore();
   const { addToast } = useToast();
+  const { t, tReact } = useTranslations();
 
   const canReadLocations = useAdminCan('locations.read');
   const canReadNodes = useAdminCan('nodes.read');
@@ -84,7 +85,7 @@ export default function AnnouncementCreateOrUpdate({
     deleteFn: contextAnnouncement ? () => deleteAnnouncement(contextAnnouncement.uuid) : undefined,
     doUpdate: !!contextAnnouncement,
     basePath: '/admin/announcements',
-    resourceName: 'Announcement',
+    resourceName: t('pages.admin.announcements.resourceName', {}),
   });
 
   useEffect(() => {
@@ -144,34 +145,37 @@ export default function AnnouncementCreateOrUpdate({
 
   return (
     <AdminContentContainer
-      title={`${contextAnnouncement ? 'Update' : 'Create'} Announcement`}
+      title={t(
+        contextAnnouncement ? 'pages.admin.announcements.update.title' : 'pages.admin.announcements.create.title',
+        {},
+      )}
       fullscreen={!!contextAnnouncement}
       titleOrder={2}
     >
       <ConfirmationModal
         opened={openModal === 'delete'}
         onClose={() => setOpenModal(null)}
-        title='Confirm Announcement Deletion'
-        confirm='Delete'
+        title={t('pages.admin.announcements.modal.delete.title', {})}
+        confirm={t('common.button.delete', {})}
         onConfirmed={doDelete}
       >
-        Are you sure you want to delete <Code>{form.getValues().title}</Code>?
+        {tReact('pages.admin.announcements.modal.delete.content', { title: form.getValues().title })}
       </ConfirmationModal>
 
       <form onSubmit={form.onSubmit(() => doCreateOrUpdate(false, [queryKeys.admin.announcements.all()]))}>
         <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
           <Select
             withAsterisk
-            label='Type'
-            data={Object.entries(announcementTypeLabelMapping).map(([value, label]) => ({ value, label }))}
+            label={t('pages.admin.announcements.form.type', {})}
+            data={Object.entries(announcementTypeLabelMapping).map(([value, label]) => ({ value, label: label() }))}
             key={form.key('type')}
             {...form.getInputProps('type')}
           />
 
           <LocalizedTextInput
             withAsterisk
-            label='Title'
-            placeholder='Title'
+            label={t('pages.admin.announcements.form.title', {})}
+            placeholder={t('pages.admin.announcements.form.title', {})}
             value={form.values.title}
             setValue={(value) => form.setFieldValue('title', value ?? '')}
             valueTranslations={form.values.titleTranslations}
@@ -182,8 +186,8 @@ export default function AnnouncementCreateOrUpdate({
 
           <LocalizedTextArea
             withAsterisk
-            label='Content'
-            placeholder='Content'
+            label={t('pages.admin.announcements.form.content', {})}
+            placeholder={t('pages.admin.announcements.form.content', {})}
             value={form.values.content}
             setValue={(value) => form.setFieldValue('content', value ?? '')}
             valueTranslations={form.values.contentTranslations}
@@ -194,29 +198,29 @@ export default function AnnouncementCreateOrUpdate({
           />
 
           <DateTimePicker
-            label='Dismissible End'
+            label={t('pages.admin.announcements.form.dismissibleEnd', {})}
             clearable
             value={form.values.dismissibleEnd}
             onChange={(value) => form.setFieldValue('dismissibleEnd', value ? new Date(value) : null)}
           />
 
           <DateTimePicker
-            label='Enabled Start'
+            label={t('pages.admin.announcements.form.enabledStart', {})}
             clearable
             value={form.values.enabledStart}
             onChange={(value) => form.setFieldValue('enabledStart', value ? new Date(value) : null)}
           />
 
           <DateTimePicker
-            label='Enabled End'
+            label={t('pages.admin.announcements.form.enabledEnd', {})}
             clearable
             value={form.values.enabledEnd}
             onChange={(value) => form.setFieldValue('enabledEnd', value ? new Date(value) : null)}
           />
 
           <MultiSelect
-            label='Locations'
-            description='Leave empty to apply to all locations.'
+            label={t('pages.admin.announcements.form.locations', {})}
+            description={t('pages.admin.announcements.form.locationsDescription', {})}
             data={locations.items.map((l) => ({ label: l.name, value: l.uuid }))}
             searchable
             searchValue={locations.search}
@@ -228,8 +232,8 @@ export default function AnnouncementCreateOrUpdate({
           />
 
           <MultiSelect
-            label='Nodes'
-            description='Leave empty to apply to all nodes.'
+            label={t('pages.admin.announcements.form.nodes', {})}
+            description={t('pages.admin.announcements.form.nodesDescription', {})}
             data={nodes.items.map((n) => ({ label: n.name, value: n.uuid }))}
             searchable
             searchValue={nodes.search}
@@ -241,8 +245,8 @@ export default function AnnouncementCreateOrUpdate({
           />
 
           <MultiSelect
-            label='Backup Configurations'
-            description='Leave empty to apply to all backup configurations.'
+            label={t('pages.admin.announcements.form.backupConfigurations', {})}
+            description={t('pages.admin.announcements.form.backupConfigurationsDescription', {})}
             data={backupConfigurations.items.map((b) => ({ label: b.name, value: b.uuid }))}
             searchable
             searchValue={backupConfigurations.search}
@@ -254,18 +258,22 @@ export default function AnnouncementCreateOrUpdate({
           />
 
           <MultiSelectGroup
-            label='Eggs'
-            placeholder='Select Eggs'
+            label={t('pages.admin.announcements.form.eggs', {})}
+            placeholder={t('pages.admin.announcements.form.eggsPlaceholder', {})}
             data={eggs}
             searchable
             loading={!eggs.length}
             {...form.getInputProps('eggs')}
           />
 
-          <Switch label='Enabled' key={form.key('enabled')} {...form.getInputProps('enabled', { type: 'checkbox' })} />
+          <Switch
+            label={t('pages.admin.announcements.form.enabled', {})}
+            key={form.key('enabled')}
+            {...form.getInputProps('enabled', { type: 'checkbox' })}
+          />
 
           <Switch
-            label='Dismissible'
+            label={t('pages.admin.announcements.form.dismissible', {})}
             key={form.key('dismissible')}
             {...form.getInputProps('dismissible', { type: 'checkbox' })}
           />
@@ -274,18 +282,18 @@ export default function AnnouncementCreateOrUpdate({
         <Group mt='md'>
           <AdminCan action={contextAnnouncement ? 'announcements.update' : 'announcements.create'} cantSave>
             <Button type='submit' disabled={!form.isValid()} loading={loading}>
-              Save
+              {t('common.button.save', {})}
             </Button>
             {!contextAnnouncement && (
               <Button onClick={() => doCreateOrUpdate(true)} disabled={!form.isValid()} loading={loading}>
-                Save & Stay
+                {t('common.button.saveAndStay', {})}
               </Button>
             )}
           </AdminCan>
           {contextAnnouncement && (
             <AdminCan action='announcements.delete' cantDelete>
               <Button color='red' onClick={() => setOpenModal('delete')} loading={loading}>
-                Delete
+                {t('common.button.delete', {})}
               </Button>
             </AdminCan>
           )}

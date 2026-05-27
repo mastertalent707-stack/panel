@@ -14,6 +14,7 @@ const baseTranslations = defineTranslations({
     file: defineEnglishItem('File', 'Files'),
     server: defineEnglishItem('Server', 'Servers'),
     sshKey: defineEnglishItem('SSH Key', 'SSH Keys'),
+    asset: defineEnglishItem('Asset', 'Assets'),
   },
   translations: {
     common: {
@@ -96,7 +97,11 @@ const baseTranslations = defineTranslations({
           empty: "No items could be found, it's almost like they are hiding.",
         },
         columns: {
+          id: 'ID',
           name: 'Name',
+          type: 'Type',
+          title: 'Title',
+          enabled: 'Enabled',
           description: 'Description',
           username: 'Username',
           size: 'Size',
@@ -260,6 +265,13 @@ const baseTranslations = defineTranslations({
         tooltip: {
           cantSave: 'You do not have permission to save.',
           cantDelete: 'You do not have permission to delete.',
+        },
+      },
+      resource: {
+        tooltip: {
+          created: '{resource} created.',
+          updated: '{resource} updated.',
+          deleted: '{resource} deleted.',
         },
       },
       activityInfoButton: {
@@ -1559,9 +1571,85 @@ const baseTranslations = defineTranslations({
         },
         announcements: {
           title: 'Announcements',
+          resourceName: 'Announcement',
+          tabs: {
+            general: 'General',
+          },
+          modal: {
+            delete: {
+              title: 'Confirm Announcement Deletion',
+              content: 'Are you sure you want to delete **{title}**?',
+            },
+          },
+          form: {
+            type: 'Type',
+            title: 'Title',
+            content: 'Content',
+            dismissibleEnd: 'Dismissible End',
+            enabledStart: 'Enabled Start',
+            enabledEnd: 'Enabled End',
+            locations: 'Locations',
+            locationsDescription: 'Leave empty to apply to all locations.',
+            nodes: 'Nodes',
+            nodesDescription: 'Leave empty to apply to all nodes.',
+            backupConfigurations: 'Backup Configurations',
+            backupConfigurationsDescription: 'Leave empty to apply to all backup configurations.',
+            eggs: 'Eggs',
+            eggsPlaceholder: 'Select Eggs',
+            enabled: 'Enabled',
+            dismissible: 'Dismissible',
+          },
+          enum: {
+            announcementType: {
+              info: 'Info',
+              success: 'Success',
+              warning: 'Warning',
+              error: 'Error',
+            },
+          },
+          create: {
+            title: 'Create Announcement',
+          },
+          update: {
+            title: 'Update Announcement',
+          },
         },
         assets: {
           title: 'Assets',
+          button: {
+            newDirectory: 'New Directory',
+            upload: 'Upload',
+            copyLink: 'Copy Link',
+          },
+          dropzone: {
+            title: 'Drop files here to upload',
+            subtitle: 'Release to start uploading',
+          },
+          operations: {
+            waiting: 'Waiting: ',
+            uploading: 'Uploading: ',
+          },
+          toast: {
+            assetDeleted: 'Asset deleted.',
+            assetsDeleted: '{assets} deleted.',
+          },
+          modal: {
+            createDirectory: {
+              title: 'New Directory',
+              form: {
+                directoryName: 'Directory name',
+              },
+              createdAs: 'Will be created at ',
+            },
+            deleteAssets: {
+              title: 'Confirm Asset Deletion',
+              content: 'Are you sure you want to delete `{count}` assets?',
+            },
+            deleteAsset: {
+              title: 'Delete Asset',
+              content: 'Are you sure you want to delete this asset? This action cannot be undone.',
+            },
+          },
         },
         extensions: {
           title: 'Extensions',

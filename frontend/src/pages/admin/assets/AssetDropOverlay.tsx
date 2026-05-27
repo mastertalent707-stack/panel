@@ -1,8 +1,11 @@
 import { faUpload } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { memo } from 'react';
+import { useTranslations } from '@/providers/TranslationProvider.tsx';
 
 function AssetDropOverlay({ visible }: { visible: boolean }) {
+  const { t } = useTranslations();
+
   if (!visible) return null;
 
   return (
@@ -11,8 +14,8 @@ function AssetDropOverlay({ visible }: { visible: boolean }) {
         <div className='bg-(--mantine-color-body) rounded-lg p-8 shadow-2xl border-2 border-dashed border-(--mantine-color-blue-5)'>
           <div className='flex flex-col items-center gap-4 z-100'>
             <FontAwesomeIcon icon={faUpload} className='text-6xl text-(--mantine-color-blue-5) animate-bounce' />
-            <p className='text-xl font-semibold'>Drop files here to upload</p>
-            <p className='text-sm text-(--mantine-color-dimmed)'>Release to start uploading</p>
+            <p className='text-xl font-semibold'>{t('pages.admin.assets.dropzone.title', {})}</p>
+            <p className='text-sm text-(--mantine-color-dimmed)'>{t('pages.admin.assets.dropzone.subtitle', {})}</p>
           </div>
         </div>
       </div>

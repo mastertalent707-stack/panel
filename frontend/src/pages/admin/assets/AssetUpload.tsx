@@ -12,6 +12,7 @@ import Tooltip from '@/elements/Tooltip.tsx';
 import { bytesToString } from '@/lib/size.ts';
 import { useFileUpload } from '@/plugins/useFileUpload.ts';
 import { useImportDragAndDrop } from '@/plugins/useImportDragAndDrop.ts';
+import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import AssetDropOverlay from './AssetDropOverlay.tsx';
 
 export default function AssetUpload({
@@ -21,6 +22,7 @@ export default function AssetUpload({
   invalidateAssets: () => void;
   currentDirectory: string;
 }) {
+  const { t } = useTranslations();
   const { uploadingFiles, handleFileSelect, totalUploadProgress, cancelFileUpload, uploadFiles } = useFileUpload(
     (form, config) =>
       uploadAssets(form, config, currentDirectory).then(() => {
@@ -68,7 +70,9 @@ export default function AssetUpload({
               <div key={key} className='flex flex-row items-center mb-2'>
                 <div className='flex flex-col grow'>
                   <p className='break-all mb-1 text-sm'>
-                    {file.status === 'pending' ? 'Waiting: ' : 'Uploading: '}
+                    {file.status === 'pending'
+                      ? t('pages.admin.assets.operations.waiting', {})
+                      : t('pages.admin.assets.operations.uploading', {})}
                     {file.filePath}
                   </p>
                   <Tooltip
@@ -90,7 +94,7 @@ export default function AssetUpload({
         color='blue'
         leftSection={<FontAwesomeIcon icon={faPlus} />}
       >
-        Upload
+        {t('pages.admin.assets.button.upload', {})}
       </Button>
 
       <input

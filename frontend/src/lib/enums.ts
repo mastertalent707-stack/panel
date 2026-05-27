@@ -106,11 +106,11 @@ export const databaseTypeLabelMapping: Record<z.infer<typeof databaseType>, stri
   mongodb: 'MongoDB',
 };
 
-export const announcementTypeLabelMapping: Record<z.infer<typeof announcementType>, string> = {
-  info: 'Info',
-  success: 'Success',
-  warning: 'Warning',
-  error: 'Error',
+export const announcementTypeLabelMapping: Record<z.infer<typeof announcementType>, () => string> = {
+  info: () => getTranslations().t('pages.admin.announcements.enum.announcementType.info', {}),
+  success: () => getTranslations().t('pages.admin.announcements.enum.announcementType.success', {}),
+  warning: () => getTranslations().t('pages.admin.announcements.enum.announcementType.warning', {}),
+  error: () => getTranslations().t('pages.admin.announcements.enum.announcementType.error', {}),
 };
 
 export const announcementTypeColorMapping: Record<z.infer<typeof announcementType>, string> = {

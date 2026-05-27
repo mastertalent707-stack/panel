@@ -9,6 +9,7 @@ import Table from '@/elements/Table.tsx';
 import { queryKeys } from '@/lib/queryKeys.ts';
 import { announcementTableColumns } from '@/lib/tableColumns.ts';
 import { useSearchablePaginatedTable } from '@/plugins/useSearchablePageableTable.ts';
+import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import AdminPermissionGuard from '@/routers/guards/AdminPermissionGuard.tsx';
 import AnnouncementCreateOrUpdate from './AnnouncementCreateOrUpdate.tsx';
 import AnnouncementRow from './AnnouncementRow.tsx';
@@ -16,6 +17,7 @@ import AnnouncementView from './AnnouncementView.tsx';
 
 function AnnouncementsContainer() {
   const navigate = useNavigate();
+  const { t } = useTranslations();
 
   const {
     data: announcements,
@@ -30,7 +32,7 @@ function AnnouncementsContainer() {
 
   return (
     <AdminContentContainer
-      title='Announcements'
+      title={t('pages.admin.announcements.title', {})}
       search={search}
       setSearch={setSearch}
       contentRight={
@@ -40,12 +42,12 @@ function AnnouncementsContainer() {
             color='blue'
             leftSection={<FontAwesomeIcon icon={faPlus} />}
           >
-            Create
+            {t('common.button.create', {})}
           </Button>
         </AdminCan>
       }
     >
-      <Table columns={announcementTableColumns} loading={loading} pagination={announcements} onPageSelect={setPage}>
+      <Table columns={announcementTableColumns()} loading={loading} pagination={announcements} onPageSelect={setPage}>
         {announcements?.data.map((announcement) => (
           <AnnouncementRow key={announcement.uuid} announcement={announcement} />
         ))}
