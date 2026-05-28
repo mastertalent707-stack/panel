@@ -64,8 +64,6 @@ cron = { version = "0.16.0", features = ["serde"] }
 # webauthn-rs = { version = "0.6.1-dev", git = "https://github.com/kanidm/webauthn-rs.git", branch = "6.0-dev-drop-openssl", features = ["danger-allow-state-serialisation"] }
 # ^ not fully stable yet
 webauthn-rs = { version = "0.5.0", features = ["danger-allow-state-serialisation"] }
-openssl = { version = "0.10.80", features = ["vendored"] }
-# end
 sha2 = "0.11.0"
 colored = "3.0.0"
 russh = "0.61.0"
