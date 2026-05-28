@@ -43,8 +43,10 @@ export default function SecurityKeyCreateModal({ opened, onClose }: ModalProps) 
       }
 
       try {
-        await postSecurityKeyChallenge(key.uuid, credential as PublicKeyCredential);
+        const credentialId = await postSecurityKeyChallenge(key.uuid, credential as PublicKeyCredential);
         addToast(t('pages.account.securityKeys.modal.createSecurityKey.toast.created', {}), 'success');
+
+        key.credentialId = credentialId;
         addSecurityKey(key);
       } catch (error) {
         console.error(error);
