@@ -1163,9 +1163,6 @@ const baseTranslations = defineTranslations({
         },
       },
       admin: {
-        sidebar: {
-          back: 'Back',
-        },
         home: {
           title: 'Home',
           alert: {

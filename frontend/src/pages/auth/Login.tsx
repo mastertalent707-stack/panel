@@ -266,11 +266,13 @@ export default function Login() {
                 >
                   {t('common.button.continue', {})}
                 </Button>
+
                 <Divider
                   label={t('common.divider.or', {})}
                   labelPosition='center'
                   hidden={oAuthProviders.length === 0 && !settings.app.registrationEnabled}
                 />
+
                 {oAuthProviders.length > 3 ? (
                   <Button
                     variant='light'
@@ -326,9 +328,14 @@ export default function Login() {
                 >
                   {t('pages.auth.login.step.passkey.button.usePasskey', {})}
                 </Button>
+
                 <Divider label={t('common.divider.or', {})} labelPosition='center' />
+
                 <Button variant='light' onClick={() => setStep('password')} size='md' fullWidth>
                   {t('pages.auth.login.step.passkey.button.usePassword', {})}
+                </Button>
+                <Button variant='light' onClick={() => setStep('username')} size='md' fullWidth>
+                  {t('common.button.back', {})}
                 </Button>
               </Stack>
             </Card>
@@ -364,9 +371,14 @@ export default function Login() {
                 >
                   {t('pages.auth.login.step.password.button.signIn', {})}
                 </Button>
+
                 <Divider label={t('common.divider.or', {})} labelPosition='center' />
+
                 <Button variant='light' onClick={() => navigate('/auth/forgot-password')} size='md' fullWidth>
                   {t('pages.auth.login.step.password.button.forgotPassword', {})}
+                </Button>
+                <Button variant='light' onClick={() => setStep('username')} size='md' fullWidth>
+                  {t('common.button.back', {})}
                 </Button>
               </Stack>
             </Card>

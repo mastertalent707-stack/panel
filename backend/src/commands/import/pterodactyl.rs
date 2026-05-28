@@ -490,15 +490,8 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                                     None => return Ok(()),
                                 };
 
-                                let token = match decrypt_laravel_value(&token, &source_app_key) {
-                                    Ok(token) => token,
-                                    Err(_) => return Ok(()),
-                                };
-
-                                let url: reqwest::Url = match format!("{}://{}:{}", scheme, fqdn, daemon_listen).parse() {
-                                    Ok(url) => url,
-                                    Err(_) => return Ok(()),
-                                };
+                                let token = decrypt_laravel_value(&token, &source_app_key)?;
+                                let url: reqwest::Url = format!("{}://{}:{}", scheme, fqdn, daemon_listen).parse()?;
 
                                 sqlx::query(
                                     r#"
