@@ -69,7 +69,12 @@
         "downloadAs": "Ladda ner som {format}",
         "export": "Export",
         "exportAs": "Exportera som {format}",
-        "recreate": "Skapa om"
+        "recreate": "Skapa om",
+        "import": "Importera",
+        "details": "Detaljer",
+        "leavePage": "Lämna sidan",
+        "setPrimary": "Ange som Primär",
+        "unsetPrimary": "Avlägsna Primär Status"
       },
       "alert": {
         "error": "Fel",
@@ -86,7 +91,8 @@
       "tooltip": {
         "resetToDefault": "Återställ till standard",
         "edit": "Redigera",
-        "delete": "Ta bort"
+        "delete": "Ta bort",
+        "primary": "Primär"
       },
       "form": {
         "name": "Namn",
@@ -95,7 +101,41 @@
         "host": "Värd",
         "username": "Användarnamn",
         "server": "Server",
-        "truncateDirectory": "Vill du ta bort alla filer på denna server innan du utför denna åtgärd? Detta kan inte ångras."
+        "truncateDirectory": "Vill du ta bort alla filer på denna server innan du utför denna åtgärd? Detta kan inte ångras.",
+        "language": "Språk",
+        "firstName": "Förnamn",
+        "lastName": "Efternamn",
+        "currentPassword": "Nuvarande Lösenord",
+        "authenticationCode": "Autentiseringskod",
+        "command": "Kommando",
+        "eggs": "Eggs",
+        "email": "E-post",
+        "confirmPassword": "Bekräfta Lösenord",
+        "disk": "Disk",
+        "memory": "Minne",
+        "portRanges": "Port Avstånd",
+        "portRangesPlaceholder": "Port Avstånd (eg. 3000-4000)",
+        "sftpHost": "SFTP Host",
+        "sftpPort": "SFTP Port",
+        "url": "URL",
+        "ignoredFiles": "Ignorerade Filer",
+        "locked": "Låst",
+        "port": "Port",
+        "protocol": "Protokoll",
+        "yourControlPanelPassword": "Ditt Control Panel Lösenord",
+        "databaseHost": "Databas Host",
+        "fileName": "Filnamn",
+        "destination": "Destination",
+        "archiveName": "Arkivnamn",
+        "directoryName": "Katalognamn",
+        "enabled": "Aktiverad",
+        "archiveFormat": "Arkivformat",
+        "powerAction": "Strömmåtgärd",
+        "startupCommand": "Startkommando",
+        "dockerImage": "Docker Image",
+        "lineContains": "Linje innehåller",
+        "serverName": "Servernamn",
+        "timezone": "Tidszon"
       },
       "table": {
         "pagination": {
@@ -113,7 +153,8 @@
           "event": "Händelse",
           "ip": "IP",
           "when": "När",
-          "command": "Kommando"
+          "command": "Kommando",
+          "notes": "Anteckningar"
         }
       },
       "badge": {
@@ -381,17 +422,12 @@
             "description": "Välj ett starkt lösenord. Detta konto kommer att ha fullständig administrativ åtkomst till alla servrar och inställningar."
           },
           "form": {
-            "username": "Användarnamn",
             "usernamePlaceholder": "admin",
             "email": "E-postadress",
             "emailPlaceholder": "admin@example.com",
-            "firstName": "Förnamn",
             "firstNamePlaceholder": "Alan",
-            "lastName": "Efternamn",
             "lastNamePlaceholder": "Turing",
-            "password": "Lösenord",
             "passwordPlaceholder": "Ange ett starkt lösenord",
-            "confirmPassword": "Bekräfta Lösenord",
             "confirmPasswordPlaceholder": "Ange lösenordet igen"
           },
           "button": {
@@ -402,9 +438,7 @@
           "title": "Logga in igen",
           "alert": "Du blev utloggad under installationsprocessen. Vänligen logga in igen för att fortsätta där du lämnade av.",
           "form": {
-            "username": "Användarnamn",
             "usernamePlaceholder": "admin",
-            "password": "Lösenord",
             "passwordPlaceholder": "Ange ett starkt lösenord"
           },
           "button": {
@@ -431,21 +465,14 @@
           "form": {
             "name": "Namn",
             "namePlaceholder": "Min server",
-            "url": "URL",
             "urlPlaceholder": "URL",
             "urlDescription": "används för intern kommunikation med noden",
             "publicUrl": "Offentlig URL",
             "publicUrlPlaceholder": "URL",
             "publicUrlDescription": "används för websocket/nedladdningar",
-            "sftpHost": "SFTP Host",
             "sftpHostPlaceholder": "SFTP Host",
-            "sftpPort": "SFTP Port",
             "sftpPortPlaceholder": "SFTP Port",
-            "memory": "Minne",
-            "disk": "Disk",
-            "ip": "IP",
-            "portRanges": "Port Avstånd",
-            "portRangesPlaceholder": "Port Avstånd (eg. 3000-4000)"
+            "ip": "IP"
           },
           "error": {
             "noLocations": "Något gick fel. Inga platser hittades."
@@ -471,7 +498,6 @@
           "form": {
             "applicationName": "Applikationsnamn",
             "applicationNamePlaceholder": "Calagopus",
-            "language": "Språk",
             "languagePlaceholder": "Språk",
             "applicationUrl": "Applikations-URL",
             "applicationUrlPlaceholder": "https://calagop.us",
@@ -499,9 +525,7 @@
               "description": "Ägg för generiska applikationskörningar som Node JS, Java och Rust."
             }
           },
-          "button": {
-            "submit": "Importera"
-          }
+          "button": {}
         },
         "server": {
           "title": "Server",
@@ -519,7 +543,6 @@
             "noNodes": "Något gick fel. Inga noder hittades."
           },
           "button": {
-            "submit": "Importera",
             "create": "Skapa & fortsätt"
           }
         },
@@ -628,11 +651,7 @@
         "register": {
           "title": "Registrera",
           "subtitle": "Ange dina uppgifter för att registrera dig",
-          "form": {
-            "email": "E-post",
-            "firstName": "Förnamn",
-            "lastName": "Efternamn"
-          },
+          "form": {},
           "button": {
             "register": "Registrera"
           }
@@ -640,9 +659,7 @@
         "forgotPassword": {
           "title": "Glömt lösenord",
           "subtitle": "Ange din e-postadress för att få instruktioner om hur du resetar ditt lösenord",
-          "form": {
-            "email": "E-post"
-          },
+          "form": {},
           "button": {
             "request": "Begär lösenordsåterställning"
           },
@@ -651,9 +668,7 @@
         "resetPassword": {
           "title": "Återställ lösenord",
           "subtitle": "Ange ditt nya lösenord",
-          "form": {
-            "confirmPassword": "Bekräfta Lösenord"
-          },
+          "form": {},
           "button": {
             "reset": "Återställ Lösenord"
           },
@@ -760,7 +775,6 @@
                 "updated": "Lösenord uppdaterat framgångsrikt."
               },
               "form": {
-                "currentPassword": "Nuvarande Lösenord",
                 "newPassword": "Nytt Lösenord",
                 "confirmNewPassword": "Bekräfta Nytt Lösenord"
               }
@@ -771,8 +785,7 @@
                 "updated": "E-post uppdaterat framgångsrikt."
               },
               "form": {
-                "newEmail": "Ny E-post",
-                "currentPassword": "Nuvarande Lösenord"
+                "newEmail": "Ny E-post"
               }
             },
             "twoFactor": {
@@ -785,17 +798,13 @@
                 "disableTwoFactor": {
                   "title": "Inaktivera Tvåfaktorsautentisering",
                   "description": "Att inaktivera tvåfaktorsautentisering kommer att göra ditt konto mindre säkert.",
-                  "form": {
-                    "code": "Autentiseringskod"
-                  }
+                  "form": {}
                 },
                 "setupTwoFactor": {
                   "title": "Konfigurera tvåfaktorsautentisering",
                   "description": "Skydda ditt konto från obehörig åtkomst. Du kommer att bli ombedd att ange en verifieringskod varje gång du loggar in.",
                   "descriptionQR": "Skanna QR-koden ovan med valfri tvåfaktorsautentiseringsapp. Ange sedan den genererade 6-siffriga koden i fältet nedan.",
-                  "form": {
-                    "code": "Autentiseringskod"
-                  }
+                  "form": {}
                 },
                 "recoveryCodes": {
                   "title": "Återställningskoder",
@@ -816,10 +825,6 @@
                 "updated": "Kontodetaljer uppdaterade framgångsrikt."
               },
               "form": {
-                "nameFirst": "Förnamn",
-                "nameLast": "Efternamn",
-                "username": "Användarnamn",
-                "language": "Språk",
                 "toastPosition": "Toast Position",
                 "startOnGroupedServers": "Starta på sidan för grupperade servrar"
               }
@@ -928,9 +933,7 @@
         },
         "sshKeys": {
           "title": "SSH-nycklar",
-          "button": {
-            "import": "Importera"
-          },
+          "button": {},
           "table": {
             "columns": {
               "fingerprint": "Fingeravtryck"
@@ -961,8 +964,7 @@
                 "created": "{sshKeys} skapade."
               },
               "form": {
-                "provider": "Leverantör",
-                "username": "Användarnamn"
+                "provider": "Leverantör"
               }
             },
             "deleteSshKey": {
@@ -981,10 +983,7 @@
               "eggs": "Eggs"
             }
           },
-          "form": {
-            "eggs": "Eggs",
-            "command": "Kommando"
-          },
+          "form": {},
           "modal": {
             "createCommandSnippet": {
               "title": "Skapa kommandosnutt",
@@ -1099,12 +1098,6 @@
             "sshDetails": {
               "title": "SSH Detaljer",
               "form": {
-                "protocol": "Protokoll",
-                "port": "Port",
-                "host": "Host",
-                "username": "Användarnamn",
-                "password": "Lösenord",
-                "yourPassword": "Ditt Control Panel Lösenord",
                 "command": "SSH kommando"
               },
               "launch": "Lansera"
@@ -1201,7 +1194,6 @@
             "new": "Ny",
             "sftpDetails": "SFTP-detaljer",
             "openInNewWindow": "Öppna i nytt fönster",
-            "details": "Detaljer",
             "rename": "Döp om",
             "copy": "Kopiera",
             "move": "Flytta",
@@ -1275,44 +1267,34 @@
             "activeUploads": {
               "title": "Aktiva uppladdningar",
               "content": "Är du säker på att du vill lämna den här sidan? Du har {files} aktiva filuppladdningar. Om du lämnar den här sidan kommer filuppladdningarna att avbrytas.",
-              "button": {
-                "leave": "Lämna sidan"
-              }
+              "button": {}
             },
             "unsavedChanges": {
               "title": "Osparade ändringar",
               "content": "Du har osparade ändringar i filredigeringen. Är du säker på att du vill lämna den här sidan? Om du lämnar sidan kommer dina ändringar att förloras.",
-              "button": {
-                "leave": "Lämna sidan"
-              }
+              "button": {}
             },
             "createArchive": {
               "title": "Skapa arkiv",
               "form": {
-                "archiveName": "Arkivnamn",
                 "format": "Format"
               },
               "createdAs": "Detta arkiv kommer att skapas som "
             },
             "createDirectory": {
               "title": "Skapa katalog",
-              "form": {
-                "directoryName": "Katalognamn"
-              },
+              "form": {},
               "createdAs": "Denna katalog kommer att skapas som "
             },
             "copyFile": {
               "title": "Kopiera fil",
-              "form": {
-                "fileName": "Filnamn"
-              },
+              "form": {},
               "createdAs": "Denna fil kommer att skapas som "
             },
             "copyRemote": {
               "title": "Fjärrkopiera filer",
               "form": {
-                "server": "Server",
-                "destination": "Destination"
+                "server": "Server"
               },
               "createdAs": "Dessa filer kommer att skapas på den remote servern under "
             },
@@ -1333,9 +1315,7 @@
             },
             "createFile": {
               "title": "Skapa fil",
-              "form": {
-                "fileName": "Filnamn"
-              }
+              "form": {}
             },
             "details": {
               "title": "Fildetaljer",
@@ -1361,9 +1341,7 @@
             },
             "renameFile": {
               "title": "Byt namn på fil",
-              "form": {
-                "fileName": "Filnamn"
-              }
+              "form": {}
             },
             "searchFiles": {
               "title": "Sök efter filer",
@@ -1386,22 +1364,14 @@
               "title": "Pull Fil",
               "form": {
                 "fileUrl": "Fil URL",
-                "query": "Query",
-                "fileName": "Filnamn"
+                "query": "Query"
               },
               "createdAs": "Denna fil kommer att skapas som ",
               "pull": "Pull"
             },
             "sftpDetails": {
               "title": "SFTP-detaljer",
-              "form": {
-                "protocol": "Protokoll",
-                "port": "Port",
-                "host": "Host",
-                "username": "Användarnamn",
-                "password": "Lösenord",
-                "yourPassword": "Ditt lösenord för kontrollpanelen"
-              },
+              "form": {},
               "launch": "Starta"
             }
           }
@@ -1420,7 +1390,6 @@
             }
           },
           "button": {
-            "details": "Detaljer",
             "rotatePassword": "Rotera lösenord"
           },
           "form": {
@@ -1433,7 +1402,6 @@
                 "created": "Databas skapad."
               },
               "form": {
-                "databaseHost": "Databas Host",
                 "noHostsFound": "Inga värdar hittades"
               }
             },
@@ -1442,9 +1410,7 @@
               "toast": {
                 "updated": "Databas uppdaterad."
               },
-              "form": {
-                "locked": "Låst"
-              }
+              "form": {}
             },
             "databaseDetails": {
               "title": "Databasanslutningsdetaljer",
@@ -1489,7 +1455,6 @@
             }
           },
           "button": {
-            "import": "Importera",
             "trigger": "Utlösare",
             "triggerWithCondition": "Utlösare (do not skip condition)",
             "triggerSkipCondition": "Utlösare (skip condition)",
@@ -1593,7 +1558,6 @@
           },
           "form": {
             "scheduleName": "Schema Name",
-            "enabled": "Aktiverad",
             "triggersList": "Utlösare",
             "triggerNumber": "Utlösare {number}",
             "actionType": "Åtgärdstyp",
@@ -1634,9 +1598,7 @@
             },
             "powerAction": {
               "title": "Power Action",
-              "form": {
-                "powerAction": "Power Action"
-              },
+              "form": {},
               "card": {
                 "content": "När Power Action `{action}` begärs."
               }
@@ -1658,9 +1620,7 @@
             },
             "consoleLine": {
               "title": "Konsollinje",
-              "form": {
-                "lineContains": "Linje innehåller"
-              },
+              "form": {},
               "card": {
                 "content": "När konsollutmatningen når en linje som innehåller `{contains}`"
               }
@@ -1723,7 +1683,6 @@
             "waitForConsoleLine": {
               "title": "Vänta på Konsollinje",
               "form": {
-                "lineContains": "Linje innehåller",
                 "timeout": "Timeout (millisekunder)"
               },
               "renderer": {
@@ -1737,9 +1696,7 @@
             },
             "sendCommand": {
               "title": "Skicka Kommando",
-              "form": {
-                "command": "Kommando"
-              },
+              "form": {},
               "renderer": {
                 "compact": "Kör {command}",
                 "detail": {
@@ -1749,9 +1706,7 @@
             },
             "sendPower": {
               "title": "Skicka Strömsignal",
-              "form": {
-                "powerAction": "Strömmåtgärd"
-              },
+              "form": {},
               "renderer": {
                 "compact": "Gör {action}",
                 "detail": {
@@ -1762,8 +1717,7 @@
             "createBackup": {
               "title": "Skapa säkerhetskopia",
               "form": {
-                "backupName": "Säkerhetskopieringsnamn",
-                "ignoredFiles": "Ignorerade filer"
+                "backupName": "Säkerhetskopieringsnamn"
               },
               "renderer": {
                 "compact": "Skapa {name}",
@@ -1775,9 +1729,7 @@
             },
             "createDirectory": {
               "title": "Skapa Katalog",
-              "form": {
-                "directoryName": "Katalognamn"
-              },
+              "form": {},
               "renderer": {
                 "compact": "Skapa {name} i {root}",
                 "detail": {
@@ -1804,8 +1756,7 @@
             "copyFile": {
               "title": "Kopiera Fil",
               "form": {
-                "sourceFile": "Källfil",
-                "destination": "Destination"
+                "sourceFile": "Källfil"
               },
               "renderer": {
                 "compact": "Kopiera {file} till {destination}",
@@ -1846,9 +1797,7 @@
             "compressFiles": {
               "title": "Komprimera Filer",
               "form": {
-                "filesToCompress": "Filer att komprimera",
-                "archiveFormat": "Arkivformat",
-                "archiveName": "Arkivnamn"
+                "filesToCompress": "Filer att komprimera"
               },
               "renderer": {
                 "compact": "Komprimera {files} i {root} till {name}",
@@ -1889,9 +1838,7 @@
             },
             "updateStartupCommand": {
               "title": "Uppdatera startkommando",
-              "form": {
-                "startupCommand": "Startkommando"
-              },
+              "form": {},
               "renderer": {
                 "compact": "Sätt till {command}",
                 "detail": {
@@ -1901,9 +1848,7 @@
             },
             "updateStartupDockerImage": {
               "title": "Uppdatera Docker Image",
-              "form": {
-                "dockerImage": "Docker Image"
-              },
+              "form": {},
               "renderer": {
                 "compact": "Sätt till {image}",
                 "detail": {
@@ -1929,10 +1874,8 @@
                 "created": "Underanvändare skapad."
               },
               "form": {
-                "email": "E-post",
                 "emailPlaceholder": "Ange den e-postadress som denna underanvändare ska sparas som.",
-                "permissions": "Behörigheter",
-                "ignoredFiles": "Ignorerade filer"
+                "permissions": "Behörigheter"
               }
             },
             "updateSubuser": {
@@ -1976,18 +1919,14 @@
               "toast": {
                 "created": "Säkerhetskopia skapad."
               },
-              "form": {
-                "ignoredFiles": "Ignorerade Filer"
-              }
+              "form": {}
             },
             "editBackup": {
               "title": "Redigera Säkerhetskopia",
               "toast": {
                 "updated": "Säkerhetskopia uppdaterad."
               },
-              "form": {
-                "locked": "Låst"
-              }
+              "form": {}
             },
             "restoreBackup": {
               "title": "Återställ Säkerhetskopia"
@@ -2005,20 +1944,15 @@
           "title": "Nätverk",
           "subtitle": "{current} av {max} maximala allokeringar tilldelade.",
           "tooltip": {
-            "limitReached": "Den här servern är begränsad till {max} allokeringar.",
-            "primary": "Primär"
+            "limitReached": "Den här servern är begränsad till {max} allokeringar."
           },
           "table": {
             "columns": {
               "hostname": "Värdnamn",
-              "port": "Port",
-              "notes": "Anteckningar"
+              "port": "Port"
             }
           },
-          "button": {
-            "setPrimary": "Ange som Primär",
-            "unsetPrimary": "Avlägsna Primär Status"
-          },
+          "button": {},
           "toast": {
             "created": "Tilldelning skapad.",
             "updated": "Tilldelning uppdaterad.",
@@ -2029,9 +1963,7 @@
           "modal": {
             "editAllocation": {
               "title": "Redigera tilldelning",
-              "form": {
-                "notes": "Anteckningar"
-              }
+              "form": {}
             },
             "removeAllocation": {
               "title": "Bekräfta Borttagning av Tilldelning",
@@ -2041,10 +1973,7 @@
         },
         "startup": {
           "title": "Uppstart",
-          "form": {
-            "startupCommand": "Startkommando",
-            "dockerImage": "Docker-bild"
-          },
+          "form": {},
           "variables": "Variabler",
           "dockerImageDescription": "Docker-avbildningen som används för att köra den här servern. Denna kan ändras för att använda en annan avbildning.",
           "dockerImageDescriptionCustom": "Docker-avbildningen som används för att köra den här servern. Denna har ställts in av en administratör och kan inte ändras.",
@@ -2057,9 +1986,7 @@
             "unsavedChanges": {
               "title": "Osparade ändringar",
               "content": "Du har osparade ändringar i dina startvariabler. Är du säker på att du vill lämna den här sidan? Om du lämnar sidan kommer dina ändringar att gå förlorade.",
-              "button": {
-                "leave": "Lämna sida"
-              }
+              "button": {}
             }
           },
           "noVariables": "Inga startvariabler hittades för den här servern."
@@ -2106,19 +2033,14 @@
           },
           "rename": {
             "title": "Döp om Server",
-            "form": {
-              "serverName": "Servernamn"
-            },
+            "form": {},
             "toast": {
               "renamed": "Server har döpts om."
             }
           },
           "timezone": {
             "title": "Tidszon",
-            "form": {
-              "timezone": "Tidszon",
-              "system": "System"
-            },
+            "form": {},
             "toast": {
               "updated": "Serverns tidszon uppdaterad."
             }
@@ -2126,7 +2048,6 @@
           "autokill": {
             "title": "Auto-Kill",
             "form": {
-              "enabled": "Aktiverad",
               "secondsUntilAutoKill": "Sekunder tills auto-kill"
             },
             "toast": {

@@ -69,7 +69,12 @@
         "downloadAs": "Downloaden als {format}",
         "export": "Exporteren",
         "exportAs": "Exporteren als {format}",
-        "recreate": "Opnieuw aanmaken"
+        "recreate": "Opnieuw aanmaken",
+        "import": "Importeren",
+        "details": "Details",
+        "leavePage": "Pagina verlaten",
+        "setPrimary": "Instellen als primair",
+        "unsetPrimary": "Primair verwijderen"
       },
       "alert": {
         "error": "Fout",
@@ -86,7 +91,8 @@
       "tooltip": {
         "resetToDefault": "Herstellen naar standaard",
         "edit": "Bewerken",
-        "delete": "Verwijderen"
+        "delete": "Verwijderen",
+        "primary": "Primair"
       },
       "form": {
         "name": "Naam",
@@ -95,7 +101,41 @@
         "host": "Host",
         "username": "Gebruikersnaam",
         "server": "Server",
-        "truncateDirectory": "Wilt u alle bestanden van deze server verwijderen voordat u deze actie uitvoert? Dit kan niet ongedaan worden gemaakt."
+        "truncateDirectory": "Wilt u alle bestanden van deze server verwijderen voordat u deze actie uitvoert? Dit kan niet ongedaan worden gemaakt.",
+        "language": "Taal",
+        "firstName": "Voornaam",
+        "lastName": "Achternaam",
+        "currentPassword": "Huidig wachtwoord",
+        "authenticationCode": "Authenticatiecode",
+        "command": "Opdracht",
+        "eggs": "Eggs",
+        "email": "E-mail",
+        "confirmPassword": "Wachtwoord bevestigen",
+        "disk": "Schijf",
+        "memory": "Geheugen",
+        "portRanges": "Poortbereiken",
+        "portRangesPlaceholder": "Poortbereiken (bijv. 3000-4000)",
+        "sftpHost": "SFTP-host",
+        "sftpPort": "SFTP-poort",
+        "url": "URL",
+        "ignoredFiles": "Genegeerde bestanden",
+        "locked": "Vergrendeld",
+        "port": "Poort",
+        "protocol": "Protocol",
+        "yourControlPanelPassword": "Uw configuratiepanelwachtwoord",
+        "databaseHost": "Databasehost",
+        "fileName": "Bestandsnaam",
+        "destination": "Bestemming",
+        "archiveName": "Archiefnaam",
+        "directoryName": "Mapnaam",
+        "enabled": "Ingeschakeld",
+        "archiveFormat": "Archiefformaat",
+        "powerAction": "Stroomactie",
+        "startupCommand": "Opstartcommando",
+        "dockerImage": "Docker-image",
+        "lineContains": "Regel bevat",
+        "serverName": "Servernaam",
+        "timezone": "Tijdzone"
       },
       "table": {
         "pagination": {
@@ -113,7 +153,8 @@
           "event": "Gebeurtenis",
           "ip": "IP",
           "when": "Wanneer",
-          "command": "Opdracht"
+          "command": "Opdracht",
+          "notes": "Notities"
         }
       },
       "badge": {
@@ -380,17 +421,12 @@
             "description": "Kies een sterk wachtwoord. Dit account heeft volledige beheerderstoegang tot alle servers en instellingen."
           },
           "form": {
-            "username": "Gebruikersnaam",
             "usernamePlaceholder": "beheerder",
             "email": "E-mailadres",
             "emailPlaceholder": "beheerder@voorbeeld.nl",
-            "firstName": "Voornaam",
             "firstNamePlaceholder": "Alan",
-            "lastName": "Achternaam",
             "lastNamePlaceholder": "Turing",
-            "password": "Wachtwoord",
             "passwordPlaceholder": "Voer een sterk wachtwoord in",
-            "confirmPassword": "Wachtwoord bevestigen",
             "confirmPasswordPlaceholder": "Voer uw wachtwoord opnieuw in"
           },
           "button": {
@@ -401,9 +437,7 @@
           "title": "Opnieuw inloggen",
           "alert": "U bent uitgelogd tijdens het installatieproces. Log opnieuw in om verder te gaan waar u gebleven was.",
           "form": {
-            "username": "Gebruikersnaam",
             "usernamePlaceholder": "beheerder",
-            "password": "Wachtwoord",
             "passwordPlaceholder": "Voer een sterk wachtwoord in"
           },
           "button": {
@@ -430,21 +464,14 @@
           "form": {
             "name": "Naam",
             "namePlaceholder": "Mijn server",
-            "url": "URL",
             "urlPlaceholder": "URL",
             "urlDescription": "gebruikt voor interne communicatie met de node",
             "publicUrl": "Openbare URL",
             "publicUrlPlaceholder": "URL",
             "publicUrlDescription": "gebruikt voor websocket/downloads",
-            "sftpHost": "SFTP-host",
             "sftpHostPlaceholder": "SFTP-host",
-            "sftpPort": "SFTP-poort",
             "sftpPortPlaceholder": "SFTP-poort",
-            "memory": "Geheugen",
-            "disk": "Schijf",
-            "ip": "IP",
-            "portRanges": "Poortbereiken",
-            "portRangesPlaceholder": "Poortbereiken (bijv. 3000-4000)"
+            "ip": "IP"
           },
           "error": {
             "noLocations": "Er is iets misgegaan. Geen locaties gevonden."
@@ -470,7 +497,6 @@
           "form": {
             "applicationName": "Applicatienaam",
             "applicationNamePlaceholder": "Calagopus",
-            "language": "Taal",
             "languagePlaceholder": "Taal",
             "applicationUrl": "Applicatie-URL",
             "applicationUrlPlaceholder": "https://calagop.us",
@@ -498,9 +524,7 @@
               "description": "Eggs voor generieke applicatie-runtimes zoals Node JS, Java en Rust."
             }
           },
-          "button": {
-            "submit": "Importeren"
-          }
+          "button": {}
         },
         "server": {
           "title": "Server",
@@ -517,7 +541,6 @@
             "noNodes": "Er is iets misgegaan. Geen nodes gevonden."
           },
           "button": {
-            "submit": "Importeren",
             "create": "Aanmaken & doorgaan"
           }
         },
@@ -624,11 +647,7 @@
         "register": {
           "title": "Registreren",
           "subtitle": "Voer uw gegevens in om te registreren",
-          "form": {
-            "email": "E-mail",
-            "firstName": "Voornaam",
-            "lastName": "Achternaam"
-          },
+          "form": {},
           "button": {
             "register": "Registreren"
           }
@@ -636,9 +655,7 @@
         "forgotPassword": {
           "title": "Wachtwoord vergeten",
           "subtitle": "Voer uw e-mailadres in om instructies te ontvangen voor het opnieuw instellen van uw wachtwoord",
-          "form": {
-            "email": "E-mail"
-          },
+          "form": {},
           "button": {
             "request": "Wachtwoordreset aanvragen"
           },
@@ -647,9 +664,7 @@
         "resetPassword": {
           "title": "Wachtwoord opnieuw instellen",
           "subtitle": "Voer uw nieuwe wachtwoord in",
-          "form": {
-            "confirmPassword": "Wachtwoord bevestigen"
-          },
+          "form": {},
           "button": {
             "reset": "Wachtwoord opnieuw instellen"
           },
@@ -756,7 +771,6 @@
                 "updated": "Wachtwoord succesvol bijgewerkt."
               },
               "form": {
-                "currentPassword": "Huidig wachtwoord",
                 "newPassword": "Nieuw wachtwoord",
                 "confirmNewPassword": "Nieuw wachtwoord bevestigen"
               }
@@ -767,8 +781,7 @@
                 "updated": "E-mailadres succesvol bijgewerkt."
               },
               "form": {
-                "newEmail": "Nieuw e-mailadres",
-                "currentPassword": "Huidig wachtwoord"
+                "newEmail": "Nieuw e-mailadres"
               }
             },
             "twoFactor": {
@@ -781,17 +794,13 @@
                 "disableTwoFactor": {
                   "title": "Tweestapsverificatie uitschakelen",
                   "description": "Het uitschakelen van tweestapsverificatie maakt uw account minder veilig.",
-                  "form": {
-                    "code": "Authenticatiecode"
-                  }
+                  "form": {}
                 },
                 "setupTwoFactor": {
                   "title": "Tweestapsverificatie instellen",
                   "description": "Bescherm uw account tegen ongeautoriseerde toegang. U wordt gevraagd om een verificatiecode bij elke aanmelding.",
                   "descriptionQR": "Scan de bovenstaande QR-code met uw tweestapsverificatie-app naar keuze. Voer vervolgens de gegenereerde 6-cijferige code in het onderstaande veld in.",
-                  "form": {
-                    "code": "Authenticatiecode"
-                  }
+                  "form": {}
                 },
                 "recoveryCodes": {
                   "title": "Herstelcodes",
@@ -812,10 +821,6 @@
                 "updated": "Accountgegevens succesvol bijgewerkt."
               },
               "form": {
-                "nameFirst": "Voornaam",
-                "nameLast": "Achternaam",
-                "username": "Gebruikersnaam",
-                "language": "Taal",
                 "toastPosition": "Meldingspositie",
                 "startOnGroupedServers": "Starten op de pagina Gegroepeerde servers"
               }
@@ -924,9 +929,7 @@
         },
         "sshKeys": {
           "title": "SSH-sleutels",
-          "button": {
-            "import": "Importeren"
-          },
+          "button": {},
           "table": {
             "columns": {
               "fingerprint": "Vingerafdruk"
@@ -957,8 +960,7 @@
                 "created": "{sshKeys} aangemaakt."
               },
               "form": {
-                "provider": "Aanbieder",
-                "username": "Gebruikersnaam"
+                "provider": "Aanbieder"
               }
             },
             "deleteSshKey": {
@@ -977,10 +979,7 @@
               "eggs": "Eggs"
             }
           },
-          "form": {
-            "eggs": "Eggs",
-            "command": "Opdracht"
-          },
+          "form": {},
           "modal": {
             "createCommandSnippet": {
               "title": "Opdrachtfragment aanmaken",
@@ -1087,12 +1086,6 @@
             "sshDetails": {
               "title": "SSH-gegevens",
               "form": {
-                "protocol": "Protocol",
-                "port": "Poort",
-                "host": "Host",
-                "username": "Gebruikersnaam",
-                "password": "Wachtwoord",
-                "yourPassword": "Uw configuratiepanelwachtwoord",
                 "command": "SSH-opdracht"
               },
               "launch": "Starten"
@@ -1187,7 +1180,6 @@
             "new": "Nieuw",
             "sftpDetails": "SFTP-gegevens",
             "openInNewWindow": "Openen in nieuw venster",
-            "details": "Details",
             "rename": "Hernoemen",
             "copy": "Kopiëren",
             "move": "Verplaatsen",
@@ -1261,44 +1253,34 @@
             "activeUploads": {
               "title": "Actieve uploads",
               "content": "Weet u zeker dat u deze pagina wilt verlaten? U heeft {files} actieve bestandsuploads. Als u de pagina verlaat, worden de uploads afgebroken.",
-              "button": {
-                "leave": "Pagina verlaten"
-              }
+              "button": {}
             },
             "unsavedChanges": {
               "title": "Niet-opgeslagen wijzigingen",
               "content": "U heeft niet-opgeslagen wijzigingen in de bestandseditor. Weet u zeker dat u deze pagina wilt verlaten? Als u de pagina verlaat, gaan uw wijzigingen verloren.",
-              "button": {
-                "leave": "Pagina verlaten"
-              }
+              "button": {}
             },
             "createArchive": {
               "title": "Archief aanmaken",
               "form": {
-                "archiveName": "Archiefnaam",
                 "format": "Formaat"
               },
               "createdAs": "Dit archief wordt aangemaakt als "
             },
             "createDirectory": {
               "title": "Map aanmaken",
-              "form": {
-                "directoryName": "Mapnaam"
-              },
+              "form": {},
               "createdAs": "Deze map wordt aangemaakt als "
             },
             "copyFile": {
               "title": "Bestand kopiëren",
-              "form": {
-                "fileName": "Bestandsnaam"
-              },
+              "form": {},
               "createdAs": "Dit bestand wordt aangemaakt als "
             },
             "copyRemote": {
               "title": "Bestanden op afstand kopiëren",
               "form": {
-                "server": "Server",
-                "destination": "Bestemming"
+                "server": "Server"
               },
               "createdAs": "Deze bestanden worden aangemaakt op de externe server onder "
             },
@@ -1319,9 +1301,7 @@
             },
             "createFile": {
               "title": "Bestand aanmaken",
-              "form": {
-                "fileName": "Bestandsnaam"
-              }
+              "form": {}
             },
             "details": {
               "title": "Bestandsdetails",
@@ -1347,9 +1327,7 @@
             },
             "renameFile": {
               "title": "Bestand hernoemen",
-              "form": {
-                "fileName": "Bestandsnaam"
-              }
+              "form": {}
             },
             "searchFiles": {
               "title": "Bestanden zoeken",
@@ -1372,22 +1350,14 @@
               "title": "Bestand ophalen",
               "form": {
                 "fileUrl": "Bestands-URL",
-                "query": "Zoekopdracht",
-                "fileName": "Bestandsnaam"
+                "query": "Zoekopdracht"
               },
               "createdAs": "Dit bestand wordt aangemaakt als ",
               "pull": "Ophalen"
             },
             "sftpDetails": {
               "title": "SFTP-gegevens",
-              "form": {
-                "protocol": "Protocol",
-                "port": "Poort",
-                "host": "Host",
-                "username": "Gebruikersnaam",
-                "password": "Wachtwoord",
-                "yourPassword": "Uw configuratiepanelwachtwoord"
-              },
+              "form": {},
               "launch": "Starten"
             }
           }
@@ -1406,7 +1376,6 @@
             }
           },
           "button": {
-            "details": "Details",
             "rotatePassword": "Wachtwoord roteren"
           },
           "form": {
@@ -1419,7 +1388,6 @@
                 "created": "Database aangemaakt."
               },
               "form": {
-                "databaseHost": "Databasehost",
                 "noHostsFound": "Geen hosts gevonden"
               }
             },
@@ -1428,9 +1396,7 @@
               "toast": {
                 "updated": "Database bijgewerkt."
               },
-              "form": {
-                "locked": "Vergrendeld"
-              }
+              "form": {}
             },
             "databaseDetails": {
               "title": "Databaseverbindingsgegevens",
@@ -1475,7 +1441,6 @@
             }
           },
           "button": {
-            "import": "Importeren",
             "trigger": "Activeren",
             "triggerWithCondition": "Activeren (conditie niet overslaan)",
             "triggerSkipCondition": "Activeren (conditie overslaan)",
@@ -1579,7 +1544,6 @@
           },
           "form": {
             "scheduleName": "Planningsnaam",
-            "enabled": "Ingeschakeld",
             "triggersList": "Triggers",
             "triggerNumber": "Trigger {number}",
             "actionType": "Actietype",
@@ -1620,9 +1584,7 @@
             },
             "powerAction": {
               "title": "Stroomactie",
-              "form": {
-                "powerAction": "Stroomactie"
-              },
+              "form": {},
               "card": {
                 "content": "Wanneer stroomactie `{action}` wordt gevraagd."
               }
@@ -1644,9 +1606,7 @@
             },
             "consoleLine": {
               "title": "Consoleregel",
-              "form": {
-                "lineContains": "Regel bevat"
-              },
+              "form": {},
               "card": {
                 "content": "Wanneer console-uitvoer een regel bereikt die `{contains}` bevat"
               }
@@ -1709,7 +1669,6 @@
             "waitForConsoleLine": {
               "title": "Wachten op consoleregel",
               "form": {
-                "lineContains": "Regel bevat",
                 "timeout": "Time-out (milliseconden)"
               },
               "renderer": {
@@ -1723,9 +1682,7 @@
             },
             "sendCommand": {
               "title": "Opdracht verzenden",
-              "form": {
-                "command": "Opdracht"
-              },
+              "form": {},
               "renderer": {
                 "compact": "Voer {command} uit",
                 "detail": {
@@ -1735,9 +1692,7 @@
             },
             "sendPower": {
               "title": "Stroomsignaal verzenden",
-              "form": {
-                "powerAction": "Stroomactie"
-              },
+              "form": {},
               "renderer": {
                 "compact": "Voer {action} uit",
                 "detail": {
@@ -1748,8 +1703,7 @@
             "createBackup": {
               "title": "Back-up aanmaken",
               "form": {
-                "backupName": "Back-upnaam",
-                "ignoredFiles": "Genegeerde bestanden"
+                "backupName": "Back-upnaam"
               },
               "renderer": {
                 "compact": "Maak {name} aan",
@@ -1761,9 +1715,7 @@
             },
             "createDirectory": {
               "title": "Map aanmaken",
-              "form": {
-                "directoryName": "Mapnaam"
-              },
+              "form": {},
               "renderer": {
                 "compact": "Maak {name} aan in {root}",
                 "detail": {
@@ -1790,8 +1742,7 @@
             "copyFile": {
               "title": "Bestand kopiëren",
               "form": {
-                "sourceFile": "Bronbestand",
-                "destination": "Bestemming"
+                "sourceFile": "Bronbestand"
               },
               "renderer": {
                 "compact": "Kopieer {file} naar {destination}",
@@ -1832,9 +1783,7 @@
             "compressFiles": {
               "title": "Bestanden comprimeren",
               "form": {
-                "filesToCompress": "Te comprimeren bestanden",
-                "archiveFormat": "Archiefformaat",
-                "archiveName": "Archiefnaam"
+                "filesToCompress": "Te comprimeren bestanden"
               },
               "renderer": {
                 "compact": "Comprimeer {files} in {root} naar {name}",
@@ -1875,9 +1824,7 @@
             },
             "updateStartupCommand": {
               "title": "Opstartcommando bijwerken",
-              "form": {
-                "startupCommand": "Opstartcommando"
-              },
+              "form": {},
               "renderer": {
                 "compact": "Stel in op {command}",
                 "detail": {
@@ -1887,9 +1834,7 @@
             },
             "updateStartupDockerImage": {
               "title": "Docker-image bijwerken",
-              "form": {
-                "dockerImage": "Docker-image"
-              },
+              "form": {},
               "renderer": {
                 "compact": "Stel in op {image}",
                 "detail": {
@@ -1915,10 +1860,8 @@
                 "created": "Subgebruiker aangemaakt."
               },
               "form": {
-                "email": "E-mail",
                 "emailPlaceholder": "Voer het e-mailadres in waaronder deze subgebruiker moet worden opgeslagen.",
-                "permissions": "Rechten",
-                "ignoredFiles": "Genegeerde bestanden"
+                "permissions": "Rechten"
               }
             },
             "updateSubuser": {
@@ -1962,18 +1905,14 @@
               "toast": {
                 "created": "Back-up aangemaakt."
               },
-              "form": {
-                "ignoredFiles": "Genegeerde bestanden"
-              }
+              "form": {}
             },
             "editBackup": {
               "title": "Back-up bewerken",
               "toast": {
                 "updated": "Back-up bijgewerkt."
               },
-              "form": {
-                "locked": "Vergrendeld"
-              }
+              "form": {}
             },
             "restoreBackup": {
               "title": "Back-up herstellen"
@@ -1991,20 +1930,15 @@
           "title": "Netwerk",
           "subtitle": "{current} van {max} maximale allocaties toegewezen.",
           "tooltip": {
-            "limitReached": "Deze server is beperkt tot {max} allocaties.",
-            "primary": "Primair"
+            "limitReached": "Deze server is beperkt tot {max} allocaties."
           },
           "table": {
             "columns": {
               "hostname": "Hostnaam",
-              "port": "Poort",
-              "notes": "Notities"
+              "port": "Poort"
             }
           },
-          "button": {
-            "setPrimary": "Instellen als primair",
-            "unsetPrimary": "Primair verwijderen"
-          },
+          "button": {},
           "toast": {
             "created": "Allocatie aangemaakt.",
             "updated": "Allocatie bijgewerkt.",
@@ -2015,9 +1949,7 @@
           "modal": {
             "editAllocation": {
               "title": "Allocatie bewerken",
-              "form": {
-                "notes": "Notities"
-              }
+              "form": {}
             },
             "removeAllocation": {
               "title": "Verwijderen van allocatie bevestigen",
@@ -2027,10 +1959,7 @@
         },
         "startup": {
           "title": "Opstarten",
-          "form": {
-            "startupCommand": "Opstartcommando",
-            "dockerImage": "Docker-image"
-          },
+          "form": {},
           "variables": "Variabelen",
           "dockerImageDescription": "De Docker-image die wordt gebruikt om deze server te draaien. Dit kan worden gewijzigd om een andere image te gebruiken.",
           "dockerImageDescriptionCustom": "De Docker-image die wordt gebruikt om deze server te draaien. Dit is ingesteld door een beheerder en kan niet worden gewijzigd.",
@@ -2083,19 +2012,14 @@
           },
           "rename": {
             "title": "Server hernoemen",
-            "form": {
-              "serverName": "Servernaam"
-            },
+            "form": {},
             "toast": {
               "renamed": "Server hernoemd."
             }
           },
           "timezone": {
             "title": "Tijdzone",
-            "form": {
-              "timezone": "Tijdzone",
-              "system": "Systeem"
-            },
+            "form": {},
             "toast": {
               "updated": "Servertijdzone bijgewerkt."
             }
@@ -2103,7 +2027,6 @@
           "autokill": {
             "title": "Automatisch beëindigen",
             "form": {
-              "enabled": "Ingeschakeld",
               "secondsUntilAutoKill": "Seconden tot automatisch beëindigen"
             },
             "toast": {
