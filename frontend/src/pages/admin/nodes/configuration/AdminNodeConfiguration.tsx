@@ -140,7 +140,7 @@ export default function AdminNodeConfiguration({ node }: { node: z.infer<typeof 
                 />
                 <NumberInput
                   name='sftp_port'
-                  label={t('pages.admin.nodes.tabs.configuration.page.form.sftpPort', {})}
+                  label={t('common.form.sftpPort', {})}
                   value={sftpPort}
                   min={1}
                   max={65535}

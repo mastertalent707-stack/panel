@@ -52,10 +52,7 @@ export default function AutokillContainer() {
     >
       <form onSubmit={form.onSubmit(() => doUpdate())} className='h-full'>
         <Stack h='100%'>
-          <Switch
-            label={t('pages.server.settings.autokill.form.enabled', {})}
-            {...form.getInputProps('enabled', { type: 'checkbox' })}
-          />
+          <Switch label={t('common.form.enabled', {})} {...form.getInputProps('enabled', { type: 'checkbox' })} />
           <NumberInput
             label={t('pages.server.settings.autokill.form.secondsUntilAutoKill', {})}
             {...form.getInputProps('seconds')}

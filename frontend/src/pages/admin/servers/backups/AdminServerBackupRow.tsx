@@ -36,7 +36,7 @@ export default function AdminServerBackupRow({ backup }: { backup: z.infer<typeo
   const doDownload = (archiveFormat: z.infer<typeof streamingArchiveFormat>) => {
     downloadNodeBackup(backup.node.uuid, backup.uuid, archiveFormat)
       .then(({ url }) => {
-        addToast('Download started.', 'success');
+        addToast(t('pages.admin.nodes.tabs.backups.page.toast.downloadStarted', {}), 'success');
         window.open(url, '_blank');
       })
       .catch((msg) => {
@@ -134,7 +134,7 @@ export default function AdminServerBackupRow({ backup }: { backup: z.infer<typeo
                 <TableLink to={`/admin/nodes/${backup.node.uuid}`}>{backup.node.name}</TableLink>
               </Code>
               {backup.server && backup.server.node.uuid !== backup.node.uuid && (
-                <Tooltip label='This backup is on a different node than the server. It is not viewable from the Client API.'>
+                <Tooltip label={t('pages.admin.servers.tabs.backups.page.tooltip.backupOnDifferentNode', {})}>
                   <FontAwesomeIcon icon={faWarning} className='ml-1 text-yellow-400' />
                 </Tooltip>
               )}

@@ -117,8 +117,8 @@ function PowerActionTriggerForm({ form, index }: TriggerFormProps) {
   return (
     <Select
       withAsterisk
-      label={t('pages.server.schedules.triggers.powerAction.form.powerAction', {})}
-      placeholder={t('pages.server.schedules.triggers.powerAction.form.powerAction', {})}
+      label={t('common.form.powerAction', {})}
+      placeholder={t('common.form.powerAction', {})}
       className='flex-1'
       data={Object.entries(serverPowerActionLabelMapping).map(([value, label]) => ({
         value,
@@ -177,8 +177,8 @@ function ConsoleLineTriggerForm({ form, index }: TriggerFormProps) {
   return (
     <TextInput
       withAsterisk
-      label={t('pages.server.schedules.triggers.consoleLine.form.lineContains', {})}
-      placeholder={t('pages.server.schedules.triggers.consoleLine.form.lineContains', {})}
+      label={t('common.form.lineContains', {})}
+      placeholder={t('common.form.lineContains', {})}
       className='flex-1'
       {...form.getInputProps(`triggers.${index}.contains`)}
     />

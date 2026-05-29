@@ -93,8 +93,8 @@ export default function NodeAllocationsCreateModal({
 
         <TagsInput
           withAsterisk
-          label={t('pages.admin.nodes.tabs.allocations.page.form.portRanges', {})}
-          placeholder={t('pages.admin.nodes.tabs.allocations.page.form.portRangesPlaceholder', {})}
+          label={t('common.form.portRanges', {})}
+          placeholder={t('common.form.portRangesPlaceholder', {})}
           {...form.getInputProps('ports')}
         />
 

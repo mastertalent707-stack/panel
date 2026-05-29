@@ -58,7 +58,7 @@ export default function DatabaseRow({ database }: { database: z.infer<typeof ser
           },
           {
             icon: faEye,
-            label: t('pages.server.databases.button.details', {}),
+            label: t('common.button.details', {}),
             onClick: () => setOpenModal('details'),
             color: 'gray',
             canAccess: useServerCan('databases.read'),

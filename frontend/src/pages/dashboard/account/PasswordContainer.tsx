@@ -73,8 +73,8 @@ export default function PasswordContainer({ requireTwoFactorActivation }: Accoun
           {user.hasPassword && (
             <PasswordInput
               withAsterisk
-              label={t('pages.account.account.containers.password.form.currentPassword', {})}
-              placeholder={t('pages.account.account.containers.password.form.currentPassword', {})}
+              label={t('common.form.currentPassword', {})}
+              placeholder={t('common.form.currentPassword', {})}
               autoComplete='current-password'
               {...form.getInputProps('currentPassword')}
             />

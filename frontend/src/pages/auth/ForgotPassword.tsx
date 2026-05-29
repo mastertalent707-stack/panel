@@ -98,7 +98,7 @@ export default function ForgotPassword() {
 
         <Card>
           <Stack>
-            <TextInput placeholder={t('pages.auth.forgotPassword.form.email', {})} {...form.getInputProps('email')} />
+            <TextInput placeholder={t('common.form.email', {})} {...form.getInputProps('email')} />
             <Captcha ref={captchaRef} />
 
             <Button onClick={submit} loading={loading} disabled={requested || !form.isValid()} size='md' fullWidth>

@@ -59,8 +59,8 @@ export default function BackupCreateModal({ opened, onClose }: ModalProps) {
         />
 
         <TagsInput
-          label={t('pages.server.backups.modal.createBackup.form.ignoredFiles', {})}
-          placeholder={t('pages.server.backups.modal.createBackup.form.ignoredFiles', {})}
+          label={t('common.form.ignoredFiles', {})}
+          placeholder={t('common.form.ignoredFiles', {})}
           {...form.getInputProps('ignoredFiles')}
         />
 

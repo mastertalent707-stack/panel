@@ -982,6 +982,87 @@ impl WingsClient {
         request_impl(self, Method::GET, "/api/system/overview", None::<&()>, None).await
     }
 
+    pub async fn get_system_restic_prune(
+        &self,
+    ) -> Result<super::system_restic_prune::get::Response, ApiHttpError> {
+        request_impl(
+            self,
+            Method::GET,
+            "/api/system/restic/prune",
+            None::<&()>,
+            None,
+        )
+        .await
+    }
+
+    pub async fn post_system_restic_prune(
+        &self,
+        data: &super::system_restic_prune::post::RequestBody,
+    ) -> Result<super::system_restic_prune::post::Response, ApiHttpError> {
+        request_impl(
+            self,
+            Method::POST,
+            "/api/system/restic/prune",
+            Some(data),
+            None,
+        )
+        .await
+    }
+
+    pub async fn get_system_restic_stats(
+        &self,
+    ) -> Result<super::system_restic_stats::get::Response, ApiHttpError> {
+        request_impl(
+            self,
+            Method::GET,
+            "/api/system/restic/stats",
+            None::<&()>,
+            None,
+        )
+        .await
+    }
+
+    pub async fn post_system_restic_stats(
+        &self,
+        data: &super::system_restic_stats::post::RequestBody,
+    ) -> Result<super::system_restic_stats::post::Response, ApiHttpError> {
+        request_impl(
+            self,
+            Method::POST,
+            "/api/system/restic/stats",
+            Some(data),
+            None,
+        )
+        .await
+    }
+
+    pub async fn get_system_restic_unlock(
+        &self,
+    ) -> Result<super::system_restic_unlock::get::Response, ApiHttpError> {
+        request_impl(
+            self,
+            Method::GET,
+            "/api/system/restic/unlock",
+            None::<&()>,
+            None,
+        )
+        .await
+    }
+
+    pub async fn post_system_restic_unlock(
+        &self,
+        data: &super::system_restic_unlock::post::RequestBody,
+    ) -> Result<super::system_restic_unlock::post::Response, ApiHttpError> {
+        request_impl(
+            self,
+            Method::POST,
+            "/api/system/restic/unlock",
+            Some(data),
+            None,
+        )
+        .await
+    }
+
     pub async fn get_system_stats(
         &self,
     ) -> Result<super::system_stats::get::Response, ApiHttpError> {

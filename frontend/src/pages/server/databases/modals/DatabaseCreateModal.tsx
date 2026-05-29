@@ -60,8 +60,8 @@ export default function DatabaseCreateModal({ opened, onClose }: ModalProps) {
 
         <Select
           withAsterisk
-          label={t('pages.server.databases.modal.createDatabase.form.databaseHost', {})}
-          placeholder={t('pages.server.databases.modal.createDatabase.form.databaseHost', {})}
+          label={t('common.form.databaseHost', {})}
+          placeholder={t('common.form.databaseHost', {})}
           searchable
           nothingFoundMessage={t('pages.server.databases.modal.createDatabase.form.noHostsFound', {})}
           data={Object.values(

@@ -93,9 +93,9 @@ export default function Register() {
         <Card>
           <Stack>
             <TextInput placeholder={t('common.form.username', {})} {...form.getInputProps('username')} />
-            <TextInput placeholder={t('pages.auth.register.form.email', {})} {...form.getInputProps('email')} />
-            <TextInput placeholder={t('pages.auth.register.form.firstName', {})} {...form.getInputProps('nameFirst')} />
-            <TextInput placeholder={t('pages.auth.register.form.lastName', {})} {...form.getInputProps('nameLast')} />
+            <TextInput placeholder={t('common.form.email', {})} {...form.getInputProps('email')} />
+            <TextInput placeholder={t('common.form.firstName', {})} {...form.getInputProps('nameFirst')} />
+            <TextInput placeholder={t('common.form.lastName', {})} {...form.getInputProps('nameLast')} />
             <PasswordInput placeholder={t('common.form.password', {})} {...form.getInputProps('password')} />
             <Captcha ref={captchaRef} />
 

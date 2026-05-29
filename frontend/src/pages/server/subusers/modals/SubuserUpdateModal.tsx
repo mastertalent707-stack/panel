@@ -64,8 +64,8 @@ export default function SubuserUpdateModal({ subuser, opened, onClose }: Props) 
         />
 
         <TagsInput
-          label={t('pages.server.subusers.modal.createSubuser.form.ignoredFiles', {})}
-          placeholder={t('pages.server.subusers.modal.createSubuser.form.ignoredFiles', {})}
+          label={t('common.form.ignoredFiles', {})}
+          placeholder={t('common.form.ignoredFiles', {})}
           description={t('pages.server.subusers.modal.createSubuser.form.ignoredFilesDescription', {})}
           {...form.getInputProps('ignoredFiles')}
         />

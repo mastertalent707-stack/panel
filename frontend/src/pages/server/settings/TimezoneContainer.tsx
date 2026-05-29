@@ -77,8 +77,8 @@ export default function TimezoneContainer() {
           <Stack gap='xs'>
             <Select
               withAsterisk
-              label={t('pages.server.settings.timezone.form.timezone', {})}
-              placeholder={t('pages.server.settings.timezone.form.system', {})}
+              label={t('common.form.timezone', {})}
+              placeholder={t('common.form.timezoneSystem', {})}
               data={timezones}
               allowDeselect
               clearable

@@ -80,7 +80,7 @@ export default function ResetPassword() {
           <Stack>
             <PasswordInput placeholder={t('common.form.password', {})} {...form.getInputProps('password')} />
             <PasswordInput
-              placeholder={t('pages.auth.resetPassword.form.confirmPassword', {})}
+              placeholder={t('common.form.confirmPassword', {})}
               {...form.getInputProps('confirmPassword')}
             />
 

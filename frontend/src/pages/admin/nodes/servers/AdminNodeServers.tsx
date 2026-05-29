@@ -207,7 +207,7 @@ export default function AdminNodeServers({ node }: { node: z.infer<typeof adminN
     deps: [nodeServers?.data],
   });
 
-  const columns = ['', ...serverTableColumns];
+  const columns = ['', ...serverTableColumns()];
 
   return (
     <>

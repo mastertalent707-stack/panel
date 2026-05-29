@@ -55,8 +55,8 @@ export default function RenameContainer() {
         <Stack h='100%'>
           <TextInput
             withAsterisk
-            label={t('pages.server.settings.rename.form.serverName', {})}
-            placeholder={t('pages.server.settings.rename.form.serverName', {})}
+            label={t('common.form.serverName', {})}
+            placeholder={t('common.form.serverName', {})}
             {...form.getInputProps('name')}
           />
 

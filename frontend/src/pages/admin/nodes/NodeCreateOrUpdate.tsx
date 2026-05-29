@@ -202,15 +202,15 @@ export default function NodeCreateOrUpdate({ contextNode }: { contextNode?: z.in
           />
 
           <TextInput
-            label={t('pages.admin.nodes.tabs.general.page.form.sftpHost', {})}
-            placeholder={t('pages.admin.nodes.tabs.general.page.form.sftpHost', {})}
+            label={t('common.form.sftpHost', {})}
+            placeholder={t('common.form.sftpHost', {})}
             key={form.key('sftpHost')}
             {...form.getInputProps('sftpHost')}
           />
           <NumberInput
             withAsterisk
-            label={t('pages.admin.nodes.tabs.general.page.form.sftpPort', {})}
-            placeholder={t('pages.admin.nodes.tabs.general.page.form.sftpPort', {})}
+            label={t('common.form.sftpPort', {})}
+            placeholder={t('common.form.sftpPort', {})}
             min={1}
             max={65535}
             key={form.key('sftpPort')}
@@ -219,7 +219,7 @@ export default function NodeCreateOrUpdate({ contextNode }: { contextNode?: z.in
 
           <SizeInput
             withAsterisk
-            label={t('pages.admin.nodes.tabs.general.page.form.memory', {})}
+            label={t('common.form.memory', {})}
             mode='mb'
             min={0}
             value={form.getValues().memory}
@@ -227,7 +227,7 @@ export default function NodeCreateOrUpdate({ contextNode }: { contextNode?: z.in
           />
           <SizeInput
             withAsterisk
-            label={t('pages.admin.nodes.tabs.general.page.form.disk', {})}
+            label={t('common.form.disk', {})}
             mode='mb'
             min={0}
             value={form.getValues().disk}

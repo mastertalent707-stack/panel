@@ -109,8 +109,8 @@ export default function ServersTransferModal({
         <Stack>
           <Select
             withAsterisk
-            label={t('pages.admin.nodes.tabs.servers.page.modal.transfer.form.node', {})}
-            placeholder={t('pages.admin.nodes.tabs.servers.page.modal.transfer.form.node', {})}
+            label={t('common.form.node', {})}
+            placeholder={t('common.form.node', {})}
             value={selectedNodeUuid || ''}
             onChange={(value) => setSelectedNodeUuid(value)}
             data={nodes.items
@@ -177,18 +177,15 @@ export default function ServersTransferModal({
           />
 
           <Switch
-            label={t('pages.admin.nodes.tabs.servers.page.modal.transfer.form.deleteSourceBackups', {})}
-            description={t(
-              'pages.admin.nodes.tabs.servers.page.modal.transfer.form.deleteSourceBackupsDescription',
-              {},
-            )}
+            label={t('common.form.deleteSourceBackups', {})}
+            description={t('common.form.deleteSourceBackupsDescription', {})}
             checked={deleteSourceBackups}
             onChange={(e) => setDeleteSourceBackups(e.target.checked)}
           />
 
           <Select
             withAsterisk
-            label={t('pages.admin.nodes.tabs.servers.page.modal.transfer.form.archiveFormat', {})}
+            label={t('common.form.archiveFormat', {})}
             value={archiveFormat}
             onChange={(value) => setArchiveFormat(value as z.infer<typeof transferArchiveFormat>)}
             data={Object.entries(transferArchiveFormatLabelMapping).map(([value, label]) => ({
@@ -199,7 +196,7 @@ export default function ServersTransferModal({
 
           <Select
             withAsterisk
-            label={t('pages.admin.nodes.tabs.servers.page.modal.transfer.form.compressionLevel', {})}
+            label={t('common.form.compressionLevel', {})}
             value={compressionLevel}
             onChange={(value) => setCompressionLevel(value as z.infer<typeof compressionLevelEnum>)}
             disabled={archiveFormat === 'tar' || archiveFormat === 'itaf'}
@@ -211,9 +208,9 @@ export default function ServersTransferModal({
 
           <NumberInput
             withAsterisk
-            label={t('pages.admin.nodes.tabs.servers.page.modal.transfer.form.multiplexChannels', {})}
-            placeholder={t('pages.admin.nodes.tabs.servers.page.modal.transfer.form.multiplexChannels', {})}
-            description={t('pages.admin.nodes.tabs.servers.page.modal.transfer.form.multiplexChannelsDescription', {})}
+            label={t('common.form.multiplexChannels', {})}
+            placeholder={t('common.form.multiplexChannels', {})}
+            description={t('common.form.multiplexChannelsDescription', {})}
             min={0}
             value={multiplexChannels}
             onChange={(value) => setMultiplexChannels(Number(value) || 0)}

@@ -95,8 +95,8 @@ export default function FileCopyRemoteModal({ files, opened, onClose }: Props) {
         />
 
         <TextInput
-          label={t('pages.server.files.modal.copyRemote.form.destination', {})}
-          placeholder={t('pages.server.files.modal.copyRemote.form.destination', {})}
+          label={t('common.form.destination', {})}
+          placeholder={t('common.form.destination', {})}
           {...form.getInputProps('destination')}
         />
       </Stack>

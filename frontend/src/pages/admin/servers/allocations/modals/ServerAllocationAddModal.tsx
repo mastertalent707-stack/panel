@@ -13,6 +13,7 @@ import { adminServerSchema } from '@/lib/schemas/admin/servers.ts';
 import { formatAllocation } from '@/lib/server.ts';
 import { useSearchableResource } from '@/plugins/useSearchableResource.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';
+import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import { useAdminStore } from '@/stores/admin.tsx';
 
 export default function ServerAllocationAddModal({
@@ -20,6 +21,7 @@ export default function ServerAllocationAddModal({
   opened,
   onClose,
 }: ModalProps & { server: z.infer<typeof adminServerSchema> }) {
+  const { t } = useTranslations();
   const { addToast } = useToast();
   const { addServerAllocation } = useAdminStore();
 
@@ -57,18 +59,21 @@ export default function ServerAllocationAddModal({
     }
 
     if (!didError) {
-      addToast(`${selectedAllocationUuids.length} allocations added.`, 'success');
+      addToast(
+        t('pages.admin.servers.tabs.allocations.page.toast.added', { count: selectedAllocationUuids.length }),
+        'success',
+      );
       onClose();
     }
   };
 
   return (
-    <Modal title='Add Server Allocations' onClose={onClose} opened={opened}>
+    <Modal title={t('pages.admin.servers.tabs.allocations.page.modal.add.title', {})} onClose={onClose} opened={opened}>
       <Stack>
         <MultiSelect
           withAsterisk
-          label='Allocations'
-          placeholder='Allocations'
+          label={t('pages.admin.servers.tabs.allocations.page.modal.add.form.allocations', {})}
+          placeholder={t('pages.admin.servers.tabs.allocations.page.modal.add.form.allocations', {})}
           value={selectedAllocationUuids}
           onChange={(value) => setSelectedAllocationUuids(value)}
           data={availableAllocations.items.map((alloc) => ({
@@ -83,10 +88,12 @@ export default function ServerAllocationAddModal({
 
         <ModalFooter>
           <Button onClick={doAdd} loading={loading} disabled={!selectedAllocationUuids.length}>
-            Add {selectedAllocationUuids.length}
+            {t('pages.admin.servers.tabs.allocations.page.modal.add.button.add', {
+              count: selectedAllocationUuids.length,
+            })}
           </Button>
           <Button variant='default' onClick={onClose}>
-            Close
+            {t('common.button.close', {})}
           </Button>
         </ModalFooter>
       </Stack>

@@ -162,7 +162,7 @@ export default function OobeNode({ onNext, onBack, canGoBack, skipFrom, data }: 
               <TextInput
                 withAsterisk
                 className='flex-1'
-                label={t('pages.oobe.node.form.url', {})}
+                label={t('common.form.url', {})}
                 description={t('pages.oobe.node.form.urlDescription', {})}
                 leftSection={<FontAwesomeIcon icon={faGlobe} size='sm' />}
                 placeholder={t('pages.oobe.node.form.urlPlaceholder', {})}
@@ -182,7 +182,7 @@ export default function OobeNode({ onNext, onBack, canGoBack, skipFrom, data }: 
             <div className='flex flex-col sm:flex-row gap-2'>
               <TextInput
                 className='flex-1'
-                label={t('pages.oobe.node.form.sftpHost', {})}
+                label={t('common.form.sftpHost', {})}
                 placeholder={t('pages.oobe.node.form.sftpHostPlaceholder', {})}
                 leftSection={<FontAwesomeIcon icon={faNetworkWired} size='sm' />}
                 {...form.getInputProps('sftpHost')}
@@ -190,7 +190,7 @@ export default function OobeNode({ onNext, onBack, canGoBack, skipFrom, data }: 
               <NumberInput
                 withAsterisk
                 className='flex-1'
-                label={t('pages.oobe.node.form.sftpPort', {})}
+                label={t('common.form.sftpPort', {})}
                 placeholder={t('pages.oobe.node.form.sftpPortPlaceholder', {})}
                 leftSection={<FontAwesomeIcon icon={faNetworkWired} size='sm' />}
                 min={1}
@@ -201,7 +201,7 @@ export default function OobeNode({ onNext, onBack, canGoBack, skipFrom, data }: 
             <div className='flex flex-col sm:flex-row gap-2'>
               <SizeInput
                 withAsterisk
-                label={t('pages.oobe.node.form.memory', {})}
+                label={t('common.form.memory', {})}
                 mode='mb'
                 min={0}
                 className='flex-1'
@@ -210,7 +210,7 @@ export default function OobeNode({ onNext, onBack, canGoBack, skipFrom, data }: 
               />
               <SizeInput
                 withAsterisk
-                label={t('pages.oobe.node.form.disk', {})}
+                label={t('common.form.disk', {})}
                 mode='mb'
                 min={0}
                 className='flex-1'
@@ -233,8 +233,8 @@ export default function OobeNode({ onNext, onBack, canGoBack, skipFrom, data }: 
                   <TagsInput
                     withAsterisk
                     flex={1}
-                    label={t('pages.oobe.node.form.portRanges', {})}
-                    placeholder={t('pages.oobe.node.form.portRangesPlaceholder', {})}
+                    label={t('common.form.portRanges', {})}
+                    placeholder={t('common.form.portRangesPlaceholder', {})}
                     {...allocationsForm.getInputProps('ports')}
                   />
                 </div>

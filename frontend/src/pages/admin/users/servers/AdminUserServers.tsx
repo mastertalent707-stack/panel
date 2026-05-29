@@ -41,7 +41,7 @@ export default function AdminUserServers({ user }: { user: z.infer<typeof fullUs
         />
       }
     >
-      <Table columns={serverTableColumns} loading={loading} pagination={userServers} onPageSelect={setPage}>
+      <Table columns={serverTableColumns()} loading={loading} pagination={userServers} onPageSelect={setPage}>
         {userServers?.data.map((server) => (
           <ServerRow key={server.uuid} server={server} />
         ))}

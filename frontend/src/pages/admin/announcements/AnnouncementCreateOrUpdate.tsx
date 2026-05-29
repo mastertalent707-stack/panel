@@ -260,7 +260,7 @@ export default function AnnouncementCreateOrUpdate({
           />
 
           <MultiSelectGroup
-            label={t('pages.admin.announcements.tabs.general.page.form.eggs', {})}
+            label={t('common.form.eggs', {})}
             placeholder={t('pages.admin.announcements.tabs.general.page.form.eggsPlaceholder', {})}
             data={eggs}
             searchable

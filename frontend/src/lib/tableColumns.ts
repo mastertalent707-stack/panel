@@ -74,8 +74,8 @@ export const nodeMountTableColumns = (): string[] => {
   return [
     t('common.table.columns.id', {}),
     t('common.table.columns.name', {}),
-    t('pages.admin.nodes.tabs.mounts.page.table.columns.source', {}),
-    t('pages.admin.nodes.tabs.mounts.page.table.columns.target', {}),
+    t('common.table.columns.source', {}),
+    t('common.table.columns.target', {}),
     t('common.table.columns.added', {}),
     '',
   ];
@@ -106,11 +106,43 @@ export const oauthProviderTableColumns = [
 
 export const roleTableColumns = ['ID', 'Name', 'Server Permissions', 'Admin Permissions', 'Created'];
 
-export const serverTableColumns = ['ID', 'Status', 'Name', 'Node', 'Owner', 'Allocation', 'Created'];
+export const serverTableColumns = (): string[] => {
+  const { t } = getTranslations();
+  return [
+    t('common.table.columns.id', {}),
+    t('common.table.columns.status', {}),
+    t('common.table.columns.name', {}),
+    t('common.table.columns.node', {}),
+    t('common.table.columns.owner', {}),
+    t('common.table.columns.allocation', {}),
+    t('common.table.columns.created', {}),
+  ];
+};
 
-export const serverMountTableColumns = ['ID', 'Name', 'Source', 'Target', 'Added', ''];
+export const serverMountTableColumns = (): string[] => {
+  const { t } = getTranslations();
+  return [
+    t('common.table.columns.id', {}),
+    t('common.table.columns.name', {}),
+    t('common.table.columns.source', {}),
+    t('common.table.columns.target', {}),
+    t('common.table.columns.added', {}),
+    '',
+  ];
+};
 
-export const serverAllocationTableColumns = ['', 'IP', 'IP Alias', 'Port', 'Notes', 'Created', ''];
+export const serverAllocationTableColumns = (): string[] => {
+  const { t } = getTranslations();
+  return [
+    '',
+    t('common.table.columns.ip', {}),
+    t('pages.admin.servers.tabs.allocations.page.table.columns.ipAlias', {}),
+    t('common.form.port', {}),
+    t('common.table.columns.notes', {}),
+    t('common.table.columns.created', {}),
+    '',
+  ];
+};
 
 export const userTableColumns = (): string[] => {
   const { t } = getTranslations();

@@ -113,7 +113,7 @@ export default function OobeConfiguration({ onNext }: OobeComponentProps) {
               />
               <Select
                 withAsterisk
-                label={t('pages.oobe.configuration.form.language', {})}
+                label={t('common.form.language', {})}
                 placeholder={t('pages.oobe.configuration.form.languagePlaceholder', {})}
                 data={languages.map((language) => ({
                   label: new Intl.DisplayNames([language], { type: 'language' }).of(language) ?? language,

@@ -232,8 +232,8 @@ export default function UserCreateOrUpdate({ contextUser }: { contextUser?: z.in
           />
 
           <TextInput
-            label={t('pages.admin.users.tabs.general.page.form.externalId', {})}
-            placeholder={t('pages.admin.users.tabs.general.page.form.externalId', {})}
+            label={t('common.form.externalId', {})}
+            placeholder={t('common.form.externalId', {})}
             key={form.key('externalId')}
             {...form.getInputProps('externalId')}
           />

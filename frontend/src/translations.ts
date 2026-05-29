@@ -53,6 +53,14 @@ const baseTranslations = defineTranslations({
         detach: 'Detach',
         send: 'Send',
         reset: 'Reset',
+        view: 'View',
+        import: 'Import',
+        details: 'Details',
+        loadLogs: 'Load Logs',
+        sendTestEmail: 'Send Test Email',
+        setPrimary: 'Set Primary',
+        unsetPrimary: 'Unset Primary',
+        leavePage: 'Leave Page',
       },
       alert: {
         error: 'Error',
@@ -71,6 +79,7 @@ const baseTranslations = defineTranslations({
         resetToDefault: 'Reset to default',
         edit: 'Edit',
         delete: 'Delete',
+        primary: 'Primary',
       },
       form: {
         name: 'Name',
@@ -103,6 +112,46 @@ const baseTranslations = defineTranslations({
         title: 'Title',
         content: 'Content',
         backupConfiguration: 'Backup Configuration',
+        fileName: 'File Name',
+        sftpPort: 'SFTP Port',
+        sftpHost: 'SFTP Host',
+        dockerImage: 'Docker Image',
+        memory: 'Memory',
+        disk: 'Disk',
+        serverName: 'Server Name',
+        startupCommand: 'Startup Command',
+        archiveName: 'Archive Name',
+        archiveFormat: 'Archive Format',
+        compressionLevel: 'Compression Level',
+        multiplexChannels: 'Multiplex Channels',
+        multiplexChannelsDescription:
+          'Add additional HTTP connections (and therefore also threads) for transfering split archives, total streams is 1 + multiplex channels.',
+        deleteSourceBackups: 'Delete source backups',
+        deleteSourceBackupsDescription: 'Deletes the transferred backups on the source node once transfer finishes.',
+        node: 'Node',
+        primaryAllocation: 'Primary Allocation',
+        additionalAllocations: 'Additional Allocations',
+        externalId: 'External ID',
+        mount: 'Mount',
+        lines: 'Lines',
+        databaseHost: 'Database Host',
+        timezone: 'Timezone',
+        timezoneSystem: 'System',
+        protocol: 'Protocol',
+        powerAction: 'Power Action',
+        destination: 'Destination',
+        directoryName: 'Directory Name',
+        locked: 'Locked',
+        portRanges: 'Port Ranges',
+        portRangesPlaceholder: 'Port Ranges (eg. 3000-4000)',
+        currentPassword: 'Current Password',
+        confirmPassword: 'Confirm Password',
+        authenticationCode: 'Authentication Code',
+        restoreStartup: 'Restore the startup command, image, and variables from this backup.',
+        lineContains: 'Line Contains',
+        eggs: 'Eggs',
+        ignoredFiles: 'Ignored Files',
+        yourControlPanelPassword: 'Your Control Panel Password',
         truncateDirectory:
           'Do you want to delete all files of this server before performing this action? This cannot be undone.',
       },
@@ -132,6 +181,13 @@ const baseTranslations = defineTranslations({
           owner: 'Owner',
           added: 'Added',
           backupConfiguration: 'Backup Configuration',
+          status: 'Status',
+          allocation: 'Allocation',
+          notes: 'Notes',
+          source: 'Source',
+          target: 'Target',
+          checksum: 'Checksum',
+          files: 'Files',
         },
       },
       tabs: {
@@ -434,17 +490,12 @@ const baseTranslations = defineTranslations({
               'Choose a strong password. This account will have complete administrative access to all servers and settings.',
           },
           form: {
-            username: 'Username',
             usernamePlaceholder: 'admin',
             email: 'Email Address',
             emailPlaceholder: 'admin@example.com',
-            firstName: 'First Name',
             firstNamePlaceholder: 'Alan',
-            lastName: 'Last Name',
             lastNamePlaceholder: 'Turing',
-            password: 'Password',
             passwordPlaceholder: 'Enter a strong password',
-            confirmPassword: 'Confirm Password',
             confirmPasswordPlaceholder: 'Re-enter your password',
           },
           button: {
@@ -455,9 +506,7 @@ const baseTranslations = defineTranslations({
           title: 'Log back in',
           alert: 'You got logged out during the setup process. Please log back in to continue where you left off.',
           form: {
-            username: 'Username',
             usernamePlaceholder: 'admin',
-            password: 'Password',
             passwordPlaceholder: 'Enter a strong password',
           },
           button: {
@@ -486,21 +535,14 @@ const baseTranslations = defineTranslations({
           form: {
             name: 'Name',
             namePlaceholder: 'My Server',
-            url: 'URL',
             urlPlaceholder: 'URL',
             urlDescription: 'used for internal communication with the node',
             publicUrl: 'Public URL',
             publicUrlPlaceholder: 'URL',
             publicUrlDescription: 'used for websocket/downloads',
-            sftpHost: 'SFTP Host',
             sftpHostPlaceholder: 'SFTP Host',
-            sftpPort: 'SFTP Port',
             sftpPortPlaceholder: 'SFTP Port',
-            memory: 'Memory',
-            disk: 'Disk',
             ip: 'IP',
-            portRanges: 'Port Ranges',
-            portRangesPlaceholder: 'Port Ranges (eg. 3000-4000)',
           },
           error: {
             noLocations: 'Something went wrong. No locations were found.',
@@ -526,7 +568,6 @@ const baseTranslations = defineTranslations({
           form: {
             applicationName: 'Application Name',
             applicationNamePlaceholder: 'Calagopus',
-            language: 'Language',
             languagePlaceholder: 'Language',
             applicationUrl: 'Application URL',
             applicationUrlPlaceholder: 'https://calagop.us',
@@ -554,9 +595,6 @@ const baseTranslations = defineTranslations({
               description: 'Eggs for generic application runtimes like Node JS, Java, and Rust.',
             },
           },
-          button: {
-            submit: 'Import',
-          },
         },
         server: {
           title: 'Server',
@@ -576,7 +614,6 @@ const baseTranslations = defineTranslations({
             noNodes: 'Something went wrong. No nodes were found.',
           },
           button: {
-            submit: 'Import',
             create: 'Create & Continue',
           },
         },
@@ -690,11 +727,6 @@ const baseTranslations = defineTranslations({
         register: {
           title: 'Register',
           subtitle: 'Please enter your details to register',
-          form: {
-            email: 'Email',
-            firstName: 'First Name',
-            lastName: 'Last Name',
-          },
           button: {
             register: 'Register',
           },
@@ -702,9 +734,6 @@ const baseTranslations = defineTranslations({
         forgotPassword: {
           title: 'Forgot Password',
           subtitle: 'Enter your email to receive instructions on how to reset your password',
-          form: {
-            email: 'Email',
-          },
           button: {
             request: 'Request Password Reset',
           },
@@ -713,9 +742,6 @@ const baseTranslations = defineTranslations({
         resetPassword: {
           title: 'Reset Password',
           subtitle: 'Please enter your new password',
-          form: {
-            confirmPassword: 'Confirm Password',
-          },
           button: {
             reset: 'Reset Password',
           },
@@ -823,7 +849,6 @@ const baseTranslations = defineTranslations({
                 updated: 'Password updated successfully.',
               },
               form: {
-                currentPassword: 'Current Password',
                 newPassword: 'New Password',
                 confirmNewPassword: 'Confirm New Password',
               },
@@ -835,7 +860,6 @@ const baseTranslations = defineTranslations({
               },
               form: {
                 newEmail: 'New Email',
-                currentPassword: 'Current Password',
               },
             },
             twoFactor: {
@@ -848,9 +872,6 @@ const baseTranslations = defineTranslations({
                 disableTwoFactor: {
                   title: 'Disable Two-Factor Authentication',
                   description: 'Disabling two-factor authentication will make your account less secure.',
-                  form: {
-                    code: 'Authentication Code',
-                  },
                 },
                 setupTwoFactor: {
                   title: 'Setup Two-Factor Authentication',
@@ -858,9 +879,6 @@ const baseTranslations = defineTranslations({
                     "Help protect your account from unauthorized access. You'll be prompted for a verification code each time you sign in.",
                   descriptionQR:
                     'Scan the QR code above using the two-factor authentication app of your choice. Then, enter the 6-digit code generated into the field below.',
-                  form: {
-                    code: 'Authentication Code',
-                  },
                 },
                 recoveryCodes: {
                   title: 'Recovery Codes',
@@ -883,10 +901,6 @@ const baseTranslations = defineTranslations({
                 updated: 'Account details updated successfully.',
               },
               form: {
-                nameFirst: 'First Name',
-                nameLast: 'Last Name',
-                username: 'Username',
-                language: 'Language',
                 toastPosition: 'Toast Position',
                 startOnGroupedServers: 'Start on the Grouped Servers page',
               },
@@ -998,9 +1012,6 @@ const baseTranslations = defineTranslations({
         sshKeys: {
           title: 'SSH Keys',
           subtitle: '{current} of {max} maximum ssh keys created.',
-          button: {
-            import: 'Import',
-          },
           tooltip: {
             limitReached: 'You are limited to {max} ssh keys.',
           },
@@ -1035,7 +1046,6 @@ const baseTranslations = defineTranslations({
               },
               form: {
                 provider: 'Provider',
-                username: 'Username',
               },
             },
             deleteSshKey: {
@@ -1057,10 +1067,6 @@ const baseTranslations = defineTranslations({
             columns: {
               eggs: 'Eggs',
             },
-          },
-          form: {
-            eggs: 'Eggs',
-            command: 'Command',
           },
           modal: {
             createCommandSnippet: {
@@ -1320,7 +1326,6 @@ const baseTranslations = defineTranslations({
               page: {
                 title: 'Application Settings',
                 form: {
-                  language: 'Language',
                   icon: 'Icon',
                   banner: 'Banner',
                   sessionCookie: 'Session Cookie',
@@ -1412,18 +1417,12 @@ const baseTranslations = defineTranslations({
                     filesystem: 'Filesystem',
                   },
                 },
-                button: {
-                  sendTestEmail: 'Send Test Email',
-                },
                 toast: {
                   updated: 'Email settings updated.',
                 },
                 modal: {
                   sendTestEmail: {
                     title: 'Send Test Email',
-                    button: {
-                      submit: 'Send Test Email',
-                    },
                     toast: {
                       sent: 'Test email has been sent successfully.',
                     },
@@ -1620,7 +1619,6 @@ const baseTranslations = defineTranslations({
                   nodesDescription: 'Leave empty to apply to all nodes.',
                   backupConfigurations: 'Backup Configurations',
                   backupConfigurationsDescription: 'Leave empty to apply to all backup configurations.',
-                  eggs: 'Eggs',
                   eggsPlaceholder: 'Select Eggs',
                   dismissible: 'Dismissible',
                 },
@@ -1660,9 +1658,6 @@ const baseTranslations = defineTranslations({
           modal: {
             createDirectory: {
               title: 'New Directory',
-              form: {
-                directoryName: 'Directory name',
-              },
               createdAs: 'Will be created at ',
             },
             deleteAssets: {
@@ -1777,7 +1772,6 @@ const baseTranslations = defineTranslations({
                 form: {
                   admin: 'Admin',
                   role: 'Role',
-                  externalId: 'External ID',
                 },
                 modal: {
                   delete: {
@@ -1870,9 +1864,6 @@ const baseTranslations = defineTranslations({
                 modal: {
                   create: {
                     title: 'Create Location Database Host',
-                    form: {
-                      databaseHost: 'Database Host',
-                    },
                   },
                   delete: {
                     title: 'Confirm Location Database Host Deletion',
@@ -1904,10 +1895,6 @@ const baseTranslations = defineTranslations({
                   useWingsProxyUrl: 'Use Wings Proxy URL',
                 },
                 form: {
-                  sftpHost: 'SFTP Host',
-                  sftpPort: 'SFTP Port',
-                  memory: 'Memory',
-                  disk: 'Disk',
                   urlDescription: 'Used for internal communication with the node.',
                   publicUrlDescription: 'Used for websocket connections and downloads.',
                   backupConfigurationPlaceholder: 'Inherit from Location',
@@ -1946,7 +1933,6 @@ const baseTranslations = defineTranslations({
                 form: {
                   panelUrl: 'Panel URL',
                   apiPort: 'API Port',
-                  sftpPort: 'SFTP Port',
                 },
                 button: {
                   save: 'Save Configuration',
@@ -1999,11 +1985,9 @@ const baseTranslations = defineTranslations({
                 title: 'Node Logs',
                 form: {
                   logFile: 'Log File',
-                  lines: 'Lines',
                 },
                 button: {
                   download: 'Download Full Log',
-                  view: 'View',
                 },
               },
             },
@@ -2016,8 +2000,6 @@ const baseTranslations = defineTranslations({
                 },
                 form: {
                   ipAlias: 'IP Alias',
-                  portRanges: 'Port Ranges',
-                  portRangesPlaceholder: 'Port Ranges (eg. 3000-4000)',
                 },
                 table: {
                   columns: {
@@ -2054,12 +2036,6 @@ const baseTranslations = defineTranslations({
               title: 'Mounts',
               page: {
                 title: 'Node Mounts',
-                table: {
-                  columns: {
-                    source: 'Source',
-                    target: 'Target',
-                  },
-                },
                 toast: {
                   added: 'Node Mount added.',
                   removed: 'Node Mount removed.',
@@ -2067,9 +2043,6 @@ const baseTranslations = defineTranslations({
                 modal: {
                   add: {
                     title: 'Add Node Mount',
-                    form: {
-                      mount: 'Mount',
-                    },
                   },
                   remove: {
                     title: 'Confirm Node Mount Removal',
@@ -2088,8 +2061,6 @@ const baseTranslations = defineTranslations({
                 table: {
                   columns: {
                     server: 'Server',
-                    checksum: 'Checksum',
-                    files: 'Files',
                   },
                 },
                 tooltip: {
@@ -2119,7 +2090,6 @@ const baseTranslations = defineTranslations({
                     form: {
                       truncateDirectory:
                         'Do you want to empty the filesystem of this server before restoring the backup?',
-                      restoreStartup: 'Restore the startup command, image, and variables from this backup.',
                     },
                   },
                   delete: {
@@ -2139,18 +2109,9 @@ const baseTranslations = defineTranslations({
                   transfer: {
                     title: 'Transfer Servers',
                     form: {
-                      node: 'Node',
                       allocationMode: 'Allocation Mode',
                       transferBackups: 'Transfer backups',
                       transferBackupsDescription: 'Whether to transfer backups along with the servers.',
-                      deleteSourceBackups: 'Delete source backups',
-                      deleteSourceBackupsDescription:
-                        'Deletes the transferred backups on the source node once transfer finishes.',
-                      archiveFormat: 'Archive Format',
-                      compressionLevel: 'Compression Level',
-                      multiplexChannels: 'Multiplex Channels',
-                      multiplexChannelsDescription:
-                        'Add additional HTTP connections (and therefore also threads) for transfering split archives, total streams is 1 + multiplex channels.',
                     },
                     toast: {
                       started: '{servers} transfer started.',
@@ -2211,6 +2172,266 @@ const baseTranslations = defineTranslations({
         },
         servers: {
           title: 'Servers',
+          resourceName: 'Server',
+          tabs: {
+            general: {
+              page: {
+                titleCreate: 'Create Server',
+                titleUpdate: 'Update Server',
+                card: {
+                  basicInformation: 'Basic Information',
+                  serverAssignment: 'Server Assignment',
+                  resourceLimits: 'Resource Limits',
+                  serverConfiguration: 'Server Configuration',
+                  featureLimits: 'Feature Limits',
+                  allocations: 'Allocations',
+                  variables: 'Variables',
+                },
+                alert: {
+                  suspended: 'This server is suspended.',
+                  selectEggForVariables: 'Please select an egg before you can configure variables.',
+                },
+                badge: {
+                  serverSuspended: 'Server Suspended',
+                },
+                form: {
+                  serverNamePlaceholder: 'My Game Server',
+                  externalIdPlaceholder: 'Optional external identifier',
+                  descriptionPlaceholder: 'Server description',
+                  owner: 'Owner',
+                  nest: 'Nest',
+                  egg: 'Egg',
+                  backupConfigurationPlaceholder: 'Inherit from Node/Location',
+                  cpuLimit: 'CPU Limit (%)',
+                  cpuLimitDescription: 'The CPU limit in % that the server can use, 1 thread = 100%.',
+                  swap: 'Swap',
+                  swapDescription: 'The amount of swap to give this server, -1 will not set a limit.',
+                  memoryDescription: 'The Memory limit of the server container, 0 will not set a limit.',
+                  memoryOverhead: 'Memory Overhead',
+                  memoryOverheadDescription: 'Hidden Memory that will be added to the container.',
+                  diskSpace: 'Disk Space',
+                  diskSpaceDescription:
+                    'The disk limit of the server. This is a soft-limit unless the disk limiter is configured on Wings.',
+                  ioWeight: 'IO Weight',
+                  ioWeightDescription:
+                    'The relative IO Weight of the server container compared to other containers, 0-1000. May not work on all systems.',
+                  dockerImagePlaceholder: 'ghcr.io/...',
+                  predefinedDockerImages: 'Predefined Docker Images',
+                  predefinedDockerImagesPlaceholder: 'No predefined image selected',
+                  timezonePlaceholder: 'Europe/Amsterdam',
+                  startupCommandPlaceholder: 'npm start',
+                  startupCommandCustom: 'Custom',
+                  startOnCompletion: 'Start on Completion',
+                  startOnCompletionDescription: 'Start server after installation completes.',
+                  skipInstaller: 'Skip Installer',
+                  skipInstallerDescription: 'Skip running the install script.',
+                  hugepagesPassthroughEnabled: 'Enable Hugepages Passthrough',
+                  hugepagesPassthroughEnabledDescription:
+                    'Enable hugepages passthrough for the server (mounts /dev/hugepages into the container).',
+                  kvmPassthroughEnabled: 'Enable KVM Passthrough',
+                  kvmPassthroughEnabledDescription:
+                    'Enable KVM passthrough for the server (allows access to /dev/kvm inside the container).',
+                  allocationsLimit: 'Allocations',
+                  databasesLimit: 'Databases',
+                  backupsLimit: 'Backups',
+                  schedulesLimit: 'Schedules',
+                },
+                modal: {
+                  confirmNoAllocation: {
+                    title: 'No Primary Allocation Assigned',
+                    content:
+                      'You are creating a server without assigning any primary allocation. Are you sure you want to continue?',
+                    button: {
+                      confirm: 'Create Anyway',
+                    },
+                  },
+                },
+              },
+            },
+            allocations: {
+              title: 'Allocations',
+              page: {
+                title: 'Server Allocations',
+                table: {
+                  columns: {
+                    ipAlias: 'IP Alias',
+                  },
+                },
+                form: {
+                  notesPlaceholder: 'Notes',
+                },
+                toast: {
+                  updated: 'Allocation updated.',
+                  setPrimary: 'Allocation set as primary.',
+                  unsetPrimary: 'Allocation unset as primary.',
+                  removed: 'Allocation removed.',
+                  added: '{count} allocations added.',
+                },
+                modal: {
+                  add: {
+                    title: 'Add Server Allocations',
+                    form: {
+                      allocations: 'Allocations',
+                    },
+                    button: {
+                      add: 'Add {count}',
+                    },
+                  },
+                  remove: {
+                    title: 'Confirm Allocation Removal',
+                    content: 'Are you sure you want to remove **{allocation}**?',
+                  },
+                },
+              },
+            },
+            variables: {
+              title: 'Variables',
+              page: {
+                title: 'Server Variables',
+                toast: {
+                  updated: 'Server variables updated.',
+                },
+              },
+            },
+            mounts: {
+              title: 'Mounts',
+              page: {
+                title: 'Server Mounts',
+                toast: {
+                  added: 'Server Mount added.',
+                  deleted: 'Server Mount deleted.',
+                },
+                modal: {
+                  add: {
+                    title: 'Add Server Mount',
+                  },
+                  remove: {
+                    title: 'Confirm Server Mount Removal',
+                    content: 'Are you sure you want to remove the mount **{mount}** from **{name}**?',
+                  },
+                },
+              },
+            },
+            backups: {
+              title: 'Backups',
+              page: {
+                title: 'Server Backups',
+                input: {
+                  partiallyDetachedOnly: 'Only show partially detached backups',
+                },
+                tooltip: {
+                  backupOnDifferentNode:
+                    'This backup is on a different node than the server. It is not viewable from the Client API.',
+                },
+              },
+            },
+            logs: {
+              title: 'Logs',
+              page: {
+                title: 'Server Logs',
+                form: {
+                  logType: 'Log Type',
+                },
+                enum: {
+                  logType: {
+                    console: 'Console',
+                    install: 'Install',
+                  },
+                },
+              },
+            },
+            management: {
+              title: 'Management',
+              page: {
+                title: 'Server Management',
+                transfer: {
+                  title: 'Transfer',
+                  content: "Transfer this server and it's data to another node within this system.",
+                  toast: {
+                    started: 'Server transfer started.',
+                  },
+                  modal: {
+                    title: 'Server Transfer',
+                    form: {
+                      backupsToTransfer: 'Backups to transfer',
+                    },
+                    tooltip: {
+                      aioNotSupported: 'Transfers to the All-In-One node are not supported.',
+                    },
+                    confirm: {
+                      title: 'Confirm Server Transfer',
+                      content: 'Are you sure you want to transfer **{name}** from **{from}** to **{to}**?',
+                      alert: {
+                        notAllBackupsSelected:
+                          'You have not selected all backups to transfer, the remaining backups will become partially detached if the transfer completes successfully.',
+                      },
+                    },
+                  },
+                },
+                suspend: {
+                  title: 'Suspend',
+                  content:
+                    'This will suspend the server, stop any running processes, and immediately block the user from being able to access their files or otherwise manage the server through the panel or API.',
+                  button: 'Suspend',
+                  toast: {
+                    suspended: 'Server suspended.',
+                  },
+                  modal: {
+                    title: 'Confirm Server Suspension',
+                    content:
+                      'Are you sure you want to suspend **{name}**? This will stop the server and prevent it from starting. All running processes will be stopped and the user will not be able to access their files or otherwise manage the server through the panel or API.',
+                  },
+                },
+                unsuspend: {
+                  title: 'Unsuspend',
+                  content:
+                    'This will unsuspend the server, allowing it to start again. The user will be able to access their files and otherwise manage the server through the panel or API.',
+                  button: 'Unsuspend',
+                  toast: {
+                    unsuspended: 'Server unsuspended.',
+                  },
+                  modal: {
+                    title: 'Confirm Server Unsuspension',
+                    content:
+                      'Are you sure you want to unsuspend **{name}**? This will allow the server to start again. The user will be able to access their files and otherwise manage the server through the panel or API.',
+                  },
+                },
+                clearState: {
+                  title: 'Clear State',
+                  content: 'This will clear the server state known by the panel.',
+                  button: 'Clear State',
+                  toast: {
+                    cleared: 'Server state cleared.',
+                  },
+                  modal: {
+                    title: 'Confirm Server State Clear',
+                    content:
+                      'Are you sure you want to clear the state of **{name}**? This will clear any known pending transfers and status failures, please make sure it is safe to do this before clicking without reason.',
+                  },
+                },
+                delete: {
+                  title: 'Delete',
+                  content: 'This will delete the server and all of its data. This action cannot be undone.',
+                  toast: {
+                    deleted: 'Server deleted.',
+                  },
+                  modal: {
+                    title: 'Confirm Server Deletion',
+                    description: 'You are about to delete **{name}**. Are you sure?',
+                    form: {
+                      force: 'Do you want to forcefully delete this server?',
+                      deleteBackups: 'Do you want to delete backups of this server?',
+                      confirmServerName: 'Confirm Server Name',
+                      confirmServerNamePlaceholder: 'Server Name',
+                    },
+                  },
+                },
+              },
+            },
+            viewClient: {
+              title: 'View in Client Area',
+            },
+          },
         },
         nests: {
           title: 'Nests',
@@ -2242,7 +2463,7 @@ const baseTranslations = defineTranslations({
       },
       server: {
         viewAdmin: {
-          title: 'View admin',
+          title: 'View in Admin Area',
         },
         console: {
           title: 'Console',
@@ -2258,12 +2479,6 @@ const baseTranslations = defineTranslations({
             sshDetails: {
               title: 'SSH Details',
               form: {
-                protocol: 'Protocol',
-                port: 'Port',
-                host: 'Host',
-                username: 'Username',
-                password: 'Password',
-                yourPassword: 'Your Control Panel Password',
                 command: 'SSH Command',
               },
               launch: 'Launch',
@@ -2369,7 +2584,6 @@ const baseTranslations = defineTranslations({
             new: 'New',
             sftpDetails: 'SFTP Details',
             openInNewWindow: 'Open in new Window',
-            details: 'Details',
             rename: 'Rename',
             copy: 'Copy',
             move: 'Move',
@@ -2479,17 +2693,11 @@ const baseTranslations = defineTranslations({
               title: 'Active Uploads',
               content:
                 'Are you sure you want to leave this page? You have {files} active file uploads. If you leave this page, the file uploads will abort.',
-              button: {
-                leave: 'Leave Page',
-              },
             },
             unsavedChanges: {
               title: 'Unsaved Changes',
               content:
                 'You have unsaved changes in the file editor. Are you sure you want to leave this page? If you leave, your changes will be lost.',
-              button: {
-                leave: 'Leave Page',
-              },
             },
             draftRestore: {
               title: 'Restore Draft',
@@ -2500,30 +2708,22 @@ const baseTranslations = defineTranslations({
             createArchive: {
               title: 'Create Archive',
               form: {
-                archiveName: 'Archive Name',
                 format: 'Format',
               },
               createdAs: 'This archive will be created as ',
             },
             createDirectory: {
               title: 'Create Directory',
-              form: {
-                directoryName: 'Directory Name',
-              },
               createdAs: 'This directory will be created as ',
             },
             copyFile: {
               title: 'Copy File',
-              form: {
-                fileName: 'File Name',
-              },
               createdAs: 'This file will be created as ',
             },
             copyRemote: {
               title: 'Remote Copy Files',
               form: {
                 server: 'Server',
-                destination: 'Destination',
               },
               createdAs: 'These files will be created on the remote server under ',
             },
@@ -2544,9 +2744,6 @@ const baseTranslations = defineTranslations({
             },
             createFile: {
               title: 'Create File',
-              form: {
-                fileName: 'File Name',
-              },
             },
             details: {
               title: 'File Details',
@@ -2575,9 +2772,6 @@ const baseTranslations = defineTranslations({
             },
             renameFile: {
               title: 'Rename File',
-              form: {
-                fileName: 'File Name',
-              },
             },
             largestDirectories: {
               title: 'Largest Directories',
@@ -2605,21 +2799,12 @@ const baseTranslations = defineTranslations({
               form: {
                 fileUrl: 'File URL',
                 query: 'Query',
-                fileName: 'File Name',
               },
               createdAs: 'This file will be created as ',
               pull: 'Pull',
             },
             sftpDetails: {
               title: 'SFTP Details',
-              form: {
-                protocol: 'Protocol',
-                port: 'Port',
-                host: 'Host',
-                username: 'Username',
-                password: 'Password',
-                yourPassword: 'Your Control Panel Password',
-              },
               launch: 'Launch',
             },
           },
@@ -2638,7 +2823,6 @@ const baseTranslations = defineTranslations({
             },
           },
           button: {
-            details: 'Details',
             rotatePassword: 'Rotate Password',
           },
           form: {
@@ -2651,7 +2835,6 @@ const baseTranslations = defineTranslations({
                 created: 'Database created.',
               },
               form: {
-                databaseHost: 'Database Host',
                 noHostsFound: 'No hosts found',
               },
             },
@@ -2659,9 +2842,6 @@ const baseTranslations = defineTranslations({
               title: 'Edit Database',
               toast: {
                 updated: 'Database updated.',
-              },
-              form: {
-                locked: 'Locked',
               },
             },
             databaseDetails: {
@@ -2709,7 +2889,6 @@ const baseTranslations = defineTranslations({
             },
           },
           button: {
-            import: 'Import',
             trigger: 'Trigger',
             triggerWithCondition: 'Trigger (do not skip condition)',
             triggerSkipCondition: 'Trigger (skip condition)',
@@ -2813,7 +2992,6 @@ const baseTranslations = defineTranslations({
           },
           form: {
             scheduleName: 'Schedule Name',
-            enabled: 'Enabled',
             triggersList: 'Triggers',
             triggerNumber: 'Trigger {number}',
             actionType: 'Action Type',
@@ -2855,9 +3033,6 @@ const baseTranslations = defineTranslations({
             },
             powerAction: {
               title: 'Power Action',
-              form: {
-                powerAction: 'Power Action',
-              },
               card: {
                 content: 'When Power Action `{action}` is requested.',
               },
@@ -2879,9 +3054,6 @@ const baseTranslations = defineTranslations({
             },
             consoleLine: {
               title: 'Console Line',
-              form: {
-                lineContains: 'Line Contains',
-              },
               card: {
                 content: 'When Console Output reaches line that contains `{contains}`',
               },
@@ -2945,7 +3117,6 @@ const baseTranslations = defineTranslations({
             waitForConsoleLine: {
               title: 'Wait for Console Line',
               form: {
-                lineContains: 'Line contains',
                 timeout: 'Timeout (milliseconds)',
               },
               renderer: {
@@ -2959,9 +3130,6 @@ const baseTranslations = defineTranslations({
             },
             sendCommand: {
               title: 'Send Command',
-              form: {
-                command: 'Command',
-              },
               renderer: {
                 compact: 'Run {command}',
                 detail: {
@@ -2971,9 +3139,6 @@ const baseTranslations = defineTranslations({
             },
             sendPower: {
               title: 'Send Power Signal',
-              form: {
-                powerAction: 'Power Action',
-              },
               renderer: {
                 compact: 'Do {action}',
                 detail: {
@@ -2985,7 +3150,6 @@ const baseTranslations = defineTranslations({
               title: 'Create Backup',
               form: {
                 backupName: 'Backup Name',
-                ignoredFiles: 'Ignored Files',
               },
               renderer: {
                 compact: 'Create {name}',
@@ -2997,9 +3161,6 @@ const baseTranslations = defineTranslations({
             },
             createDirectory: {
               title: 'Create Directory',
-              form: {
-                directoryName: 'Directory Name',
-              },
               renderer: {
                 compact: 'Create {name} in {root}',
                 detail: {
@@ -3027,7 +3188,6 @@ const baseTranslations = defineTranslations({
               title: 'Copy File',
               form: {
                 sourceFile: 'Source File',
-                destination: 'Destination',
               },
               renderer: {
                 compact: 'Copy {file} to {destination}',
@@ -3069,8 +3229,6 @@ const baseTranslations = defineTranslations({
               title: 'Compress Files',
               form: {
                 filesToCompress: 'Files to Compress',
-                archiveFormat: 'Archive Format',
-                archiveName: 'Archive Name',
               },
               renderer: {
                 compact: 'Compress {files} in {root} to {name}',
@@ -3111,9 +3269,6 @@ const baseTranslations = defineTranslations({
             },
             updateStartupCommand: {
               title: 'Update Startup Command',
-              form: {
-                startupCommand: 'Startup Command',
-              },
               renderer: {
                 compact: 'Set to {command}',
                 detail: {
@@ -3123,9 +3278,6 @@ const baseTranslations = defineTranslations({
             },
             updateStartupDockerImage: {
               title: 'Update Docker Image',
-              form: {
-                dockerImage: 'Docker Image',
-              },
               renderer: {
                 compact: 'Set to {image}',
                 detail: {
@@ -3155,10 +3307,8 @@ const baseTranslations = defineTranslations({
                 created: 'Subuser created.',
               },
               form: {
-                email: 'Email',
                 emailPlaceholder: 'Enter the email that this subuser should be saved as.',
                 permissions: 'Permissions',
-                ignoredFiles: 'Ignored Files',
                 ignoredFilesDescription:
                   'Files and directories matching these patterns will be hidden from this subuser. Uses gitignore-style glob patterns (e.g. `*.env`, `secrets/`). Prefix a pattern with `!` to un-hide a path that a broader pattern would otherwise exclude.',
               },
@@ -3204,24 +3354,15 @@ const baseTranslations = defineTranslations({
               toast: {
                 created: 'Backup created.',
               },
-              form: {
-                ignoredFiles: 'Ignored Files',
-              },
             },
             editBackup: {
               title: 'Edit Backup',
               toast: {
                 updated: 'Backup updated.',
               },
-              form: {
-                locked: 'Locked',
-              },
             },
             restoreBackup: {
               title: 'Restore Backup',
-              form: {
-                restoreStartup: 'Restore the startup command, image, and variables from this backup.',
-              },
             },
             deleteBackup: {
               title: 'Confirm Backup Deletion',
@@ -3240,18 +3381,12 @@ const baseTranslations = defineTranslations({
           subtitle: '{current} of {max} maximum allocations assigned.',
           tooltip: {
             limitReached: 'This server is limited to {max} allocations.',
-            primary: 'Primary',
           },
           table: {
             columns: {
               hostname: 'Hostname',
               port: 'Port',
-              notes: 'Notes',
             },
-          },
-          button: {
-            setPrimary: 'Set Primary',
-            unsetPrimary: 'Unset Primary',
           },
           toast: {
             created: 'Allocation created.',
@@ -3263,9 +3398,6 @@ const baseTranslations = defineTranslations({
           modal: {
             editAllocation: {
               title: 'Edit Allocation',
-              form: {
-                notes: 'Notes',
-              },
             },
             removeAllocation: {
               title: 'Confirm Allocation Removal',
@@ -3275,10 +3407,6 @@ const baseTranslations = defineTranslations({
         },
         startup: {
           title: 'Startup',
-          form: {
-            startupCommand: 'Startup Command',
-            dockerImage: 'Docker Image',
-          },
           variables: 'Variables',
           dockerImageDescription:
             'The Docker image used to run this server. This can be changed to use a different image.',
@@ -3294,9 +3422,6 @@ const baseTranslations = defineTranslations({
               title: 'Unsaved Changes',
               content:
                 'You have unsaved changes to your startup variables. Are you sure you want to leave this page? If you leave, your changes will be lost.',
-              button: {
-                leave: 'Leave Page',
-              },
             },
           },
           noVariables: 'No startup variables found for this server.',
@@ -3343,19 +3468,12 @@ const baseTranslations = defineTranslations({
           },
           rename: {
             title: 'Rename Server',
-            form: {
-              serverName: 'Server Name',
-            },
             toast: {
               renamed: 'Server renamed.',
             },
           },
           timezone: {
             title: 'Timezone',
-            form: {
-              timezone: 'Timezone',
-              system: 'System',
-            },
             toast: {
               updated: 'Server timezone updated.',
             },
@@ -3363,7 +3481,6 @@ const baseTranslations = defineTranslations({
           autokill: {
             title: 'Auto-Kill',
             form: {
-              enabled: 'Enabled',
               secondsUntilAutoKill: 'Seconds until auto-kill',
             },
             toast: {

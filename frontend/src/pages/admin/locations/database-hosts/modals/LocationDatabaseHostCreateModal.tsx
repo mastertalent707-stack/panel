@@ -62,8 +62,8 @@ export default function LocationDatabaseHostCreateModal({
       <Stack>
         <Select
           withAsterisk
-          label={t('pages.admin.locations.tabs.databaseHosts.page.modal.create.form.databaseHost', {})}
-          placeholder={t('pages.admin.locations.tabs.databaseHosts.page.modal.create.form.databaseHost', {})}
+          label={t('common.form.databaseHost', {})}
+          placeholder={t('common.form.databaseHost', {})}
           value={databaseHost?.uuid}
           onChange={(value) => setDatabaseHost(databaseHosts.items.find((dh) => dh.uuid === value) ?? null)}
           data={Object.values(

@@ -17,8 +17,8 @@ export default function StepWaitForConsoleLine({
   return (
     <Stack>
       <ScheduleDynamicParameterInput
-        label={t('pages.server.schedules.steps.waitForConsoleLine.form.lineContains', {})}
-        placeholder={t('pages.server.schedules.steps.waitForConsoleLine.form.lineContains', {})}
+        label={t('common.form.lineContains', {})}
+        placeholder={t('common.form.lineContains', {})}
         value={form.getInputProps('contains.root').value}
         onChange={(v) => form.setFieldValue('action.contains', v)}
       />

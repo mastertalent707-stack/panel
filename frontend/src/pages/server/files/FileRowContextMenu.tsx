@@ -177,7 +177,7 @@ export default function FileRowContextMenu({ file, openMode, children }: FileRow
           items: [
             {
               icon: faInfoCircle,
-              label: t('pages.server.files.button.details', {}),
+              label: t('common.button.details', {}),
               onClick: () => doOpenModal('details', [file]),
               color: 'gray',
             },

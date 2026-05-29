@@ -136,8 +136,8 @@ export default function ApplicationContainer() {
           />
           <Select
             withAsterisk
-            label={t('pages.admin.settings.tabs.application.page.form.language', {})}
-            placeholder={t('pages.admin.settings.tabs.application.page.form.language', {})}
+            label={t('common.form.language', {})}
+            placeholder={t('common.form.language', {})}
             data={languages.map((language) => ({
               label: new Intl.DisplayNames([language], { type: 'language' }).of(language) ?? language,
               value: language,

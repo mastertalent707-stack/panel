@@ -29,7 +29,7 @@ export default function AdminEggServers({
 
   return (
     <AdminSubContentContainer title='Egg Servers' titleOrder={2} search={search} setSearch={setSearch}>
-      <Table columns={serverTableColumns} loading={loading} pagination={eggServers} onPageSelect={setPage}>
+      <Table columns={serverTableColumns()} loading={loading} pagination={eggServers} onPageSelect={setPage}>
         {eggServers?.data.map((server) => (
           <ServerRow key={server.uuid} server={server} />
         ))}

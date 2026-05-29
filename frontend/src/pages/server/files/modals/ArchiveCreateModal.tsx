@@ -66,8 +66,8 @@ export default function ArchiveCreateModal({ files, opened, onClose }: Props) {
     >
       <Stack>
         <TextInput
-          label={t('pages.server.files.modal.createArchive.form.archiveName', {})}
-          placeholder={t('pages.server.files.modal.createArchive.form.archiveName', {})}
+          label={t('common.form.archiveName', {})}
+          placeholder={t('common.form.archiveName', {})}
           data-autofocus
           {...form.getInputProps('name')}
         />

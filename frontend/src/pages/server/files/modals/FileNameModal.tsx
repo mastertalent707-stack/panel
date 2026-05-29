@@ -38,8 +38,8 @@ export default function FileNameModal({ onFileName, opened, onClose }: Props) {
     >
       <TextInput
         withAsterisk
-        label={t('pages.server.files.modal.createFile.form.fileName', {})}
-        placeholder={t('pages.server.files.modal.createFile.form.fileName', {})}
+        label={t('common.form.fileName', {})}
+        placeholder={t('common.form.fileName', {})}
         data-autofocus
         {...form.getInputProps('name')}
       />

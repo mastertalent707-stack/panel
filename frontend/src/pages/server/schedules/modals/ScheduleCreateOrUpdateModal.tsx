@@ -98,7 +98,7 @@ export default function ScheduleCreateOrUpdateModal({ propSchedule, onScheduleUp
         />
 
         <Switch
-          label={t('pages.server.schedules.form.enabled', {})}
+          label={t('common.form.enabled', {})}
           name='enabled'
           {...form.getInputProps('enabled', { type: 'checkbox' })}
         />

@@ -64,8 +64,8 @@ export default function NodeMountAddModal({
       <Stack>
         <Select
           withAsterisk
-          label={t('pages.admin.nodes.tabs.mounts.page.modal.add.form.mount', {})}
-          placeholder={t('pages.admin.nodes.tabs.mounts.page.modal.add.form.mount', {})}
+          label={t('common.form.mount', {})}
+          placeholder={t('common.form.mount', {})}
           value={selectedMount?.uuid}
           onChange={(value) => setSelectedMount(mounts.items.find((m) => m.uuid === value) ?? null)}
           data={mounts.items.map((mount) => ({

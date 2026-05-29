@@ -125,8 +125,8 @@ export default function AdminNodeLogs({ node }: { node: z.infer<typeof adminNode
               />
               <NumberInput
                 withAsterisk
-                label={t('pages.admin.nodes.tabs.logs.page.form.lines', {})}
-                placeholder={t('pages.admin.nodes.tabs.logs.page.form.lines', {})}
+                label={t('common.form.lines', {})}
+                placeholder={t('common.form.lines', {})}
                 value={lines}
                 className='w-full'
                 onChange={(value) => setLines(Number(value))}
@@ -138,7 +138,7 @@ export default function AdminNodeLogs({ node }: { node: z.infer<typeof adminNode
                 {t('pages.admin.nodes.tabs.logs.page.button.download', {})}
               </Button>
               <Button className='ml-2' onClick={doView} variant='outline' disabled={!selectedLog} loading={loading}>
-                {t('pages.admin.nodes.tabs.logs.page.button.view', {})}
+                {t('common.button.loadLogs', {})}
               </Button>
             </div>
           </div>

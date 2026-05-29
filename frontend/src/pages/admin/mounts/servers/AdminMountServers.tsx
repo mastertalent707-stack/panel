@@ -22,7 +22,7 @@ export default function AdminMountServers({ mount }: { mount: z.infer<typeof adm
 
   return (
     <AdminSubContentContainer title='Mount Servers' titleOrder={2} search={search} setSearch={setSearch}>
-      <Table columns={serverTableColumns} loading={loading} pagination={mountServers} onPageSelect={setPage}>
+      <Table columns={serverTableColumns()} loading={loading} pagination={mountServers} onPageSelect={setPage}>
         {mountServers?.data.map((serverMount) => (
           <ServerRow key={serverMount.server.uuid} server={serverMount.server} />
         ))}

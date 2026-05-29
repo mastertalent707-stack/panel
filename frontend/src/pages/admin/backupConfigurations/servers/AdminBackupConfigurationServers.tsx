@@ -27,7 +27,7 @@ export default function AdminBackupConfigurationServers({
   return (
     <AdminSubContentContainer title={`Backup Config Servers`} titleOrder={2} search={search} setSearch={setSearch}>
       <Table
-        columns={serverTableColumns}
+        columns={serverTableColumns()}
         loading={loading}
         pagination={backupConfigurationServers}
         onPageSelect={setPage}

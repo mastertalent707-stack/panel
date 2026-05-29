@@ -99,7 +99,15 @@
         "reattach": "Wieder anhängen",
         "detach": "Lösen",
         "send": "Senden",
-        "reset": "Zurücksetzen"
+        "reset": "Zurücksetzen",
+        "view": "Anzeigen",
+        "import": "Importieren",
+        "details": "Details",
+        "loadLogs": "Logs laden",
+        "sendTestEmail": "Test-E-Mail senden",
+        "setPrimary": "Als primär festlegen",
+        "unsetPrimary": "Als primär entfernen",
+        "leavePage": "Seite verlassen"
       },
       "alert": {
         "error": "Fehler",
@@ -116,7 +124,8 @@
       "tooltip": {
         "resetToDefault": "Auf Standard zurücksetzen",
         "edit": "Bearbeiten",
-        "delete": "Löschen"
+        "delete": "Löschen",
+        "primary": "Primär"
       },
       "form": {
         "name": "Name",
@@ -149,7 +158,46 @@
         "enabled": "Aktiviert",
         "title": "Titel",
         "content": "Inhalt",
-        "backupConfiguration": "Backup-Konfiguration"
+        "backupConfiguration": "Backup-Konfiguration",
+        "fileName": "Dateiname",
+        "sftpPort": "SFTP Port",
+        "sftpHost": "SFTP Host",
+        "dockerImage": "Docker-Image",
+        "memory": "Arbeitsspeicher (RAM)",
+        "disk": "Festplattenspeicher",
+        "serverName": "Servername",
+        "startupCommand": "Startbefehl",
+        "archiveName": "Archivname",
+        "archiveFormat": "Archivformat",
+        "compressionLevel": "Komprimierungsstufe",
+        "multiplexChannels": "Multiplex-Kanäle",
+        "multiplexChannelsDescription": "Zusätzliche HTTP-Verbindungen (und damit auch Threads) für das Übertragen geteilter Archive hinzufügen, Gesamtstreams ist 1 + Multiplex-Kanäle",
+        "deleteSourceBackups": "Quell-Backups löschen",
+        "deleteSourceBackupsDescription": "Löscht die übertragenen Backups auf der Quell-Node, sobald die Übertragung abgeschlossen ist",
+        "node": "Node",
+        "primaryAllocation": "Primäre Allocation",
+        "additionalAllocations": "Zusätzliche Allocations",
+        "externalId": "Externe ID",
+        "mount": "Mount",
+        "lines": "Zeilen",
+        "databaseHost": "Datenbank-Host",
+        "timezone": "Zeitzone",
+        "timezoneSystem": "System",
+        "protocol": "Protokoll",
+        "powerAction": "Power-Aktion",
+        "destination": "Ziel",
+        "directoryName": "Verzeichnisname",
+        "locked": "Gesperrt",
+        "portRanges": "Port-Bereiche",
+        "portRangesPlaceholder": "Port-Bereiche (z.B. 3000-4000)",
+        "currentPassword": "Aktuelles Passwort",
+        "confirmPassword": "Passwort bestätigen",
+        "authenticationCode": "Authentifizierungs-Code",
+        "restoreStartup": "Den Startbefehl, das Image und die Variablen aus diesem Backup wiederherstellen.",
+        "lineContains": "Zeile enthält",
+        "eggs": "Eggs",
+        "ignoredFiles": "Ignorierte Dateien",
+        "yourControlPanelPassword": "Dein Control Panel Passwort"
       },
       "table": {
         "pagination": {
@@ -176,7 +224,14 @@
           "node": "Node",
           "owner": "Besitzer",
           "added": "Hinzugefügt",
-          "backupConfiguration": "Backup-Konfiguration"
+          "backupConfiguration": "Backup-Konfiguration",
+          "status": "Status",
+          "allocation": "Allocation",
+          "notes": "Notizen",
+          "source": "Quelle",
+          "target": "Ziel",
+          "checksum": "Prüfsumme",
+          "files": "Dateien"
         }
       },
       "badge": {
@@ -472,17 +527,12 @@
             "description": "Wähle ein starkes Passwort. Dieser Account hat vollen administrativen Zugriff auf alle Server und Einstellungen."
           },
           "form": {
-            "username": "Benutzername",
             "usernamePlaceholder": "admin",
             "email": "E-Mail-Adresse",
             "emailPlaceholder": "admin@beispiel.de",
-            "firstName": "Vorname",
             "firstNamePlaceholder": "Alan",
-            "lastName": "Nachname",
             "lastNamePlaceholder": "Turing",
-            "password": "Passwort",
             "passwordPlaceholder": "Gib ein sicheres Passwort ein",
-            "confirmPassword": "Passwort bestätigen",
             "confirmPasswordPlaceholder": "Gib dein Passwort erneut ein"
           },
           "button": {
@@ -493,9 +543,7 @@
           "title": "Wieder einloggen",
           "alert": "Du wurdest während des Einrichtungsprozesses ausgeloggt. Bitte logge dich erneut ein, um dort weiterzumachen, wo du aufgehört hast.",
           "form": {
-            "username": "Benutzername",
             "usernamePlaceholder": "admin",
-            "password": "Passwort",
             "passwordPlaceholder": "Gib ein sicheres Passwort ein"
           },
           "button": {
@@ -524,21 +572,14 @@
           "form": {
             "name": "Name",
             "namePlaceholder": "Mein Server",
-            "url": "URL",
             "urlPlaceholder": "URL",
             "urlDescription": "wird für die interne Kommunikation mit der Node verwendet",
             "publicUrl": "Öffentliche URL",
             "publicUrlPlaceholder": "URL",
             "publicUrlDescription": "wird für Websocket/Downloads verwendet",
-            "sftpHost": "SFTP Host",
             "sftpHostPlaceholder": "SFTP Host",
-            "sftpPort": "SFTP Port",
             "sftpPortPlaceholder": "SFTP Port",
-            "memory": "Arbeitsspeicher (RAM)",
-            "disk": "Festplattenspeicher",
-            "ip": "IP",
-            "portRanges": "Port-Bereiche",
-            "portRangesPlaceholder": "Port-Bereiche (z.B. 3000-4000)"
+            "ip": "IP"
           },
           "error": {
             "noLocations": "Etwas ist schiefgelaufen. Es wurden keine Standorte gefunden."
@@ -564,7 +605,6 @@
           "form": {
             "applicationName": "Anwendungsname",
             "applicationNamePlaceholder": "Calagopus",
-            "language": "Sprache",
             "languagePlaceholder": "Sprache",
             "applicationUrl": "Anwendungs-URL",
             "applicationUrlPlaceholder": "https://calagop.us",
@@ -591,9 +631,6 @@
               "title": "Pterodactyl Generic Eggs",
               "description": "Eggs für generische Laufzeitumgebungen wie Node JS, Java und Rust."
             }
-          },
-          "button": {
-            "submit": "Importieren"
           }
         },
         "server": {
@@ -612,7 +649,6 @@
             "noNodes": "Etwas ist schiefgelaufen. Es wurden keine Nodes gefunden."
           },
           "button": {
-            "submit": "Importieren",
             "create": "Erstellen & Weiter"
           }
         },
@@ -724,11 +760,6 @@
         "register": {
           "title": "Registrieren",
           "subtitle": "Bitte gib deine Daten ein, um dich zu registrieren",
-          "form": {
-            "email": "E-Mail",
-            "firstName": "Vorname",
-            "lastName": "Nachname"
-          },
           "button": {
             "register": "Registrieren"
           }
@@ -736,9 +767,6 @@
         "forgotPassword": {
           "title": "Passwort vergessen",
           "subtitle": "Gib deine E-Mail-Adresse ein, um Anweisungen zum Zurücksetzen deines Passworts zu erhalten",
-          "form": {
-            "email": "E-Mail"
-          },
           "button": {
             "request": "Passwort-Zurücksetzung anfordern"
           },
@@ -747,9 +775,6 @@
         "resetPassword": {
           "title": "Passwort zurücksetzen",
           "subtitle": "Bitte gib dein neues Passwort ein",
-          "form": {
-            "confirmPassword": "Passwort bestätigen"
-          },
           "button": {
             "reset": "Passwort zurücksetzen"
           },
@@ -856,7 +881,6 @@
                 "updated": "Passwort erfolgreich aktualisiert."
               },
               "form": {
-                "currentPassword": "Aktuelles Passwort",
                 "newPassword": "Neues Passwort",
                 "confirmNewPassword": "Neues Passwort bestätigen"
               }
@@ -867,8 +891,7 @@
                 "updated": "E-Mail erfolgreich aktualisiert."
               },
               "form": {
-                "newEmail": "Neue E-Mail",
-                "currentPassword": "Aktuelles Passwort"
+                "newEmail": "Neue E-Mail"
               }
             },
             "twoFactor": {
@@ -880,18 +903,12 @@
               "modal": {
                 "disableTwoFactor": {
                   "title": "Zwei-Faktor-Authentifizierung deaktivieren",
-                  "description": "Das Deaktivieren der Zwei-Faktor-Authentifizierung macht deinen Account weniger sicher.",
-                  "form": {
-                    "code": "Authentifizierungs-Code"
-                  }
+                  "description": "Das Deaktivieren der Zwei-Faktor-Authentifizierung macht deinen Account weniger sicher."
                 },
                 "setupTwoFactor": {
                   "title": "Zwei-Faktor-Authentifizierung einrichten",
                   "description": "Schütze deinen Account vor unbefugtem Zugriff. Du wirst bei jeder Anmeldung nach einem Bestätigungscode gefragt.",
-                  "descriptionQR": "Scanne den obigen QR-Code mit der Authentifizierungs-App deiner Wahl. Gib dann den generierten 6-stelligen Code in das Feld unten ein.",
-                  "form": {
-                    "code": "Authentifizierungs-Code"
-                  }
+                  "descriptionQR": "Scanne den obigen QR-Code mit der Authentifizierungs-App deiner Wahl. Gib dann den generierten 6-stelligen Code in das Feld unten ein."
                 },
                 "recoveryCodes": {
                   "title": "Wiederherstellungscodes",
@@ -912,10 +929,6 @@
                 "updated": "Account-Details erfolgreich aktualisiert."
               },
               "form": {
-                "nameFirst": "Vorname",
-                "nameLast": "Nachname",
-                "username": "Benutzername",
-                "language": "Sprache",
                 "toastPosition": "Toast-Position",
                 "startOnGroupedServers": "Auf der Seite 'Gruppierte Server' starten"
               }
@@ -1027,9 +1040,6 @@
         "sshKeys": {
           "title": "SSH-Schlüssel",
           "subtitle": "{current} von maximal {max} SSH-Schlüsseln erstellt.",
-          "button": {
-            "import": "Importieren"
-          },
           "tooltip": {
             "limitReached": "Du bist auf {max} SSH-Schlüssel limitiert."
           },
@@ -1063,8 +1073,7 @@
                 "created": "{sshKeys} erstellt."
               },
               "form": {
-                "provider": "Anbieter",
-                "username": "Benutzername"
+                "provider": "Anbieter"
               }
             },
             "deleteSshKey": {
@@ -1086,10 +1095,6 @@
             "columns": {
               "eggs": "Eggs"
             }
-          },
-          "form": {
-            "eggs": "Eggs",
-            "command": "Befehl"
           },
           "modal": {
             "createCommandSnippet": {
@@ -1345,7 +1350,6 @@
               "page": {
                 "title": "Anwendungseinstellungen",
                 "form": {
-                  "language": "Sprache",
                   "icon": "Symbol",
                   "banner": "Banner",
                   "sessionCookie": "Session-Cookie",
@@ -1424,18 +1428,12 @@
               "title": "E-Mail",
               "page": {
                 "title": "E-Mail-Einstellungen",
-                "button": {
-                  "sendTestEmail": "Test-E-Mail senden"
-                },
                 "toast": {
                   "updated": "E-Mail-Einstellungen aktualisiert."
                 },
                 "modal": {
                   "sendTestEmail": {
                     "title": "Test-E-Mail senden",
-                    "button": {
-                      "submit": "Test-E-Mail senden"
-                    },
                     "toast": {
                       "sent": "Test-E-Mail wurde erfolgreich versendet."
                     }
@@ -1639,7 +1637,6 @@
                   "nodesDescription": "Leer lassen, um auf alle Nodes anzuwenden.",
                   "backupConfigurations": "Backup-Konfigurationen",
                   "backupConfigurationsDescription": "Leer lassen, um auf alle Backup-Konfigurationen anzuwenden.",
-                  "eggs": "Eggs",
                   "eggsPlaceholder": "Eggs auswählen",
                   "dismissible": "Ausblendbar"
                 },
@@ -1671,9 +1668,6 @@
           "modal": {
             "createDirectory": {
               "title": "Neues Verzeichnis",
-              "form": {
-                "directoryName": "Verzeichnisname"
-              },
               "createdAs": "Wird erstellt unter "
             },
             "deleteAssets": {
@@ -1815,8 +1809,7 @@
                 },
                 "form": {
                   "admin": "Administrator",
-                  "role": "Rolle",
-                  "externalId": "Externe ID"
+                  "role": "Rolle"
                 },
                 "modal": {
                   "delete": {
@@ -1863,10 +1856,7 @@
                 },
                 "modal": {
                   "create": {
-                    "title": "Standort Datenbank-Host erstellen",
-                    "form": {
-                      "databaseHost": "Datenbank-Host"
-                    }
+                    "title": "Standort Datenbank-Host erstellen"
                   },
                   "delete": {
                     "title": "Löschen des Standort Datenbank-Hosts bestätigen",
@@ -1918,8 +1908,7 @@
                 },
                 "form": {
                   "panelUrl": "Panel URL",
-                  "apiPort": "API Port",
-                  "sftpPort": "SFTP Port"
+                  "apiPort": "API Port"
                 },
                 "button": {
                   "save": "Konfiguration speichern"
@@ -1971,12 +1960,10 @@
               "page": {
                 "title": "Node Logs",
                 "form": {
-                  "logFile": "Log-Datei",
-                  "lines": "Zeilen"
+                  "logFile": "Log-Datei"
                 },
                 "button": {
-                  "download": "Vollständiges Log herunterladen",
-                  "view": "Ansehen"
+                  "download": "Vollständiges Log herunterladen"
                 }
               }
             },
@@ -1988,9 +1975,7 @@
                   "clearSelection": "Auswahl löschen"
                 },
                 "form": {
-                  "ipAlias": "IP Alias",
-                  "portRanges": "Port-Bereiche",
-                  "portRangesPlaceholder": "Port-Bereiche (z.B. 3000-4000)"
+                  "ipAlias": "IP Alias"
                 },
                 "table": {
                   "columns": {
@@ -2027,22 +2012,13 @@
               "title": "Mounts",
               "page": {
                 "title": "Node Mounts",
-                "table": {
-                  "columns": {
-                    "source": "Quelle",
-                    "target": "Ziel"
-                  }
-                },
                 "toast": {
                   "added": "Node Mount hinzugefügt.",
                   "removed": "Node Mount entfernt."
                 },
                 "modal": {
                   "add": {
-                    "title": "Node Mount hinzufügen",
-                    "form": {
-                      "mount": "Mount"
-                    }
+                    "title": "Node Mount hinzufügen"
                   },
                   "remove": {
                     "title": "Entfernen des Node Mounts bestätigen",
@@ -2060,9 +2036,7 @@
                 },
                 "table": {
                   "columns": {
-                    "server": "Server",
-                    "checksum": "Prüfsumme",
-                    "files": "Dateien"
+                    "server": "Server"
                   }
                 },
                 "tooltip": {
@@ -2087,8 +2061,7 @@
                   "restore": {
                     "title": "Node-Backup wiederherstellen",
                     "form": {
-                      "truncateDirectory": "Möchtest du das Dateisystem dieses Servers vor der Wiederherstellung des Backups leeren?",
-                      "restoreStartup": "Den Startbefehl, das Image und die Variablen aus diesem Backup wiederherstellen."
+                      "truncateDirectory": "Möchtest du das Dateisystem dieses Servers vor der Wiederherstellung des Backups leeren?"
                     }
                   },
                   "delete": {
@@ -2108,16 +2081,9 @@
                   "transfer": {
                     "title": "Server übertragen",
                     "form": {
-                      "node": "Node",
                       "allocationMode": "Allocation-Modus",
                       "transferBackups": "Backups übertragen",
-                      "transferBackupsDescription": "Ob Backups zusammen mit den Servern übertragen werden sollen",
-                      "deleteSourceBackups": "Quell-Backups löschen",
-                      "deleteSourceBackupsDescription": "Löscht die übertragenen Backups auf der Quell-Node, sobald die Übertragung abgeschlossen ist",
-                      "archiveFormat": "Archivformat",
-                      "compressionLevel": "Komprimierungsstufe",
-                      "multiplexChannels": "Multiplex-Kanäle",
-                      "multiplexChannelsDescription": "Zusätzliche HTTP-Verbindungen (und damit auch Threads) für das Übertragen geteilter Archive hinzufügen, Gesamtstreams ist 1 + Multiplex-Kanäle"
+                      "transferBackupsDescription": "Ob Backups zusammen mit den Servern übertragen werden sollen"
                     },
                     "toast": {
                       "started": "Übertragung von {servers} gestartet."
@@ -2163,10 +2129,6 @@
                   "useWingsProxyUrl": "Wings Proxy URL verwenden"
                 },
                 "form": {
-                  "sftpHost": "SFTP Host",
-                  "sftpPort": "SFTP Port",
-                  "memory": "Arbeitsspeicher",
-                  "disk": "Speicher",
                   "urlDescription": "Wird für die interne Kommunikation mit dem Node verwendet.",
                   "publicUrlDescription": "Wird für WebSocket-Verbindungen und Downloads verwendet.",
                   "backupConfigurationPlaceholder": "Vom Standort übernehmen",
@@ -2208,7 +2170,255 @@
           }
         },
         "servers": {
-          "title": "Server"
+          "title": "Server",
+          "resourceName": "Server",
+          "tabs": {
+            "general": {
+              "page": {
+                "titleCreate": "Server erstellen",
+                "titleUpdate": "Server aktualisieren",
+                "card": {
+                  "basicInformation": "Grundinformationen",
+                  "serverAssignment": "Server-Zuweisung",
+                  "resourceLimits": "Ressourcen-Limits",
+                  "serverConfiguration": "Server-Konfiguration",
+                  "featureLimits": "Feature-Limits",
+                  "allocations": "Allocations",
+                  "variables": "Variablen"
+                },
+                "alert": {
+                  "suspended": "Dieser Server ist suspendiert.",
+                  "selectEggForVariables": "Bitte wähle ein Egg aus, bevor du Variablen konfigurieren kannst."
+                },
+                "badge": {
+                  "serverSuspended": "Server suspendiert"
+                },
+                "form": {
+                  "serverNamePlaceholder": "Mein Spieleserver",
+                  "externalIdPlaceholder": "Optionaler externer Bezeichner",
+                  "descriptionPlaceholder": "Serverbeschreibung",
+                  "owner": "Besitzer",
+                  "nest": "Nest",
+                  "egg": "Egg",
+                  "backupConfigurationPlaceholder": "Von Node/Standort erben",
+                  "cpuLimit": "CPU-Limit (%)",
+                  "cpuLimitDescription": "Das CPU-Limit in %, das der Server nutzen darf, 1 Thread = 100%.",
+                  "swap": "Swap",
+                  "swapDescription": "Die Menge an Swap für diesen Server, -1 setzt kein Limit.",
+                  "memoryDescription": "Das Arbeitsspeicher-Limit des Server-Containers, 0 setzt kein Limit.",
+                  "memoryOverhead": "Speicher-Overhead",
+                  "memoryOverheadDescription": "Versteckter Arbeitsspeicher, der dem Container hinzugefügt wird.",
+                  "diskSpace": "Speicherplatz",
+                  "diskSpaceDescription": "Das Speicher-Limit des Servers. Dies ist ein Soft-Limit, sofern der Disk-Limiter nicht in Wings konfiguriert ist.",
+                  "ioWeight": "IO-Gewichtung",
+                  "ioWeightDescription": "Die relative IO-Gewichtung des Server-Containers im Vergleich zu anderen Containern, 0-1000. Funktioniert möglicherweise nicht auf allen Systemen.",
+                  "dockerImagePlaceholder": "ghcr.io/...",
+                  "predefinedDockerImages": "Vordefinierte Docker-Images",
+                  "predefinedDockerImagesPlaceholder": "Kein vordefiniertes Image ausgewählt",
+                  "timezonePlaceholder": "Europe/Berlin",
+                  "startupCommandPlaceholder": "npm start",
+                  "startupCommandCustom": "Benutzerdefiniert",
+                  "startOnCompletion": "Nach Abschluss starten",
+                  "startOnCompletionDescription": "Server nach Abschluss der Installation starten.",
+                  "skipInstaller": "Installer überspringen",
+                  "skipInstallerDescription": "Ausführung des Installationsskripts überspringen.",
+                  "hugepagesPassthroughEnabled": "Hugepages-Passthrough aktivieren",
+                  "hugepagesPassthroughEnabledDescription": "Hugepages-Passthrough für den Server aktivieren (mountet /dev/hugepages in den Container).",
+                  "kvmPassthroughEnabled": "KVM-Passthrough aktivieren",
+                  "kvmPassthroughEnabledDescription": "KVM-Passthrough für den Server aktivieren (ermöglicht Zugriff auf /dev/kvm im Container).",
+                  "allocationsLimit": "Allocations",
+                  "databasesLimit": "Datenbanken",
+                  "backupsLimit": "Backups",
+                  "schedulesLimit": "Zeitpläne"
+                },
+                "modal": {
+                  "confirmNoAllocation": {
+                    "title": "Keine primäre Allocation zugewiesen",
+                    "content": "Du erstellst einen Server, ohne eine primäre Allocation zuzuweisen. Möchtest du wirklich fortfahren?",
+                    "button": {
+                      "confirm": "Trotzdem erstellen"
+                    }
+                  }
+                }
+              }
+            },
+            "allocations": {
+              "title": "Allocations",
+              "page": {
+                "title": "Server Allocations",
+                "table": {
+                  "columns": {
+                    "ipAlias": "IP-Alias"
+                  }
+                },
+                "form": {
+                  "notesPlaceholder": "Notizen"
+                },
+                "toast": {
+                  "updated": "Allocation aktualisiert.",
+                  "setPrimary": "Allocation als primär festgelegt.",
+                  "unsetPrimary": "Allocation als primär entfernt.",
+                  "removed": "Allocation entfernt.",
+                  "added": "{count} Allocations hinzugefügt."
+                },
+                "modal": {
+                  "add": {
+                    "title": "Server Allocations hinzufügen",
+                    "form": {
+                      "allocations": "Allocations"
+                    },
+                    "button": {
+                      "add": "{count} hinzufügen"
+                    }
+                  },
+                  "remove": {
+                    "title": "Entfernung der Allocation bestätigen",
+                    "content": "Bist du sicher, dass du **{allocation}** entfernen möchtest?"
+                  }
+                }
+              }
+            },
+            "variables": {
+              "title": "Variablen",
+              "page": {
+                "title": "Server-Variablen",
+                "toast": {
+                  "updated": "Server-Variablen aktualisiert."
+                }
+              }
+            },
+            "mounts": {
+              "title": "Mounts",
+              "page": {
+                "title": "Server Mounts",
+                "toast": {
+                  "added": "Server Mount hinzugefügt.",
+                  "deleted": "Server Mount gelöscht."
+                },
+                "modal": {
+                  "add": {
+                    "title": "Server Mount hinzufügen"
+                  },
+                  "remove": {
+                    "title": "Entfernung des Server Mounts bestätigen",
+                    "content": "Bist du sicher, dass du den Mount **{mount}** von **{name}** entfernen möchtest?"
+                  }
+                }
+              }
+            },
+            "backups": {
+              "title": "Backups",
+              "page": {
+                "title": "Server Backups",
+                "input": {
+                  "partiallyDetachedOnly": "Nur teilweise abgetrennte Backups anzeigen"
+                },
+                "tooltip": {
+                  "backupOnDifferentNode": "Dieses Backup befindet sich auf einer anderen Node als der Server. Es ist nicht über die Client-API einsehbar."
+                }
+              }
+            },
+            "logs": {
+              "title": "Logs",
+              "page": {
+                "title": "Server Logs",
+                "form": {
+                  "logType": "Log-Typ"
+                },
+                "enum": {
+                  "logType": {
+                    "console": "Konsole",
+                    "install": "Installation"
+                  }
+                }
+              }
+            },
+            "management": {
+              "title": "Verwaltung",
+              "page": {
+                "title": "Server-Verwaltung",
+                "transfer": {
+                  "title": "Transfer",
+                  "content": "Übertrage diesen Server und seine Daten auf eine andere Node innerhalb dieses Systems.",
+                  "toast": {
+                    "started": "Server-Transfer gestartet."
+                  },
+                  "modal": {
+                    "title": "Server-Transfer",
+                    "form": {
+                      "backupsToTransfer": "Zu übertragende Backups"
+                    },
+                    "tooltip": {
+                      "aioNotSupported": "Transfers zur All-In-One-Node werden nicht unterstützt."
+                    },
+                    "confirm": {
+                      "title": "Server-Transfer bestätigen",
+                      "content": "Bist du sicher, dass du **{name}** von **{from}** nach **{to}** übertragen möchtest?",
+                      "alert": {
+                        "notAllBackupsSelected": "Du hast nicht alle Backups zum Transfer ausgewählt. Die verbleibenden Backups werden teilweise abgetrennt, wenn der Transfer erfolgreich abgeschlossen wird."
+                      }
+                    }
+                  }
+                },
+                "suspend": {
+                  "title": "Suspendieren",
+                  "content": "Dies suspendiert den Server, stoppt alle laufenden Prozesse und blockiert sofort den Zugriff des Benutzers auf seine Dateien oder die Verwaltung des Servers über das Panel oder die API.",
+                  "button": "Suspendieren",
+                  "toast": {
+                    "suspended": "Server suspendiert."
+                  },
+                  "modal": {
+                    "title": "Server-Suspendierung bestätigen",
+                    "content": "Bist du sicher, dass du **{name}** suspendieren möchtest? Dies stoppt den Server und verhindert seinen Start. Alle laufenden Prozesse werden gestoppt und der Benutzer kann nicht mehr auf seine Dateien zugreifen oder den Server über das Panel oder die API verwalten."
+                  }
+                },
+                "unsuspend": {
+                  "title": "Entsuspendieren",
+                  "content": "Dies entsuspendiert den Server und erlaubt ihm wieder zu starten. Der Benutzer kann wieder auf seine Dateien zugreifen und den Server über das Panel oder die API verwalten.",
+                  "button": "Entsuspendieren",
+                  "toast": {
+                    "unsuspended": "Server entsuspendiert."
+                  },
+                  "modal": {
+                    "title": "Server-Entsuspendierung bestätigen",
+                    "content": "Bist du sicher, dass du **{name}** entsuspendieren möchtest? Dies erlaubt dem Server wieder zu starten. Der Benutzer kann wieder auf seine Dateien zugreifen und den Server über das Panel oder die API verwalten."
+                  }
+                },
+                "clearState": {
+                  "title": "Status zurücksetzen",
+                  "content": "Dies setzt den dem Panel bekannten Server-Status zurück.",
+                  "button": "Status zurücksetzen",
+                  "toast": {
+                    "cleared": "Server-Status zurückgesetzt."
+                  },
+                  "modal": {
+                    "title": "Zurücksetzen des Server-Status bestätigen",
+                    "content": "Bist du sicher, dass du den Status von **{name}** zurücksetzen möchtest? Dies entfernt alle bekannten ausstehenden Transfers und Statusfehler. Stelle bitte sicher, dass dies sicher ist, bevor du ohne Grund klickst."
+                  }
+                },
+                "delete": {
+                  "title": "Löschen",
+                  "content": "Dies löscht den Server und alle seine Daten. Diese Aktion kann nicht rückgängig gemacht werden.",
+                  "toast": {
+                    "deleted": "Server gelöscht."
+                  },
+                  "modal": {
+                    "title": "Server-Löschung bestätigen",
+                    "description": "Du bist dabei, **{name}** zu löschen. Bist du sicher?",
+                    "form": {
+                      "force": "Möchtest du diesen Server zwangsweise löschen?",
+                      "deleteBackups": "Möchtest du die Backups dieses Servers löschen?",
+                      "confirmServerName": "Servername bestätigen",
+                      "confirmServerNamePlaceholder": "Servername"
+                    }
+                  }
+                }
+              }
+            },
+            "viewClient": {
+              "title": "Im Client-Bereich ansehen"
+            }
+          }
         },
         "nests": {
           "title": "Nests"
@@ -2256,12 +2466,6 @@
             "sshDetails": {
               "title": "SSH-Details",
               "form": {
-                "protocol": "Protokoll",
-                "port": "Port",
-                "host": "Host",
-                "username": "Benutzername",
-                "password": "Passwort",
-                "yourPassword": "Dein Control Panel Passwort",
                 "command": "SSH-Befehl"
               },
               "launch": "Starten"
@@ -2362,7 +2566,6 @@
             "new": "Neu",
             "sftpDetails": "SFTP-Details",
             "openInNewWindow": "In neuem Fenster öffnen",
-            "details": "Details",
             "rename": "Umbenennen",
             "copy": "Kopieren",
             "move": "Verschieben",
@@ -2470,17 +2673,11 @@
           "modal": {
             "activeUploads": {
               "title": "Aktive Uploads",
-              "content": "Bist du sicher, dass du diese Seite verlassen möchtest? Du hast {files} aktive Datei-Uploads. Wenn du diese Seite verlässt, werden die Uploads abgebrochen.",
-              "button": {
-                "leave": "Seite verlassen"
-              }
+              "content": "Bist du sicher, dass du diese Seite verlassen möchtest? Du hast {files} aktive Datei-Uploads. Wenn du diese Seite verlässt, werden die Uploads abgebrochen."
             },
             "unsavedChanges": {
               "title": "Ungespeicherte Änderungen",
-              "content": "Du hast ungespeicherte Änderungen im Editor. Bist du sicher, dass du diese Seite verlassen möchtest? Wenn du die Seite verlässt, gehen deine Änderungen verloren.",
-              "button": {
-                "leave": "Seite verlassen"
-              }
+              "content": "Du hast ungespeicherte Änderungen im Editor. Bist du sicher, dass du diese Seite verlassen möchtest? Wenn du die Seite verlässt, gehen deine Änderungen verloren."
             },
             "draftRestore": {
               "title": "Entwurf wiederherstellen",
@@ -2490,30 +2687,22 @@
             "createArchive": {
               "title": "Archiv erstellen",
               "form": {
-                "archiveName": "Archivname",
                 "format": "Format"
               },
               "createdAs": "Dieses Archiv wird erstellt als "
             },
             "createDirectory": {
               "title": "Verzeichnis erstellen",
-              "form": {
-                "directoryName": "Verzeichnisname"
-              },
               "createdAs": "Dieses Verzeichnis wird erstellt als "
             },
             "copyFile": {
               "title": "Datei kopieren",
-              "form": {
-                "fileName": "Dateiname"
-              },
               "createdAs": "Diese Datei wird erstellt als "
             },
             "copyRemote": {
               "title": "Remote kopieren",
               "form": {
-                "server": "Server",
-                "destination": "Ziel"
+                "server": "Server"
               },
               "createdAs": "Diese Dateien werden auf dem Remote-Server erstellt unter "
             },
@@ -2533,10 +2722,7 @@
               "multipleFilesWarning": "Du wirst den Inhalt der folgenden Dateien nach dem Löschen nicht mehr wiederherstellen können."
             },
             "createFile": {
-              "title": "Datei erstellen",
-              "form": {
-                "fileName": "Dateiname"
-              }
+              "title": "Datei erstellen"
             },
             "details": {
               "title": "Dateidetails",
@@ -2564,10 +2750,7 @@
               "executePermission": "Ausführungsberechtigung (1)"
             },
             "renameFile": {
-              "title": "Datei umbenennen",
-              "form": {
-                "fileName": "Dateiname"
-              }
+              "title": "Datei umbenennen"
             },
             "largestDirectories": {
               "title": "Größte Verzeichnisse",
@@ -2594,22 +2777,13 @@
               "title": "Datei herunterladen",
               "form": {
                 "fileUrl": "Datei-URL",
-                "query": "Abfragen",
-                "fileName": "Dateiname"
+                "query": "Abfragen"
               },
               "createdAs": "Diese Datei wird erstellt als ",
               "pull": "Herunterladen"
             },
             "sftpDetails": {
               "title": "SFTP-Details",
-              "form": {
-                "protocol": "Protokoll",
-                "port": "Port",
-                "host": "Host",
-                "username": "Benutzername",
-                "password": "Passwort",
-                "yourPassword": "Dein Control Panel Passwort"
-              },
               "launch": "Starten"
             }
           }
@@ -2628,7 +2802,6 @@
             }
           },
           "button": {
-            "details": "Details",
             "rotatePassword": "Passwort rotieren"
           },
           "form": {
@@ -2641,7 +2814,6 @@
                 "created": "Datenbank erstellt."
               },
               "form": {
-                "databaseHost": "Datenbank Host",
                 "noHostsFound": "Keine Hosts gefunden"
               }
             },
@@ -2649,9 +2821,6 @@
               "title": "Datenbank bearbeiten",
               "toast": {
                 "updated": "Datenbank aktualisiert."
-              },
-              "form": {
-                "locked": "Gesperrt"
               }
             },
             "databaseDetails": {
@@ -2697,7 +2866,6 @@
             }
           },
           "button": {
-            "import": "Importieren",
             "trigger": "Auslösen",
             "triggerWithCondition": "Auslösen (Bedingung nicht überspringen)",
             "triggerSkipCondition": "Auslösen (Bedingung überspringen)",
@@ -2801,7 +2969,6 @@
           },
           "form": {
             "scheduleName": "Zeitplan-Name",
-            "enabled": "Aktiviert",
             "triggersList": "Auslöser",
             "triggerNumber": "Auslöser {number}",
             "actionType": "Aktionstyp",
@@ -2843,9 +3010,6 @@
             },
             "powerAction": {
               "title": "Power-Aktion",
-              "form": {
-                "powerAction": "Power-Aktion"
-              },
               "card": {
                 "content": "Wenn Power-Aktion `{action}` angefordert wird."
               }
@@ -2867,9 +3031,6 @@
             },
             "consoleLine": {
               "title": "Konsolenzeile",
-              "form": {
-                "lineContains": "Zeile enthält"
-              },
               "card": {
                 "content": "Wenn die Konsolenausgabe eine Zeile erreicht, die `{contains}` enthält"
               }
@@ -2932,7 +3093,6 @@
             "waitForConsoleLine": {
               "title": "Auf Konsolenzeile warten",
               "form": {
-                "lineContains": "Zeile enthält",
                 "timeout": "Zeitüberschreitung (Millisekunden)"
               },
               "renderer": {
@@ -2946,9 +3106,6 @@
             },
             "sendCommand": {
               "title": "Befehl senden",
-              "form": {
-                "command": "Befehl"
-              },
               "renderer": {
                 "compact": "Führe {command} aus",
                 "detail": {
@@ -2958,9 +3115,6 @@
             },
             "sendPower": {
               "title": "Power-Signal senden",
-              "form": {
-                "powerAction": "Power-Aktion"
-              },
               "renderer": {
                 "compact": "Führe {action} aus",
                 "detail": {
@@ -2971,8 +3125,7 @@
             "createBackup": {
               "title": "Backup erstellen",
               "form": {
-                "backupName": "Backup-Name",
-                "ignoredFiles": "Ignorierte Dateien"
+                "backupName": "Backup-Name"
               },
               "renderer": {
                 "compact": "Erstelle {name}",
@@ -2984,9 +3137,6 @@
             },
             "createDirectory": {
               "title": "Verzeichnis erstellen",
-              "form": {
-                "directoryName": "Verzeichnisname"
-              },
               "renderer": {
                 "compact": "Erstelle {name} in {root}",
                 "detail": {
@@ -3013,8 +3163,7 @@
             "copyFile": {
               "title": "Datei kopieren",
               "form": {
-                "sourceFile": "Quelldatei",
-                "destination": "Ziel"
+                "sourceFile": "Quelldatei"
               },
               "renderer": {
                 "compact": "Kopiere {file} nach {destination}",
@@ -3055,9 +3204,7 @@
             "compressFiles": {
               "title": "Dateien komprimieren",
               "form": {
-                "filesToCompress": "Zu komprimierende Dateien",
-                "archiveFormat": "Archivformat",
-                "archiveName": "Archivname"
+                "filesToCompress": "Zu komprimierende Dateien"
               },
               "renderer": {
                 "compact": "Komprimiere {files} in {root} nach {name}",
@@ -3098,9 +3245,6 @@
             },
             "updateStartupCommand": {
               "title": "Startbefehl aktualisieren",
-              "form": {
-                "startupCommand": "Startbefehl"
-              },
               "renderer": {
                 "compact": "Setze auf {command}",
                 "detail": {
@@ -3110,9 +3254,6 @@
             },
             "updateStartupDockerImage": {
               "title": "Docker Image aktualisieren",
-              "form": {
-                "dockerImage": "Docker Image"
-              },
               "renderer": {
                 "compact": "Setze auf {image}",
                 "detail": {
@@ -3142,10 +3283,8 @@
                 "created": "Subuser erstellt."
               },
               "form": {
-                "email": "E-Mail",
                 "emailPlaceholder": "Gib die E-Mail ein, unter der dieser Subuser gespeichert werden soll.",
                 "permissions": "Berechtigungen",
-                "ignoredFiles": "Ignorierte Dateien",
                 "ignoredFilesDescription": "Dateien und Verzeichnisse, die diesen Mustern entsprechen, werden vor diesem Subuser verborgen. Verwendet Glob-Muster im gitignore-Stil (z. B. `*.env`, `secrets/`). Stelle einem Muster ein `!` voran, um einen Pfad wieder anzuzeigen, den ein allgemeineres Muster andernfalls ausschließen würde."
               }
             },
@@ -3189,25 +3328,16 @@
               "title": "Backup erstellen",
               "toast": {
                 "created": "Backup erstellt."
-              },
-              "form": {
-                "ignoredFiles": "Ignorierte Dateien"
               }
             },
             "editBackup": {
               "title": "Backup bearbeiten",
               "toast": {
                 "updated": "Backup aktualisiert."
-              },
-              "form": {
-                "locked": "Gesperrt"
               }
             },
             "restoreBackup": {
-              "title": "Backup wiederherstellen",
-              "form": {
-                "restoreStartup": "Startbefehl, Image und Variablen aus diesem Backup wiederherstellen."
-              }
+              "title": "Backup wiederherstellen"
             },
             "deleteBackup": {
               "title": "Löschen des Backups bestätigen",
@@ -3225,19 +3355,13 @@
           "title": "Netzwerk",
           "subtitle": "{current} von maximal {max} Allocations zugewiesen.",
           "tooltip": {
-            "limitReached": "Dieser Server ist auf {max} Allocations limitiert.",
-            "primary": "Primär"
+            "limitReached": "Dieser Server ist auf {max} Allocations limitiert."
           },
           "table": {
             "columns": {
               "hostname": "Hostname",
-              "port": "Port",
-              "notes": "Notizen"
+              "port": "Port"
             }
-          },
-          "button": {
-            "setPrimary": "Als Primär setzen",
-            "unsetPrimary": "Primär entfernen"
           },
           "toast": {
             "created": "Allocation erstellt.",
@@ -3248,10 +3372,7 @@
           },
           "modal": {
             "editAllocation": {
-              "title": "Allocation bearbeiten",
-              "form": {
-                "notes": "Notizen"
-              }
+              "title": "Allocation bearbeiten"
             },
             "removeAllocation": {
               "title": "Entfernen der Allocation bestätigen",
@@ -3261,10 +3382,6 @@
         },
         "startup": {
           "title": "Start",
-          "form": {
-            "startupCommand": "Startbefehl",
-            "dockerImage": "Docker Image"
-          },
           "variables": "Variablen",
           "dockerImageDescription": "Das Docker Image, das verwendet wird, um diesen Server auszuführen. Dies kann geändert werden, um ein anderes Image zu verwenden.",
           "dockerImageDescriptionCustom": "Das Docker Image, das verwendet wird, um diesen Server auszuführen. Dies wurde von einem Administrator festgelegt und kann nicht geändert werden.",
@@ -3276,10 +3393,7 @@
           "modal": {
             "unsavedChanges": {
               "title": "Ungespeicherte Änderungen",
-              "content": "Du hast ungespeicherte Änderungen an deinen Startvariablen. Bist du sicher, dass du diese Seite verlassen möchtest? Wenn du die Seite verlässt, gehen deine Änderungen verloren.",
-              "button": {
-                "leave": "Seite verlassen"
-              }
+              "content": "Du hast ungespeicherte Änderungen an deinen Startvariablen. Bist du sicher, dass du diese Seite verlassen möchtest? Wenn du die Seite verlässt, gehen deine Änderungen verloren."
             }
           },
           "noVariables": "Keine Startvariablen für diesen Server gefunden."
@@ -3326,19 +3440,12 @@
           },
           "rename": {
             "title": "Server umbenennen",
-            "form": {
-              "serverName": "Server Name"
-            },
             "toast": {
               "renamed": "Server umbenannt."
             }
           },
           "timezone": {
             "title": "Zeitzone",
-            "form": {
-              "timezone": "Zeitzone",
-              "system": "System"
-            },
             "toast": {
               "updated": "Server-Zeitzone aktualisiert."
             }
@@ -3346,7 +3453,6 @@
           "autokill": {
             "title": "Auto-Kill",
             "form": {
-              "enabled": "Aktiviert",
               "secondsUntilAutoKill": "Sekunden bis zum Auto-Kill"
             },
             "toast": {

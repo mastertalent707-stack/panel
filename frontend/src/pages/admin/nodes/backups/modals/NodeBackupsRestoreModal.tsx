@@ -86,7 +86,7 @@ export default function NodeBackupsRestoreModal({ node, backup, opened, onClose 
         />
 
         <Switch
-          label={t('pages.admin.nodes.tabs.backups.page.modal.restore.form.restoreStartup', {})}
+          label={t('common.form.restoreStartup', {})}
           name='restoreStartup'
           checked={restoreStartup}
           disabled={Object.keys(backup.metadata).length === 0}
