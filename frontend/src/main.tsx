@@ -25,7 +25,11 @@ window.extensionContext = new ExtensionContext(extensions);
 
 window.addEventListener('vite:preloadError', (event) => {
   event.preventDefault();
-  window.location.reload();
+  const key = 'vite_preload_error_reloaded';
+  if (!sessionStorage.getItem(key)) {
+    sessionStorage.setItem(key, '1');
+    window.location.reload();
+  }
 });
 
 const root = document.getElementById('root');
