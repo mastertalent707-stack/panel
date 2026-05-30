@@ -176,7 +176,6 @@ export default function OobeServer({ onNext, onBack, canGoBack, skipFrom, data }
                     withAsterisk
                     className='flex-1'
                     label='Egg Repository'
-                    placeholder='Egg Repository'
                     data={data.eggRepositories.map((repo) => ({
                       label: repo.name,
                       value: repo.uuid,
@@ -188,7 +187,6 @@ export default function OobeServer({ onNext, onBack, canGoBack, skipFrom, data }
                     withAsterisk
                     className='flex-1'
                     label='Egg'
-                    placeholder='Egg'
                     data={eggs.items.map((egg) => ({
                       label: egg.name,
                       value: egg.uuid,
@@ -208,7 +206,6 @@ export default function OobeServer({ onNext, onBack, canGoBack, skipFrom, data }
                   <TextInput
                     withAsterisk
                     label='Nest Name'
-                    placeholder='Nest Name'
                     key={form.key('nestName')}
                     {...form.getInputProps('nestName')}
                   />
@@ -334,7 +331,6 @@ export default function OobeServer({ onNext, onBack, canGoBack, skipFrom, data }
                   <Select
                     className='flex-1'
                     label='Primary Allocation'
-                    placeholder='Primary Allocation'
                     data={availablePrimaryAllocations.items
                       .filter((alloc) => !form.getValues().allocationUuids.includes(alloc.uuid))
                       .map((alloc) => ({
@@ -351,7 +347,6 @@ export default function OobeServer({ onNext, onBack, canGoBack, skipFrom, data }
                   <MultiSelect
                     className='flex-1'
                     label='Additional Allocations'
-                    placeholder='Additional Allocations'
                     data={availableAllocations.items
                       .filter((alloc) => alloc.uuid !== form.getValues().allocationUuid)
                       .map((alloc) => ({

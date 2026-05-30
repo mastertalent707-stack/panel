@@ -59,7 +59,6 @@ export default function MountAddEggModal({
         <Select
           withAsterisk
           label='Egg'
-          placeholder='Egg'
           value={selectedEgg?.[1]}
           onChange={(value) =>
             setSelectedEgg(

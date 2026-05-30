@@ -79,7 +79,6 @@ export default function ServerContainer() {
           <NumberInput
             withAsterisk
             label={t('pages.admin.settings.tabs.server.page.form.maxScheduleStepCount', {})}
-            placeholder={t('pages.admin.settings.tabs.server.page.form.maxScheduleStepCount', {})}
             key={form.key('maxScheduleStepCount')}
             {...form.getInputProps('maxScheduleStepCount')}
           />
@@ -96,7 +95,6 @@ export default function ServerContainer() {
           <NumberInput
             withAsterisk
             label={t('pages.admin.settings.tabs.server.page.form.maxFileManagerSearchResults', {})}
-            placeholder={t('pages.admin.settings.tabs.server.page.form.maxFileManagerSearchResults', {})}
             key={form.key('maxFileManagerSearchResults')}
             {...form.getInputProps('maxFileManagerSearchResults')}
           />
@@ -104,7 +102,6 @@ export default function ServerContainer() {
           <NumberInput
             withAsterisk
             label={t('pages.admin.settings.tabs.server.page.form.maxSubuserCount', {})}
-            placeholder={t('pages.admin.settings.tabs.server.page.form.maxSubuserCount', {})}
             key={form.key('maxSubuserCount')}
             {...form.getInputProps('maxSubuserCount')}
           />

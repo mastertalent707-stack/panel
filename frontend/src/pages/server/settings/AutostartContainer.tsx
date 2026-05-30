@@ -53,7 +53,6 @@ export default function AutostartContainer() {
           <Select
             withAsterisk
             label={t('pages.server.settings.autostart.form.behavior', {})}
-            placeholder={t('pages.server.settings.autostart.form.behavior', {})}
             data={[
               {
                 label: t('common.enum.serverAutoStartBehavior.always', {}),

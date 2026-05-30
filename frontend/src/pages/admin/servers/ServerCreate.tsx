@@ -304,7 +304,6 @@ export default function ServerCreate() {
                 <Select
                   withAsterisk
                   label={t('common.form.node', {})}
-                  placeholder={t('common.form.node', {})}
                   data={nodes.items.map((node) => ({
                     label: node.name,
                     value: node.uuid,
@@ -320,7 +319,6 @@ export default function ServerCreate() {
                 <Select
                   withAsterisk
                   label={t('pages.admin.servers.tabs.general.page.form.owner', {})}
-                  placeholder={t('pages.admin.servers.tabs.general.page.form.owner', {})}
                   data={users.items.map((user) => ({
                     label: user.username,
                     value: user.uuid,
@@ -337,7 +335,6 @@ export default function ServerCreate() {
                 <Select
                   withAsterisk
                   label={t('pages.admin.servers.tabs.general.page.form.nest', {})}
-                  placeholder={t('pages.admin.servers.tabs.general.page.form.nest', {})}
                   value={selectedNestUuid}
                   onChange={(value) => setSelectedNestUuid(value)}
                   data={nests.items.map((nest) => ({
@@ -353,7 +350,6 @@ export default function ServerCreate() {
                 <Select
                   withAsterisk
                   label={t('pages.admin.servers.tabs.general.page.form.egg', {})}
-                  placeholder={t('pages.admin.servers.tabs.general.page.form.egg', {})}
                   disabled={!canReadEggs || !selectedNestUuid}
                   data={eggs.items.map((egg) => ({
                     label: egg.name,
@@ -659,7 +655,6 @@ export default function ServerCreate() {
                 <Group grow>
                   <Select
                     label={t('common.form.primaryAllocation', {})}
-                    placeholder={t('common.form.primaryAllocation', {})}
                     disabled={!form.getValues().nodeUuid}
                     data={availablePrimaryAllocations.items
                       .filter((alloc) => !form.getValues().allocationUuids.includes(alloc.uuid))
@@ -676,7 +671,6 @@ export default function ServerCreate() {
                   />
                   <MultiSelect
                     label={t('common.form.additionalAllocations', {})}
-                    placeholder={t('common.form.additionalAllocations', {})}
                     disabled={!form.getValues().nodeUuid}
                     data={availableAllocations.items
                       .filter((alloc) => alloc.uuid !== form.getValues().allocationUuid)

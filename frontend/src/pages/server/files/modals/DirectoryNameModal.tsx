@@ -47,7 +47,6 @@ export default function DirectoryNameModal({ opened, onClose }: ModalProps) {
       <TextInput
         withAsterisk
         label={t('common.form.directoryName', {})}
-        placeholder={t('common.form.directoryName', {})}
         data-autofocus
         {...form.getInputProps('name')}
       />

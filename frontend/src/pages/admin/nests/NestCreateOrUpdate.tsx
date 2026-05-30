@@ -73,24 +73,11 @@ export default function NestCreateOrUpdate({ contextNest }: { contextNest?: z.in
 
       <form onSubmit={form.onSubmit(() => doCreateOrUpdate(false, queryKeys.admin.nests.all()))}>
         <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-          <TextInput
-            withAsterisk
-            label='Name'
-            placeholder='Name'
-            key={form.key('name')}
-            {...form.getInputProps('name')}
-          />
-          <TextInput
-            withAsterisk
-            label='Author'
-            placeholder='Author'
-            key={form.key('author')}
-            {...form.getInputProps('author')}
-          />
+          <TextInput withAsterisk label='Name' key={form.key('name')} {...form.getInputProps('name')} />
+          <TextInput withAsterisk label='Author' key={form.key('author')} {...form.getInputProps('author')} />
 
           <TextArea
             label='Description'
-            placeholder='Description'
             className='col-span-full'
             rows={3}
             key={form.key('description')}

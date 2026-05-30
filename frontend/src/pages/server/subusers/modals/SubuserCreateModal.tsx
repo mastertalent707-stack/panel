@@ -76,7 +76,6 @@ export default function SubuserCreateModal({ opened, onClose }: ModalProps) {
 
         <TagsInput
           label={t('common.form.ignoredFiles', {})}
-          placeholder={t('common.form.ignoredFiles', {})}
           description={t('pages.server.subusers.modal.createSubuser.form.ignoredFilesDescription', {})}
           {...form.getInputProps('ignoredFiles')}
         />

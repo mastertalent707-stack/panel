@@ -21,47 +21,22 @@ export default function BackupS3({
 
       <Stack>
         <Group grow>
-          <TextInput
-            withAsterisk
-            label='Access Key'
-            placeholder='Access Key'
-            key={form.key('accessKey')}
-            {...form.getInputProps('accessKey')}
-          />
+          <TextInput withAsterisk label='Access Key' key={form.key('accessKey')} {...form.getInputProps('accessKey')} />
           <PasswordInput
             withAsterisk
             label='Secret Key'
-            placeholder='Secret Key'
             key={form.key('secretKey')}
             {...form.getInputProps('secretKey')}
           />
         </Group>
 
         <Group grow>
-          <TextInput
-            withAsterisk
-            label='Bucket'
-            placeholder='Bucket'
-            key={form.key('bucket')}
-            {...form.getInputProps('bucket')}
-          />
-          <TextInput
-            withAsterisk
-            label='Region'
-            placeholder='Region'
-            key={form.key('region')}
-            {...form.getInputProps('region')}
-          />
+          <TextInput withAsterisk label='Bucket' key={form.key('bucket')} {...form.getInputProps('bucket')} />
+          <TextInput withAsterisk label='Region' key={form.key('region')} {...form.getInputProps('region')} />
         </Group>
 
         <Group grow>
-          <TextInput
-            withAsterisk
-            label='Endpoint'
-            placeholder='Endpoint'
-            key={form.key('endpoint')}
-            {...form.getInputProps('endpoint')}
-          />
+          <TextInput withAsterisk label='Endpoint' key={form.key('endpoint')} {...form.getInputProps('endpoint')} />
           <SizeInput
             withAsterisk
             label='Part Size'

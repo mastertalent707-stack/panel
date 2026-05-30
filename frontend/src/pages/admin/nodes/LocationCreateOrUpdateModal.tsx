@@ -85,7 +85,6 @@ export default function LocationCreateOrUpdateModal({
           <TextInput
             withAsterisk
             label={t('common.form.name', {})}
-            placeholder={t('common.form.name', {})}
             key={form.key('name')}
             {...form.getInputProps('name')}
           />
@@ -107,12 +106,7 @@ export default function LocationCreateOrUpdateModal({
             {...form.getInputProps('backupConfigurationUuid')}
           />
 
-          <TextArea
-            label={t('common.form.description', {})}
-            placeholder={t('common.form.description', {})}
-            rows={3}
-            {...form.getInputProps('description')}
-          />
+          <TextArea label={t('common.form.description', {})} rows={3} {...form.getInputProps('description')} />
 
           <Select
             label={t('pages.admin.locations.tabs.general.page.form.flag', {})}

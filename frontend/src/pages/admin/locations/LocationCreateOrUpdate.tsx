@@ -101,7 +101,6 @@ export default ({ contextLocation }: { contextLocation?: z.infer<typeof adminLoc
           <TextInput
             withAsterisk
             label={t('common.form.name', {})}
-            placeholder={t('common.form.name', {})}
             key={form.key('name')}
             {...form.getInputProps('name')}
           />
@@ -125,7 +124,6 @@ export default ({ contextLocation }: { contextLocation?: z.infer<typeof adminLoc
 
           <TextArea
             label={t('common.form.description', {})}
-            placeholder={t('common.form.description', {})}
             rows={3}
             key={form.key('description')}
             {...form.getInputProps('description')}

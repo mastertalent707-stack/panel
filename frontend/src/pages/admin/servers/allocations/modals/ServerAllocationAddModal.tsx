@@ -66,7 +66,6 @@ export default function ServerAllocationAddModal({
         <MultiSelect
           withAsterisk
           label={t('pages.admin.servers.tabs.allocations.page.modal.add.form.allocations', {})}
-          placeholder={t('pages.admin.servers.tabs.allocations.page.modal.add.form.allocations', {})}
           value={selectedAllocationUuids}
           onChange={(value) => setSelectedAllocationUuids(value)}
           data={availableAllocations.items.map((alloc) => ({

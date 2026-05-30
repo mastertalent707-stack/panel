@@ -89,35 +89,11 @@ export default function MountCreateOrUpdate({ contextMount }: { contextMount?: z
 
       <form onSubmit={form.onSubmit(() => doCreateOrUpdate(false, queryKeys.admin.mounts.all()))}>
         <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-          <TextInput
-            withAsterisk
-            label='Name'
-            placeholder='Name'
-            key={form.key('name')}
-            {...form.getInputProps('name')}
-          />
-          <TextArea
-            label='Description'
-            placeholder='Description'
-            rows={3}
-            key={form.key('description')}
-            {...form.getInputProps('description')}
-          />
+          <TextInput withAsterisk label='Name' key={form.key('name')} {...form.getInputProps('name')} />
+          <TextArea label='Description' rows={3} key={form.key('description')} {...form.getInputProps('description')} />
 
-          <TextInput
-            withAsterisk
-            label='Source'
-            placeholder='Source'
-            key={form.key('source')}
-            {...form.getInputProps('source')}
-          />
-          <TextInput
-            withAsterisk
-            label='Target'
-            placeholder='Target'
-            key={form.key('target')}
-            {...form.getInputProps('target')}
-          />
+          <TextInput withAsterisk label='Source' key={form.key('source')} {...form.getInputProps('source')} />
+          <TextInput withAsterisk label='Target' key={form.key('target')} {...form.getInputProps('target')} />
 
           <Switch
             label='Read Only'

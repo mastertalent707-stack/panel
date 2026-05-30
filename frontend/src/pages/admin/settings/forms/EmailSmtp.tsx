@@ -30,14 +30,12 @@ export default function EmailSmtp({ form }: { form: UseFormReturnType<z.infer<ty
         <TextInput
           withAsterisk
           label={t('common.form.host', {})}
-          placeholder={t('common.form.host', {})}
           key={form.key('host')}
           {...form.getInputProps('host')}
         />
         <NumberInput
           withAsterisk
           label={t('common.form.port', {})}
-          placeholder={t('common.form.port', {})}
           min={0}
           key={form.key('port')}
           {...form.getInputProps('port')}
@@ -60,13 +58,11 @@ export default function EmailSmtp({ form }: { form: UseFormReturnType<z.infer<ty
       <Group grow>
         <TextInput
           label={t('common.form.username', {})}
-          placeholder={t('common.form.username', {})}
           key={form.key('username')}
           {...form.getInputProps('username')}
         />
         <PasswordInput
           label={t('common.form.password', {})}
-          placeholder={t('common.form.password', {})}
           key={form.key('password')}
           {...form.getInputProps('password')}
         />
@@ -76,13 +72,11 @@ export default function EmailSmtp({ form }: { form: UseFormReturnType<z.infer<ty
         <TextInput
           withAsterisk
           label={t('common.form.fromAddress', {})}
-          placeholder={t('common.form.fromAddress', {})}
           key={form.key('fromAddress')}
           {...form.getInputProps('fromAddress')}
         />
         <TextInput
           label={t('common.form.fromName', {})}
-          placeholder={t('common.form.fromName', {})}
           key={form.key('fromName')}
           {...form.getInputProps('fromName')}
         />

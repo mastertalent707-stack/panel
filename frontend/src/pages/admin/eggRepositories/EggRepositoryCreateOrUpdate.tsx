@@ -98,24 +98,16 @@ export default function EggRepositoryCreateOrUpdate({
 
       <form onSubmit={form.onSubmit(() => doCreateOrUpdate(false, queryKeys.admin.eggRepositories.all()))}>
         <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-          <TextInput
-            withAsterisk
-            label='Name'
-            placeholder='Name'
-            key={form.key('name')}
-            {...form.getInputProps('name')}
-          />
+          <TextInput withAsterisk label='Name' key={form.key('name')} {...form.getInputProps('name')} />
           <TextInput
             withAsterisk
             label='Git Repository'
-            placeholder='Git Repository'
             key={form.key('gitRepository')}
             {...form.getInputProps('gitRepository')}
           />
 
           <TextArea
             label='Description'
-            placeholder='Description'
             className='col-span-full'
             rows={3}
             key={form.key('description')}

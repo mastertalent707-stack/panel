@@ -63,7 +63,6 @@ export default function LocationDatabaseHostCreateModal({
         <Select
           withAsterisk
           label={t('common.form.databaseHost', {})}
-          placeholder={t('common.form.databaseHost', {})}
           value={databaseHost?.uuid}
           onChange={(value) => setDatabaseHost(databaseHosts.items.find((dh) => dh.uuid === value) ?? null)}
           data={Object.values(

@@ -114,7 +114,6 @@ export default function AdminNodeLogs({ node }: { node: z.infer<typeof adminNode
               <Select
                 withAsterisk
                 label={t('pages.admin.nodes.tabs.logs.page.form.logFile', {})}
-                placeholder={t('pages.admin.nodes.tabs.logs.page.form.logFile', {})}
                 value={selectedLog?.name || ''}
                 className='w-full'
                 onChange={(value) => setSelectedLog(logs.find((log) => log.name === value) ?? null)}
@@ -126,7 +125,6 @@ export default function AdminNodeLogs({ node }: { node: z.infer<typeof adminNode
               <NumberInput
                 withAsterisk
                 label={t('common.form.lines', {})}
-                placeholder={t('common.form.lines', {})}
                 value={lines}
                 className='w-full'
                 onChange={(value) => setLines(Number(value))}

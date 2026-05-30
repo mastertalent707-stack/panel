@@ -24,14 +24,12 @@ export default function BackupRestic({
           <TextInput
             withAsterisk
             label='Repository'
-            placeholder='Repository'
             key={form.key('repository')}
             {...form.getInputProps('repository')}
           />
           <NumberInput
             withAsterisk
             label='Retry Lock Seconds'
-            placeholder='Retry Lock Seconds'
             key={form.key('retryLockSeconds')}
             {...form.getInputProps('retryLockSeconds')}
           />
@@ -40,7 +38,6 @@ export default function BackupRestic({
         <PasswordInput
           withAsterisk
           label='Password'
-          placeholder='Password'
           value={form.values.environment?.RESTIC_PASSWORD || ''}
           onChange={(e) => form.setFieldValue('environment.RESTIC_PASSWORD', e.target.value)}
         />

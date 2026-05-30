@@ -174,20 +174,8 @@ export default function OAuthProviderCreateOrUpdate({
 
       <form onSubmit={form.onSubmit(() => doCreateOrUpdate(false, queryKeys.admin.oAuthProviders.all()))}>
         <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-          <TextInput
-            withAsterisk
-            label='Name'
-            placeholder='Name'
-            key={form.key('name')}
-            {...form.getInputProps('name')}
-          />
-          <TextArea
-            label='Description'
-            placeholder='Description'
-            rows={3}
-            key={form.key('description')}
-            {...form.getInputProps('description')}
-          />
+          <TextInput withAsterisk label='Name' key={form.key('name')} {...form.getInputProps('name')} />
+          <TextArea label='Description' rows={3} key={form.key('description')} {...form.getInputProps('description')} />
 
           <Card className='flex flex-row! items-center justify-between col-span-full'>
             <Title order={4}>Redirect URL</Title>
@@ -198,44 +186,19 @@ export default function OAuthProviderCreateOrUpdate({
             </Code>
           </Card>
 
-          <TextInput
-            withAsterisk
-            label='Client Id'
-            placeholder='Client Id'
-            key={form.key('clientId')}
-            {...form.getInputProps('clientId')}
-          />
+          <TextInput withAsterisk label='Client Id' key={form.key('clientId')} {...form.getInputProps('clientId')} />
           <TextInput
             withAsterisk={!contextOAuthProvider}
             label='Client Secret'
-            placeholder='Client Secret'
             type='password'
             key={form.key('clientSecret')}
             {...form.getInputProps('clientSecret')}
           />
 
-          <TextInput
-            withAsterisk
-            label='Auth URL'
-            placeholder='Auth URL'
-            key={form.key('authUrl')}
-            {...form.getInputProps('authUrl')}
-          />
-          <TextInput
-            withAsterisk
-            label='Token URL'
-            placeholder='Token URL'
-            key={form.key('tokenUrl')}
-            {...form.getInputProps('tokenUrl')}
-          />
+          <TextInput withAsterisk label='Auth URL' key={form.key('authUrl')} {...form.getInputProps('authUrl')} />
+          <TextInput withAsterisk label='Token URL' key={form.key('tokenUrl')} {...form.getInputProps('tokenUrl')} />
 
-          <TextInput
-            withAsterisk
-            label='Info URL'
-            placeholder='Info URL'
-            key={form.key('infoUrl')}
-            {...form.getInputProps('infoUrl')}
-          />
+          <TextInput withAsterisk label='Info URL' key={form.key('infoUrl')} {...form.getInputProps('infoUrl')} />
           <Switch
             label='Basic Auth'
             description='Uses HTTP Basic Authentication to transmit client id and secret, not common anymore'
@@ -245,7 +208,6 @@ export default function OAuthProviderCreateOrUpdate({
 
           <TagsInput
             label='Scopes'
-            placeholder='Scopes'
             description='The OAuth2 Scopes to request, make sure to include scopes for email/profile info when needed'
             key={form.key('scopes')}
             {...form.getInputProps('scopes')}
@@ -253,7 +215,6 @@ export default function OAuthProviderCreateOrUpdate({
           <TextInput
             withAsterisk
             label='Identifier Path'
-            placeholder='Identifier Path'
             description='The Path to use to extract the unique user identifier from the Info URL response (https://serdejsonpath.live)'
             key={form.key('identifierPath')}
             {...form.getInputProps('identifierPath')}
@@ -261,14 +222,12 @@ export default function OAuthProviderCreateOrUpdate({
 
           <TextInput
             label='Email Path'
-            placeholder='Email Path'
             description='The Path to use to extract the email from the Info URL response (https://serdejsonpath.live)'
             key={form.key('emailPath')}
             {...form.getInputProps('emailPath')}
           />
           <TextInput
             label='Username Path'
-            placeholder='Username Path'
             description='The Path to use to extract the username from the Info URL response (https://serdejsonpath.live)'
             key={form.key('usernamePath')}
             {...form.getInputProps('usernamePath')}
@@ -283,7 +242,6 @@ export default function OAuthProviderCreateOrUpdate({
           />
           <TextInput
             label='Last Name Path'
-            placeholder='Last Name Path'
             description='The Path to use to extract the last name from the Info URL response (https://serdejsonpath.live)'
             key={form.key('nameLastPath')}
             {...form.getInputProps('nameLastPath')}

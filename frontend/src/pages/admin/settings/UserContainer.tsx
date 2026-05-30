@@ -65,35 +65,30 @@ export default function UserContainer() {
           <NumberInput
             withAsterisk
             label={t('pages.admin.settings.tabs.user.page.form.maxServerGroupCount', {})}
-            placeholder={t('pages.admin.settings.tabs.user.page.form.maxServerGroupCount', {})}
             key={form.key('maxServerGroupCount')}
             {...form.getInputProps('maxServerGroupCount')}
           />
           <NumberInput
             withAsterisk
             label={t('pages.admin.settings.tabs.user.page.form.maxApiKeyCount', {})}
-            placeholder={t('pages.admin.settings.tabs.user.page.form.maxApiKeyCount', {})}
             key={form.key('maxApiKeyCount')}
             {...form.getInputProps('maxApiKeyCount')}
           />
           <NumberInput
             withAsterisk
             label={t('pages.admin.settings.tabs.user.page.form.maxCommandSnippetCount', {})}
-            placeholder={t('pages.admin.settings.tabs.user.page.form.maxCommandSnippetCount', {})}
             key={form.key('maxCommandSnippetCount')}
             {...form.getInputProps('maxCommandSnippetCount')}
           />
           <NumberInput
             withAsterisk
             label={t('pages.admin.settings.tabs.user.page.form.maxSecurityKeyCount', {})}
-            placeholder={t('pages.admin.settings.tabs.user.page.form.maxSecurityKeyCount', {})}
             key={form.key('maxSecurityKeyCount')}
             {...form.getInputProps('maxSecurityKeyCount')}
           />
           <NumberInput
             withAsterisk
             label={t('pages.admin.settings.tabs.user.page.form.maxSshKeyCount', {})}
-            placeholder={t('pages.admin.settings.tabs.user.page.form.maxSshKeyCount', {})}
             key={form.key('maxSshKeyCount')}
             {...form.getInputProps('maxSshKeyCount')}
           />

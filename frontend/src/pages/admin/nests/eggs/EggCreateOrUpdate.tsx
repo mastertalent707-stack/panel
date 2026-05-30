@@ -279,34 +279,15 @@ export default function EggCreateOrUpdate({
       <form onSubmit={form.onSubmit(() => doCreateOrUpdate(false, queryKeys.admin.nests.eggs(contextNest.uuid)))}>
         <Stack>
           <Group grow>
-            <TextInput
-              withAsterisk
-              label='Author'
-              placeholder='Author'
-              key={form.key('author')}
-              {...form.getInputProps('author')}
-            />
-            <TextInput
-              withAsterisk
-              label='Name'
-              placeholder='Name'
-              key={form.key('name')}
-              {...form.getInputProps('name')}
-            />
+            <TextInput withAsterisk label='Author' key={form.key('author')} {...form.getInputProps('author')} />
+            <TextInput withAsterisk label='Name' key={form.key('name')} {...form.getInputProps('name')} />
           </Group>
 
-          <TextArea
-            label='Description'
-            placeholder='Description'
-            rows={3}
-            key={form.key('description')}
-            {...form.getInputProps('description')}
-          />
+          <TextArea label='Description' rows={3} key={form.key('description')} {...form.getInputProps('description')} />
 
           <Group grow>
             <Select
               label='Egg Repository'
-              placeholder='Egg Repository'
               value={selectedEggRepositoryUuid}
               onChange={(value) => setSelectedEggRepositoryUuid(value ?? '')}
               data={eggRepositories.items.map((eggRepository) => ({
@@ -342,7 +323,6 @@ export default function EggCreateOrUpdate({
               <TagsInput
                 withAsterisk
                 label='Startup Done'
-                placeholder='Startup Done'
                 description='Console message indicating startup completion.'
                 key={form.key('configStartup.done')}
                 {...form.getInputProps('configStartup.done')}
@@ -364,7 +344,6 @@ export default function EggCreateOrUpdate({
               <Select
                 withAsterisk
                 label='Stop Type'
-                placeholder='Stop Type'
                 data={[
                   { label: 'Send Command', value: 'command' },
                   { label: 'Send Signal', value: 'signal' },
@@ -377,7 +356,6 @@ export default function EggCreateOrUpdate({
                 <TextInput
                   withAsterisk
                   label='Stop Command'
-                  placeholder='Stop Command'
                   key={form.key('configStop.value')}
                   {...form.getInputProps('configStop.value')}
                 />
@@ -385,7 +363,6 @@ export default function EggCreateOrUpdate({
                 <Select
                   withAsterisk
                   label='Stop Signal'
-                  placeholder='Stop Signal'
                   data={[
                     { label: 'SIGABRT', value: 'SIGABRT' },
                     { label: 'SIGINT (^C)', value: 'SIGINT' },
@@ -412,14 +389,12 @@ export default function EggCreateOrUpdate({
                       <TextInput
                         withAsterisk
                         label='File Path'
-                        placeholder='File Path'
                         key={form.key(`configFiles.${index}.file`)}
                         {...form.getInputProps(`configFiles.${index}.file`)}
                       />
                       <Select
                         withAsterisk
                         label='Parser'
-                        placeholder='Parser'
                         data={Object.entries(processConfigurationParserLabelMapping).map(([value, label]) => ({
                           label,
                           value,
@@ -449,20 +424,17 @@ export default function EggCreateOrUpdate({
                                 <TextInput
                                   withAsterisk
                                   label='Match'
-                                  placeholder='Match'
                                   key={form.key(`configFiles.${index}.replace.${replaceIndex}.match`)}
                                   {...form.getInputProps(`configFiles.${index}.replace.${replaceIndex}.match`)}
                                 />
                                 <TextInput
                                   label='If Value'
-                                  placeholder='If Value'
                                   key={form.key(`configFiles.${index}.replace.${replaceIndex}.ifValue`)}
                                   {...form.getInputProps(`configFiles.${index}.replace.${replaceIndex}.ifValue`)}
                                 />
                                 <TextInput
                                   withAsterisk
                                   label='Replace With'
-                                  placeholder='Replace With'
                                   key={form.key(`configFiles.${index}.replace.${replaceIndex}.replaceWith`)}
                                   {...form.getInputProps(`configFiles.${index}.replace.${replaceIndex}.replaceWith`)}
                                 />
@@ -612,12 +584,7 @@ export default function EggCreateOrUpdate({
               key={form.key('features')}
               {...form.getInputProps('features')}
             />
-            <TagsInput
-              label='File Deny List'
-              placeholder='File Deny List'
-              key={form.key('fileDenylist')}
-              {...form.getInputProps('fileDenylist')}
-            />
+            <TagsInput label='File Deny List' key={form.key('fileDenylist')} {...form.getInputProps('fileDenylist')} />
           </Group>
 
           <MultiKeyValueInput

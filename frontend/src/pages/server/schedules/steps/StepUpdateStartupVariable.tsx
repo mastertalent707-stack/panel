@@ -18,14 +18,12 @@ export default function StepUpdateStartupVariable({
       <ScheduleDynamicParameterInput
         withAsterisk
         label={t('pages.server.schedules.steps.updateStartupVariable.form.envVariable', {})}
-        placeholder={t('pages.server.schedules.steps.updateStartupVariable.form.envVariable', {})}
         value={form.getInputProps('action.envVariable').value}
         onChange={(v) => form.setFieldValue('action.envVariable', v)}
       />
       <ScheduleDynamicParameterInput
         withAsterisk
         label={t('pages.server.schedules.steps.updateStartupVariable.form.value', {})}
-        placeholder={t('pages.server.schedules.steps.updateStartupVariable.form.value', {})}
         value={form.getInputProps('action.value').value}
         onChange={(v) => form.setFieldValue('action.value', v)}
       />

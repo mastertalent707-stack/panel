@@ -149,14 +149,12 @@ export default function NodeCreateOrUpdate({ contextNode }: { contextNode?: z.in
           <TextInput
             withAsterisk
             label={t('common.form.name', {})}
-            placeholder={t('common.form.name', {})}
             key={form.key('name')}
             {...form.getInputProps('name')}
           />
           <Select
             withAsterisk
             label={t('common.table.columns.location', {})}
-            placeholder={t('common.table.columns.location', {})}
             data={locations.items.map((location) => ({
               label: location.name,
               value: location.uuid,
@@ -173,7 +171,6 @@ export default function NodeCreateOrUpdate({ contextNode }: { contextNode?: z.in
             withAsterisk
             label={t('common.form.url', {})}
             description={t('pages.admin.nodes.tabs.general.page.form.urlDescription', {})}
-            placeholder={t('common.form.url', {})}
             key={form.key('url')}
             {...form.getInputProps('url')}
             disabled={contextNode ? isNodeAIO(contextNode) : false}
@@ -181,7 +178,6 @@ export default function NodeCreateOrUpdate({ contextNode }: { contextNode?: z.in
           <TextInput
             label={t('common.form.publicUrl', {})}
             description={t('pages.admin.nodes.tabs.general.page.form.publicUrlDescription', {})}
-            placeholder={t('common.form.url', {})}
             key={form.key('publicUrl')}
             rightSection={
               <Tooltip label={t('pages.admin.nodes.tabs.general.page.tooltip.useWingsProxyUrl', {})}>
@@ -203,14 +199,12 @@ export default function NodeCreateOrUpdate({ contextNode }: { contextNode?: z.in
 
           <TextInput
             label={t('common.form.sftpHost', {})}
-            placeholder={t('common.form.sftpHost', {})}
             key={form.key('sftpHost')}
             {...form.getInputProps('sftpHost')}
           />
           <NumberInput
             withAsterisk
             label={t('common.form.sftpPort', {})}
-            placeholder={t('common.form.sftpPort', {})}
             min={1}
             max={65535}
             key={form.key('sftpPort')}
@@ -252,7 +246,6 @@ export default function NodeCreateOrUpdate({ contextNode }: { contextNode?: z.in
           />
           <TextArea
             label={t('common.form.description', {})}
-            placeholder={t('common.form.description', {})}
             rows={3}
             key={form.key('description')}
             {...form.getInputProps('description')}

@@ -48,7 +48,6 @@ export default function AdminServerLogs({ server }: { server: z.infer<typeof adm
             <Select
               withAsterisk
               label={t('pages.admin.servers.tabs.logs.page.form.logType', {})}
-              placeholder={t('pages.admin.servers.tabs.logs.page.form.logType', {})}
               value={logType}
               className='w-full'
               onChange={(value) => setLogType(value as 'console' | 'install')}
@@ -60,7 +59,6 @@ export default function AdminServerLogs({ server }: { server: z.infer<typeof adm
             <NumberInput
               withAsterisk
               label={t('common.form.lines', {})}
-              placeholder={t('common.form.lines', {})}
               value={lines}
               className='w-full'
               onChange={(value) => setLines(Number(value))}

@@ -296,20 +296,8 @@ export default function EggConfigurationCreateOrUpdate({
 
       <form onSubmit={form.onSubmit(() => doCreateOrUpdate(false, queryKeys.admin.eggConfigurations.all()))}>
         <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-          <TextInput
-            withAsterisk
-            label='Name'
-            placeholder='Name'
-            key={form.key('name')}
-            {...form.getInputProps('name')}
-          />
-          <NumberInput
-            withAsterisk
-            label='Order'
-            placeholder='Order'
-            key={form.key('order')}
-            {...form.getInputProps('order')}
-          />
+          <TextInput withAsterisk label='Name' key={form.key('name')} {...form.getInputProps('name')} />
+          <NumberInput withAsterisk label='Order' key={form.key('order')} {...form.getInputProps('order')} />
 
           <MultiSelectGroup
             label='Eggs'
@@ -319,13 +307,7 @@ export default function EggConfigurationCreateOrUpdate({
             loading={!eggs.length}
             {...form.getInputProps('eggs')}
           />
-          <TextArea
-            label='Description'
-            placeholder='Description'
-            rows={3}
-            key={form.key('description')}
-            {...form.getInputProps('description')}
-          />
+          <TextArea label='Description' rows={3} key={form.key('description')} {...form.getInputProps('description')} />
 
           <CollapsibleSection
             icon={<FontAwesomeIcon icon={faNetworkWired} />}
@@ -380,13 +362,11 @@ export default function EggConfigurationCreateOrUpdate({
               <Group grow>
                 <NumberInput
                   label='Automatic Allocation Start'
-                  placeholder='Automatic Allocation Start'
                   key={form.key('configAllocations.userSelfAssign.startPort')}
                   {...form.getInputProps('configAllocations.userSelfAssign.startPort')}
                 />
                 <NumberInput
                   label='Automatic Allocation End'
-                  placeholder='Automatic Allocation End'
                   key={form.key('configAllocations.userSelfAssign.endPort')}
                   {...form.getInputProps('configAllocations.userSelfAssign.endPort')}
                 />

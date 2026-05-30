@@ -78,7 +78,6 @@ export default function PullFileModal({ opened, onClose }: ModalProps) {
           withAsterisk
           className='col-span-3'
           label={t('pages.server.files.modal.pullFile.form.fileUrl', {})}
-          placeholder={t('pages.server.files.modal.pullFile.form.fileUrl', {})}
           {...form.getInputProps('url')}
         />
         <Button

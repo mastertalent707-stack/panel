@@ -84,14 +84,12 @@ export default function AccountContainer({ requireTwoFactorActivation }: Account
             <TextInput
               withAsterisk
               label={t('common.form.firstName', {})}
-              placeholder={t('common.form.firstName', {})}
               autoComplete='given-name'
               {...form.getInputProps('nameFirst')}
             />
             <TextInput
               withAsterisk
               label={t('common.form.lastName', {})}
-              placeholder={t('common.form.lastName', {})}
               autoComplete='family-name'
               {...form.getInputProps('nameLast')}
             />
@@ -100,7 +98,6 @@ export default function AccountContainer({ requireTwoFactorActivation }: Account
             <TextInput
               withAsterisk
               label={t('common.form.username', {})}
-              placeholder={t('common.form.username', {})}
               autoComplete='username'
               {...form.getInputProps('username')}
             />
@@ -108,7 +105,6 @@ export default function AccountContainer({ requireTwoFactorActivation }: Account
               <Select
                 withAsterisk
                 label={t('common.form.language', {})}
-                placeholder={t('common.form.language', {})}
                 data={languages.map((language) => ({
                   label: new Intl.DisplayNames([language], { type: 'language' }).of(language) ?? language,
                   value: language,
@@ -121,7 +117,6 @@ export default function AccountContainer({ requireTwoFactorActivation }: Account
             <Select
               withAsterisk
               label={t('pages.account.account.containers.account.form.toastPosition', {})}
-              placeholder={t('pages.account.account.containers.account.form.toastPosition', {})}
               data={[
                 {
                   label: t('common.enum.userToastPosition.topLeft', {}),

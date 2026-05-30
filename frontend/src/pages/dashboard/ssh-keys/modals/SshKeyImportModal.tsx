@@ -66,7 +66,6 @@ export default function SshKeyImportModal({ opened, onClose }: ModalProps) {
           <TextInput
             withAsterisk
             label={t('common.form.username', {})}
-            placeholder={t('common.form.username', {})}
             className='col-span-2'
             {...form.getInputProps('username')}
           />

@@ -87,14 +87,12 @@ export default function WebauthnContainer() {
             <TextInput
               withAsterisk
               label={t('pages.admin.settings.tabs.webauthn.page.form.rpId', {})}
-              placeholder={t('pages.admin.settings.tabs.webauthn.page.form.rpId', {})}
               key={form.key('rpId')}
               {...form.getInputProps('rpId')}
             />
             <TextInput
               withAsterisk
               label={t('pages.admin.settings.tabs.webauthn.page.form.rpOrigin', {})}
-              placeholder={t('pages.admin.settings.tabs.webauthn.page.form.rpOrigin', {})}
               key={form.key('rpOrigin')}
               {...form.getInputProps('rpOrigin')}
             />

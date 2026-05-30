@@ -63,7 +63,6 @@ export default function ServerMountAddModal({
         <Select
           withAsterisk
           label={t('common.form.mount', {})}
-          placeholder={t('common.form.mount', {})}
           value={selectedMount?.mount.uuid}
           onChange={(value) => setSelectedMount(mounts.items.find((m) => m.mount.uuid === value) ?? null)}
           data={mounts.items.map((mount) => ({

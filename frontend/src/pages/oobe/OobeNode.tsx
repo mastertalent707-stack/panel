@@ -227,7 +227,6 @@ export default function OobeNode({ onNext, onBack, canGoBack, skipFrom, data }: 
                     withAsterisk
                     className='flex-1'
                     label={t('pages.oobe.node.form.ip', {})}
-                    placeholder={t('pages.oobe.node.form.ip', {})}
                     {...allocationsForm.getInputProps('ip')}
                   />
                   <TagsInput

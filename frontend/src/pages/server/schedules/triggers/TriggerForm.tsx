@@ -79,7 +79,6 @@ function CronTriggerForm({ form, index }: TriggerFormProps) {
         <TextInput
           withAsterisk
           label={t('pages.server.schedules.triggers.cron.form.cronSchedule', {})}
-          placeholder={t('pages.server.schedules.triggers.cron.form.cronSchedule', {})}
           className='flex-1'
           {...form.getInputProps(`triggers.${index}.schedule`)}
         />
@@ -118,7 +117,6 @@ function PowerActionTriggerForm({ form, index }: TriggerFormProps) {
     <Select
       withAsterisk
       label={t('common.form.powerAction', {})}
-      placeholder={t('common.form.powerAction', {})}
       className='flex-1'
       data={Object.entries(serverPowerActionLabelMapping).map(([value, label]) => ({
         value,
@@ -138,7 +136,6 @@ function ServerStateTriggerForm({ form, index }: TriggerFormProps) {
     <Select
       withAsterisk
       label={t('pages.server.schedules.form.serverState', {})}
-      placeholder={t('pages.server.schedules.form.serverState', {})}
       className='flex-1'
       data={Object.entries(serverPowerStateLabelMapping).map(([value, label]) => ({
         value,
@@ -158,7 +155,6 @@ function BackupStatusTriggerForm({ form, index }: TriggerFormProps) {
     <Select
       withAsterisk
       label={t('pages.server.schedules.triggers.backupStatus.form.backupStatus', {})}
-      placeholder={t('pages.server.schedules.triggers.backupStatus.form.backupStatus', {})}
       className='flex-1'
       data={Object.entries(serverBackupStatusLabelMapping).map(([value, label]) => ({
         value,
@@ -178,7 +174,6 @@ function ConsoleLineTriggerForm({ form, index }: TriggerFormProps) {
     <TextInput
       withAsterisk
       label={t('common.form.lineContains', {})}
-      placeholder={t('common.form.lineContains', {})}
       className='flex-1'
       {...form.getInputProps(`triggers.${index}.contains`)}
     />
@@ -194,7 +189,6 @@ function ConsoleLineExtraForm({ form, index }: TriggerFormProps) {
     <Stack>
       <ScheduleDynamicParameterInput
         label={t('pages.server.schedules.form.outputInto', {})}
-        placeholder={t('pages.server.schedules.form.outputInto', {})}
         allowNull
         allowString={false}
         value={form.values.triggers[index].outputInto}

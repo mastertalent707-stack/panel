@@ -74,7 +74,6 @@ export default function TwoFactorDisableButton() {
           <PasswordInput
             withAsterisk
             label={t('common.form.password', {})}
-            placeholder={t('common.form.password', {})}
             autoComplete='current-password'
             {...form.getInputProps('password')}
           />

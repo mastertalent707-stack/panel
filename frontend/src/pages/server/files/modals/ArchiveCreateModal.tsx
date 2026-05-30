@@ -65,12 +65,7 @@ export default function ArchiveCreateModal({ files, opened, onClose }: Props) {
       opened={opened}
     >
       <Stack>
-        <TextInput
-          label={t('common.form.archiveName', {})}
-          placeholder={t('common.form.archiveName', {})}
-          data-autofocus
-          {...form.getInputProps('name')}
-        />
+        <TextInput label={t('common.form.archiveName', {})} data-autofocus {...form.getInputProps('name')} />
 
         <Select
           withAsterisk

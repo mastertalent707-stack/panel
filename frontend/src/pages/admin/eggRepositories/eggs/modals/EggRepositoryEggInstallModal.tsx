@@ -66,7 +66,6 @@ export default function EggRepositoryEggInstallModal({
         <Select
           withAsterisk
           label='Nest'
-          placeholder='Nest'
           value={selectedNest?.uuid}
           onChange={(value) => setSelectedNest(nests.items.find((m) => m.uuid === value) ?? null)}
           data={nests.items.map((mount) => ({

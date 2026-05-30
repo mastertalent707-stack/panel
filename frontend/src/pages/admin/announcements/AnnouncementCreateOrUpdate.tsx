@@ -177,7 +177,6 @@ export default function AnnouncementCreateOrUpdate({
           <LocalizedTextInput
             withAsterisk
             label={t('common.form.title', {})}
-            placeholder={t('common.form.title', {})}
             value={form.values.title}
             setValue={(value) => form.setFieldValue('title', value ?? '')}
             valueTranslations={form.values.titleTranslations}
@@ -189,7 +188,6 @@ export default function AnnouncementCreateOrUpdate({
           <LocalizedTextArea
             withAsterisk
             label={t('common.form.content', {})}
-            placeholder={t('common.form.content', {})}
             value={form.values.content}
             setValue={(value) => form.setFieldValue('content', value ?? '')}
             valueTranslations={form.values.contentTranslations}

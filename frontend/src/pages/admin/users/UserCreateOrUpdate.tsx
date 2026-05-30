@@ -172,14 +172,12 @@ export default function UserCreateOrUpdate({ contextUser }: { contextUser?: z.in
           <TextInput
             withAsterisk
             label={t('common.table.columns.username', {})}
-            placeholder={t('common.table.columns.username', {})}
             key={form.key('username')}
             {...form.getInputProps('username')}
           />
           <TextInput
             withAsterisk
             label={t('common.form.email', {})}
-            placeholder={t('common.form.email', {})}
             type='email'
             key={form.key('email')}
             {...form.getInputProps('email')}
@@ -188,14 +186,12 @@ export default function UserCreateOrUpdate({ contextUser }: { contextUser?: z.in
           <TextInput
             withAsterisk
             label={t('common.form.firstName', {})}
-            placeholder={t('common.form.firstName', {})}
             key={form.key('nameFirst')}
             {...form.getInputProps('nameFirst')}
           />
           <TextInput
             withAsterisk
             label={t('common.form.lastName', {})}
-            placeholder={t('common.form.lastName', {})}
             key={form.key('nameLast')}
             {...form.getInputProps('nameLast')}
           />
@@ -203,7 +199,6 @@ export default function UserCreateOrUpdate({ contextUser }: { contextUser?: z.in
           <Select
             withAsterisk
             label={t('common.form.language', {})}
-            placeholder={t('common.form.language', {})}
             data={languages.map((language) => ({
               label: new Intl.DisplayNames([language], { type: 'language' }).of(language) ?? language,
               value: language,
@@ -215,7 +210,6 @@ export default function UserCreateOrUpdate({ contextUser }: { contextUser?: z.in
 
           <Select
             label={t('pages.admin.users.tabs.general.page.form.role', {})}
-            placeholder={t('pages.admin.users.tabs.general.page.form.role', {})}
             data={roles.items.map((role) => ({
               label: role.name,
               value: role.uuid,
@@ -233,14 +227,12 @@ export default function UserCreateOrUpdate({ contextUser }: { contextUser?: z.in
 
           <TextInput
             label={t('common.form.externalId', {})}
-            placeholder={t('common.form.externalId', {})}
             key={form.key('externalId')}
             {...form.getInputProps('externalId')}
           />
           <TextInput
             withAsterisk={!contextUser}
             label={t('common.form.password', {})}
-            placeholder={t('common.form.password', {})}
             type='password'
             key={form.key('password')}
             {...form.getInputProps('password')}

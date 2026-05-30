@@ -278,7 +278,6 @@ export default function ServerUpdate({ contextServer }: { contextServer: z.infer
                 <Select
                   withAsterisk
                   label={t('pages.admin.servers.tabs.general.page.form.owner', {})}
-                  placeholder={t('pages.admin.servers.tabs.general.page.form.owner', {})}
                   data={users.items.map((user) => ({
                     label: user.username,
                     value: user.uuid,
@@ -312,7 +311,6 @@ export default function ServerUpdate({ contextServer }: { contextServer: z.infer
                 <Select
                   withAsterisk
                   label={t('pages.admin.servers.tabs.general.page.form.nest', {})}
-                  placeholder={t('pages.admin.servers.tabs.general.page.form.nest', {})}
                   value={selectedNestUuid}
                   onChange={(value) => setSelectedNestUuid(value)}
                   data={nests.items.map((nest) => ({
@@ -328,7 +326,6 @@ export default function ServerUpdate({ contextServer }: { contextServer: z.infer
                 <Select
                   withAsterisk
                   label={t('pages.admin.servers.tabs.general.page.form.egg', {})}
-                  placeholder={t('pages.admin.servers.tabs.general.page.form.egg', {})}
                   disabled={!canReadEggs || !selectedNestUuid}
                   data={eggs.items.map((egg) => ({
                     label: egg.name,

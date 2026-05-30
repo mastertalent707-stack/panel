@@ -130,14 +130,12 @@ export default function ApplicationContainer() {
           <TextInput
             withAsterisk
             label={t('common.form.name', {})}
-            placeholder={t('common.form.name', {})}
             key={form.key('name')}
             {...form.getInputProps('name')}
           />
           <Select
             withAsterisk
             label={t('common.form.language', {})}
-            placeholder={t('common.form.language', {})}
             data={languages.map((language) => ({
               label: new Intl.DisplayNames([language], { type: 'language' }).of(language) ?? language,
               value: language,
@@ -150,36 +148,27 @@ export default function ApplicationContainer() {
           <Autocomplete
             withAsterisk
             label={t('pages.admin.settings.tabs.application.page.form.icon', {})}
-            placeholder={t('pages.admin.settings.tabs.application.page.form.icon', {})}
             data={assets.items.map((asset) => asset.url)}
             key={form.key('icon')}
             {...form.getInputProps('icon')}
           />
           <Autocomplete
             label={t('pages.admin.settings.tabs.application.page.form.banner', {})}
-            placeholder={t('pages.admin.settings.tabs.application.page.form.banner', {})}
             data={assets.items.map((asset) => asset.url)}
             key={form.key('banner')}
             {...form.getInputProps('banner')}
           />
 
-          <TextInput
-            withAsterisk
-            label={t('common.form.url', {})}
-            placeholder={t('common.form.url', {})}
-            {...form.getInputProps('url')}
-          />
+          <TextInput withAsterisk label={t('common.form.url', {})} {...form.getInputProps('url')} />
 
           <TextInput
             withAsterisk
             label={t('pages.admin.settings.tabs.application.page.form.sessionCookie', {})}
-            placeholder={t('pages.admin.settings.tabs.application.page.form.sessionCookie', {})}
             {...form.getInputProps('sessionCookie')}
           />
           <TextInput
             withAsterisk
             label={t('pages.admin.settings.tabs.application.page.form.sessionDurationSeconds', {})}
-            placeholder={t('pages.admin.settings.tabs.application.page.form.sessionDurationSeconds', {})}
             {...form.getInputProps('sessionDurationSeconds')}
           />
 

@@ -36,13 +36,7 @@ export default function FileNameModal({ onFileName, opened, onClose }: Props) {
       loading={loading}
       opened={opened}
     >
-      <TextInput
-        withAsterisk
-        label={t('common.form.fileName', {})}
-        placeholder={t('common.form.fileName', {})}
-        data-autofocus
-        {...form.getInputProps('name')}
-      />
+      <TextInput withAsterisk label={t('common.form.fileName', {})} data-autofocus {...form.getInputProps('name')} />
 
       <ModalFooter>
         <Button type='submit' disabled={!form.isValid()}>

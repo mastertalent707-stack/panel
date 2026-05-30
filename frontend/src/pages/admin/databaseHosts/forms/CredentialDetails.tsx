@@ -30,14 +30,12 @@ export default function CredentialDetails({
         <TextInput
           withAsterisk
           label='Username'
-          placeholder='Username'
           key={form.key('credentials.username')}
           {...form.getInputProps('credentials.username')}
         />
         <PasswordInput
           withAsterisk
           label='Password'
-          placeholder='Password'
           key={form.key('credentials.password')}
           {...form.getInputProps('credentials.password')}
         />
@@ -47,14 +45,12 @@ export default function CredentialDetails({
         <TextInput
           withAsterisk
           label='Host'
-          placeholder='Host'
           key={form.key('credentials.host')}
           {...form.getInputProps('credentials.host')}
         />
         <NumberInput
           withAsterisk
           label='Port'
-          placeholder='Port'
           key={form.key('credentials.port')}
           {...form.getInputProps('credentials.port')}
         />

@@ -62,7 +62,6 @@ export default function MountAddNodeModal({
         <Select
           withAsterisk
           label='Node'
-          placeholder='Node'
           value={selectedNode?.uuid}
           onChange={(value) => setSelectedNode(nodes.items.find((n) => n.uuid === value) ?? null)}
           data={nodes.items.map((node) => ({

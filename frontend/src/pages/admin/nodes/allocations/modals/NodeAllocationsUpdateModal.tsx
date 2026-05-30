@@ -124,14 +124,12 @@ export default function NodeAllocationsUpdateModal({
         <TextInput
           withAsterisk
           label={t('common.table.columns.ip', {})}
-          placeholder={t('common.table.columns.ip', {})}
           value={ip}
           onChange={(e) => setIp(e.target.value)}
         />
 
         <TextInput
           label={t('pages.admin.nodes.tabs.allocations.page.form.ipAlias', {})}
-          placeholder={t('pages.admin.nodes.tabs.allocations.page.form.ipAlias', {})}
           value={ipAlias}
           onChange={(e) => setIpAlias(e.target.value)}
         />

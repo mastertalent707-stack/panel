@@ -128,13 +128,7 @@ export default function DatabaseHostCreateOrUpdate({
 
       <form onSubmit={form.onSubmit(() => doCreateOrUpdate(false, queryKeys.admin.databaseHosts.all()))}>
         <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-          <TextInput
-            withAsterisk
-            label='Name'
-            placeholder='Name'
-            key={form.key('name')}
-            {...form.getInputProps('name')}
-          />
+          <TextInput withAsterisk label='Name' key={form.key('name')} {...form.getInputProps('name')} />
           <Select
             withAsterisk
             label='Type'
@@ -147,18 +141,8 @@ export default function DatabaseHostCreateOrUpdate({
             {...form.getInputProps('type')}
           />
 
-          <TextInput
-            label='Public Host'
-            placeholder='Public Host'
-            key={form.key('publicHost')}
-            {...form.getInputProps('publicHost')}
-          />
-          <NumberInput
-            label='Public Port'
-            placeholder='Public Port'
-            key={form.key('publicPort')}
-            {...form.getInputProps('publicPort')}
-          />
+          <TextInput label='Public Host' key={form.key('publicHost')} {...form.getInputProps('publicHost')} />
+          <NumberInput label='Public Port' key={form.key('publicPort')} {...form.getInputProps('publicPort')} />
 
           <CollapsibleSection
             icon={<FontAwesomeIcon icon={faUnlockKeyhole} />}

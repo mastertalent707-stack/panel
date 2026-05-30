@@ -110,7 +110,6 @@ export default function ServersTransferModal({
           <Select
             withAsterisk
             label={t('common.form.node', {})}
-            placeholder={t('common.form.node', {})}
             value={selectedNodeUuid || ''}
             onChange={(value) => setSelectedNodeUuid(value)}
             data={nodes.items
@@ -209,7 +208,6 @@ export default function ServersTransferModal({
           <NumberInput
             withAsterisk
             label={t('common.form.multiplexChannels', {})}
-            placeholder={t('common.form.multiplexChannels', {})}
             description={t('common.form.multiplexChannelsDescription', {})}
             min={0}
             value={multiplexChannels}

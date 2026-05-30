@@ -103,21 +103,9 @@ export default function RoleCreateOrUpdate({ contextRole }: { contextRole?: z.in
 
       <form onSubmit={form.onSubmit(() => doCreateOrUpdate(false, queryKeys.admin.roles.all()))}>
         <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-          <TextInput
-            withAsterisk
-            label='Name'
-            placeholder='Name'
-            key={form.key('name')}
-            {...form.getInputProps('name')}
-          />
+          <TextInput withAsterisk label='Name' key={form.key('name')} {...form.getInputProps('name')} />
 
-          <TextArea
-            label='Description'
-            placeholder='Description'
-            rows={3}
-            key={form.key('description')}
-            {...form.getInputProps('description')}
-          />
+          <TextArea label='Description' rows={3} key={form.key('description')} {...form.getInputProps('description')} />
 
           <Switch
             label='Require Two Factor'
