@@ -1,5 +1,6 @@
 import { faStar, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useQueryClient } from '@tanstack/react-query';
 import debounce from 'debounce';
 import { useCallback, useEffect, useState } from 'react';
 import { z } from 'zod';
@@ -13,6 +14,7 @@ import ConfirmationModal from '@/elements/modals/ConfirmationModal.tsx';
 import { TableData, TableRow } from '@/elements/Table.tsx';
 import Tooltip from '@/elements/Tooltip.tsx';
 import FormattedTimestamp from '@/elements/time/FormattedTimestamp.tsx';
+import { queryKeys } from '@/lib/queryKeys.ts';
 import { adminServerSchema } from '@/lib/schemas/admin/servers.ts';
 import { serverAllocationSchema } from '@/lib/schemas/server/allocations.ts';
 import { formatAllocation } from '@/lib/server.ts';
@@ -29,6 +31,7 @@ export default function ServerAllocationRow({
 }) {
   const { t } = useTranslations();
   const { addToast } = useToast();
+  const queryClient = useQueryClient();
   const { serverAllocations, setServerAllocations, removeServerAllocation } = useAdminStore();
 
   const [openModal, setOpenModal] = useState<'remove' | null>(null);
@@ -90,8 +93,10 @@ export default function ServerAllocationRow({
 
   const doRemove = async () => {
     await deleteServerAllocation(server.uuid, allocation.uuid)
-      .then(() => {
+      .then(async () => {
         removeServerAllocation(allocation);
+        await queryClient.invalidateQueries({ queryKey: queryKeys.admin.servers.allocations(server.uuid) });
+        setOpenModal(null);
         addToast(t('pages.admin.servers.tabs.allocations.page.toast.removed', {}), 'success');
       })
       .catch((msg) => {

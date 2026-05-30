@@ -1,4 +1,5 @@
 import { ModalProps, Stack } from '@mantine/core';
+import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { z } from 'zod';
 import getAvailableNodeAllocations from '@/api/admin/nodes/allocations/getAvailableNodeAllocations.ts';
@@ -14,7 +15,6 @@ import { formatAllocation } from '@/lib/server.ts';
 import { useSearchableResource } from '@/plugins/useSearchableResource.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
-import { useAdminStore } from '@/stores/admin.tsx';
 
 export default function ServerAllocationAddModal({
   server,
@@ -23,7 +23,7 @@ export default function ServerAllocationAddModal({
 }: ModalProps & { server: z.infer<typeof adminServerSchema> }) {
   const { t } = useTranslations();
   const { addToast } = useToast();
-  const { addServerAllocation } = useAdminStore();
+  const queryClient = useQueryClient();
 
   const [loading, setLoading] = useState(false);
   const [selectedAllocationUuids, setSelectedAllocationUuids] = useState<string[]>([]);
@@ -40,30 +40,23 @@ export default function ServerAllocationAddModal({
     }
   }, [opened]);
 
-  const doAdd = () => {
+  const doAdd = async () => {
     setLoading(true);
 
-    let didError = false;
-    for (const allocationUuid of selectedAllocationUuids) {
-      createServerAllocation(server.uuid, { allocationUuid })
-        .then((allocation) => {
-          addServerAllocation(allocation);
-        })
-        .catch((msg) => {
-          addToast(httpErrorToHuman(msg), 'error');
-          didError = true;
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    }
-
-    if (!didError) {
+    try {
+      await Promise.all(
+        selectedAllocationUuids.map((allocationUuid) => createServerAllocation(server.uuid, { allocationUuid })),
+      );
+      await queryClient.invalidateQueries({ queryKey: queryKeys.admin.servers.allocations(server.uuid) });
       addToast(
         t('pages.admin.servers.tabs.allocations.page.toast.added', { count: selectedAllocationUuids.length }),
         'success',
       );
       onClose();
+    } catch (msg) {
+      addToast(httpErrorToHuman(msg), 'error');
+    } finally {
+      setLoading(false);
     }
   };
 
