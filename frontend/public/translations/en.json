@@ -1446,6 +1446,11 @@
                     "smtp": "SMTP",
                     "sendmail": "Sendmail Command",
                     "filesystem": "Filesystem"
+                  },
+                  "tlsMode": {
+                    "none": "None",
+                    "startTls": "STARTTLS",
+                    "implicitTls": "Implicit TLS"
                   }
                 },
                 "toast": {
@@ -1461,7 +1466,7 @@
                 },
                 "smtp": {
                   "form": {
-                    "useTls": "Use TLS",
+                    "tlsMode": "TLS Mode",
                     "skipCertValidation": "Skip Certificate Validation"
                   }
                 }

@@ -1421,6 +1421,11 @@ const baseTranslations = defineTranslations({
                     sendmail: 'Sendmail Command',
                     filesystem: 'Filesystem',
                   },
+                  tlsMode: {
+                    none: 'None',
+                    startTls: 'STARTTLS',
+                    implicitTls: 'Implicit TLS',
+                  },
                 },
                 toast: {
                   updated: 'Email settings updated.',
@@ -1435,7 +1440,7 @@ const baseTranslations = defineTranslations({
                 },
                 smtp: {
                   form: {
-                    useTls: 'Use TLS',
+                    tlsMode: 'TLS Mode',
                     skipCertValidation: 'Skip Certificate Validation',
                   },
                 },

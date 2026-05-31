@@ -1361,7 +1361,9 @@
                 "title": "Anwendungseinstellungen",
                 "form": {
                   "icon": "Symbol",
+                  "iconLight": "Symbol (Helles Design)",
                   "banner": "Banner",
+                  "bannerLight": "Banner (Helles Design)",
                   "sessionCookie": "Session-Cookie",
                   "sessionDurationSeconds": "Sitzungsdauer (Sekunden)",
                   "twoFactorRequirement": "Zwei-Faktor-Authentifizierung-Anforderung",
@@ -1451,7 +1453,7 @@
                 },
                 "smtp": {
                   "form": {
-                    "useTls": "TLS verwenden",
+                    "tlsMode": "TLS-Modus",
                     "skipCertValidation": "Zertifikatsvalidierung überspringen"
                   }
                 },
@@ -1461,6 +1463,11 @@
                     "smtp": "SMTP",
                     "sendmail": "Sendmail-Befehl",
                     "filesystem": "Dateisystem"
+                  },
+                  "tlsMode": {
+                    "none": "Keines",
+                    "startTls": "STARTTLS",
+                    "implicitTls": "Implizites TLS"
                   }
                 }
               }
@@ -1553,7 +1560,9 @@
                   "allowAcknowledgingInstallationFailure": "Bestätigen von Installationsfehlern erlauben",
                   "allowAcknowledgingInstallationFailureDescription": "Wenn aktiviert, können Benutzer Installationsfehler für Server bestätigen, die sich im Zustand „Install Failed“ befinden, und versuchen, den Server zu starten, anstatt auf einen Admin warten zu müssen. Wenn deaktiviert, können nur Admins Installationsfehler bestätigen.",
                   "allowViewingTransferProgress": "Anzeigen des Übertragungsfortschritts erlauben",
-                  "allowViewingTransferProgressDescription": "Wenn aktiviert, können Benutzer mit Lesezugriff auf die Konsole auch Übertragungsfortschritts-Protokolle über die WebSocket-Verbindung sehen. Wenn deaktiviert, sind Übertragungsfortschritts-Protokolle nur für Admins verfügbar."
+                  "allowViewingTransferProgressDescription": "Wenn aktiviert, können Benutzer mit Lesezugriff auf die Konsole auch Übertragungsfortschritts-Protokolle über die WebSocket-Verbindung sehen. Wenn deaktiviert, sind Übertragungsfortschritts-Protokolle nur für Admins verfügbar.",
+                  "containerPrelude": "Container-Präludium",
+                  "containerPreludeDescription": "Das Terminal-Präludium, das für einige statusbezogene Nachrichten in der Server-Konsole verwendet wird."
                 },
                 "toast": {
                   "updated": "Server-Einstellungen aktualisiert."
