@@ -69,6 +69,7 @@ export default function BackupConfigurationCreateOrUpdate({
       repository: '',
       retryLockSeconds: 0,
       environment: {},
+      pruneJobs: [],
     },
     validateInputOnBlur: true,
     validate: zod4Resolver(adminBackupConfigurationResticSchema),
@@ -124,7 +125,10 @@ export default function BackupConfigurationCreateOrUpdate({
         backupConfigS3Form.setValues(contextBackupConfiguration.backupConfigs.s3);
       }
       if (contextBackupConfiguration.backupConfigs?.restic) {
-        backupConfigResticForm.setValues(contextBackupConfiguration.backupConfigs.restic);
+        backupConfigResticForm.setValues({
+          ...contextBackupConfiguration.backupConfigs.restic,
+          pruneJobs: contextBackupConfiguration.backupConfigs.restic.pruneJobs ?? [],
+        });
       }
     }
   }, [contextBackupConfiguration]);
