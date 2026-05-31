@@ -80,6 +80,7 @@ const admin = {
     all: () => ['admin', 'oauth-providers'] as const,
     detail: (uuid: string) => ['admin', 'oauth-providers', { uuid }] as const,
     users: (providerUuid: string) => ['admin', 'oauth-providers', providerUuid, 'users'] as const,
+    mappings: (providerUuid: string) => ['admin', 'oauth-providers', providerUuid, 'mappings'] as const,
   },
 
   eggRepositories: {

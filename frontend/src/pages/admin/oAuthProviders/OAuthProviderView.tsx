@@ -1,10 +1,11 @@
-import { faCog, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { faCog, faSitemap, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router';
 import getOAuthProvider from '@/api/admin/oauth-providers/getOAuthProvider.ts';
 import AdminContentContainer from '@/elements/containers/AdminContentContainer.tsx';
 import Spinner from '@/elements/Spinner.tsx';
 import SubNavigation from '@/elements/SubNavigation.tsx';
+import AdminOAuthProviderMappings from '@/pages/admin/oAuthProviders/mappings/AdminOAuthProviderMappings.tsx';
 import AdminOAuthProviderUsers from '@/pages/admin/oAuthProviders/users/AdminOAuthProviderUsers.tsx';
 import OAuthProviderCreateOrUpdate from './OAuthProviderCreateOrUpdate.tsx';
 
@@ -28,6 +29,12 @@ export default function OAuthProviderView() {
             icon: faCog,
             path: '/',
             element: <OAuthProviderCreateOrUpdate contextOAuthProvider={oauthProvider} />,
+          },
+          {
+            name: 'Mappings',
+            icon: faSitemap,
+            path: `/mappings`,
+            element: <AdminOAuthProviderMappings oauthProvider={oauthProvider} />,
           },
           {
             name: 'Users',

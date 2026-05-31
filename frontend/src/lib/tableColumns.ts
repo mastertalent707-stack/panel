@@ -189,6 +189,8 @@ export const eggRepositoryEggTableColumns = ['', 'Path', 'Name', 'Author', 'Desc
 
 export const adminOAuthProviderUsersTableColumns = ['ID', 'User', 'Identifier', 'Last Used', 'Created'];
 
+export const adminOAuthProviderMappingsTableColumns = ['ID', 'Type', 'Target', 'Scopes', 'Created', ''];
+
 export const adminUserOAuthLinkTableColumns = (): string[] => {
   const { t } = getTranslations();
   return [

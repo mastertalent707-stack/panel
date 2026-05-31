@@ -2,7 +2,8 @@ use rand::RngExt;
 use shared::models::{
     ByUuid, admin_activity::AdminActivity, announcement::Announcement,
     backup_configuration::BackupConfiguration, egg_configuration::EggConfiguration, node::Node,
-    server_activity::ServerActivity, user_activity::UserActivity, user_api_key::UserApiKey,
+    oauth_provider_mapping::OAuthProviderMapping, server_activity::ServerActivity,
+    user_activity::UserActivity, user_api_key::UserApiKey,
     user_command_snippet::UserCommandSnippet, user_security_key::UserSecurityKey,
     user_server_group::UserServerGroup, user_session::UserSession,
 };
@@ -180,6 +181,15 @@ pub async fn define_background_tasks(
                     tracing::info!(
                         "cleaned up stale node uuids in {} backup configuration prune jobs",
                         cleaned_prune_jobs
+                    );
+                }
+
+                let cleaned_oauth_provider_mappings =
+                    OAuthProviderMapping::cleanup_uuid_arrays(&state.database).await?;
+                if cleaned_oauth_provider_mappings > 0 {
+                    tracing::info!(
+                        "cleaned up {} oauth provider mappings with stale references",
+                        cleaned_oauth_provider_mappings
                     );
                 }
 
