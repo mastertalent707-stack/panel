@@ -42,32 +42,35 @@
       "input": {
         "search": "Caută..."
       },
+      "tooltip": {
+        "primary": "Primar"
+      },
       "form": {
         "name": "Nume",
         "description": "Descriere",
         "password": "Parolă",
         "host": "Gazdă",
         "username": "Nume utilizator",
-        "language": "Limbă",
+        "url": "URL",
+        "email": "Email",
         "firstName": "Prenume",
         "lastName": "Nume de familie",
-        "currentPassword": "Parolă actuală",
-        "authenticationCode": "Cod de autentificare",
-        "disk": "Disc",
-        "memory": "Memorie",
-        "sftpHost": "Gazdă SFTP",
-        "sftpPort": "Port SFTP",
-        "url": "URL",
-        "confirmPassword": "Confirmă parola",
-        "ignoredFiles": "Fișiere ignorate",
-        "locked": "Blocat",
-        "databaseHost": "Gazdă bază de date",
+        "language": "Limbă",
         "enabled": "Activat",
-        "serverName": "Nume server",
-        "timezone": "Fus orar",
+        "sftpPort": "Port SFTP",
+        "sftpHost": "Gazdă SFTP",
         "dockerImage": "Imagine Docker",
+        "memory": "Memorie",
+        "disk": "Disc",
+        "serverName": "Nume server",
         "startupCommand": "Comandă de pornire",
-        "email": "Email"
+        "databaseHost": "Gazdă bază de date",
+        "timezone": "Fus orar",
+        "locked": "Blocat",
+        "currentPassword": "Parolă actuală",
+        "confirmPassword": "Confirmă parola",
+        "authenticationCode": "Cod de autentificare",
+        "ignoredFiles": "Fișiere ignorate"
       },
       "table": {
         "pagination": {
@@ -116,10 +119,7 @@
       "na": "N/A",
       "yes": "Da",
       "no": "Nu",
-      "system": "Sistem",
-      "tooltip": {
-        "primary": "Primar"
-      }
+      "system": "Sistem"
     },
     "pages": {
       "oobe": {
@@ -331,14 +331,12 @@
               "modal": {
                 "disableTwoFactor": {
                   "title": "Dezactivează autentificarea cu doi factori",
-                  "description": "Dezactivarea autentificării cu doi factori va face contul tău mai puțin sigur.",
-                  "form": {}
+                  "description": "Dezactivarea autentificării cu doi factori va face contul tău mai puțin sigur."
                 },
                 "setupTwoFactor": {
                   "title": "Configurează autentificarea cu doi factori",
                   "description": "Ajută la protejarea contului tău împotriva accesului neautorizat. Ți se va solicita un cod de verificare de fiecare dată când te autentifici.",
-                  "descriptionQR": "Scanează codul QR de mai sus folosind aplicația de autentificare în doi pași la alegere. Apoi, introdu codul de 6 cifre generat în câmpul de mai jos.",
-                  "form": {}
+                  "descriptionQR": "Scanează codul QR de mai sus folosind aplicația de autentificare în doi pași la alegere. Apoi, introdu codul de 6 cifre generat în câmpul de mai jos."
                 },
                 "recoveryCodes": {
                   "title": "Coduri de recuperare",
@@ -420,7 +418,6 @@
         },
         "sshKeys": {
           "title": "Chei SSH",
-          "button": {},
           "table": {
             "columns": {
               "fingerprint": "Amprentă"
@@ -572,8 +569,6 @@
           },
           "table": {
             "columns": {
-              "type": "Tip",
-              "address": "Adresă",
               "locked": "Blocat?"
             }
           },
@@ -597,8 +592,7 @@
               "title": "Editează bază de date",
               "toast": {
                 "updated": "Bază de date actualizată."
-              },
-              "form": {}
+              }
             },
             "databaseDetails": {
               "title": "Detalii conexiune bază de date",
@@ -678,15 +672,13 @@
               "title": "Creează backup",
               "toast": {
                 "created": "Backup creat."
-              },
-              "form": {}
+              }
             },
             "editBackup": {
               "title": "Editează backup",
               "toast": {
                 "updated": "Backup actualizat."
-              },
-              "form": {}
+              }
             },
             "restoreBackup": {
               "title": "Restaurează backup"
@@ -712,7 +704,6 @@
               "port": "Port"
             }
           },
-          "button": {},
           "toast": {
             "created": "Alocare creată.",
             "updated": "Alocare actualizată.",
@@ -722,8 +713,7 @@
           },
           "modal": {
             "editAllocation": {
-              "title": "Editează alocare",
-              "form": {}
+              "title": "Editează alocare"
             },
             "removeAllocation": {
               "title": "Confirmă eliminarea alocării",
@@ -733,7 +723,6 @@
         },
         "startup": {
           "title": "Pornire",
-          "form": {},
           "variables": "Variabile",
           "dockerImageDescription": "Imaginea Docker folosită pentru a rula acest server. Aceasta poate fi schimbată pentru a folosi o imagine diferită.",
           "dockerImageDescriptionCustom": "Imaginea Docker folosită pentru a rula acest server. Aceasta a fost setată de un administrator și nu poate fi schimbată.",
@@ -747,14 +736,12 @@
           "title": "Setări",
           "rename": {
             "title": "Redenumește server",
-            "form": {},
             "toast": {
               "renamed": "Server redenumit."
             }
           },
           "timezone": {
             "title": "Fus orar",
-            "form": {},
             "toast": {
               "updated": "Fus orar server actualizat."
             }

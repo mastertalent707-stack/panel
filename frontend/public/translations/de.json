@@ -103,6 +103,7 @@
         "export": "Exportieren",
         "exportAs": "Als {format} exportieren",
         "recreate": "Neu erstellen",
+        "move": "Verschieben",
         "transfer": "Übertragen",
         "reattach": "Wieder anhängen",
         "detach": "Lösen",
@@ -116,8 +117,7 @@
         "setPrimary": "Als primär festlegen",
         "unsetPrimary": "Als primär entfernen",
         "leavePage": "Seite verlassen",
-        "viewDocumentation": "Dokumentation ansehen",
-        "move": "Verschieben"
+        "viewDocumentation": "Dokumentation ansehen"
       },
       "alert": {
         "error": "Fehler",
@@ -135,18 +135,19 @@
         "resetToDefault": "Auf Standard zurücksetzen",
         "edit": "Bearbeiten",
         "delete": "Löschen",
-        "primary": "Primär",
         "remove": "Entfernen",
+        "primary": "Primär",
         "backupOnDifferentNode": "Dieses Backup befindet sich auf einer anderen Node als der Server. Es ist nicht über die Client-API einsehbar."
       },
       "form": {
         "name": "Name",
         "description": "Beschreibung",
+        "author": "Autor",
+        "type": "Typ",
         "password": "Passwort",
         "host": "Host",
         "username": "Benutzername",
         "server": "Server",
-        "truncateDirectory": "Möchtest du alle Dateien dieses Servers löschen, bevor diese Aktion ausgeführt wird? Dies kann nicht rückgängig gemacht werden.",
         "url": "URL",
         "email": "E-Mail",
         "path": "Pfad",
@@ -191,6 +192,7 @@
         "additionalAllocations": "Zusätzliche Allocations",
         "externalId": "Externe ID",
         "mount": "Mount",
+        "nest": "Nest",
         "lines": "Zeilen",
         "databaseHost": "Datenbank-Host",
         "timezone": "Zeitzone",
@@ -207,17 +209,15 @@
         "authenticationCode": "Authentifizierungs-Code",
         "restoreStartup": "Den Startbefehl, das Image und die Variablen aus diesem Backup wiederherstellen.",
         "lineContains": "Zeile enthält",
+        "filePath": "Dateipfad",
+        "envVariable": "Umgebungsvariable",
+        "value": "Wert",
         "eggs": "Eggs",
         "ignoredFiles": "Ignorierte Dateien",
         "yourControlPanelPassword": "Dein Control Panel Passwort",
-        "author": "Autor",
-        "type": "Typ",
         "deploymentEnabled": "Bereitstellung aktiviert",
         "maintenanceEnabled": "Wartung aktiviert",
-        "nest": "Nest",
-        "filePath": "Dateipfad",
-        "envVariable": "Umgebungsvariable",
-        "value": "Wert"
+        "truncateDirectory": "Möchtest du alle Dateien dieses Servers löschen, bevor diese Aktion ausgeführt wird? Dies kann nicht rückgängig gemacht werden."
       },
       "table": {
         "pagination": {
@@ -225,7 +225,12 @@
           "empty": "Es konnten keine Elemente gefunden werden, fast so, als würden sie sich verstecken."
         },
         "columns": {
+          "id": "ID",
           "name": "Name",
+          "author": "Autor",
+          "type": "Typ",
+          "title": "Titel",
+          "enabled": "Aktiviert",
           "description": "Beschreibung",
           "username": "Benutzername",
           "size": "Größe",
@@ -236,10 +241,6 @@
           "ip": "IP",
           "when": "Wann",
           "command": "Befehl",
-          "id": "ID",
-          "type": "Typ",
-          "title": "Titel",
-          "enabled": "Aktiviert",
           "location": "Standort",
           "node": "Node",
           "owner": "Besitzer",
@@ -252,11 +253,13 @@
           "target": "Ziel",
           "checksum": "Prüfsumme",
           "files": "Dateien",
-          "author": "Autor",
           "server": "Server",
           "address": "Adresse",
           "eggs": "Eggs"
         }
+      },
+      "tabs": {
+        "general": "Allgemein"
       },
       "badge": {
         "active": "Aktiv",
@@ -335,6 +338,8 @@
       "readOnly": "Schreibgeschützt",
       "na": "N/V",
       "never": "Nie",
+      "none": "Keine",
+      "unknown": "Unbekannt",
       "yes": "Ja",
       "no": "Nein",
       "web": "Web",
@@ -343,12 +348,7 @@
       "custom": "Benutzerdefiniert",
       "system": "System",
       "schedule": "Zeitplan",
-      "impersonatedBy": "Impersoniert von {username}",
-      "tabs": {
-        "general": "Allgemein"
-      },
-      "none": "Keine",
-      "unknown": "Unbekannt"
+      "impersonatedBy": "Impersoniert von {username}"
     },
     "elements": {
       "errorBoundary": {
@@ -1338,6 +1338,9 @@
                 "noExtensions": "Keine Erweiterungen gefunden.",
                 "nodesSynced": "Es scheint, als hätten alle Nodes eine synchrone Uhr (innerhalb von 5 Sekunden zur Panel-Uhr). ({failed} Prüfungen fehlgeschlagen)",
                 "nodesDesync": "Einige Nodes haben asynchrone Uhren (mehr als 5 Sekunden Abweichung von der Panel-Uhr). Dies kann zu Problemen beim Dateidownload oder der Konsole führen. ({desync} asynchron, {failed} Prüfungen fehlgeschlagen)",
+                "debugEnabled": "Der Debug-Modus ist derzeit aktiviert. Im Debug-Modus werden zusätzliche Informationen protokolliert, die bei der Fehlersuche helfen können. Du solltest den Debug-Modus in der Produktion nicht aktiviert lassen.",
+                "debugDisabled": "Der Debug-Modus ist derzeit deaktiviert. Aktiviere den Debug-Modus nur, wenn du Probleme untersuchst.",
+                "debugResetNote": "Hinweis: Diese Einstellung wird beim nächsten Neustart der Anwendung auf den Standardwert ({default}) zurückgesetzt.",
                 "table": {
                   "packageName": "Paketname",
                   "applied": "Angewendet",
@@ -1346,9 +1349,6 @@
                   "desync": "Asynchron",
                   "appliedValue": "{applied} ({percent}%)"
                 },
-                "debugEnabled": "Der Debug-Modus ist derzeit aktiviert. Im Debug-Modus werden zusätzliche Informationen protokolliert, die bei der Fehlersuche helfen können. Du solltest den Debug-Modus in der Produktion nicht aktiviert lassen.",
-                "debugDisabled": "Der Debug-Modus ist derzeit deaktiviert. Aktiviere den Debug-Modus nur, wenn du Probleme untersuchst.",
-                "debugResetNote": "Hinweis: Diese Einstellung wird beim nächsten Neustart der Anwendung auf den Standardwert ({default}) zurückgesetzt.",
                 "button": {
                   "enableDebug": "Debug-Modus aktivieren",
                   "disableDebug": "Debug-Modus deaktivieren"
@@ -1415,6 +1415,12 @@
                 "form": {
                   "driver": "Treiber"
                 },
+                "enum": {
+                  "driver": {
+                    "filesystem": "Dateisystem",
+                    "s3": "S3"
+                  }
+                },
                 "toast": {
                   "updated": "Speichereinstellungen aktualisiert."
                 },
@@ -1436,12 +1442,6 @@
                     "pathStyleOn": "Pfad-Stil-URLs verwenden",
                     "pathStyleOff": "Virtual-Hosted-Stil-URLs verwenden"
                   }
-                },
-                "enum": {
-                  "driver": {
-                    "filesystem": "Dateisystem",
-                    "s3": "S3"
-                  }
                 }
               }
             },
@@ -1449,6 +1449,19 @@
               "title": "E-Mail",
               "page": {
                 "title": "E-Mail-Einstellungen",
+                "enum": {
+                  "provider": {
+                    "none": "Keine",
+                    "smtp": "SMTP",
+                    "sendmail": "Sendmail-Befehl",
+                    "filesystem": "Dateisystem"
+                  },
+                  "tlsMode": {
+                    "none": "Keines",
+                    "startTls": "STARTTLS",
+                    "implicitTls": "Implizites TLS"
+                  }
+                },
                 "toast": {
                   "updated": "E-Mail-Einstellungen aktualisiert."
                 },
@@ -1464,19 +1477,6 @@
                   "form": {
                     "tlsMode": "TLS-Modus",
                     "skipCertValidation": "Zertifikatsvalidierung überspringen"
-                  }
-                },
-                "enum": {
-                  "provider": {
-                    "none": "Keine",
-                    "smtp": "SMTP",
-                    "sendmail": "Sendmail-Befehl",
-                    "filesystem": "Dateisystem"
-                  },
-                  "tlsMode": {
-                    "none": "Keines",
-                    "startTls": "STARTTLS",
-                    "implicitTls": "Implizites TLS"
                   }
                 }
               }
@@ -1637,14 +1637,6 @@
         "announcements": {
           "title": "Ankündigungen",
           "resourceName": "Ankündigung",
-          "enum": {
-            "announcementType": {
-              "info": "Info",
-              "success": "Erfolg",
-              "warning": "Warnung",
-              "error": "Fehler"
-            }
-          },
           "tabs": {
             "general": {
               "page": {
@@ -1670,6 +1662,14 @@
                 "titleCreate": "Ankündigung erstellen",
                 "titleUpdate": "Ankündigung aktualisieren"
               }
+            }
+          },
+          "enum": {
+            "announcementType": {
+              "info": "Info",
+              "success": "Erfolg",
+              "warning": "Warnung",
+              "error": "Fehler"
             }
           }
         },
@@ -1788,42 +1788,12 @@
             "twoFactorEnabled": "2FA aktiviert",
             "twoFactorDisabled": "2FA deaktiviert"
           },
+          "table": {
+            "columns": {
+              "role": "Rolle"
+            }
+          },
           "tabs": {
-            "servers": {
-              "title": "Server",
-              "page": {
-                "title": "Benutzer Server",
-                "showOwnedOnly": "Nur eigene Server des Benutzers anzeigen"
-              }
-            },
-            "oauthLinks": {
-              "title": "OAuth-Verknüpfungen",
-              "page": {
-                "title": "Benutzer OAuth-Verknüpfungen",
-                "toast": {
-                  "added": "OAuth-Verknüpfung hinzugefügt.",
-                  "removed": "OAuth-Verknüpfung entfernt."
-                },
-                "modal": {
-                  "add": {
-                    "title": "OAuth-Verknüpfung hinzufügen",
-                    "form": {
-                      "oauthProvider": "OAuth-Anbieter"
-                    }
-                  },
-                  "delete": {
-                    "title": "Löschung der OAuth-Verknüpfung bestätigen",
-                    "content": "Bist du sicher, dass du die **{provider}**-Verbindung von **{username}** löschen möchtest?"
-                  }
-                }
-              }
-            },
-            "activity": {
-              "title": "Aktivität",
-              "page": {
-                "title": "Benutzer Aktivität"
-              }
-            },
             "general": {
               "page": {
                 "tooltip": {
@@ -1861,11 +1831,41 @@
                 "titleCreate": "Benutzer erstellen",
                 "titleUpdate": "Benutzer aktualisieren"
               }
-            }
-          },
-          "table": {
-            "columns": {
-              "role": "Rolle"
+            },
+            "servers": {
+              "title": "Server",
+              "page": {
+                "title": "Benutzer Server",
+                "showOwnedOnly": "Nur eigene Server des Benutzers anzeigen"
+              }
+            },
+            "oauthLinks": {
+              "title": "OAuth-Verknüpfungen",
+              "page": {
+                "title": "Benutzer OAuth-Verknüpfungen",
+                "toast": {
+                  "added": "OAuth-Verknüpfung hinzugefügt.",
+                  "removed": "OAuth-Verknüpfung entfernt."
+                },
+                "modal": {
+                  "add": {
+                    "title": "OAuth-Verknüpfung hinzufügen",
+                    "form": {
+                      "oauthProvider": "OAuth-Anbieter"
+                    }
+                  },
+                  "delete": {
+                    "title": "Löschung der OAuth-Verknüpfung bestätigen",
+                    "content": "Bist du sicher, dass du die **{provider}**-Verbindung von **{username}** löschen möchtest?"
+                  }
+                }
+              }
+            },
+            "activity": {
+              "title": "Aktivität",
+              "page": {
+                "title": "Benutzer Aktivität"
+              }
             }
           }
         },
@@ -1873,6 +1873,21 @@
           "title": "Standorte",
           "resourceName": "Standort",
           "tabs": {
+            "general": {
+              "page": {
+                "form": {
+                  "flag": "Flagge"
+                },
+                "modal": {
+                  "delete": {
+                    "title": "Löschen des Standorts bestätigen",
+                    "content": "Bist du sicher, dass du **{name}** löschen möchtest?"
+                  }
+                },
+                "titleCreate": "Standort erstellen",
+                "titleUpdate": "Standort aktualisieren"
+              }
+            },
             "databaseHosts": {
               "title": "Datenbank-Hosts",
               "page": {
@@ -1897,21 +1912,6 @@
               "page": {
                 "title": "Standort Nodes"
               }
-            },
-            "general": {
-              "page": {
-                "form": {
-                  "flag": "Flagge"
-                },
-                "modal": {
-                  "delete": {
-                    "title": "Löschen des Standorts bestätigen",
-                    "content": "Bist du sicher, dass du **{name}** löschen möchtest?"
-                  }
-                },
-                "titleCreate": "Standort erstellen",
-                "titleUpdate": "Standort aktualisieren"
-              }
             }
           }
         },
@@ -1919,6 +1919,35 @@
           "title": "Nodes",
           "resourceName": "Node",
           "tabs": {
+            "general": {
+              "page": {
+                "tooltip": {
+                  "deploymentEnabled": "Bereitstellung aktiviert",
+                  "deploymentDisabled": "Bereitstellung deaktiviert",
+                  "allInOneNode": "All-in-One Node",
+                  "errorWhileFetchingVersion": "Fehler beim Abrufen der Version",
+                  "updateAvailable": "{version} (Update verfügbar)",
+                  "useWingsProxyUrl": "Wings Proxy URL verwenden"
+                },
+                "form": {
+                  "urlDescription": "Wird für die interne Kommunikation mit dem Node verwendet.",
+                  "publicUrlDescription": "Wird für WebSocket-Verbindungen und Downloads verwendet.",
+                  "backupConfigurationPlaceholder": "Vom Standort übernehmen"
+                },
+                "button": {
+                  "resetToken": "Token zurücksetzen",
+                  "updateConfig": "Konfiguration aktualisieren"
+                },
+                "toast": {
+                  "tokenReset": "Node-Token zurückgesetzt."
+                },
+                "alert": {
+                  "noLocations": "Du musst mindestens einen Standort erstellen, bevor du Nodes erstellen kannst. Standorte helfen dabei, deine Nodes geografisch oder logisch zu organisieren."
+                },
+                "titleCreate": "Node erstellen",
+                "titleUpdate": "Node aktualisieren"
+              }
+            },
             "configuration": {
               "title": "Konfiguration",
               "page": {
@@ -2061,9 +2090,6 @@
                 "input": {
                   "detachedOnly": "Nur losgelöste Backups anzeigen"
                 },
-                "table": {
-                  "columns": {}
-                },
                 "tooltip": {
                   "backupNotOnSameNode": "Dieses Backup befindet sich nicht auf derselben Node wie der Server. Es ist nicht über die Client-API einsehbar."
                 },
@@ -2141,35 +2167,6 @@
                     "networkRate": "Netzwerk-Rate"
                   }
                 }
-              }
-            },
-            "general": {
-              "page": {
-                "tooltip": {
-                  "deploymentEnabled": "Bereitstellung aktiviert",
-                  "deploymentDisabled": "Bereitstellung deaktiviert",
-                  "allInOneNode": "All-in-One Node",
-                  "errorWhileFetchingVersion": "Fehler beim Abrufen der Version",
-                  "updateAvailable": "{version} (Update verfügbar)",
-                  "useWingsProxyUrl": "Wings Proxy URL verwenden"
-                },
-                "form": {
-                  "urlDescription": "Wird für die interne Kommunikation mit dem Node verwendet.",
-                  "publicUrlDescription": "Wird für WebSocket-Verbindungen und Downloads verwendet.",
-                  "backupConfigurationPlaceholder": "Vom Standort übernehmen"
-                },
-                "button": {
-                  "resetToken": "Token zurücksetzen",
-                  "updateConfig": "Konfiguration aktualisieren"
-                },
-                "toast": {
-                  "tokenReset": "Node-Token zurückgesetzt."
-                },
-                "alert": {
-                  "noLocations": "Du musst mindestens einen Standort erstellen, bevor du Nodes erstellen kannst. Standorte helfen dabei, deine Nodes geografisch oder logisch zu organisieren."
-                },
-                "titleCreate": "Node erstellen",
-                "titleUpdate": "Node aktualisieren"
               }
             }
           },
@@ -2464,7 +2461,6 @@
                   "title": "Lege einige Dateien hier ab, um sie als Eggs zu importieren",
                   "subtitle": "Loslassen, um den Import zu starten"
                 },
-                "form": {},
                 "button": {
                   "updateFromRepository": "Aus Repository aktualisieren"
                 },
@@ -3283,9 +3279,9 @@
         "files": {
           "title": "Dateien",
           "titleEditorViewing": "Betrachte {file}",
+          "titleEditorPlaying": "Spiele {file} ab",
           "titleEditorEditing": "Bearbeite {file}",
           "titleEditorNew": "Neue Datei",
-          "titleEditorPlaying": "Spiele {file} ab",
           "titleDiffRevisionVsCurrent": "{file} - Revision #{revision} vs Aktuell",
           "titleDiffRevisionVsRevision": "{file} - Revision #{previousRevision} vs #{revision}",
           "table": {

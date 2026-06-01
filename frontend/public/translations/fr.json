@@ -59,12 +59,15 @@
         "downloadAs": "Télécharger en {format}",
         "import": "Importer",
         "details": "Détails",
-        "leavePage": "Quitter la page",
         "setPrimary": "Définir primaire",
-        "unsetPrimary": "Retirer primarité"
+        "unsetPrimary": "Retirer primarité",
+        "leavePage": "Quitter la page"
       },
       "input": {
         "search": "Chercher..."
+      },
+      "tooltip": {
+        "primary": "Primaire"
       },
       "form": {
         "name": "Nom",
@@ -73,34 +76,34 @@
         "host": "Hôte",
         "username": "Nom d'utilisateur",
         "server": "Serveur",
-        "truncateDirectory": "Souhaitez-vous supprimer tous les fichiers de ce serveur avant d'effectuer cette action ? Ceci n'est pas réversible.",
-        "language": "Langue",
+        "url": "URL",
+        "email": "E-mail",
+        "port": "Port",
         "firstName": "Prénom",
         "lastName": "Nom de famille",
-        "currentPassword": "Mot de passe actuel",
-        "authenticationCode": "Code d'authentification",
-        "disk": "Disque",
-        "memory": "Mémoire",
-        "sftpHost": "Hôte SFTP",
-        "sftpPort": "Port SFTP",
-        "url": "URL",
-        "confirmPassword": "Confirmer le mot de passe",
-        "ignoredFiles": "Fichiers ignorés",
-        "locked": "Verrouillé",
-        "databaseHost": "Hôte de base de données",
-        "fileName": "Nom du fichier",
-        "destination": "Destination",
-        "archiveName": "Nom de l'archive",
-        "directoryName": "Nom du répertoire",
-        "port": "Port",
-        "protocol": "Protocole",
-        "yourControlPanelPassword": "Votre mot de passe de panel de contrôle",
+        "language": "Langue",
         "enabled": "Activé",
-        "serverName": "Nom du serveur",
-        "timezone": "Fuseau horaire",
+        "fileName": "Nom du fichier",
+        "sftpPort": "Port SFTP",
+        "sftpHost": "Hôte SFTP",
         "dockerImage": "Image Docker",
+        "memory": "Mémoire",
+        "disk": "Disque",
+        "serverName": "Nom du serveur",
         "startupCommand": "Commande de démarrage",
-        "email": "E-mail"
+        "archiveName": "Nom de l'archive",
+        "databaseHost": "Hôte de base de données",
+        "timezone": "Fuseau horaire",
+        "protocol": "Protocole",
+        "destination": "Destination",
+        "directoryName": "Nom du répertoire",
+        "locked": "Verrouillé",
+        "currentPassword": "Mot de passe actuel",
+        "confirmPassword": "Confirmer le mot de passe",
+        "authenticationCode": "Code d'authentification",
+        "ignoredFiles": "Fichiers ignorés",
+        "yourControlPanelPassword": "Votre mot de passe de panel de contrôle",
+        "truncateDirectory": "Souhaitez-vous supprimer tous les fichiers de ce serveur avant d'effectuer cette action ? Ceci n'est pas réversible."
       },
       "table": {
         "pagination": {
@@ -177,10 +180,7 @@
       "api": "API",
       "system": "Système",
       "schedule": "Planification",
-      "impersonatedBy": "Usurpé par {username}",
-      "tooltip": {
-        "primary": "Primaire"
-      }
+      "impersonatedBy": "Usurpé par {username}"
     },
     "elements": {
       "errorBoundary": {
@@ -456,14 +456,12 @@
               "modal": {
                 "disableTwoFactor": {
                   "title": "Désactiver l'authentification à double facteurs",
-                  "description": "Désactiver l'authentification à double facteurs rendra votre compte moins sécurisé.",
-                  "form": {}
+                  "description": "Désactiver l'authentification à double facteurs rendra votre compte moins sécurisé."
                 },
                 "setupTwoFactor": {
                   "title": "Configurer l'authentification à double facteurs",
                   "description": "Protégez votre compte des accès non-autorisés. Un code de vérification vous sera demandé à chaque connexion.",
-                  "descriptionQR": "Scannez le QR code ci-dessus en utilisant l'application à double facteurs de votre choix. Ensuite, entrez le code à 6 chiffres généré dans le champ ci-dessous.",
-                  "form": {}
+                  "descriptionQR": "Scannez le QR code ci-dessus en utilisant l'application à double facteurs de votre choix. Ensuite, entrez le code à 6 chiffres généré dans le champ ci-dessous."
                 },
                 "recoveryCodes": {
                   "title": "Codes de récupération",
@@ -584,7 +582,6 @@
         },
         "sshKeys": {
           "title": "Clés SSH",
-          "button": {},
           "table": {
             "columns": {
               "fingerprint": "Empreinte"
@@ -791,7 +788,6 @@
             "openInNewWindow": "Ouvrir dans une nouvelle fenêtre",
             "rename": "Renommer",
             "copy": "Copier",
-            "move": "Déplacer",
             "permissions": "Permissions",
             "unarchive": "Désarchiver",
             "archive": "Archiver",
@@ -854,13 +850,11 @@
           "modal": {
             "activeUploads": {
               "title": "Téléversements actifs",
-              "content": "Êtes-vous sûr de vouloir quitter la page ? Vous avez {files} téléversements de fichier actifs. Si vous quittez la page, les téléversements seront annulés.",
-              "button": {}
+              "content": "Êtes-vous sûr de vouloir quitter la page ? Vous avez {files} téléversements de fichier actifs. Si vous quittez la page, les téléversements seront annulés."
             },
             "unsavedChanges": {
               "title": "Changements non sauvegardées",
-              "content": "Vous avez des changements non sauvegardés dans l'éditeur de fichiers. Êtes-vous sûr de vouloir quitter cette page ? Si vous quittez, vos changements seront perdus.",
-              "button": {}
+              "content": "Vous avez des changements non sauvegardés dans l'éditeur de fichiers. Êtes-vous sûr de vouloir quitter cette page ? Si vous quittez, vos changements seront perdus."
             },
             "createArchive": {
               "title": "Créer archive",
@@ -871,12 +865,10 @@
             },
             "createDirectory": {
               "title": "Créer répertoire",
-              "form": {},
               "createdAs": "Ce répertoire sera créé en tant que "
             },
             "copyFile": {
               "title": "Copier fichier",
-              "form": {},
               "createdAs": "Ce fichier sera créé en tant que "
             },
             "copyRemote": {
@@ -892,8 +884,7 @@
               "multipleFilesWarning": "Vous ne serez plus en mesure de récupérer le contenu des fichiers suivants une fois supprimés."
             },
             "createFile": {
-              "title": "Créer fichier",
-              "form": {}
+              "title": "Créer fichier"
             },
             "filePermissions": {
               "title": "Permissions du fichier",
@@ -908,8 +899,7 @@
               "executePermission": "Permission exécution (1)"
             },
             "renameFile": {
-              "title": "Renommer fichier",
-              "form": {}
+              "title": "Renommer fichier"
             },
             "searchFiles": {
               "title": "Rechercher fichiers",
@@ -939,7 +929,6 @@
             },
             "sftpDetails": {
               "title": "Détails SFTP",
-              "form": {},
               "launch": "Lancer"
             }
           }
@@ -952,8 +941,6 @@
           },
           "table": {
             "columns": {
-              "type": "Type",
-              "address": "Adresse",
               "locked": "Verrouillé ?"
             }
           },
@@ -977,8 +964,7 @@
               "title": "Modifier la base de données",
               "toast": {
                 "updated": "Base de données modifiée."
-              },
-              "form": {}
+              }
             },
             "databaseDetails": {
               "title": "Détails de connexion à la base de données",
@@ -1061,15 +1047,13 @@
               "title": "Créer sauvegarde",
               "toast": {
                 "created": "Sauvegarde créée."
-              },
-              "form": {}
+              }
             },
             "editBackup": {
               "title": "Modifier la sauvegarde",
               "toast": {
                 "updated": "Sauvegarde mise à jour."
-              },
-              "form": {}
+              }
             },
             "restoreBackup": {
               "title": "Restaurer la sauvegarde"
@@ -1095,7 +1079,6 @@
               "port": "Port"
             }
           },
-          "button": {},
           "toast": {
             "created": "Allocation créée.",
             "updated": "Allocation mise à jour.",
@@ -1105,8 +1088,7 @@
           },
           "modal": {
             "editAllocation": {
-              "title": "Modifier l'allocation",
-              "form": {}
+              "title": "Modifier l'allocation"
             },
             "removeAllocation": {
               "title": "Confirmer la suppression de l'allocation",
@@ -1116,7 +1098,6 @@
         },
         "startup": {
           "title": "Démarrage",
-          "form": {},
           "variables": "Variables",
           "dockerImageDescription": "L'image Docker utilisée pour lancer ce serveur. Elle peut être changée pour utiliser une autre image.",
           "dockerImageDescriptionCustom": "L'image Docker utilisée pour lancer ce serveur. Elle a été définie par un administrateur et ne peut pas être changée.",
@@ -1130,14 +1111,12 @@
           "title": "Paramètres",
           "rename": {
             "title": "Renommer serveur",
-            "form": {},
             "toast": {
               "renamed": "Serveur renommé."
             }
           },
           "timezone": {
             "title": "Fuseau horaire",
-            "form": {},
             "toast": {
               "updated": "Fuseau horaire du serveur mis à jour."
             }

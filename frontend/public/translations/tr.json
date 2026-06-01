@@ -72,9 +72,9 @@
         "recreate": "Yeniden Oluştur",
         "import": "İçe Aktar",
         "details": "Detaylar",
-        "leavePage": "Sayfadan Ayrıl",
         "setPrimary": "Birincil Yap",
-        "unsetPrimary": "Birincilliği Kaldır"
+        "unsetPrimary": "Birincilliği Kaldır",
+        "leavePage": "Sayfadan Ayrıl"
       },
       "alert": {
         "error": "Hata",
@@ -101,41 +101,41 @@
         "host": "Host",
         "username": "Kullanıcı Adı",
         "server": "Sunucu",
-        "truncateDirectory": "Bu işlemi yapmadan önce bu sunucudaki tüm dosyaları silmek istiyor musunuz? Bu işlem geri alınamaz.",
-        "language": "Dil",
+        "url": "URL",
+        "email": "E-posta",
+        "port": "Port",
+        "command": "Komut",
         "firstName": "Ad",
         "lastName": "Soyad",
-        "currentPassword": "Mevcut Şifre",
-        "authenticationCode": "Doğrulama Kodu",
-        "command": "Komut",
-        "eggs": "Egg'ler",
-        "email": "E-posta",
-        "confirmPassword": "Şifreyi Onayla",
-        "disk": "Disk",
+        "language": "Dil",
+        "enabled": "Etkin",
+        "fileName": "Dosya Adı",
+        "sftpPort": "SFTP Port",
+        "sftpHost": "SFTP Host",
+        "dockerImage": "Docker İmajı",
         "memory": "Bellek (RAM)",
+        "disk": "Disk",
+        "serverName": "Sunucu Adı",
+        "startupCommand": "Başlangıç Komutu",
+        "archiveName": "Arşiv Adı",
+        "archiveFormat": "Arşiv Formatı",
+        "databaseHost": "Veritabanı Hostu",
+        "timezone": "Zaman Dilimi",
+        "protocol": "Protokol",
+        "powerAction": "Güç Eylemi",
+        "destination": "Hedef",
+        "directoryName": "Dizin Adı",
+        "locked": "Kilitli",
         "portRanges": "Port Aralıkları",
         "portRangesPlaceholder": "Port Aralıkları (ör. 3000-4000)",
-        "sftpHost": "SFTP Host",
-        "sftpPort": "SFTP Port",
-        "url": "URL",
-        "ignoredFiles": "Yoksayılan Dosyalar",
-        "locked": "Kilitli",
-        "port": "Port",
-        "protocol": "Protokol",
-        "yourControlPanelPassword": "Kontrol Paneli Şifreniz",
-        "databaseHost": "Veritabanı Hostu",
-        "fileName": "Dosya Adı",
-        "destination": "Hedef",
-        "archiveName": "Arşiv Adı",
-        "directoryName": "Dizin Adı",
-        "enabled": "Etkin",
-        "archiveFormat": "Arşiv Formatı",
-        "powerAction": "Güç Eylemi",
-        "startupCommand": "Başlangıç Komutu",
-        "dockerImage": "Docker İmajı",
+        "currentPassword": "Mevcut Şifre",
+        "confirmPassword": "Şifreyi Onayla",
+        "authenticationCode": "Doğrulama Kodu",
         "lineContains": "Satır şunu içerir",
-        "serverName": "Sunucu Adı",
-        "timezone": "Zaman Dilimi"
+        "eggs": "Egg'ler",
+        "ignoredFiles": "Yoksayılan Dosyalar",
+        "yourControlPanelPassword": "Kontrol Paneli Şifreniz",
+        "truncateDirectory": "Bu işlemi yapmadan önce bu sunucudaki tüm dosyaları silmek istiyor musunuz? Bu işlem geri alınamaz."
       },
       "table": {
         "pagination": {
@@ -523,8 +523,7 @@
               "title": "Pterodactyl Genel Egg'ler",
               "description": "Node JS, Java ve Rust gibi genel uygulama çalışma ortamları için Egg'ler."
             }
-          },
-          "button": {}
+          }
         },
         "server": {
           "title": "Sunucu",
@@ -647,7 +646,6 @@
         "register": {
           "title": "Kayıt Ol",
           "subtitle": "Kayıt olmak için lütfen bilgilerinizi girin",
-          "form": {},
           "button": {
             "register": "Kayıt Ol"
           }
@@ -655,7 +653,6 @@
         "forgotPassword": {
           "title": "Şifremi Unuttum",
           "subtitle": "Şifrenizi nasıl sıfırlayacağınıza dair talimatları almak için e-postanızı girin",
-          "form": {},
           "button": {
             "request": "Şifre Sıfırlama İste"
           },
@@ -664,7 +661,6 @@
         "resetPassword": {
           "title": "Şifreyi Sıfırla",
           "subtitle": "Lütfen yeni şifrenizi girin",
-          "form": {},
           "button": {
             "reset": "Şifreyi Sıfırla"
           },
@@ -793,14 +789,12 @@
               "modal": {
                 "disableTwoFactor": {
                   "title": "İki Faktörlü Doğrulamayı Devre Dışı Bırak",
-                  "description": "İki faktörlü doğrulamayı devre dışı bırakmak hesabınızı daha az güvenli hale getirecektir.",
-                  "form": {}
+                  "description": "İki faktörlü doğrulamayı devre dışı bırakmak hesabınızı daha az güvenli hale getirecektir."
                 },
                 "setupTwoFactor": {
                   "title": "İki Faktörlü Doğrulamayı Kur",
                   "description": "Hesabınızı yetkisiz erişimden korumaya yardımcı olun. Her giriş yaptığınızda bir doğrulama kodu istenecektir.",
-                  "descriptionQR": "Tercih ettiğiniz iki faktörlü kimlik doğrulama uygulamasını kullanarak yukarıdaki QR kodu tarayın. Ardından, oluşturulan 6 haneli kodu aşağıdaki alana girin.",
-                  "form": {}
+                  "descriptionQR": "Tercih ettiğiniz iki faktörlü kimlik doğrulama uygulamasını kullanarak yukarıdaki QR kodu tarayın. Ardından, oluşturulan 6 haneli kodu aşağıdaki alana girin."
                 },
                 "recoveryCodes": {
                   "title": "Kurtarma Kodları",
@@ -929,7 +923,6 @@
         },
         "sshKeys": {
           "title": "SSH Anahtarları",
-          "button": {},
           "table": {
             "columns": {
               "fingerprint": "Parmak İzi"
@@ -974,12 +967,6 @@
         },
         "commandSnippets": {
           "title": "Komut Parçacıkları (Snippets)",
-          "table": {
-            "columns": {
-              "eggs": "Egg'ler"
-            }
-          },
-          "form": {},
           "modal": {
             "createCommandSnippet": {
               "title": "Komut Parçacığı Oluştur",
@@ -1068,7 +1055,6 @@
           "title": "Aktivite"
         }
       },
-      "admin": {},
       "server": {
         "viewAdmin": {
           "title": "Yönetici görünümü"
@@ -1182,7 +1168,6 @@
             "openInNewWindow": "Yeni Pencerede Aç",
             "rename": "Yeniden Adlandır",
             "copy": "Kopyala",
-            "move": "Taşı",
             "fingerprint": "Parmak İzi",
             "permissions": "İzinler",
             "unarchive": "Arşivi Aç",
@@ -1252,13 +1237,11 @@
           "modal": {
             "activeUploads": {
               "title": "Aktif Yüklemeler",
-              "content": "Bu sayfadan ayrılmak istediğinize emin misiniz? {files} adet aktif dosya yüklemeniz var. Ayrılırsanız yüklemeler iptal edilecektir.",
-              "button": {}
+              "content": "Bu sayfadan ayrılmak istediğinize emin misiniz? {files} adet aktif dosya yüklemeniz var. Ayrılırsanız yüklemeler iptal edilecektir."
             },
             "unsavedChanges": {
               "title": "Kaydedilmemiş Değişiklikler",
-              "content": "Dosya editöründe kaydedilmemiş değişiklikleriniz var. Sayfadan ayrılmak istediğinize emin misiniz? Ayrılırsanız değişiklikleriniz kaybolacaktır.",
-              "button": {}
+              "content": "Dosya editöründe kaydedilmemiş değişiklikleriniz var. Sayfadan ayrılmak istediğinize emin misiniz? Ayrılırsanız değişiklikleriniz kaybolacaktır."
             },
             "createArchive": {
               "title": "Arşiv Oluştur",
@@ -1269,12 +1252,10 @@
             },
             "createDirectory": {
               "title": "Dizin Oluştur",
-              "form": {},
               "createdAs": "Bu dizin şu isimle oluşturulacak: "
             },
             "copyFile": {
               "title": "Dosyayı Kopyala",
-              "form": {},
               "createdAs": "Bu dosya şu isimle oluşturulacak: "
             },
             "copyRemote": {
@@ -1300,8 +1281,7 @@
               "multipleFilesWarning": "Aşağıdaki dosyaların içeriğini sildikten sonra geri kurtaramazsınız."
             },
             "createFile": {
-              "title": "Dosya Oluştur",
-              "form": {}
+              "title": "Dosya Oluştur"
             },
             "details": {
               "title": "Dosya Detayları",
@@ -1326,8 +1306,7 @@
               "executePermission": "Çalıştırma izni (1)"
             },
             "renameFile": {
-              "title": "Dosyayı Yeniden Adlandır",
-              "form": {}
+              "title": "Dosyayı Yeniden Adlandır"
             },
             "searchFiles": {
               "title": "Dosya Ara",
@@ -1357,7 +1336,6 @@
             },
             "sftpDetails": {
               "title": "SFTP Detayları",
-              "form": {},
               "launch": "Başlat"
             }
           }
@@ -1370,8 +1348,6 @@
           },
           "table": {
             "columns": {
-              "type": "Tür",
-              "address": "Adres",
               "locked": "Kilitli?"
             }
           },
@@ -1395,8 +1371,7 @@
               "title": "Veritabanını Düzenle",
               "toast": {
                 "updated": "Veritabanı güncellendi."
-              },
-              "form": {}
+              }
             },
             "databaseDetails": {
               "title": "Veritabanı bağlantı detayları",
@@ -1569,8 +1544,7 @@
           "preCondition": {
             "valueSeconds": "Değer (saniye)",
             "valuePercent": "Değer (%)",
-            "value": "Değer",
-            "filePath": "Dosya Yolu"
+            "value": "Değer"
           },
           "triggers": {
             "cron": {
@@ -1584,7 +1558,6 @@
             },
             "powerAction": {
               "title": "Güç Eylemi",
-              "form": {},
               "card": {
                 "content": "`{action}` güç eylemi istendiğinde."
               }
@@ -1606,7 +1579,6 @@
             },
             "consoleLine": {
               "title": "Konsol Satırı",
-              "form": {},
               "card": {
                 "content": "Konsol çıktısı `{contains}` içeren bir satıra ulaştığında."
               }
@@ -1682,7 +1654,6 @@
             },
             "sendCommand": {
               "title": "Komut Gönder",
-              "form": {},
               "renderer": {
                 "compact": "{command} komutunu çalıştır",
                 "detail": {
@@ -1692,7 +1663,6 @@
             },
             "sendPower": {
               "title": "Güç Sinyali Gönder",
-              "form": {},
               "renderer": {
                 "compact": "{action} işlemini yap",
                 "detail": {
@@ -1715,7 +1685,6 @@
             },
             "createDirectory": {
               "title": "Dizin Oluştur",
-              "form": {},
               "renderer": {
                 "compact": "{root} içinde {name} oluştur",
                 "detail": {
@@ -1727,7 +1696,6 @@
             "writeFile": {
               "title": "Dosya Yaz",
               "form": {
-                "filePath": "Dosya Yolu",
                 "content": "İçerik",
                 "appendToFile": "Dosyanın Sonuna Ekle"
               },
@@ -1810,10 +1778,6 @@
             },
             "updateStartupVariable": {
               "title": "Başlangıç Değişkenini Güncelle",
-              "form": {
-                "envVariable": "Environment Değişkeni",
-                "value": "Değer"
-              },
               "renderer": {
                 "compact": "{variable} değişkenini {value} yap",
                 "detail": {
@@ -1824,7 +1788,6 @@
             },
             "updateStartupCommand": {
               "title": "Başlangıç Komutunu Güncelle",
-              "form": {},
               "renderer": {
                 "compact": "{command} olarak ayarla",
                 "detail": {
@@ -1834,7 +1797,6 @@
             },
             "updateStartupDockerImage": {
               "title": "Docker İmajını Güncelle",
-              "form": {},
               "renderer": {
                 "compact": "{image} olarak ayarla",
                 "detail": {
@@ -1904,15 +1866,13 @@
               "title": "Yedek Oluştur",
               "toast": {
                 "created": "Yedek oluşturuldu."
-              },
-              "form": {}
+              }
             },
             "editBackup": {
               "title": "Yedeği Düzenle",
               "toast": {
                 "updated": "Yedek güncellendi."
-              },
-              "form": {}
+              }
             },
             "restoreBackup": {
               "title": "Yedeği Geri Yükle"
@@ -1938,7 +1898,6 @@
               "port": "Port"
             }
           },
-          "button": {},
           "toast": {
             "created": "Tahsis oluşturuldu.",
             "updated": "Tahsis güncellendi.",
@@ -1948,8 +1907,7 @@
           },
           "modal": {
             "editAllocation": {
-              "title": "Tahsisi Düzenle",
-              "form": {}
+              "title": "Tahsisi Düzenle"
             },
             "removeAllocation": {
               "title": "Tahsis Kaldırma Onayı",
@@ -1959,7 +1917,6 @@
         },
         "startup": {
           "title": "Başlangıç",
-          "form": {},
           "variables": "Sunucu Ortam Değişkenleri",
           "dockerImageDescription": "Bu sunucuyu çalıştırmak için kullanılan Docker imajı. Farklı bir imajla değiştirilebilir.",
           "dockerImageDescriptionCustom": "Bu sunucuyu çalıştırmak için kullanılan Docker imajı. Bu bir yönetici tarafından ayarlanmıştır ve değiştirilemez.",
@@ -2012,14 +1969,12 @@
           },
           "rename": {
             "title": "Sunucuyu Yeniden Adlandır",
-            "form": {},
             "toast": {
               "renamed": "Sunucu yeniden adlandırıldı."
             }
           },
           "timezone": {
             "title": "Zaman Dilimi",
-            "form": {},
             "toast": {
               "updated": "Sunucu zaman dilimi güncellendi."
             }

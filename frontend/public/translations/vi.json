@@ -71,9 +71,9 @@
         "exportAs": "Xuất dưới dạng {format}",
         "import": "Nhập",
         "details": "Chi Tiết",
-        "leavePage": "Rời Khỏi Trang",
         "setPrimary": "Đặt làm Chính",
-        "unsetPrimary": "Bỏ Chính"
+        "unsetPrimary": "Bỏ Chính",
+        "leavePage": "Rời Khỏi Trang"
       },
       "alert": {
         "error": "Lỗi",
@@ -100,41 +100,41 @@
         "host": "Máy chủ",
         "username": "Tên người dùng",
         "server": "Máy chủ",
-        "truncateDirectory": "Bạn có chắc muốn xóa tất cả các tệp trong thư mục này không? Hành động này không thể hoàn tác.",
-        "language": "Ngôn ngữ",
+        "url": "URL",
+        "email": "Email",
+        "port": "Cổng",
+        "command": "Lệnh",
         "firstName": "Tên",
         "lastName": "Họ",
-        "currentPassword": "Mật khẩu Hiện tại",
-        "authenticationCode": "Mã Xác thực",
-        "command": "Lệnh",
-        "eggs": "Eggs",
-        "email": "Email",
-        "confirmPassword": "Xác nhận Mật khẩu",
-        "disk": "Ông đĩa (MB)",
+        "language": "Ngôn ngữ",
+        "enabled": "Bật",
+        "fileName": "Tên Tệp",
+        "sftpPort": "Cổng SFTP",
+        "sftpHost": "Máy chủ SFTP",
+        "dockerImage": "Hình Ảnh Docker",
         "memory": "Bộ nhớ (MB)",
+        "disk": "Ông đĩa (MB)",
+        "serverName": "Tên Máy Chủ",
+        "startupCommand": "Lệnh Khởi Động",
+        "archiveName": "Tên Kho Lưu Trữ",
+        "archiveFormat": "Định Dạng Kho Lưu Trữ",
+        "databaseHost": "Máy Chủ Cơ Sở Dữ Liệu",
+        "timezone": "Múi Giờ",
+        "protocol": "Giao Thức",
+        "powerAction": "Hành Động Nguồn Điện",
+        "destination": "Đích Đến",
+        "directoryName": "Tên Thư Mục",
+        "locked": "Khóa",
         "portRanges": "Dãi cổng",
         "portRangesPlaceholder": "Dãi cổng (vd. 3000-4000)",
-        "sftpHost": "Máy chủ SFTP",
-        "sftpPort": "Cổng SFTP",
-        "url": "URL",
-        "ignoredFiles": "Tệp Bị Bỏ Qua",
-        "locked": "Khóa",
-        "port": "Cổng",
-        "protocol": "Giao Thức",
-        "yourControlPanelPassword": "Mật Khẩu Bảng Điều Khiển Của Bạn",
-        "databaseHost": "Máy Chủ Cơ Sở Dữ Liệu",
-        "fileName": "Tên Tệp",
-        "destination": "Đích Đến",
-        "archiveName": "Tên Kho Lưu Trữ",
-        "directoryName": "Tên Thư Mục",
-        "enabled": "Bật",
-        "archiveFormat": "Định Dạng Kho Lưu Trữ",
-        "powerAction": "Hành Động Nguồn Điện",
-        "startupCommand": "Lệnh Khởi Động",
-        "dockerImage": "Hình Ảnh Docker",
+        "currentPassword": "Mật khẩu Hiện tại",
+        "confirmPassword": "Xác nhận Mật khẩu",
+        "authenticationCode": "Mã Xác thực",
         "lineContains": "Dòng chứa",
-        "serverName": "Tên Máy Chủ",
-        "timezone": "Múi Giờ"
+        "eggs": "Eggs",
+        "ignoredFiles": "Tệp Bị Bỏ Qua",
+        "yourControlPanelPassword": "Mật Khẩu Bảng Điều Khiển Của Bạn",
+        "truncateDirectory": "Bạn có chắc muốn xóa tất cả các tệp trong thư mục này không? Hành động này không thể hoàn tác."
       },
       "table": {
         "pagination": {
@@ -519,8 +519,7 @@
               "title": "Pterodactyl Generic Eggs",
               "description": "Eggs cho các runtime ứng dụng chung như Node JS, Java, và Rust."
             }
-          },
-          "button": {}
+          }
         },
         "server": {
           "title": "Máy chủ",
@@ -643,7 +642,6 @@
         "register": {
           "title": "Đăng ký",
           "subtitle": "Vui lòng nhập thông tin của bạn để đăng ký một tài khoản mới.",
-          "form": {},
           "button": {
             "register": "Đăng ký"
           }
@@ -651,7 +649,6 @@
         "forgotPassword": {
           "title": "Quên Mật khẩu",
           "subtitle": "Nhập địa chỉ email của bạn để nhận hướng dẫn đặt lại mật khẩu",
-          "form": {},
           "button": {
             "request": "Yêu cầu Đặt Lại Mật khẩu"
           },
@@ -660,7 +657,6 @@
         "resetPassword": {
           "title": "Đặt Lại Mật khẩu",
           "subtitle": "Vui lòng nhập mật khẩu mới của bạn",
-          "form": {},
           "button": {
             "reset": "Đặt Lại Mật khẩu"
           },
@@ -789,14 +785,12 @@
               "modal": {
                 "disableTwoFactor": {
                   "title": "Tắt Xác thực Hai Lớp",
-                  "description": "Tắt xác thực hai lớp sẽ làm cho tài khoản của bạn kém an toàn hơn.",
-                  "form": {}
+                  "description": "Tắt xác thực hai lớp sẽ làm cho tài khoản của bạn kém an toàn hơn."
                 },
                 "setupTwoFactor": {
                   "title": "Thiết lập Xác thực Hai Lớp",
                   "description": "Giúp bảo vệ tài khoản của bạn khỏi truy cập trái phép. Bạn sẽ được yêu cầu nhập mã xác minh mỗi lần bạn đăng nhập.",
-                  "descriptionQR": "Quét mã QR ở trên bằng ứng dụng xác thực hai lớp mà bạn chọn. Sau đó, nhập mã 6 chữ số được tạo ra vào trường bên dưới.",
-                  "form": {}
+                  "descriptionQR": "Quét mã QR ở trên bằng ứng dụng xác thực hai lớp mà bạn chọn. Sau đó, nhập mã 6 chữ số được tạo ra vào trường bên dưới."
                 },
                 "recoveryCodes": {
                   "title": "Mã Khôi phục",
@@ -925,7 +919,6 @@
         },
         "sshKeys": {
           "title": "Khóa SSH",
-          "button": {},
           "table": {
             "columns": {
               "fingerprint": "Dấu Vân Tay"
@@ -970,12 +963,6 @@
         },
         "commandSnippets": {
           "title": "Đoạn Lệnh",
-          "table": {
-            "columns": {
-              "eggs": "Eggs"
-            }
-          },
-          "form": {},
           "modal": {
             "createCommandSnippet": {
               "title": "Tạo Đoạn Lệnh",
@@ -1177,7 +1164,6 @@
             "openInNewWindow": "Mở Trong Cửa Sổ Mới",
             "rename": "Đổi Tên",
             "copy": "Sao Chép",
-            "move": "Di Chuyển",
             "fingerprint": "Dấu Vân Tay",
             "permissions": "Quyền",
             "unarchive": "Giải Nén",
@@ -1247,13 +1233,11 @@
           "modal": {
             "activeUploads": {
               "title": "Tải Lên Đang Hoạt Động",
-              "content": "Bạn có chắc muốn rời khỏi trang này không? Bạn có {files} tệp tải lên đang hoạt động. Nếu bạn rời khỏi trang này, tệp tải lên sẽ bị hủy.",
-              "button": {}
+              "content": "Bạn có chắc muốn rời khỏi trang này không? Bạn có {files} tệp tải lên đang hoạt động. Nếu bạn rời khỏi trang này, tệp tải lên sẽ bị hủy."
             },
             "unsavedChanges": {
               "title": "Thay Đổi Chưa Lưu",
-              "content": "Bạn có thay đổi chưa lưu trong trình soạn thảo tệp. Bạn có chắc muốn rời khỏi trang này không? Nếu bạn rời khỏi, thay đổi của bạn sẽ bị mất.",
-              "button": {}
+              "content": "Bạn có thay đổi chưa lưu trong trình soạn thảo tệp. Bạn có chắc muốn rời khỏi trang này không? Nếu bạn rời khỏi, thay đổi của bạn sẽ bị mất."
             },
             "createArchive": {
               "title": "Tạo Kho Lưu Trữ",
@@ -1264,12 +1248,10 @@
             },
             "createDirectory": {
               "title": "Tạo Thư Mục",
-              "form": {},
               "createdAs": "Thư mục này sẽ được tạo dưới dạng "
             },
             "copyFile": {
               "title": "Sao Chép Tệp",
-              "form": {},
               "createdAs": "Tệp này sẽ được tạo dưới dạng "
             },
             "copyRemote": {
@@ -1295,8 +1277,7 @@
               "multipleFilesWarning": "Bạn sẽ không thể khôi phục nội dung của các tệp sau đây sau khi xóa."
             },
             "createFile": {
-              "title": "Tạo Tệp",
-              "form": {}
+              "title": "Tạo Tệp"
             },
             "details": {
               "title": "Chi Tiết Tệp",
@@ -1321,8 +1302,7 @@
               "executePermission": "Quyền Thực Thi (1)"
             },
             "renameFile": {
-              "title": "Đổi Tên Tệp",
-              "form": {}
+              "title": "Đổi Tên Tệp"
             },
             "searchFiles": {
               "title": "Tìm Kiếm Tệp",
@@ -1352,7 +1332,6 @@
             },
             "sftpDetails": {
               "title": "Chi Tiết SFTP",
-              "form": {},
               "launch": "Khởi Chạy"
             }
           }
@@ -1365,8 +1344,6 @@
           },
           "table": {
             "columns": {
-              "type": "Loại",
-              "address": "Địa Chỉ",
               "locked": "Khóa?"
             }
           },
@@ -1390,8 +1367,7 @@
               "title": "Chỉnh Sửa Cơ Sở Dữ Liệu",
               "toast": {
                 "updated": "Cơ sở dữ liệu đã được cập nhật."
-              },
-              "form": {}
+              }
             },
             "databaseDetails": {
               "title": "Chi tiết kết nối cơ sở dữ liệu",
@@ -1557,8 +1533,7 @@
           "preCondition": {
             "valueSeconds": "Giá Trị (giây)",
             "valuePercent": "Giá Trị (%)",
-            "value": "Giá Trị",
-            "filePath": "Đường Dẫn Tệp"
+            "value": "Giá Trị"
           },
           "triggers": {
             "cron": {
@@ -1572,7 +1547,6 @@
             },
             "powerAction": {
               "title": "Hành Động Nguồn Điện",
-              "form": {},
               "card": {
                 "content": "Khi Hành Động Nguồn Điện `{action}` được yêu cầu."
               }
@@ -1594,7 +1568,6 @@
             },
             "consoleLine": {
               "title": "Dòng Bảng Điều Khiển",
-              "form": {},
               "card": {
                 "content": "Khi Đầu Ra Bảng Điều Khiển Đạt Tới Dòng Chứa `{contains}`"
               }
@@ -1670,7 +1643,6 @@
             },
             "sendCommand": {
               "title": "Gửi Lệnh",
-              "form": {},
               "renderer": {
                 "compact": "Chạy {command}",
                 "detail": {
@@ -1680,7 +1652,6 @@
             },
             "sendPower": {
               "title": "Gửi Tín Hiệu Nguồn Điện",
-              "form": {},
               "renderer": {
                 "compact": "Thực hiện {action}",
                 "detail": {
@@ -1703,7 +1674,6 @@
             },
             "createDirectory": {
               "title": "Tạo Thư Mục",
-              "form": {},
               "renderer": {
                 "compact": "Tạo {name} trong {root}",
                 "detail": {
@@ -1715,7 +1685,6 @@
             "writeFile": {
               "title": "Ghi Tệp",
               "form": {
-                "filePath": "Đường Dẫn Tệp",
                 "content": "Nội Dung",
                 "appendToFile": "Nối Vào Tệp"
               },
@@ -1798,10 +1767,6 @@
             },
             "updateStartupVariable": {
               "title": "Cập Nhật Biến Khởi Động",
-              "form": {
-                "envVariable": "Biến Môi Trường",
-                "value": "Giá Trị"
-              },
               "renderer": {
                 "compact": "Đặt {variable} thành {value}",
                 "detail": {
@@ -1812,7 +1777,6 @@
             },
             "updateStartupCommand": {
               "title": "Cập Nhật Lệnh Khởi Động",
-              "form": {},
               "renderer": {
                 "compact": "Đặt thành {command}",
                 "detail": {
@@ -1822,7 +1786,6 @@
             },
             "updateStartupDockerImage": {
               "title": "Cập Nhật Hình Ảnh Docker",
-              "form": {},
               "renderer": {
                 "compact": "Đặt thành {image}",
                 "detail": {
@@ -1892,15 +1855,13 @@
               "title": "Tạo Sao Lưu",
               "toast": {
                 "created": "Sao lưu đã được tạo."
-              },
-              "form": {}
+              }
             },
             "editBackup": {
               "title": "Chỉnh Sửa Sao Lưu",
               "toast": {
                 "updated": "Sao lưu đã được cập nhật."
-              },
-              "form": {}
+              }
             },
             "restoreBackup": {
               "title": "Khôi Phục Sao Lưu"
@@ -1926,7 +1887,6 @@
               "port": "Cổng"
             }
           },
-          "button": {},
           "toast": {
             "created": "Phân bổ đã được tạo.",
             "updated": "Phân bổ đã được cập nhật.",
@@ -1936,8 +1896,7 @@
           },
           "modal": {
             "editAllocation": {
-              "title": "Chỉnh Sửa Phân Bổ",
-              "form": {}
+              "title": "Chỉnh Sửa Phân Bổ"
             },
             "removeAllocation": {
               "title": "Xác Nhận Xóa Phân Bổ",
@@ -1947,7 +1906,6 @@
         },
         "startup": {
           "title": "Khởi Động",
-          "form": {},
           "variables": "Biến",
           "dockerImageDescription": "Hình ảnh Docker được sử dụng để chạy máy chủ này. Điều này có thể được thay đổi để sử dụng một hình ảnh khác.",
           "dockerImageDescriptionCustom": "Hình ảnh Docker được sử dụng để chạy máy chủ này. Điều này đã được đặt bởi quản trị viên và không thể thay đổi.",
@@ -1999,14 +1957,12 @@
           },
           "rename": {
             "title": "Đổi Tên Máy Chủ",
-            "form": {},
             "toast": {
               "renamed": "Tên máy chủ đã được đổi."
             }
           },
           "timezone": {
             "title": "Múi Giờ",
-            "form": {},
             "toast": {
               "updated": "Múi giờ máy chủ đã được cập nhật."
             }

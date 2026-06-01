@@ -72,9 +72,9 @@
         "recreate": "إعادة إنشاء",
         "import": "استيراد",
         "details": "التفاصيل",
-        "leavePage": "مغادرة الصفحة",
         "setPrimary": "تعيين كأساسي",
-        "unsetPrimary": "إلغاء التعيين كأساسي"
+        "unsetPrimary": "إلغاء التعيين كأساسي",
+        "leavePage": "مغادرة الصفحة"
       },
       "alert": {
         "error": "خطأ",
@@ -101,41 +101,41 @@
         "host": "المضيف",
         "username": "اسم المستخدم",
         "server": "الخادم",
-        "truncateDirectory": "هل تريد حذف جميع ملفات هذا الخادم قبل تنفيذ هذا الإجراء؟ لا يمكن التراجع عن هذا.",
-        "language": "اللغة",
+        "url": "URL",
+        "email": "البريد الإلكتروني",
+        "port": "المنفذ",
+        "command": "الأمر",
         "firstName": "الاسم الأول",
         "lastName": "اسم العائلة",
-        "currentPassword": "كلمة المرور الحالية",
-        "authenticationCode": "رمز المصادقة",
-        "command": "الأمر",
-        "eggs": "البيض",
-        "email": "البريد الإلكتروني",
-        "confirmPassword": "تأكيد كلمة المرور",
-        "disk": "القرص",
+        "language": "اللغة",
+        "enabled": "مفعّل",
+        "fileName": "اسم الملف",
+        "sftpPort": "منفذ SFTP",
+        "sftpHost": "مضيف SFTP",
+        "dockerImage": "صورة Docker",
         "memory": "الذاكرة",
+        "disk": "القرص",
+        "serverName": "اسم الخادم",
+        "startupCommand": "أمر بدء التشغيل",
+        "archiveName": "اسم الأرشيف",
+        "archiveFormat": "تنسيق الأرشيف",
+        "databaseHost": "مضيف قاعدة البيانات",
+        "timezone": "المنطقة الزمنية",
+        "protocol": "البروتوكول",
+        "powerAction": "إجراء الطاقة",
+        "destination": "الوجهة",
+        "directoryName": "اسم المجلد",
+        "locked": "مقفل",
         "portRanges": "نطاقات المنافذ",
         "portRangesPlaceholder": "نطاقات المنافذ (مثلاً 3000-4000)",
-        "sftpHost": "مضيف SFTP",
-        "sftpPort": "منفذ SFTP",
-        "url": "URL",
-        "ignoredFiles": "الملفات المتجاهلة",
-        "locked": "مقفل",
-        "port": "المنفذ",
-        "protocol": "البروتوكول",
-        "yourControlPanelPassword": "كلمة مرور لوحة التحكم الخاصة بك",
-        "databaseHost": "مضيف قاعدة البيانات",
-        "fileName": "اسم الملف",
-        "destination": "الوجهة",
-        "archiveName": "اسم الأرشيف",
-        "directoryName": "اسم المجلد",
-        "enabled": "مفعّل",
-        "archiveFormat": "تنسيق الأرشيف",
-        "powerAction": "إجراء الطاقة",
-        "startupCommand": "أمر بدء التشغيل",
-        "dockerImage": "صورة Docker",
+        "currentPassword": "كلمة المرور الحالية",
+        "confirmPassword": "تأكيد كلمة المرور",
+        "authenticationCode": "رمز المصادقة",
         "lineContains": "السطر يحتوي",
-        "serverName": "اسم الخادم",
-        "timezone": "المنطقة الزمنية"
+        "eggs": "البيض",
+        "ignoredFiles": "الملفات المتجاهلة",
+        "yourControlPanelPassword": "كلمة مرور لوحة التحكم الخاصة بك",
+        "truncateDirectory": "هل تريد حذف جميع ملفات هذا الخادم قبل تنفيذ هذا الإجراء؟ لا يمكن التراجع عن هذا."
       },
       "table": {
         "pagination": {
@@ -523,8 +523,7 @@
               "title": "بيض عامة Pterodactyl",
               "description": "بيض لبيئات تشغيل التطبيقات العامة مثل Node JS و Java و Rust."
             }
-          },
-          "button": {}
+          }
         },
         "server": {
           "title": "الخادم",
@@ -647,7 +646,6 @@
         "register": {
           "title": "التسجيل",
           "subtitle": "الرجاء إدخال تفاصيلك للتسجيل",
-          "form": {},
           "button": {
             "register": "التسجيل"
           }
@@ -655,7 +653,6 @@
         "forgotPassword": {
           "title": "نسيت كلمة المرور",
           "subtitle": "أدخل بريدك الإلكتروني لتلقي تعليمات حول كيفية إعادة تعيين كلمة المرور",
-          "form": {},
           "button": {
             "request": "طلب إعادة تعيين كلمة المرور"
           },
@@ -664,7 +661,6 @@
         "resetPassword": {
           "title": "إعادة تعيين كلمة المرور",
           "subtitle": "الرجاء إدخال كلمة المرور الجديدة",
-          "form": {},
           "button": {
             "reset": "إعادة تعيين كلمة المرور"
           },
@@ -793,14 +789,12 @@
               "modal": {
                 "disableTwoFactor": {
                   "title": "تعطيل المصادقة الثنائية",
-                  "description": "تعطيل المصادقة الثنائية سيجعل حسابك أقل أماناً.",
-                  "form": {}
+                  "description": "تعطيل المصادقة الثنائية سيجعل حسابك أقل أماناً."
                 },
                 "setupTwoFactor": {
                   "title": "إعداد المصادقة الثنائية",
                   "description": "ساعد في حماية حسابك من الوصول غير المصرح به. ستُطلب منك رمز تحقق في كل مرة تقوم فيها بتسجيل الدخول.",
-                  "descriptionQR": "امسح رمز QR أعلاه باستخدام تطبيق المصادقة الثنائية الذي تختاره. ثم أدخل الرقم المكون من 6 أرقام الذي تم إنشاؤه في الحقل أدناه.",
-                  "form": {}
+                  "descriptionQR": "امسح رمز QR أعلاه باستخدام تطبيق المصادقة الثنائية الذي تختاره. ثم أدخل الرقم المكون من 6 أرقام الذي تم إنشاؤه في الحقل أدناه."
                 },
                 "recoveryCodes": {
                   "title": "رموز الاستعادة",
@@ -929,7 +923,6 @@
         },
         "sshKeys": {
           "title": "مفاتيح SSH",
-          "button": {},
           "table": {
             "columns": {
               "fingerprint": "البصمة"
@@ -974,12 +967,6 @@
         },
         "commandSnippets": {
           "title": "قصاصات الأوامر",
-          "table": {
-            "columns": {
-              "eggs": "البيض"
-            }
-          },
-          "form": {},
           "modal": {
             "createCommandSnippet": {
               "title": "إنشاء قصاصة أمر",
@@ -1075,7 +1062,6 @@
           "title": "النشاط"
         }
       },
-      "admin": {},
       "server": {
         "viewAdmin": {
           "title": "عرض المسؤول"
@@ -1191,7 +1177,6 @@
             "openInNewWindow": "فتح في نافذة جديدة",
             "rename": "إعادة التسمية",
             "copy": "نسخ",
-            "move": "نقل",
             "fingerprint": "البصمة",
             "permissions": "الأذونات",
             "unarchive": "فك الأرشفة",
@@ -1261,13 +1246,11 @@
           "modal": {
             "activeUploads": {
               "title": "الرفعات النشطة",
-              "content": "هل أنت متأكد أنك تريد مغادرة هذه الصفحة؟ لديك {files} رفع ملف نشط. إذا غادرت هذه الصفحة، سيتم إجهاض رفع الملفات.",
-              "button": {}
+              "content": "هل أنت متأكد أنك تريد مغادرة هذه الصفحة؟ لديك {files} رفع ملف نشط. إذا غادرت هذه الصفحة، سيتم إجهاض رفع الملفات."
             },
             "unsavedChanges": {
               "title": "تغييرات غير محفوظة",
-              "content": "لديك تغييرات غير محفوظة في محرر الملفات. هل أنت متأكد أنك تريد مغادرة هذه الصفحة؟ إذا غادرت، ستفقد تغييراتك.",
-              "button": {}
+              "content": "لديك تغييرات غير محفوظة في محرر الملفات. هل أنت متأكد أنك تريد مغادرة هذه الصفحة؟ إذا غادرت، ستفقد تغييراتك."
             },
             "createArchive": {
               "title": "إنشاء أرشيف",
@@ -1278,12 +1261,10 @@
             },
             "createDirectory": {
               "title": "إنشاء مجلد",
-              "form": {},
               "createdAs": "سيتم إنشاء هذا المجلد كـ "
             },
             "copyFile": {
               "title": "نسخ ملف",
-              "form": {},
               "createdAs": "سيتم إنشاء هذا الملف كـ "
             },
             "copyRemote": {
@@ -1309,8 +1290,7 @@
               "multipleFilesWarning": "لن تتمكن من استعادة محتويات الملفات التالية بمجرد حذفها."
             },
             "createFile": {
-              "title": "إنشاء ملف",
-              "form": {}
+              "title": "إنشاء ملف"
             },
             "details": {
               "title": "تفاصيل الملف",
@@ -1335,8 +1315,7 @@
               "executePermission": "إذن التنفيذ (1)"
             },
             "renameFile": {
-              "title": "إعادة تسمية الملف",
-              "form": {}
+              "title": "إعادة تسمية الملف"
             },
             "searchFiles": {
               "title": "بحث الملفات",
@@ -1366,7 +1345,6 @@
             },
             "sftpDetails": {
               "title": "تفاصيل SFTP",
-              "form": {},
               "launch": "إطلاق"
             }
           }
@@ -1379,8 +1357,6 @@
           },
           "table": {
             "columns": {
-              "type": "النوع",
-              "address": "العنوان",
               "locked": "مقفل؟"
             }
           },
@@ -1404,8 +1380,7 @@
               "title": "تعديل قاعدة البيانات",
               "toast": {
                 "updated": "تم تحديث قاعدة البيانات."
-              },
-              "form": {}
+              }
             },
             "databaseDetails": {
               "title": "تفاصيل اتصال قاعدة البيانات",
@@ -1578,8 +1553,7 @@
           "preCondition": {
             "valueSeconds": "القيمة (ثوانٍ)",
             "valuePercent": "القيمة (٪)",
-            "value": "القيمة",
-            "filePath": "مسار الملف"
+            "value": "القيمة"
           },
           "triggers": {
             "cron": {
@@ -1593,7 +1567,6 @@
             },
             "powerAction": {
               "title": "إجراء الطاقة",
-              "form": {},
               "card": {
                 "content": "عند طلب إجراء الطاقة `{action}`."
               }
@@ -1615,7 +1588,6 @@
             },
             "consoleLine": {
               "title": "سطر وحدة التحكم",
-              "form": {},
               "card": {
                 "content": "عند وصول مخرجات وحدة التحكم إلى سطر يحتوي على `{contains}`"
               }
@@ -1691,7 +1663,6 @@
             },
             "sendCommand": {
               "title": "إرسال أمر",
-              "form": {},
               "renderer": {
                 "compact": "تشغيل {command}",
                 "detail": {
@@ -1701,7 +1672,6 @@
             },
             "sendPower": {
               "title": "إرسال إشارة طاقة",
-              "form": {},
               "renderer": {
                 "compact": "تنفيذ {action}",
                 "detail": {
@@ -1724,7 +1694,6 @@
             },
             "createDirectory": {
               "title": "إنشاء مجلد",
-              "form": {},
               "renderer": {
                 "compact": "إنشاء {name} في {root}",
                 "detail": {
@@ -1736,7 +1705,6 @@
             "writeFile": {
               "title": "كتابة ملف",
               "form": {
-                "filePath": "مسار الملف",
                 "content": "المحتوى",
                 "appendToFile": "إلحاق بالملف"
               },
@@ -1819,10 +1787,6 @@
             },
             "updateStartupVariable": {
               "title": "تحديث متغير بدء التشغيل",
-              "form": {
-                "envVariable": "متغير البيئة",
-                "value": "القيمة"
-              },
               "renderer": {
                 "compact": "تعيين {variable} إلى {value}",
                 "detail": {
@@ -1833,7 +1797,6 @@
             },
             "updateStartupCommand": {
               "title": "تحديث أمر بدء التشغيل",
-              "form": {},
               "renderer": {
                 "compact": "تعيين إلى {command}",
                 "detail": {
@@ -1843,7 +1806,6 @@
             },
             "updateStartupDockerImage": {
               "title": "تحديث صورة Docker",
-              "form": {},
               "renderer": {
                 "compact": "تعيين إلى {image}",
                 "detail": {
@@ -1913,15 +1875,13 @@
               "title": "إنشاء نسخة احتياطية",
               "toast": {
                 "created": "تم إنشاء النسخة الاحتياطية."
-              },
-              "form": {}
+              }
             },
             "editBackup": {
               "title": "تعديل النسخة الاحتياطية",
               "toast": {
                 "updated": "تم تحديث النسخة الاحتياطية."
-              },
-              "form": {}
+              }
             },
             "restoreBackup": {
               "title": "استعادة النسخة الاحتياطية"
@@ -1947,7 +1907,6 @@
               "port": "المنفذ"
             }
           },
-          "button": {},
           "toast": {
             "created": "تم إنشاء التخصيص.",
             "updated": "تم تحديث التخصيص.",
@@ -1957,8 +1916,7 @@
           },
           "modal": {
             "editAllocation": {
-              "title": "تعديل التخصيص",
-              "form": {}
+              "title": "تعديل التخصيص"
             },
             "removeAllocation": {
               "title": "تأكيد إزالة التخصيص",
@@ -1968,7 +1926,6 @@
         },
         "startup": {
           "title": "بدء التشغيل",
-          "form": {},
           "variables": "المتغيرات",
           "dockerImageDescription": "صورة Docker المستخدمة لتشغيل هذا الخادم. يمكن تغييرها لاستخدام صورة مختلفة.",
           "dockerImageDescriptionCustom": "صورة Docker المستخدمة لتشغيل هذا الخادم. تم تعيينها بواسطة مسؤول ولا يمكن تغييرها.",
@@ -1980,8 +1937,7 @@
           "modal": {
             "unsavedChanges": {
               "title": "تغييرات غير محفوظة",
-              "content": "لديك تغييرات غير محفوظة في متغيرات بدء التشغيل. هل أنت متأكد أنك تريد مغادرة هذه الصفحة؟ إذا غادرت، ستفقد تغييراتك.",
-              "button": {}
+              "content": "لديك تغييرات غير محفوظة في متغيرات بدء التشغيل. هل أنت متأكد أنك تريد مغادرة هذه الصفحة؟ إذا غادرت، ستفقد تغييراتك."
             }
           },
           "noVariables": "لم يتم العثور على متغيرات بدء التشغيل لهذا الخادم."
@@ -2028,14 +1984,12 @@
           },
           "rename": {
             "title": "إعادة تسمية الخادم",
-            "form": {},
             "toast": {
               "renamed": "تم إعادة تسمية الخادم."
             }
           },
           "timezone": {
             "title": "المنطقة الزمنية",
-            "form": {},
             "toast": {
               "updated": "تم تحديث المنطقة الزمنية للخادم."
             }

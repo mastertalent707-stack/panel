@@ -72,9 +72,9 @@
         "recreate": "Volver a crear",
         "import": "Importar",
         "details": "Detalles",
-        "leavePage": "Salir de la página",
         "setPrimary": "Establecer como principal",
-        "unsetPrimary": "Quitar principal"
+        "unsetPrimary": "Quitar principal",
+        "leavePage": "Salir de la página"
       },
       "alert": {
         "error": "Error",
@@ -101,41 +101,41 @@
         "host": "Host",
         "username": "Usuario",
         "server": "Servidor",
-        "truncateDirectory": "¿Quieres eliminar todos los archivos de este servidor antes de realizar esta acción? Esto no se puede deshacer.",
-        "language": "Idioma",
+        "url": "URL",
+        "email": "Correo",
+        "port": "Puerto",
+        "command": "Comando",
         "firstName": "Nombre",
         "lastName": "Apellidos",
-        "currentPassword": "Contraseña actual",
-        "authenticationCode": "Código de autenticación",
-        "command": "Comando",
-        "eggs": "Eggs",
-        "email": "Correo",
-        "confirmPassword": "Confirmar contraseña",
-        "disk": "Disco",
+        "language": "Idioma",
+        "enabled": "Activado",
+        "fileName": "Nombre del archivo",
+        "sftpPort": "Puerto SFTP",
+        "sftpHost": "Host SFTP",
+        "dockerImage": "Imagen de Docker",
         "memory": "Memoria",
+        "disk": "Disco",
+        "serverName": "Nombre del servidor",
+        "startupCommand": "Comando de arranque",
+        "archiveName": "Nombre del archivo",
+        "archiveFormat": "Formato del archivo",
+        "databaseHost": "Host de la base de datos",
+        "timezone": "Zona horaria",
+        "protocol": "Protocolo",
+        "powerAction": "Acción de energía",
+        "destination": "Destino",
+        "directoryName": "Nombre del directorio",
+        "locked": "Bloqueada",
         "portRanges": "Rangos de puertos",
         "portRangesPlaceholder": "Rangos de puertos (p. ej. 3000-4000)",
-        "sftpHost": "Host SFTP",
-        "sftpPort": "Puerto SFTP",
-        "url": "URL",
-        "ignoredFiles": "Archivos ignorados",
-        "locked": "Bloqueada",
-        "port": "Puerto",
-        "protocol": "Protocolo",
-        "yourControlPanelPassword": "Tu contraseña del panel de control",
-        "databaseHost": "Host de la base de datos",
-        "fileName": "Nombre del archivo",
-        "destination": "Destino",
-        "archiveName": "Nombre del archivo",
-        "directoryName": "Nombre del directorio",
-        "enabled": "Activado",
-        "archiveFormat": "Formato del archivo",
-        "powerAction": "Acción de energía",
-        "startupCommand": "Comando de arranque",
-        "dockerImage": "Imagen de Docker",
+        "currentPassword": "Contraseña actual",
+        "confirmPassword": "Confirmar contraseña",
+        "authenticationCode": "Código de autenticación",
         "lineContains": "La línea contiene",
-        "serverName": "Nombre del servidor",
-        "timezone": "Zona horaria"
+        "eggs": "Eggs",
+        "ignoredFiles": "Archivos ignorados",
+        "yourControlPanelPassword": "Tu contraseña del panel de control",
+        "truncateDirectory": "¿Quieres eliminar todos los archivos de este servidor antes de realizar esta acción? Esto no se puede deshacer."
       },
       "table": {
         "pagination": {
@@ -523,8 +523,7 @@
               "title": "Pterodactyl Generic Eggs",
               "description": "Eggs para entornos genéricos como Node JS, Java y Rust."
             }
-          },
-          "button": {}
+          }
         },
         "server": {
           "title": "Servidor",
@@ -647,7 +646,6 @@
         "register": {
           "title": "Registrarse",
           "subtitle": "Introduce tus datos para registrarte",
-          "form": {},
           "button": {
             "register": "Registrarse"
           }
@@ -655,7 +653,6 @@
         "forgotPassword": {
           "title": "Olvidé mi contraseña",
           "subtitle": "Introduce tu correo para recibir instrucciones sobre cómo restablecer tu contraseña",
-          "form": {},
           "button": {
             "request": "Solicitar restablecimiento de contraseña"
           },
@@ -664,7 +661,6 @@
         "resetPassword": {
           "title": "Restablecer contraseña",
           "subtitle": "Introduce tu nueva contraseña",
-          "form": {},
           "button": {
             "reset": "Restablecer contraseña"
           },
@@ -793,14 +789,12 @@
               "modal": {
                 "disableTwoFactor": {
                   "title": "Desactivar autenticación de dos factores",
-                  "description": "Desactivar la autenticación de dos factores hará que tu cuenta sea menos segura.",
-                  "form": {}
+                  "description": "Desactivar la autenticación de dos factores hará que tu cuenta sea menos segura."
                 },
                 "setupTwoFactor": {
                   "title": "Configurar autenticación de dos factores",
                   "description": "Ayuda a proteger tu cuenta de accesos no autorizados. Se te pedirá un código de verificación cada vez que inicies sesión.",
-                  "descriptionQR": "Escanea el código QR de arriba con la app de autenticación en dos factores que prefieras. Después, introduce el código de 6 dígitos generado en el campo de abajo.",
-                  "form": {}
+                  "descriptionQR": "Escanea el código QR de arriba con la app de autenticación en dos factores que prefieras. Después, introduce el código de 6 dígitos generado en el campo de abajo."
                 },
                 "recoveryCodes": {
                   "title": "Códigos de recuperación",
@@ -929,7 +923,6 @@
         },
         "sshKeys": {
           "title": "Claves SSH",
-          "button": {},
           "table": {
             "columns": {
               "fingerprint": "Huella"
@@ -974,12 +967,6 @@
         },
         "commandSnippets": {
           "title": "Fragmentos de comandos",
-          "table": {
-            "columns": {
-              "eggs": "Eggs"
-            }
-          },
-          "form": {},
           "modal": {
             "createCommandSnippet": {
               "title": "Crear fragmento de comando",
@@ -1075,7 +1062,6 @@
           "title": "Actividad"
         }
       },
-      "admin": {},
       "server": {
         "viewAdmin": {
           "title": "Ver como administrador"
@@ -1191,7 +1177,6 @@
             "openInNewWindow": "Abrir en una nueva ventana",
             "rename": "Renombrar",
             "copy": "Copiar",
-            "move": "Mover",
             "fingerprint": "Huella",
             "permissions": "Permisos",
             "unarchive": "Extraer",
@@ -1261,13 +1246,11 @@
           "modal": {
             "activeUploads": {
               "title": "Subidas activas",
-              "content": "¿Seguro que quieres salir de esta página? Tienes {files} subidas de archivos activas. Si sales, las subidas se cancelarán.",
-              "button": {}
+              "content": "¿Seguro que quieres salir de esta página? Tienes {files} subidas de archivos activas. Si sales, las subidas se cancelarán."
             },
             "unsavedChanges": {
               "title": "Cambios sin guardar",
-              "content": "Tienes cambios sin guardar en el editor de archivos. ¿Seguro que quieres salir de esta página? Si sales, se perderán tus cambios.",
-              "button": {}
+              "content": "Tienes cambios sin guardar en el editor de archivos. ¿Seguro que quieres salir de esta página? Si sales, se perderán tus cambios."
             },
             "createArchive": {
               "title": "Crear archivo",
@@ -1278,12 +1261,10 @@
             },
             "createDirectory": {
               "title": "Crear directorio",
-              "form": {},
               "createdAs": "Este directorio se creará como "
             },
             "copyFile": {
               "title": "Copiar archivo",
-              "form": {},
               "createdAs": "Este archivo se creará como "
             },
             "copyRemote": {
@@ -1309,8 +1290,7 @@
               "multipleFilesWarning": "No podrás recuperar el contenido de los siguientes archivos una vez eliminados."
             },
             "createFile": {
-              "title": "Crear archivo",
-              "form": {}
+              "title": "Crear archivo"
             },
             "details": {
               "title": "Detalles del archivo",
@@ -1335,8 +1315,7 @@
               "executePermission": "Permiso de ejecución (1)"
             },
             "renameFile": {
-              "title": "Renombrar archivo",
-              "form": {}
+              "title": "Renombrar archivo"
             },
             "searchFiles": {
               "title": "Buscar archivos",
@@ -1366,7 +1345,6 @@
             },
             "sftpDetails": {
               "title": "Detalles SFTP",
-              "form": {},
               "launch": "Abrir"
             }
           }
@@ -1379,8 +1357,6 @@
           },
           "table": {
             "columns": {
-              "type": "Tipo",
-              "address": "Dirección",
               "locked": "¿Bloqueada?"
             }
           },
@@ -1404,8 +1380,7 @@
               "title": "Editar base de datos",
               "toast": {
                 "updated": "Base de datos actualizada."
-              },
-              "form": {}
+              }
             },
             "databaseDetails": {
               "title": "Detalles de conexión de la base de datos",
@@ -1578,8 +1553,7 @@
           "preCondition": {
             "valueSeconds": "Valor (segundos)",
             "valuePercent": "Valor (%)",
-            "value": "Valor",
-            "filePath": "Ruta del archivo"
+            "value": "Valor"
           },
           "triggers": {
             "cron": {
@@ -1593,7 +1567,6 @@
             },
             "powerAction": {
               "title": "Acción de energía",
-              "form": {},
               "card": {
                 "content": "Cuando se solicita la acción de energía `{action}`."
               }
@@ -1615,7 +1588,6 @@
             },
             "consoleLine": {
               "title": "Línea de consola",
-              "form": {},
               "card": {
                 "content": "Cuando la salida de la consola alcanza una línea que contiene `{contains}`"
               }
@@ -1691,7 +1663,6 @@
             },
             "sendCommand": {
               "title": "Enviar comando",
-              "form": {},
               "renderer": {
                 "compact": "Ejecutar {command}",
                 "detail": {
@@ -1701,7 +1672,6 @@
             },
             "sendPower": {
               "title": "Enviar señal de energía",
-              "form": {},
               "renderer": {
                 "compact": "Hacer {action}",
                 "detail": {
@@ -1724,7 +1694,6 @@
             },
             "createDirectory": {
               "title": "Crear directorio",
-              "form": {},
               "renderer": {
                 "compact": "Crear {name} en {root}",
                 "detail": {
@@ -1736,7 +1705,6 @@
             "writeFile": {
               "title": "Escribir archivo",
               "form": {
-                "filePath": "Ruta del archivo",
                 "content": "Contenido",
                 "appendToFile": "Añadir al archivo"
               },
@@ -1819,10 +1787,6 @@
             },
             "updateStartupVariable": {
               "title": "Actualizar variable de arranque",
-              "form": {
-                "envVariable": "Variable de entorno",
-                "value": "Valor"
-              },
               "renderer": {
                 "compact": "Establecer {variable} en {value}",
                 "detail": {
@@ -1833,7 +1797,6 @@
             },
             "updateStartupCommand": {
               "title": "Actualizar comando de arranque",
-              "form": {},
               "renderer": {
                 "compact": "Establecer en {command}",
                 "detail": {
@@ -1843,7 +1806,6 @@
             },
             "updateStartupDockerImage": {
               "title": "Actualizar imagen de Docker",
-              "form": {},
               "renderer": {
                 "compact": "Establecer en {image}",
                 "detail": {
@@ -1913,15 +1875,13 @@
               "title": "Crear copia de seguridad",
               "toast": {
                 "created": "Copia de seguridad creada."
-              },
-              "form": {}
+              }
             },
             "editBackup": {
               "title": "Editar copia de seguridad",
               "toast": {
                 "updated": "Copia de seguridad actualizada."
-              },
-              "form": {}
+              }
             },
             "restoreBackup": {
               "title": "Restaurar copia de seguridad"
@@ -1947,7 +1907,6 @@
               "port": "Puerto"
             }
           },
-          "button": {},
           "toast": {
             "created": "Asignación creada.",
             "updated": "Asignación actualizada.",
@@ -1957,8 +1916,7 @@
           },
           "modal": {
             "editAllocation": {
-              "title": "Editar asignación",
-              "form": {}
+              "title": "Editar asignación"
             },
             "removeAllocation": {
               "title": "Confirmar eliminación de la asignación",
@@ -1968,7 +1926,6 @@
         },
         "startup": {
           "title": "Arranque",
-          "form": {},
           "variables": "Variables",
           "dockerImageDescription": "La imagen de Docker usada para ejecutar este servidor. Se puede cambiar para usar una imagen diferente.",
           "dockerImageDescriptionCustom": "La imagen de Docker usada para ejecutar este servidor. Ha sido configurada por un administrador y no se puede cambiar.",
@@ -1980,8 +1937,7 @@
           "modal": {
             "unsavedChanges": {
               "title": "Cambios sin guardar",
-              "content": "Tienes cambios sin guardar en tus variables de arranque. ¿Seguro que quieres salir de esta página? Si sales, se perderán tus cambios.",
-              "button": {}
+              "content": "Tienes cambios sin guardar en tus variables de arranque. ¿Seguro que quieres salir de esta página? Si sales, se perderán tus cambios."
             }
           },
           "noVariables": "No se encontraron variables de arranque para este servidor."
@@ -2028,14 +1984,12 @@
           },
           "rename": {
             "title": "Renombrar servidor",
-            "form": {},
             "toast": {
               "renamed": "Servidor renombrado."
             }
           },
           "timezone": {
             "title": "Zona horaria",
-            "form": {},
             "toast": {
               "updated": "Zona horaria del servidor actualizada."
             }

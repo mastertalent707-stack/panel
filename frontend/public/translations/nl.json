@@ -72,9 +72,9 @@
         "recreate": "Opnieuw aanmaken",
         "import": "Importeren",
         "details": "Details",
-        "leavePage": "Pagina verlaten",
         "setPrimary": "Instellen als primair",
-        "unsetPrimary": "Primair verwijderen"
+        "unsetPrimary": "Primair verwijderen",
+        "leavePage": "Pagina verlaten"
       },
       "alert": {
         "error": "Fout",
@@ -101,41 +101,41 @@
         "host": "Host",
         "username": "Gebruikersnaam",
         "server": "Server",
-        "truncateDirectory": "Wilt u alle bestanden van deze server verwijderen voordat u deze actie uitvoert? Dit kan niet ongedaan worden gemaakt.",
-        "language": "Taal",
+        "url": "URL",
+        "email": "E-mail",
+        "port": "Poort",
+        "command": "Opdracht",
         "firstName": "Voornaam",
         "lastName": "Achternaam",
-        "currentPassword": "Huidig wachtwoord",
-        "authenticationCode": "Authenticatiecode",
-        "command": "Opdracht",
-        "eggs": "Eggs",
-        "email": "E-mail",
-        "confirmPassword": "Wachtwoord bevestigen",
-        "disk": "Schijf",
+        "language": "Taal",
+        "enabled": "Ingeschakeld",
+        "fileName": "Bestandsnaam",
+        "sftpPort": "SFTP-poort",
+        "sftpHost": "SFTP-host",
+        "dockerImage": "Docker-image",
         "memory": "Geheugen",
+        "disk": "Schijf",
+        "serverName": "Servernaam",
+        "startupCommand": "Opstartcommando",
+        "archiveName": "Archiefnaam",
+        "archiveFormat": "Archiefformaat",
+        "databaseHost": "Databasehost",
+        "timezone": "Tijdzone",
+        "protocol": "Protocol",
+        "powerAction": "Stroomactie",
+        "destination": "Bestemming",
+        "directoryName": "Mapnaam",
+        "locked": "Vergrendeld",
         "portRanges": "Poortbereiken",
         "portRangesPlaceholder": "Poortbereiken (bijv. 3000-4000)",
-        "sftpHost": "SFTP-host",
-        "sftpPort": "SFTP-poort",
-        "url": "URL",
-        "ignoredFiles": "Genegeerde bestanden",
-        "locked": "Vergrendeld",
-        "port": "Poort",
-        "protocol": "Protocol",
-        "yourControlPanelPassword": "Uw configuratiepanelwachtwoord",
-        "databaseHost": "Databasehost",
-        "fileName": "Bestandsnaam",
-        "destination": "Bestemming",
-        "archiveName": "Archiefnaam",
-        "directoryName": "Mapnaam",
-        "enabled": "Ingeschakeld",
-        "archiveFormat": "Archiefformaat",
-        "powerAction": "Stroomactie",
-        "startupCommand": "Opstartcommando",
-        "dockerImage": "Docker-image",
+        "currentPassword": "Huidig wachtwoord",
+        "confirmPassword": "Wachtwoord bevestigen",
+        "authenticationCode": "Authenticatiecode",
         "lineContains": "Regel bevat",
-        "serverName": "Servernaam",
-        "timezone": "Tijdzone"
+        "eggs": "Eggs",
+        "ignoredFiles": "Genegeerde bestanden",
+        "yourControlPanelPassword": "Uw configuratiepanelwachtwoord",
+        "truncateDirectory": "Wilt u alle bestanden van deze server verwijderen voordat u deze actie uitvoert? Dit kan niet ongedaan worden gemaakt."
       },
       "table": {
         "pagination": {
@@ -523,8 +523,7 @@
               "title": "Pterodactyl Generieke Eggs",
               "description": "Eggs voor generieke applicatie-runtimes zoals Node JS, Java en Rust."
             }
-          },
-          "button": {}
+          }
         },
         "server": {
           "title": "Server",
@@ -647,7 +646,6 @@
         "register": {
           "title": "Registreren",
           "subtitle": "Voer uw gegevens in om te registreren",
-          "form": {},
           "button": {
             "register": "Registreren"
           }
@@ -655,7 +653,6 @@
         "forgotPassword": {
           "title": "Wachtwoord vergeten",
           "subtitle": "Voer uw e-mailadres in om instructies te ontvangen voor het opnieuw instellen van uw wachtwoord",
-          "form": {},
           "button": {
             "request": "Wachtwoordreset aanvragen"
           },
@@ -664,7 +661,6 @@
         "resetPassword": {
           "title": "Wachtwoord opnieuw instellen",
           "subtitle": "Voer uw nieuwe wachtwoord in",
-          "form": {},
           "button": {
             "reset": "Wachtwoord opnieuw instellen"
           },
@@ -793,14 +789,12 @@
               "modal": {
                 "disableTwoFactor": {
                   "title": "Tweestapsverificatie uitschakelen",
-                  "description": "Het uitschakelen van tweestapsverificatie maakt uw account minder veilig.",
-                  "form": {}
+                  "description": "Het uitschakelen van tweestapsverificatie maakt uw account minder veilig."
                 },
                 "setupTwoFactor": {
                   "title": "Tweestapsverificatie instellen",
                   "description": "Bescherm uw account tegen ongeautoriseerde toegang. U wordt gevraagd om een verificatiecode bij elke aanmelding.",
-                  "descriptionQR": "Scan de bovenstaande QR-code met uw tweestapsverificatie-app naar keuze. Voer vervolgens de gegenereerde 6-cijferige code in het onderstaande veld in.",
-                  "form": {}
+                  "descriptionQR": "Scan de bovenstaande QR-code met uw tweestapsverificatie-app naar keuze. Voer vervolgens de gegenereerde 6-cijferige code in het onderstaande veld in."
                 },
                 "recoveryCodes": {
                   "title": "Herstelcodes",
@@ -929,7 +923,6 @@
         },
         "sshKeys": {
           "title": "SSH-sleutels",
-          "button": {},
           "table": {
             "columns": {
               "fingerprint": "Vingerafdruk"
@@ -974,12 +967,6 @@
         },
         "commandSnippets": {
           "title": "Opdrachtfragmenten",
-          "table": {
-            "columns": {
-              "eggs": "Eggs"
-            }
-          },
-          "form": {},
           "modal": {
             "createCommandSnippet": {
               "title": "Opdrachtfragment aanmaken",
@@ -1068,7 +1055,6 @@
           "title": "Activiteit"
         }
       },
-      "admin": {},
       "server": {
         "viewAdmin": {
           "title": "Bekijk als beheerder"
@@ -1182,7 +1168,6 @@
             "openInNewWindow": "Openen in nieuw venster",
             "rename": "Hernoemen",
             "copy": "Kopiëren",
-            "move": "Verplaatsen",
             "fingerprint": "Vingerafdruk",
             "permissions": "Rechten",
             "unarchive": "Uitpakken",
@@ -1252,13 +1237,11 @@
           "modal": {
             "activeUploads": {
               "title": "Actieve uploads",
-              "content": "Weet u zeker dat u deze pagina wilt verlaten? U heeft {files} actieve bestandsuploads. Als u de pagina verlaat, worden de uploads afgebroken.",
-              "button": {}
+              "content": "Weet u zeker dat u deze pagina wilt verlaten? U heeft {files} actieve bestandsuploads. Als u de pagina verlaat, worden de uploads afgebroken."
             },
             "unsavedChanges": {
               "title": "Niet-opgeslagen wijzigingen",
-              "content": "U heeft niet-opgeslagen wijzigingen in de bestandseditor. Weet u zeker dat u deze pagina wilt verlaten? Als u de pagina verlaat, gaan uw wijzigingen verloren.",
-              "button": {}
+              "content": "U heeft niet-opgeslagen wijzigingen in de bestandseditor. Weet u zeker dat u deze pagina wilt verlaten? Als u de pagina verlaat, gaan uw wijzigingen verloren."
             },
             "createArchive": {
               "title": "Archief aanmaken",
@@ -1269,12 +1252,10 @@
             },
             "createDirectory": {
               "title": "Map aanmaken",
-              "form": {},
               "createdAs": "Deze map wordt aangemaakt als "
             },
             "copyFile": {
               "title": "Bestand kopiëren",
-              "form": {},
               "createdAs": "Dit bestand wordt aangemaakt als "
             },
             "copyRemote": {
@@ -1300,8 +1281,7 @@
               "multipleFilesWarning": "U kunt de inhoud van de volgende bestanden niet herstellen nadat ze zijn verwijderd."
             },
             "createFile": {
-              "title": "Bestand aanmaken",
-              "form": {}
+              "title": "Bestand aanmaken"
             },
             "details": {
               "title": "Bestandsdetails",
@@ -1326,8 +1306,7 @@
               "executePermission": "Uitvoerrecht (1)"
             },
             "renameFile": {
-              "title": "Bestand hernoemen",
-              "form": {}
+              "title": "Bestand hernoemen"
             },
             "searchFiles": {
               "title": "Bestanden zoeken",
@@ -1357,7 +1336,6 @@
             },
             "sftpDetails": {
               "title": "SFTP-gegevens",
-              "form": {},
               "launch": "Starten"
             }
           }
@@ -1370,8 +1348,6 @@
           },
           "table": {
             "columns": {
-              "type": "Type",
-              "address": "Adres",
               "locked": "Vergrendeld?"
             }
           },
@@ -1395,8 +1371,7 @@
               "title": "Database bewerken",
               "toast": {
                 "updated": "Database bijgewerkt."
-              },
-              "form": {}
+              }
             },
             "databaseDetails": {
               "title": "Databaseverbindingsgegevens",
@@ -1569,8 +1544,7 @@
           "preCondition": {
             "valueSeconds": "Waarde (seconden)",
             "valuePercent": "Waarde (%)",
-            "value": "Waarde",
-            "filePath": "Bestandspad"
+            "value": "Waarde"
           },
           "triggers": {
             "cron": {
@@ -1584,7 +1558,6 @@
             },
             "powerAction": {
               "title": "Stroomactie",
-              "form": {},
               "card": {
                 "content": "Wanneer stroomactie `{action}` wordt gevraagd."
               }
@@ -1606,7 +1579,6 @@
             },
             "consoleLine": {
               "title": "Consoleregel",
-              "form": {},
               "card": {
                 "content": "Wanneer console-uitvoer een regel bereikt die `{contains}` bevat"
               }
@@ -1682,7 +1654,6 @@
             },
             "sendCommand": {
               "title": "Opdracht verzenden",
-              "form": {},
               "renderer": {
                 "compact": "Voer {command} uit",
                 "detail": {
@@ -1692,7 +1663,6 @@
             },
             "sendPower": {
               "title": "Stroomsignaal verzenden",
-              "form": {},
               "renderer": {
                 "compact": "Voer {action} uit",
                 "detail": {
@@ -1715,7 +1685,6 @@
             },
             "createDirectory": {
               "title": "Map aanmaken",
-              "form": {},
               "renderer": {
                 "compact": "Maak {name} aan in {root}",
                 "detail": {
@@ -1727,7 +1696,6 @@
             "writeFile": {
               "title": "Bestand schrijven",
               "form": {
-                "filePath": "Bestandspad",
                 "content": "Inhoud",
                 "appendToFile": "Toevoegen aan bestand"
               },
@@ -1810,10 +1778,6 @@
             },
             "updateStartupVariable": {
               "title": "Opstartvariabele bijwerken",
-              "form": {
-                "envVariable": "Omgevingsvariabele",
-                "value": "Waarde"
-              },
               "renderer": {
                 "compact": "Stel {variable} in op {value}",
                 "detail": {
@@ -1824,7 +1788,6 @@
             },
             "updateStartupCommand": {
               "title": "Opstartcommando bijwerken",
-              "form": {},
               "renderer": {
                 "compact": "Stel in op {command}",
                 "detail": {
@@ -1834,7 +1797,6 @@
             },
             "updateStartupDockerImage": {
               "title": "Docker-image bijwerken",
-              "form": {},
               "renderer": {
                 "compact": "Stel in op {image}",
                 "detail": {
@@ -1904,15 +1866,13 @@
               "title": "Back-up aanmaken",
               "toast": {
                 "created": "Back-up aangemaakt."
-              },
-              "form": {}
+              }
             },
             "editBackup": {
               "title": "Back-up bewerken",
               "toast": {
                 "updated": "Back-up bijgewerkt."
-              },
-              "form": {}
+              }
             },
             "restoreBackup": {
               "title": "Back-up herstellen"
@@ -1938,7 +1898,6 @@
               "port": "Poort"
             }
           },
-          "button": {},
           "toast": {
             "created": "Allocatie aangemaakt.",
             "updated": "Allocatie bijgewerkt.",
@@ -1948,8 +1907,7 @@
           },
           "modal": {
             "editAllocation": {
-              "title": "Allocatie bewerken",
-              "form": {}
+              "title": "Allocatie bewerken"
             },
             "removeAllocation": {
               "title": "Verwijderen van allocatie bevestigen",
@@ -1959,7 +1917,6 @@
         },
         "startup": {
           "title": "Opstarten",
-          "form": {},
           "variables": "Variabelen",
           "dockerImageDescription": "De Docker-image die wordt gebruikt om deze server te draaien. Dit kan worden gewijzigd om een andere image te gebruiken.",
           "dockerImageDescriptionCustom": "De Docker-image die wordt gebruikt om deze server te draaien. Dit is ingesteld door een beheerder en kan niet worden gewijzigd.",
@@ -2012,14 +1969,12 @@
           },
           "rename": {
             "title": "Server hernoemen",
-            "form": {},
             "toast": {
               "renamed": "Server hernoemd."
             }
           },
           "timezone": {
             "title": "Tijdzone",
-            "form": {},
             "toast": {
               "updated": "Servertijdzone bijgewerkt."
             }

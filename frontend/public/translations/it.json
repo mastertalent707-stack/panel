@@ -42,32 +42,35 @@
       "input": {
         "search": "Cerca..."
       },
+      "tooltip": {
+        "primary": "Primaria"
+      },
       "form": {
         "name": "Nome",
         "description": "Descrizione",
         "password": "Password",
         "host": "Host",
         "username": "Nome utente",
-        "language": "Lingua",
+        "url": "URL",
+        "email": "Email",
         "firstName": "Nome",
         "lastName": "Cognome",
-        "currentPassword": "Password attuale",
-        "authenticationCode": "Codice di autenticazione",
-        "disk": "Disco",
-        "memory": "Memoria",
-        "sftpHost": "Host SFTP",
-        "sftpPort": "Porta SFTP",
-        "url": "URL",
-        "confirmPassword": "Conferma password",
-        "ignoredFiles": "File ignorati",
-        "locked": "Bloccato",
-        "databaseHost": "Host database",
+        "language": "Lingua",
         "enabled": "Abilitato",
-        "serverName": "Nome server",
-        "timezone": "Fuso orario",
+        "sftpPort": "Porta SFTP",
+        "sftpHost": "Host SFTP",
         "dockerImage": "Immagine Docker",
+        "memory": "Memoria",
+        "disk": "Disco",
+        "serverName": "Nome server",
         "startupCommand": "Comando di avvio",
-        "email": "Email"
+        "databaseHost": "Host database",
+        "timezone": "Fuso orario",
+        "locked": "Bloccato",
+        "currentPassword": "Password attuale",
+        "confirmPassword": "Conferma password",
+        "authenticationCode": "Codice di autenticazione",
+        "ignoredFiles": "File ignorati"
       },
       "table": {
         "pagination": {
@@ -116,10 +119,7 @@
       "na": "N/D",
       "yes": "Sì",
       "no": "No",
-      "system": "Sistema",
-      "tooltip": {
-        "primary": "Primaria"
-      }
+      "system": "Sistema"
     },
     "pages": {
       "oobe": {
@@ -331,14 +331,12 @@
               "modal": {
                 "disableTwoFactor": {
                   "title": "Disabilita autenticazione a due fattori",
-                  "description": "Disabilitare l'autenticazione a due fattori renderà il tuo account meno sicuro.",
-                  "form": {}
+                  "description": "Disabilitare l'autenticazione a due fattori renderà il tuo account meno sicuro."
                 },
                 "setupTwoFactor": {
                   "title": "Configura autenticazione a due fattori",
                   "description": "Aiuta a proteggere il tuo account da accessi non autorizzati. Ti verrà richiesto un codice di verifica ogni volta che accedi.",
-                  "descriptionQR": "Scansiona il codice QR qui sopra utilizzando l'app di autenticazione a due fattori di tua scelta. Quindi, inserisci il codice a 6 cifre generato nel campo sottostante.",
-                  "form": {}
+                  "descriptionQR": "Scansiona il codice QR qui sopra utilizzando l'app di autenticazione a due fattori di tua scelta. Quindi, inserisci il codice a 6 cifre generato nel campo sottostante."
                 },
                 "recoveryCodes": {
                   "title": "Codici di recupero",
@@ -420,7 +418,6 @@
         },
         "sshKeys": {
           "title": "Chiavi SSH",
-          "button": {},
           "table": {
             "columns": {
               "fingerprint": "Impronta digitale"
@@ -572,8 +569,6 @@
           },
           "table": {
             "columns": {
-              "type": "Tipo",
-              "address": "Indirizzo",
               "locked": "Bloccato?"
             }
           },
@@ -597,8 +592,7 @@
               "title": "Modifica database",
               "toast": {
                 "updated": "Database aggiornato."
-              },
-              "form": {}
+              }
             },
             "databaseDetails": {
               "title": "Dettagli connessione database",
@@ -678,15 +672,13 @@
               "title": "Crea backup",
               "toast": {
                 "created": "Backup creato."
-              },
-              "form": {}
+              }
             },
             "editBackup": {
               "title": "Modifica backup",
               "toast": {
                 "updated": "Backup aggiornato."
-              },
-              "form": {}
+              }
             },
             "restoreBackup": {
               "title": "Ripristina backup"
@@ -712,7 +704,6 @@
               "port": "Porta"
             }
           },
-          "button": {},
           "toast": {
             "created": "Allocazione creata.",
             "updated": "Allocazione aggiornata.",
@@ -722,8 +713,7 @@
           },
           "modal": {
             "editAllocation": {
-              "title": "Modifica allocazione",
-              "form": {}
+              "title": "Modifica allocazione"
             },
             "removeAllocation": {
               "title": "Conferma rimozione allocazione",
@@ -733,7 +723,6 @@
         },
         "startup": {
           "title": "Avvio",
-          "form": {},
           "variables": "Variabili",
           "dockerImageDescription": "L'immagine Docker utilizzata per eseguire questo server. Può essere modificata per utilizzare un'immagine diversa.",
           "dockerImageDescriptionCustom": "L'immagine Docker utilizzata per eseguire questo server. È stata impostata da un amministratore e non può essere modificata.",
@@ -747,14 +736,12 @@
           "title": "Impostazioni",
           "rename": {
             "title": "Rinomina server",
-            "form": {},
             "toast": {
               "renamed": "Server rinominato."
             }
           },
           "timezone": {
             "title": "Fuso orario",
-            "form": {},
             "toast": {
               "updated": "Fuso orario del server aggiornato."
             }

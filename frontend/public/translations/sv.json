@@ -72,9 +72,9 @@
         "recreate": "Skapa om",
         "import": "Importera",
         "details": "Detaljer",
-        "leavePage": "Lämna sidan",
         "setPrimary": "Ange som Primär",
-        "unsetPrimary": "Avlägsna Primär Status"
+        "unsetPrimary": "Avlägsna Primär Status",
+        "leavePage": "Lämna sidan"
       },
       "alert": {
         "error": "Fel",
@@ -101,41 +101,41 @@
         "host": "Värd",
         "username": "Användarnamn",
         "server": "Server",
-        "truncateDirectory": "Vill du ta bort alla filer på denna server innan du utför denna åtgärd? Detta kan inte ångras.",
-        "language": "Språk",
+        "url": "URL",
+        "email": "E-post",
+        "port": "Port",
+        "command": "Kommando",
         "firstName": "Förnamn",
         "lastName": "Efternamn",
-        "currentPassword": "Nuvarande Lösenord",
-        "authenticationCode": "Autentiseringskod",
-        "command": "Kommando",
-        "eggs": "Eggs",
-        "email": "E-post",
-        "confirmPassword": "Bekräfta Lösenord",
-        "disk": "Disk",
+        "language": "Språk",
+        "enabled": "Aktiverad",
+        "fileName": "Filnamn",
+        "sftpPort": "SFTP Port",
+        "sftpHost": "SFTP Host",
+        "dockerImage": "Docker Image",
         "memory": "Minne",
+        "disk": "Disk",
+        "serverName": "Servernamn",
+        "startupCommand": "Startkommando",
+        "archiveName": "Arkivnamn",
+        "archiveFormat": "Arkivformat",
+        "databaseHost": "Databas Host",
+        "timezone": "Tidszon",
+        "protocol": "Protokoll",
+        "powerAction": "Strömmåtgärd",
+        "destination": "Destination",
+        "directoryName": "Katalognamn",
+        "locked": "Låst",
         "portRanges": "Port Avstånd",
         "portRangesPlaceholder": "Port Avstånd (eg. 3000-4000)",
-        "sftpHost": "SFTP Host",
-        "sftpPort": "SFTP Port",
-        "url": "URL",
-        "ignoredFiles": "Ignorerade Filer",
-        "locked": "Låst",
-        "port": "Port",
-        "protocol": "Protokoll",
-        "yourControlPanelPassword": "Ditt Control Panel Lösenord",
-        "databaseHost": "Databas Host",
-        "fileName": "Filnamn",
-        "destination": "Destination",
-        "archiveName": "Arkivnamn",
-        "directoryName": "Katalognamn",
-        "enabled": "Aktiverad",
-        "archiveFormat": "Arkivformat",
-        "powerAction": "Strömmåtgärd",
-        "startupCommand": "Startkommando",
-        "dockerImage": "Docker Image",
+        "currentPassword": "Nuvarande Lösenord",
+        "confirmPassword": "Bekräfta Lösenord",
+        "authenticationCode": "Autentiseringskod",
         "lineContains": "Linje innehåller",
-        "serverName": "Servernamn",
-        "timezone": "Tidszon"
+        "eggs": "Eggs",
+        "ignoredFiles": "Ignorerade Filer",
+        "yourControlPanelPassword": "Ditt Control Panel Lösenord",
+        "truncateDirectory": "Vill du ta bort alla filer på denna server innan du utför denna åtgärd? Detta kan inte ångras."
       },
       "table": {
         "pagination": {
@@ -524,8 +524,7 @@
               "title": "Pterodactyl Generella Egg",
               "description": "Ägg för generiska applikationskörningar som Node JS, Java och Rust."
             }
-          },
-          "button": {}
+          }
         },
         "server": {
           "title": "Server",
@@ -651,7 +650,6 @@
         "register": {
           "title": "Registrera",
           "subtitle": "Ange dina uppgifter för att registrera dig",
-          "form": {},
           "button": {
             "register": "Registrera"
           }
@@ -659,7 +657,6 @@
         "forgotPassword": {
           "title": "Glömt lösenord",
           "subtitle": "Ange din e-postadress för att få instruktioner om hur du resetar ditt lösenord",
-          "form": {},
           "button": {
             "request": "Begär lösenordsåterställning"
           },
@@ -668,7 +665,6 @@
         "resetPassword": {
           "title": "Återställ lösenord",
           "subtitle": "Ange ditt nya lösenord",
-          "form": {},
           "button": {
             "reset": "Återställ Lösenord"
           },
@@ -797,14 +793,12 @@
               "modal": {
                 "disableTwoFactor": {
                   "title": "Inaktivera Tvåfaktorsautentisering",
-                  "description": "Att inaktivera tvåfaktorsautentisering kommer att göra ditt konto mindre säkert.",
-                  "form": {}
+                  "description": "Att inaktivera tvåfaktorsautentisering kommer att göra ditt konto mindre säkert."
                 },
                 "setupTwoFactor": {
                   "title": "Konfigurera tvåfaktorsautentisering",
                   "description": "Skydda ditt konto från obehörig åtkomst. Du kommer att bli ombedd att ange en verifieringskod varje gång du loggar in.",
-                  "descriptionQR": "Skanna QR-koden ovan med valfri tvåfaktorsautentiseringsapp. Ange sedan den genererade 6-siffriga koden i fältet nedan.",
-                  "form": {}
+                  "descriptionQR": "Skanna QR-koden ovan med valfri tvåfaktorsautentiseringsapp. Ange sedan den genererade 6-siffriga koden i fältet nedan."
                 },
                 "recoveryCodes": {
                   "title": "Återställningskoder",
@@ -933,7 +927,6 @@
         },
         "sshKeys": {
           "title": "SSH-nycklar",
-          "button": {},
           "table": {
             "columns": {
               "fingerprint": "Fingeravtryck"
@@ -978,12 +971,6 @@
         },
         "commandSnippets": {
           "title": "Kommandosnuttar",
-          "table": {
-            "columns": {
-              "eggs": "Eggs"
-            }
-          },
-          "form": {},
           "modal": {
             "createCommandSnippet": {
               "title": "Skapa kommandosnutt",
@@ -1079,7 +1066,6 @@
           "title": "Aktivitetslogg"
         }
       },
-      "admin": {},
       "server": {
         "viewAdmin": {
           "title": "Visa admin"
@@ -1196,7 +1182,6 @@
             "openInNewWindow": "Öppna i nytt fönster",
             "rename": "Döp om",
             "copy": "Kopiera",
-            "move": "Flytta",
             "fingerprint": "Fingeravtryck",
             "permissions": "Behörigheter",
             "unarchive": "Avkomprimera",
@@ -1266,13 +1251,11 @@
           "modal": {
             "activeUploads": {
               "title": "Aktiva uppladdningar",
-              "content": "Är du säker på att du vill lämna den här sidan? Du har {files} aktiva filuppladdningar. Om du lämnar den här sidan kommer filuppladdningarna att avbrytas.",
-              "button": {}
+              "content": "Är du säker på att du vill lämna den här sidan? Du har {files} aktiva filuppladdningar. Om du lämnar den här sidan kommer filuppladdningarna att avbrytas."
             },
             "unsavedChanges": {
               "title": "Osparade ändringar",
-              "content": "Du har osparade ändringar i filredigeringen. Är du säker på att du vill lämna den här sidan? Om du lämnar sidan kommer dina ändringar att förloras.",
-              "button": {}
+              "content": "Du har osparade ändringar i filredigeringen. Är du säker på att du vill lämna den här sidan? Om du lämnar sidan kommer dina ändringar att förloras."
             },
             "createArchive": {
               "title": "Skapa arkiv",
@@ -1283,12 +1266,10 @@
             },
             "createDirectory": {
               "title": "Skapa katalog",
-              "form": {},
               "createdAs": "Denna katalog kommer att skapas som "
             },
             "copyFile": {
               "title": "Kopiera fil",
-              "form": {},
               "createdAs": "Denna fil kommer att skapas som "
             },
             "copyRemote": {
@@ -1314,8 +1295,7 @@
               "multipleFilesWarning": "Du kommer inte att kunna återställa innehållet i följande filer efter borttagning."
             },
             "createFile": {
-              "title": "Skapa fil",
-              "form": {}
+              "title": "Skapa fil"
             },
             "details": {
               "title": "Fildetaljer",
@@ -1340,8 +1320,7 @@
               "executePermission": "Körbehörighet (1)"
             },
             "renameFile": {
-              "title": "Byt namn på fil",
-              "form": {}
+              "title": "Byt namn på fil"
             },
             "searchFiles": {
               "title": "Sök efter filer",
@@ -1371,7 +1350,6 @@
             },
             "sftpDetails": {
               "title": "SFTP-detaljer",
-              "form": {},
               "launch": "Starta"
             }
           }
@@ -1384,8 +1362,6 @@
           },
           "table": {
             "columns": {
-              "type": "Typ",
-              "address": "Adress",
               "locked": "Låst?"
             }
           },
@@ -1409,8 +1385,7 @@
               "title": "Redigera databas",
               "toast": {
                 "updated": "Databas uppdaterad."
-              },
-              "form": {}
+              }
             },
             "databaseDetails": {
               "title": "Databasanslutningsdetaljer",
@@ -1583,8 +1558,7 @@
           "preCondition": {
             "valueSeconds": "Värde (sekunder)",
             "valuePercent": "Värde (%)",
-            "value": "Värde",
-            "filePath": "Filväg"
+            "value": "Värde"
           },
           "triggers": {
             "cron": {
@@ -1598,7 +1572,6 @@
             },
             "powerAction": {
               "title": "Power Action",
-              "form": {},
               "card": {
                 "content": "När Power Action `{action}` begärs."
               }
@@ -1620,7 +1593,6 @@
             },
             "consoleLine": {
               "title": "Konsollinje",
-              "form": {},
               "card": {
                 "content": "När konsollutmatningen når en linje som innehåller `{contains}`"
               }
@@ -1696,7 +1668,6 @@
             },
             "sendCommand": {
               "title": "Skicka Kommando",
-              "form": {},
               "renderer": {
                 "compact": "Kör {command}",
                 "detail": {
@@ -1706,7 +1677,6 @@
             },
             "sendPower": {
               "title": "Skicka Strömsignal",
-              "form": {},
               "renderer": {
                 "compact": "Gör {action}",
                 "detail": {
@@ -1729,7 +1699,6 @@
             },
             "createDirectory": {
               "title": "Skapa Katalog",
-              "form": {},
               "renderer": {
                 "compact": "Skapa {name} i {root}",
                 "detail": {
@@ -1741,7 +1710,6 @@
             "writeFile": {
               "title": "Skriv Fil",
               "form": {
-                "filePath": "Filväg",
                 "content": "Innehåll",
                 "appendToFile": "Lägg till i fil"
               },
@@ -1824,10 +1792,6 @@
             },
             "updateStartupVariable": {
               "title": "Uppdatera Startvariabel",
-              "form": {
-                "envVariable": "Env-variabel",
-                "value": "Värde"
-              },
               "renderer": {
                 "compact": "Sätt {variable} till {value}",
                 "detail": {
@@ -1838,7 +1802,6 @@
             },
             "updateStartupCommand": {
               "title": "Uppdatera startkommando",
-              "form": {},
               "renderer": {
                 "compact": "Sätt till {command}",
                 "detail": {
@@ -1848,7 +1811,6 @@
             },
             "updateStartupDockerImage": {
               "title": "Uppdatera Docker Image",
-              "form": {},
               "renderer": {
                 "compact": "Sätt till {image}",
                 "detail": {
@@ -1918,15 +1880,13 @@
               "title": "Skapa Säkerhetskopia",
               "toast": {
                 "created": "Säkerhetskopia skapad."
-              },
-              "form": {}
+              }
             },
             "editBackup": {
               "title": "Redigera Säkerhetskopia",
               "toast": {
                 "updated": "Säkerhetskopia uppdaterad."
-              },
-              "form": {}
+              }
             },
             "restoreBackup": {
               "title": "Återställ Säkerhetskopia"
@@ -1952,7 +1912,6 @@
               "port": "Port"
             }
           },
-          "button": {},
           "toast": {
             "created": "Tilldelning skapad.",
             "updated": "Tilldelning uppdaterad.",
@@ -1962,8 +1921,7 @@
           },
           "modal": {
             "editAllocation": {
-              "title": "Redigera tilldelning",
-              "form": {}
+              "title": "Redigera tilldelning"
             },
             "removeAllocation": {
               "title": "Bekräfta Borttagning av Tilldelning",
@@ -1973,7 +1931,6 @@
         },
         "startup": {
           "title": "Uppstart",
-          "form": {},
           "variables": "Variabler",
           "dockerImageDescription": "Docker-avbildningen som används för att köra den här servern. Denna kan ändras för att använda en annan avbildning.",
           "dockerImageDescriptionCustom": "Docker-avbildningen som används för att köra den här servern. Denna har ställts in av en administratör och kan inte ändras.",
@@ -1985,8 +1942,7 @@
           "modal": {
             "unsavedChanges": {
               "title": "Osparade ändringar",
-              "content": "Du har osparade ändringar i dina startvariabler. Är du säker på att du vill lämna den här sidan? Om du lämnar sidan kommer dina ändringar att gå förlorade.",
-              "button": {}
+              "content": "Du har osparade ändringar i dina startvariabler. Är du säker på att du vill lämna den här sidan? Om du lämnar sidan kommer dina ändringar att gå förlorade."
             }
           },
           "noVariables": "Inga startvariabler hittades för den här servern."
@@ -2033,14 +1989,12 @@
           },
           "rename": {
             "title": "Döp om Server",
-            "form": {},
             "toast": {
               "renamed": "Server har döpts om."
             }
           },
           "timezone": {
             "title": "Tidszon",
-            "form": {},
             "toast": {
               "updated": "Serverns tidszon uppdaterad."
             }
