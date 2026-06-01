@@ -136,7 +136,8 @@
         "edit": "Edit",
         "delete": "Delete",
         "remove": "Remove",
-        "primary": "Primary"
+        "primary": "Primary",
+        "backupOnDifferentNode": "This backup is on a different node than the server. It is not viewable from the Client API."
       },
       "form": {
         "name": "Name",
@@ -2330,9 +2331,6 @@
                 "title": "Server Backups",
                 "input": {
                   "partiallyDetachedOnly": "Only show partially detached backups"
-                },
-                "tooltip": {
-                  "backupOnDifferentNode": "This backup is on a different node than the server. It is not viewable from the Client API."
                 }
               }
             },
@@ -2949,13 +2947,229 @@
           }
         },
         "backupConfigurations": {
-          "title": "Backup Configs"
+          "title": "Backup Configurations",
+          "resourceName": "Backup configuration",
+          "table": {
+            "columns": {
+              "disk": "Disk"
+            }
+          },
+          "tabs": {
+            "general": {
+              "page": {
+                "titleCreate": "Create Backup Configuration",
+                "titleUpdate": "Update Backup Configuration",
+                "alert": {
+                  "ddupBak": "Ddup-Bak is Technology Preview software, it is technically not recommended for production use. If you acknowledge, sail ahead as you wish.",
+                  "btrfs": "Btrfs requires additional setup on the node to work, please [see the documentation]({docsUrl}) for more details.",
+                  "zfs": "ZFS requires additional setup on the node to work, please [see the documentation]({docsUrl}) for more details."
+                },
+                "form": {
+                  "backupDisk": "Backup Disk",
+                  "maintenanceEnabledDescription": "If enabled, any server using this backup configuration will not be able to create new backups, or manage existing ones.",
+                  "shared": "Shared",
+                  "sharedDescription": "If enabled, backups on this backup configuration will not be transferred between nodes, they will be assumed to be accessible by all nodes."
+                },
+                "modal": {
+                  "delete": {
+                    "title": "Confirm Backup Configuration Deletion",
+                    "content": "Are you sure you want to delete **{name}**?"
+                  }
+                },
+                "s3": {
+                  "title": "S3 Settings",
+                  "form": {
+                    "partSize": "Part Size",
+                    "pathStyle": "Using path-style URLs"
+                  }
+                },
+                "restic": {
+                  "title": "Restic Settings",
+                  "form": {
+                    "repository": "Repository",
+                    "retryLockSeconds": "Retry Lock Seconds",
+                    "environmentVariables": "Environment Variables",
+                    "cronSchedule": "Cron Schedule",
+                    "cronScheduleDescription": "Format: second minute hour day month weekday.",
+                    "nodes": "Nodes",
+                    "nodesPlaceholder": "Select nodes"
+                  },
+                  "pruneJobs": {
+                    "title": "Prune Jobs",
+                    "description": "Scheduled restic prune runs. Each job runs on the configured nodes following its cron schedule.",
+                    "button": {
+                      "add": "Add Prune Job"
+                    }
+                  }
+                }
+              }
+            },
+            "stats": {
+              "title": "Stats",
+              "page": {
+                "title": "Backup Configuration Stats",
+                "card": {
+                  "title": "Backup Statistics"
+                },
+                "period": {
+                  "allTime": "All Time",
+                  "today": "Today",
+                  "week": "This Week",
+                  "month": "This Month"
+                },
+                "periodLabel": {
+                  "allTime": "all time",
+                  "today": "today",
+                  "week": "this week",
+                  "month": "this month"
+                },
+                "stat": {
+                  "total": "Total backups {period}",
+                  "successful": "Successful backups {period}",
+                  "failed": "Failed backups {period}",
+                  "deleted": "Deleted backups {period}"
+                }
+              }
+            },
+            "backups": {
+              "title": "Backups",
+              "page": {
+                "title": "Backup Configuration Backups",
+                "toast": {
+                  "downloadStarted": "Download started."
+                }
+              }
+            },
+            "locations": {
+              "title": "Locations",
+              "page": {
+                "title": "Backup Configuration Locations"
+              }
+            },
+            "nodes": {
+              "title": "Nodes",
+              "page": {
+                "title": "Backup Configuration Nodes"
+              }
+            },
+            "servers": {
+              "title": "Servers",
+              "page": {
+                "title": "Backup Configuration Servers"
+              }
+            }
+          }
         },
         "mounts": {
-          "title": "Mounts"
+          "title": "Mounts",
+          "resourceName": "Mount",
+          "tabs": {
+            "general": {
+              "page": {
+                "titleCreate": "Create Mount",
+                "titleUpdate": "Update Mount",
+                "alert": "Mounts are a powerful and potentially dangerous feature. Improper use can lead to data loss or security vulnerabilities (including container escapes). Make sure you understand the implications of using mounts before creating or updating them.",
+                "form": {
+                  "source": "Source",
+                  "target": "Target",
+                  "readOnly": "Read Only",
+                  "userMountable": "User Mountable"
+                },
+                "modal": {
+                  "delete": {
+                    "title": "Confirm Mount Deletion",
+                    "content": "Are you sure you want to delete **{name}**?"
+                  }
+                }
+              }
+            },
+            "eggs": {
+              "title": "Eggs",
+              "page": {
+                "title": "Mount Eggs",
+                "toast": {
+                  "added": "Mount Egg added.",
+                  "removed": "Mount Egg deleted."
+                },
+                "modal": {
+                  "add": {
+                    "title": "Add Mount Egg",
+                    "form": {
+                      "egg": "Egg"
+                    }
+                  },
+                  "remove": {
+                    "title": "Confirm Mount Egg Removal",
+                    "content": "Are you sure you want to remove the mount **{mount}** from **{name}**?"
+                  }
+                }
+              }
+            },
+            "nodes": {
+              "title": "Nodes",
+              "page": {
+                "title": "Mount Nodes",
+                "toast": {
+                  "added": "Mount Node added.",
+                  "removed": "Mount Node deleted."
+                },
+                "modal": {
+                  "add": {
+                    "title": "Add Mount Node"
+                  },
+                  "remove": {
+                    "title": "Confirm Mount Node Removal",
+                    "content": "Are you sure you want to remove the mount **{mount}** from **{name}**?"
+                  }
+                }
+              }
+            },
+            "servers": {
+              "title": "Servers",
+              "page": {
+                "title": "Mount Servers"
+              }
+            }
+          }
         },
         "roles": {
-          "title": "Roles"
+          "title": "Roles",
+          "resourceName": "Role",
+          "table": {
+            "columns": {
+              "serverPermissions": "Server Permissions",
+              "adminPermissions": "Admin Permissions"
+            }
+          },
+          "tabs": {
+            "general": {
+              "page": {
+                "titleCreate": "Create Role",
+                "titleUpdate": "Update Role",
+                "alert": {
+                  "impersonate": "This role has the `users.impersonate` permission, which allows users with this role to impersonate any other user, including administrators. Be cautious when assigning this permission to roles with less trusted users."
+                },
+                "form": {
+                  "requireTwoFactor": "Require Two Factor",
+                  "requireTwoFactorDescription": "Require users with this role to use two factor authentication.",
+                  "serverPermissions": "Server Permissions",
+                  "adminPermissions": "Admin Permissions"
+                },
+                "modal": {
+                  "delete": {
+                    "title": "Confirm Role Deletion",
+                    "content": "Are you sure you want to delete **{name}**?"
+                  }
+                }
+              }
+            },
+            "users": {
+              "title": "Users",
+              "page": {
+                "title": "Role Users"
+              }
+            }
+          }
         },
         "activity": {
           "title": "Activity"

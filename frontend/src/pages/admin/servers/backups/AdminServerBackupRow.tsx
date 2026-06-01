@@ -134,7 +134,7 @@ export default function AdminServerBackupRow({ backup }: { backup: z.infer<typeo
                 <TableLink to={`/admin/nodes/${backup.node.uuid}`}>{backup.node.name}</TableLink>
               </Code>
               {backup.server && backup.server.node.uuid !== backup.node.uuid && (
-                <Tooltip label={t('pages.admin.servers.tabs.backups.page.tooltip.backupOnDifferentNode', {})}>
+                <Tooltip label={t('common.tooltip.backupOnDifferentNode', {})}>
                   <FontAwesomeIcon icon={faWarning} className='ml-1 text-yellow-400' />
                 </Tooltip>
               )}

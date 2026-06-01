@@ -136,7 +136,8 @@
         "edit": "Bearbeiten",
         "delete": "Löschen",
         "primary": "Primär",
-        "remove": "Entfernen"
+        "remove": "Entfernen",
+        "backupOnDifferentNode": "Dieses Backup befindet sich auf einer anderen Node als der Server. Es ist nicht über die Client-API einsehbar."
       },
       "form": {
         "name": "Name",
@@ -2333,9 +2334,6 @@
                 "title": "Server Backups",
                 "input": {
                   "partiallyDetachedOnly": "Nur teilweise abgetrennte Backups anzeigen"
-                },
-                "tooltip": {
-                  "backupOnDifferentNode": "Dieses Backup befindet sich auf einer anderen Node als der Server. Es ist nicht über die Client-API einsehbar."
                 }
               }
             },
@@ -2953,13 +2951,229 @@
           }
         },
         "backupConfigurations": {
-          "title": "Backup-Konfigurationen"
+          "title": "Backup-Konfigurationen",
+          "resourceName": "Backup-Konfiguration",
+          "table": {
+            "columns": {
+              "disk": "Datenträger"
+            }
+          },
+          "tabs": {
+            "general": {
+              "page": {
+                "titleCreate": "Backup-Konfiguration erstellen",
+                "titleUpdate": "Backup-Konfiguration aktualisieren",
+                "alert": {
+                  "ddupBak": "Ddup-Bak ist Technology-Preview-Software, sie wird technisch nicht für den Produktiveinsatz empfohlen. Wenn du dies zur Kenntnis nimmst, kannst du gerne fortfahren.",
+                  "btrfs": "Btrfs erfordert zusätzliche Einrichtung auf der Node, um zu funktionieren, bitte [siehe die Dokumentation]({docsUrl}) für weitere Details.",
+                  "zfs": "ZFS erfordert zusätzliche Einrichtung auf der Node, um zu funktionieren, bitte [siehe die Dokumentation]({docsUrl}) für weitere Details."
+                },
+                "form": {
+                  "backupDisk": "Backup-Datenträger",
+                  "maintenanceEnabledDescription": "Wenn aktiviert, kann kein Server, der diese Backup-Konfiguration verwendet, neue Backups erstellen oder bestehende verwalten.",
+                  "shared": "Geteilt",
+                  "sharedDescription": "Wenn aktiviert, werden Backups dieser Backup-Konfiguration nicht zwischen Nodes übertragen, es wird angenommen, dass sie für alle Nodes zugänglich sind."
+                },
+                "modal": {
+                  "delete": {
+                    "title": "Löschen der Backup-Konfiguration bestätigen",
+                    "content": "Bist du sicher, dass du **{name}** löschen möchtest?"
+                  }
+                },
+                "s3": {
+                  "title": "S3-Einstellungen",
+                  "form": {
+                    "partSize": "Teilgröße",
+                    "pathStyle": "Pfad-Stil-URLs verwenden"
+                  }
+                },
+                "restic": {
+                  "title": "Restic-Einstellungen",
+                  "form": {
+                    "repository": "Repository",
+                    "retryLockSeconds": "Sperr-Wiederholungssekunden",
+                    "environmentVariables": "Umgebungsvariablen",
+                    "cronSchedule": "Cron-Zeitplan",
+                    "cronScheduleDescription": "Format: Sekunde Minute Stunde Tag Monat Wochentag.",
+                    "nodes": "Nodes",
+                    "nodesPlaceholder": "Nodes auswählen"
+                  },
+                  "pruneJobs": {
+                    "title": "Prune-Jobs",
+                    "description": "Geplante Restic-Prune-Durchläufe. Jeder Job läuft auf den konfigurierten Nodes gemäß seinem Cron-Zeitplan.",
+                    "button": {
+                      "add": "Prune-Job hinzufügen"
+                    }
+                  }
+                }
+              }
+            },
+            "stats": {
+              "title": "Statistiken",
+              "page": {
+                "title": "Backup-Konfiguration Statistiken",
+                "card": {
+                  "title": "Backup-Statistiken"
+                },
+                "period": {
+                  "allTime": "Gesamte Zeit",
+                  "today": "Heute",
+                  "week": "Diese Woche",
+                  "month": "Dieser Monat"
+                },
+                "periodLabel": {
+                  "allTime": "aller Zeit",
+                  "today": "heute",
+                  "week": "diese Woche",
+                  "month": "diesen Monat"
+                },
+                "stat": {
+                  "total": "Gesamte Backups {period}",
+                  "successful": "Erfolgreiche Backups {period}",
+                  "failed": "Fehlgeschlagene Backups {period}",
+                  "deleted": "Gelöschte Backups {period}"
+                }
+              }
+            },
+            "backups": {
+              "title": "Backups",
+              "page": {
+                "title": "Backup-Konfiguration Backups",
+                "toast": {
+                  "downloadStarted": "Download gestartet."
+                }
+              }
+            },
+            "locations": {
+              "title": "Standorte",
+              "page": {
+                "title": "Backup-Konfiguration Standorte"
+              }
+            },
+            "nodes": {
+              "title": "Nodes",
+              "page": {
+                "title": "Backup-Konfiguration Nodes"
+              }
+            },
+            "servers": {
+              "title": "Server",
+              "page": {
+                "title": "Backup-Konfiguration Server"
+              }
+            }
+          }
         },
         "mounts": {
-          "title": "Mounts"
+          "title": "Mounts",
+          "resourceName": "Mount",
+          "tabs": {
+            "general": {
+              "page": {
+                "titleCreate": "Mount erstellen",
+                "titleUpdate": "Mount aktualisieren",
+                "alert": "Mounts sind eine mächtige und potenziell gefährliche Funktion. Unsachgemäße Nutzung kann zu Datenverlust oder Sicherheitslücken führen (einschließlich Container-Ausbrüchen). Stelle sicher, dass du die Auswirkungen der Nutzung von Mounts verstehst, bevor du sie erstellst oder aktualisierst.",
+                "form": {
+                  "source": "Quelle",
+                  "target": "Ziel",
+                  "readOnly": "Schreibgeschützt",
+                  "userMountable": "Vom Benutzer einbindbar"
+                },
+                "modal": {
+                  "delete": {
+                    "title": "Mount-Löschung bestätigen",
+                    "content": "Bist du sicher, dass du **{name}** löschen möchtest?"
+                  }
+                }
+              }
+            },
+            "eggs": {
+              "title": "Eggs",
+              "page": {
+                "title": "Mount Eggs",
+                "toast": {
+                  "added": "Mount Egg hinzugefügt.",
+                  "removed": "Mount Egg gelöscht."
+                },
+                "modal": {
+                  "add": {
+                    "title": "Mount Egg hinzufügen",
+                    "form": {
+                      "egg": "Egg"
+                    }
+                  },
+                  "remove": {
+                    "title": "Entfernen des Mount Eggs bestätigen",
+                    "content": "Bist du sicher, dass du den Mount **{mount}** von **{name}** entfernen möchtest?"
+                  }
+                }
+              }
+            },
+            "nodes": {
+              "title": "Nodes",
+              "page": {
+                "title": "Mount Nodes",
+                "toast": {
+                  "added": "Mount Node hinzugefügt.",
+                  "removed": "Mount Node gelöscht."
+                },
+                "modal": {
+                  "add": {
+                    "title": "Mount Node hinzufügen"
+                  },
+                  "remove": {
+                    "title": "Entfernen des Mount Nodes bestätigen",
+                    "content": "Bist du sicher, dass du den Mount **{mount}** von **{name}** entfernen möchtest?"
+                  }
+                }
+              }
+            },
+            "servers": {
+              "title": "Server",
+              "page": {
+                "title": "Mount Server"
+              }
+            }
+          }
         },
         "roles": {
-          "title": "Rollen"
+          "title": "Rollen",
+          "resourceName": "Rolle",
+          "table": {
+            "columns": {
+              "serverPermissions": "Server-Berechtigungen",
+              "adminPermissions": "Admin-Berechtigungen"
+            }
+          },
+          "tabs": {
+            "general": {
+              "page": {
+                "titleCreate": "Rolle erstellen",
+                "titleUpdate": "Rolle aktualisieren",
+                "alert": {
+                  "impersonate": "Diese Rolle hat die `users.impersonate` Berechtigung, die es Benutzern mit dieser Rolle erlaubt, sich als jeder andere Benutzer auszugeben, einschließlich Administratoren. Sei vorsichtig, wenn du diese Berechtigung Rollen mit weniger vertrauenswürdigen Benutzern zuweist."
+                },
+                "form": {
+                  "requireTwoFactor": "Zwei-Faktor erforderlich",
+                  "requireTwoFactorDescription": "Benutzer mit dieser Rolle müssen die Zwei-Faktor-Authentifizierung verwenden.",
+                  "serverPermissions": "Server-Berechtigungen",
+                  "adminPermissions": "Admin-Berechtigungen"
+                },
+                "modal": {
+                  "delete": {
+                    "title": "Rollenlöschung bestätigen",
+                    "content": "Bist du sicher, dass du **{name}** löschen möchtest?"
+                  }
+                }
+              }
+            },
+            "users": {
+              "title": "Benutzer",
+              "page": {
+                "title": "Rollen Benutzer"
+              }
+            }
+          }
         },
         "activity": {
           "title": "Aktivität"

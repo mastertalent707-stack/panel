@@ -31,7 +31,7 @@ function cronDescription(cron: string, language: string): string | null {
 }
 
 function PruneJobRow({ form, index }: { form: ResticForm; index: number }) {
-  const { language } = useTranslations();
+  const { t, language } = useTranslations();
   const canReadNodes = useAdminCan('nodes.read');
 
   const nodes = useSearchableResource<z.infer<typeof adminNodeSchema>>({
@@ -48,16 +48,19 @@ function PruneJobRow({ form, index }: { form: ResticForm; index: number }) {
         <Stack gap='xs' className='flex-1'>
           <TextInput
             withAsterisk
-            label='Cron Schedule'
+            label={t('pages.admin.backupConfigurations.tabs.general.page.restic.form.cronSchedule', {})}
             placeholder='0 0 0 * * *'
-            description={description ?? 'Format: second minute hour day month weekday'}
+            description={
+              description ??
+              t('pages.admin.backupConfigurations.tabs.general.page.restic.form.cronScheduleDescription', {})
+            }
             key={form.key(`pruneJobs.${index}.cron`)}
             {...form.getInputProps(`pruneJobs.${index}.cron`)}
           />
           <MultiSelect
             searchable
-            label='Nodes'
-            placeholder='Select nodes'
+            label={t('pages.admin.backupConfigurations.tabs.general.page.restic.form.nodes', {})}
+            placeholder={t('pages.admin.backupConfigurations.tabs.general.page.restic.form.nodesPlaceholder', {})}
             data={nodes.items.map((node) => ({ value: node.uuid, label: node.name }))}
             searchValue={nodes.search}
             onSearchChange={nodes.setSearch}
@@ -74,12 +77,13 @@ function PruneJobRow({ form, index }: { form: ResticForm; index: number }) {
 }
 
 export default function BackupRestic({ form }: { form: ResticForm }) {
+  const { t } = useTranslations();
   const pruneJobs = form.values.pruneJobs ?? [];
 
   return (
     <Stack gap='xs' mt='md'>
       <Stack gap={0}>
-        <Title order={2}>Restic Settings</Title>
+        <Title order={2}>{t('pages.admin.backupConfigurations.tabs.general.page.restic.title', {})}</Title>
         <Divider />
       </Stack>
 
@@ -87,13 +91,13 @@ export default function BackupRestic({ form }: { form: ResticForm }) {
         <Group grow>
           <TextInput
             withAsterisk
-            label='Repository'
+            label={t('pages.admin.backupConfigurations.tabs.general.page.restic.form.repository', {})}
             key={form.key('repository')}
             {...form.getInputProps('repository')}
           />
           <NumberInput
             withAsterisk
-            label='Retry Lock Seconds'
+            label={t('pages.admin.backupConfigurations.tabs.general.page.restic.form.retryLockSeconds', {})}
             key={form.key('retryLockSeconds')}
             {...form.getInputProps('retryLockSeconds')}
           />
@@ -101,13 +105,13 @@ export default function BackupRestic({ form }: { form: ResticForm }) {
 
         <PasswordInput
           withAsterisk
-          label='Password'
+          label={t('common.form.password', {})}
           value={form.values.environment?.RESTIC_PASSWORD || ''}
           onChange={(e) => form.setFieldValue('environment.RESTIC_PASSWORD', e.target.value)}
         />
 
         <MultiKeyValueInput
-          label='Environment Variables'
+          label={t('pages.admin.backupConfigurations.tabs.general.page.restic.form.environmentVariables', {})}
           allowReordering={false}
           options={form.values.environment}
           onChange={(e) => form.setFieldValue('environment', e)}
@@ -116,10 +120,14 @@ export default function BackupRestic({ form }: { form: ResticForm }) {
         />
       </Stack>
 
-      <TitleCard title='Prune Jobs' icon={<FontAwesomeIcon icon={faBroom} />} className='mt-2'>
+      <TitleCard
+        title={t('pages.admin.backupConfigurations.tabs.general.page.restic.pruneJobs.title', {})}
+        icon={<FontAwesomeIcon icon={faBroom} />}
+        className='mt-2'
+      >
         <Stack>
           <Text size='sm' c='dimmed'>
-            Scheduled restic prune runs. Each job runs on the configured nodes following its cron schedule.
+            {t('pages.admin.backupConfigurations.tabs.general.page.restic.pruneJobs.description', {})}
           </Text>
 
           {pruneJobs.map((_, index) => (
@@ -132,7 +140,7 @@ export default function BackupRestic({ form }: { form: ResticForm }) {
               leftSection={<FontAwesomeIcon icon={faPlus} />}
               onClick={() => form.insertListItem('pruneJobs', { cron: '0 0 0 * * *', nodes: [] })}
             >
-              Add Prune Job
+              {t('pages.admin.backupConfigurations.tabs.general.page.restic.pruneJobs.button.add', {})}
             </Button>
           </Group>
         </Stack>

@@ -21,7 +21,15 @@ export const assetTableColumns = (): string[] => {
   ];
 };
 
-export const backupConfigurationTableColumns = ['ID', 'Name', 'Disk', 'Created'];
+export const backupConfigurationTableColumns = (): string[] => {
+  const { t } = getTranslations();
+  return [
+    t('common.table.columns.id', {}),
+    t('common.table.columns.name', {}),
+    t('pages.admin.backupConfigurations.table.columns.disk', {}),
+    t('common.table.columns.created', {}),
+  ];
+};
 
 export const databaseHostTableColumns = (): string[] => {
   const { t } = getTranslations();
@@ -78,7 +86,16 @@ export const eggRepositoryTableColumns = (): string[] => {
   ];
 };
 
-export const mountTableColumns = ['ID', 'Name', 'Source', 'Target', 'Created'];
+export const mountTableColumns = (): string[] => {
+  const { t } = getTranslations();
+  return [
+    t('common.table.columns.id', {}),
+    t('common.table.columns.name', {}),
+    t('common.table.columns.source', {}),
+    t('common.table.columns.target', {}),
+    t('common.table.columns.created', {}),
+  ];
+};
 
 export const nestTableColumns = (): string[] => {
   const { t } = getTranslations();
@@ -174,7 +191,16 @@ export const oauthProviderTableColumns = (): string[] => {
   ];
 };
 
-export const roleTableColumns = ['ID', 'Name', 'Server Permissions', 'Admin Permissions', 'Created'];
+export const roleTableColumns = (): string[] => {
+  const { t } = getTranslations();
+  return [
+    t('common.table.columns.id', {}),
+    t('common.table.columns.name', {}),
+    t('pages.admin.roles.table.columns.serverPermissions', {}),
+    t('pages.admin.roles.table.columns.adminPermissions', {}),
+    t('common.table.columns.created', {}),
+  ];
+};
 
 export const serverTableColumns = (): string[] => {
   const { t } = getTranslations();
@@ -272,4 +298,14 @@ export const adminUserOAuthLinkTableColumns = (): string[] => {
   ];
 };
 
-export const adminActivityColumns = ['', 'Actor', 'Event', 'IP', 'When', ''];
+export const adminActivityColumns = (): string[] => {
+  const { t } = getTranslations();
+  return [
+    '',
+    t('common.table.columns.actor', {}),
+    t('common.table.columns.event', {}),
+    t('common.table.columns.ip', {}),
+    t('common.table.columns.when', {}),
+    '',
+  ];
+};
