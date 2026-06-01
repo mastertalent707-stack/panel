@@ -428,7 +428,7 @@ export default function EggCreateOrUpdate({
                     <Group grow>
                       <TextInput
                         withAsterisk
-                        label={t('pages.admin.nests.tabs.eggs.page.tabs.general.page.form.filePath', {})}
+                        label={t('common.form.filePath', {})}
                         key={form.key(`configFiles.${index}.file`)}
                         {...form.getInputProps(`configFiles.${index}.file`)}
                       />
@@ -699,13 +699,13 @@ export default function EggCreateOrUpdate({
                     items={[
                       {
                         icon: faFileDownload,
-                        label: t('pages.admin.nests.tabs.eggs.page.tabs.general.page.button.asJson', {}),
+                        label: t('common.button.exportAs', { format: 'JSON' }),
                         onClick: () => doExport('json'),
                         color: 'gray',
                       },
                       {
                         icon: faFileDownload,
-                        label: t('pages.admin.nests.tabs.eggs.page.tabs.general.page.button.asYaml', {}),
+                        label: t('common.button.exportAs', { format: 'YAML' }),
                         onClick: () => doExport('yaml'),
                         color: 'gray',
                       },
@@ -740,7 +740,7 @@ export default function EggCreateOrUpdate({
           </AdminCan>
           {contextEgg && (
             <Button variant='outline' onClick={() => setOpenModal('move')} loading={loading}>
-              {t('pages.admin.nests.tabs.eggs.page.button.move', {})}
+              {t('common.button.move', {})}
             </Button>
           )}
           {contextEgg && (

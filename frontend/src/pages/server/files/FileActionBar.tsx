@@ -255,7 +255,7 @@ function FileActionBar() {
                 </Tooltip>
               </ServerCan>
               <ServerCan action='files.update'>
-                <Tooltip label={t('pages.server.files.button.move', {})}>
+                <Tooltip label={t('common.button.move', {})}>
                   <Button
                     onClick={() => {
                       doActFiles('move', selectedFiles.values());

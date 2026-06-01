@@ -11,6 +11,7 @@ import { queryKeys } from '@/lib/queryKeys.ts';
 import { adminOAuthProviderSchema } from '@/lib/schemas/admin/oauthProviders.ts';
 import { adminOAuthProviderMappingsTableColumns } from '@/lib/tableColumns.ts';
 import { useSearchablePaginatedTable } from '@/plugins/useSearchablePageableTable.ts';
+import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import OAuthProviderMappingModal from './modals/OAuthProviderMappingModal.tsx';
 import OAuthProviderMappingRow from './OAuthProviderMappingRow.tsx';
 
@@ -19,6 +20,8 @@ export default function AdminOAuthProviderMappings({
 }: {
   oauthProvider: z.infer<typeof adminOAuthProviderSchema>;
 }) {
+  const { t } = useTranslations();
+
   const [openModal, setOpenModal] = useState<'add' | null>(null);
 
   const {
@@ -33,11 +36,11 @@ export default function AdminOAuthProviderMappings({
 
   return (
     <AdminSubContentContainer
-      title='OAuth Provider Mappings'
+      title={t('pages.admin.oAuthProviders.tabs.mappings.page.title', {})}
       titleOrder={2}
       contentRight={
         <Button onClick={() => setOpenModal('add')} color='blue' leftSection={<FontAwesomeIcon icon={faPlus} />}>
-          Add
+          {t('common.button.add', {})}
         </Button>
       }
     >
@@ -50,7 +53,7 @@ export default function AdminOAuthProviderMappings({
 
       <ContextMenuProvider>
         <Table
-          columns={adminOAuthProviderMappingsTableColumns}
+          columns={adminOAuthProviderMappingsTableColumns()}
           loading={loading}
           pagination={mappings}
           onPageSelect={setPage}

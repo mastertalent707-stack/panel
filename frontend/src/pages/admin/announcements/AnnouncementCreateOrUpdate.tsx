@@ -168,7 +168,7 @@ export default function AnnouncementCreateOrUpdate({
         <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
           <Select
             withAsterisk
-            label={t('pages.admin.announcements.tabs.general.page.form.type', {})}
+            label={t('common.form.type', {})}
             data={Object.entries(announcementTypeLabelMapping).map(([value, label]) => ({ value, label: label() }))}
             key={form.key('type')}
             {...form.getInputProps('type')}

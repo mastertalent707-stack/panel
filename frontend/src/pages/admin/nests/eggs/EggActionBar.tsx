@@ -98,8 +98,7 @@ export default function EggActionBar({
             {t('pages.admin.nests.tabs.eggs.page.button.updateFromRepository', {})}
           </Button>
           <Button onClick={() => setOpenModal('move')} className='col-span-2' disabled={loading}>
-            <FontAwesomeIcon icon={faArrowTurnUp} className='mr-2' />{' '}
-            {t('pages.admin.nests.tabs.eggs.page.button.move', {})}
+            <FontAwesomeIcon icon={faArrowTurnUp} className='mr-2' /> {t('common.button.move', {})}
           </Button>
         </AdminCan>
         <AdminCan action='eggs.delete'>

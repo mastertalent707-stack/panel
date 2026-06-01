@@ -58,7 +58,7 @@ export default function EggMoveModal({
       <Stack>
         <Select
           withAsterisk
-          label={t('pages.admin.nests.tabs.eggs.page.form.nest', {})}
+          label={t('common.form.nest', {})}
           value={selectedNest?.uuid}
           onChange={(value) => setSelectedNest(nests.items.find((m) => m.uuid === value) ?? null)}
           data={nests.items.map((nest) => ({
@@ -73,7 +73,7 @@ export default function EggMoveModal({
 
         <ModalFooter>
           <Button onClick={doMove} loading={loading} disabled={!selectedNest}>
-            {t('pages.admin.nests.tabs.eggs.page.button.move', {})}
+            {t('common.button.move', {})}
           </Button>
           <Button variant='default' onClick={onClose}>
             {t('common.button.close', {})}

@@ -84,10 +84,10 @@ export default function OAuthProviderMappingModal({
 
       if (isEdit) {
         await updateOAuthProviderMapping(oauthProvider.uuid, mapping.uuid, payload);
-        addToast('OAuth provider mapping updated.', 'success');
+        addToast(t('pages.admin.oAuthProviders.tabs.mappings.page.toast.updated', {}), 'success');
       } else {
         await createOAuthProviderMapping(oauthProvider.uuid, payload);
-        addToast('OAuth provider mapping created.', 'success');
+        addToast(t('pages.admin.oAuthProviders.tabs.mappings.page.toast.created', {}), 'success');
       }
 
       onSaved();
@@ -127,7 +127,12 @@ export default function OAuthProviderMappingModal({
 
   return (
     <FormModal
-      title={isEdit ? 'Edit OAuth Provider Mapping' : 'Add OAuth Provider Mapping'}
+      title={t(
+        isEdit
+          ? 'pages.admin.oAuthProviders.tabs.mappings.page.modal.edit.title'
+          : 'pages.admin.oAuthProviders.tabs.mappings.page.modal.add.title',
+        {},
+      )}
       onClose={handleClose}
       onSubmit={handleSubmit}
       isDirty={isDirty}
@@ -137,18 +142,21 @@ export default function OAuthProviderMappingModal({
     >
       <Stack>
         <TagsInput
-          label='Scopes'
-          description='OAuth scopes required for this mapping to apply.'
+          label={t('pages.admin.oAuthProviders.tabs.mappings.page.form.scopes', {})}
+          description={t('pages.admin.oAuthProviders.tabs.mappings.page.form.scopesDescription', {})}
           {...form.getInputProps('scopes')}
         />
 
         <Select
           withAsterisk
-          label='Mapping Type'
+          label={t('pages.admin.oAuthProviders.tabs.mappings.page.form.mappingType', {})}
           allowDeselect={false}
           data={[
-            { label: 'Role', value: 'role' },
-            { label: 'Server Subuser', value: 'server_subuser' },
+            { label: t('pages.admin.oAuthProviders.tabs.mappings.page.enum.mappingType.role', {}), value: 'role' },
+            {
+              label: t('pages.admin.oAuthProviders.tabs.mappings.page.enum.mappingType.serverSubuser', {}),
+              value: 'server_subuser',
+            },
           ]}
           {...form.getInputProps('type')}
         />
@@ -156,8 +164,7 @@ export default function OAuthProviderMappingModal({
         {form.values.type === 'role' ? (
           <Select
             withAsterisk
-            label='Role'
-            placeholder='Role'
+            label={t('pages.admin.oAuthProviders.tabs.mappings.page.form.role', {})}
             data={roleOptions}
             searchable
             searchValue={roles.search}
@@ -169,8 +176,7 @@ export default function OAuthProviderMappingModal({
           <>
             <Select
               withAsterisk
-              label='Server'
-              placeholder='Server'
+              label={t('common.form.server', {})}
               data={serverOptions}
               searchable
               searchValue={servers.search}
@@ -180,7 +186,7 @@ export default function OAuthProviderMappingModal({
             />
 
             <PermissionSelector
-              label='Permissions'
+              label={t('pages.admin.oAuthProviders.tabs.mappings.page.form.permissions', {})}
               permissionsMapType='serverPermissions'
               permissions={availablePermissions.serverPermissions}
               selectedPermissions={form.values.permissions}

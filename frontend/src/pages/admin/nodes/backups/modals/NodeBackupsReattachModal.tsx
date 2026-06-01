@@ -65,8 +65,8 @@ export default function NodeBackupsReattachModal({ node, backup, opened, onClose
 
         <Select
           withAsterisk
-          label={t('pages.admin.nodes.tabs.backups.page.table.columns.server', {})}
-          placeholder={t('pages.admin.nodes.tabs.backups.page.table.columns.server', {})}
+          label={t('common.table.columns.server', {})}
+          placeholder={t('common.table.columns.server', {})}
           value={selectedServer?.uuid}
           onChange={(value) => setSelectedServer(servers.items.find((m) => m.uuid === value) ?? null)}
           data={servers.items.map((server) => ({

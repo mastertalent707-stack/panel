@@ -171,7 +171,7 @@ export default function EggVariableContainer({
             <Group grow>
               <TextInput
                 withAsterisk
-                label={t('pages.admin.nests.tabs.eggs.page.tabs.variables.page.form.envVariable', {})}
+                label={t('common.form.envVariable', {})}
                 {...form.getInputProps('envVariable')}
                 onChange={(e) => form.setFieldValue('envVariable', e.target.value.toUpperCase().replace(/-| /g, '_'))}
               />

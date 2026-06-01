@@ -61,7 +61,7 @@ export default function EggsMoveModal({
       <Stack>
         <Select
           withAsterisk
-          label={t('pages.admin.nests.tabs.eggs.page.form.nest', {})}
+          label={t('common.form.nest', {})}
           value={selectedNest?.uuid}
           onChange={(value) => setSelectedNest(nests.items.find((m) => m.uuid === value) ?? null)}
           data={nests.items.map((nest) => ({

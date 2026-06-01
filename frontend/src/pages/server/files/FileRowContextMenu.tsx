@@ -132,7 +132,7 @@ export default function FileRowContextMenu({ file, openMode, children }: FileRow
         },
         {
           icon: faAnglesUp,
-          label: t('pages.server.files.button.move', {}),
+          label: t('common.button.move', {}),
           hidden: !browsingWritableDirectory,
           onClick: () => doActFiles('move', [file]),
           color: 'gray',

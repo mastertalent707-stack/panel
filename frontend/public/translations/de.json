@@ -115,7 +115,9 @@
         "sendTestEmail": "Test-E-Mail senden",
         "setPrimary": "Als primär festlegen",
         "unsetPrimary": "Als primär entfernen",
-        "leavePage": "Seite verlassen"
+        "leavePage": "Seite verlassen",
+        "viewDocumentation": "Dokumentation ansehen",
+        "move": "Verschieben"
       },
       "alert": {
         "error": "Fehler",
@@ -133,7 +135,8 @@
         "resetToDefault": "Auf Standard zurücksetzen",
         "edit": "Bearbeiten",
         "delete": "Löschen",
-        "primary": "Primär"
+        "primary": "Primär",
+        "remove": "Entfernen"
       },
       "form": {
         "name": "Name",
@@ -206,7 +209,14 @@
         "eggs": "Eggs",
         "ignoredFiles": "Ignorierte Dateien",
         "yourControlPanelPassword": "Dein Control Panel Passwort",
-        "author": "Autor"
+        "author": "Autor",
+        "type": "Typ",
+        "deploymentEnabled": "Bereitstellung aktiviert",
+        "maintenanceEnabled": "Wartung aktiviert",
+        "nest": "Nest",
+        "filePath": "Dateipfad",
+        "envVariable": "Umgebungsvariable",
+        "value": "Wert"
       },
       "table": {
         "pagination": {
@@ -241,7 +251,10 @@
           "target": "Ziel",
           "checksum": "Prüfsumme",
           "files": "Dateien",
-          "author": "Autor"
+          "author": "Autor",
+          "server": "Server",
+          "address": "Adresse",
+          "eggs": "Eggs"
         }
       },
       "badge": {
@@ -1101,11 +1114,6 @@
           "tooltip": {
             "limitReached": "Du bist auf {max} Befehlskürzel limitiert."
           },
-          "table": {
-            "columns": {
-              "eggs": "Eggs"
-            }
-          },
           "modal": {
             "createCommandSnippet": {
               "title": "Befehlskürzel erstellen",
@@ -1646,7 +1654,6 @@
                   }
                 },
                 "form": {
-                  "type": "Typ",
                   "dismissibleEnd": "Ende der Ausblendbarkeit",
                   "enabledStart": "Aktivierungsstart",
                   "enabledEnd": "Aktivierungsende",
@@ -2054,9 +2061,7 @@
                   "detachedOnly": "Nur losgelöste Backups anzeigen"
                 },
                 "table": {
-                  "columns": {
-                    "server": "Server"
-                  }
+                  "columns": {}
                 },
                 "tooltip": {
                   "backupNotOnSameNode": "Dieses Backup befindet sich nicht auf derselben Node wie der Server. Es ist nicht über die Client-API einsehbar."
@@ -2150,9 +2155,7 @@
                 "form": {
                   "urlDescription": "Wird für die interne Kommunikation mit dem Node verwendet.",
                   "publicUrlDescription": "Wird für WebSocket-Verbindungen und Downloads verwendet.",
-                  "backupConfigurationPlaceholder": "Vom Standort übernehmen",
-                  "deploymentEnabled": "Bereitstellung aktiviert",
-                  "maintenanceEnabled": "Wartung aktiviert"
+                  "backupConfigurationPlaceholder": "Vom Standort übernehmen"
                 },
                 "button": {
                   "resetToken": "Token zurücksetzen",
@@ -2217,7 +2220,6 @@
                   "externalIdPlaceholder": "Optionaler externer Bezeichner",
                   "descriptionPlaceholder": "Serverbeschreibung",
                   "owner": "Besitzer",
-                  "nest": "Nest",
                   "egg": "Egg",
                   "backupConfigurationPlaceholder": "Von Node/Standort erben",
                   "cpuLimit": "CPU-Limit (%)",
@@ -2464,11 +2466,8 @@
                   "title": "Lege einige Dateien hier ab, um sie als Eggs zu importieren",
                   "subtitle": "Loslassen, um den Import zu starten"
                 },
-                "form": {
-                  "nest": "Nest"
-                },
+                "form": {},
                 "button": {
-                  "move": "Verschieben",
                   "updateFromRepository": "Aus Repository aktualisieren"
                 },
                 "toast": {
@@ -2512,7 +2511,6 @@
                         "stopType": "Stopp-Typ",
                         "stopCommand": "Stopp-Befehl",
                         "stopSignal": "Stopp-Signal",
-                        "filePath": "Dateipfad",
                         "parser": "Parser",
                         "createNewFile": "Neue Datei erstellen",
                         "createNewFileDescription": "Wenn aktiviert, wird die Datei erstellt, falls sie nicht existiert. Wenn deaktiviert, muss die Datei bereits existieren, andernfalls schlägt die Ersetzung fehl.",
@@ -2545,9 +2543,7 @@
                         "addReplacement": "Ersetzung hinzufügen",
                         "addConfigFile": "Konfigurationsdatei hinzufügen",
                         "fromFile": "aus Datei",
-                        "fromRepository": "aus Repository",
-                        "asJson": "als JSON",
-                        "asYaml": "als YAML"
+                        "fromRepository": "aus Repository"
                       },
                       "toast": {
                         "exported": "Egg exportiert.",
@@ -2580,14 +2576,13 @@
                       "title": "Egg Variablen",
                       "form": {
                         "supportsMarkdown": "Unterstützt Markdown-Formatierung.",
-                        "envVariable": "Umgebungsvariable",
                         "defaultValue": "Standardwert",
                         "defaultValuePlaceholder": "server.jar",
                         "userViewable": "Für Benutzer sichtbar",
                         "userEditable": "Für Benutzer bearbeitbar",
                         "secret": "Geheim",
                         "rules": "Regeln",
-                        "rulesDescription": "Inspiriert von https://laravel.com/docs/12.x/validation#available-validation-rules"
+                        "rulesDescription": "Siehe https://laravel.com/docs/12.x/validation#available-validation-rules für die verfügbaren Validierungsregeln."
                       },
                       "toast": {
                         "created": "Egg Variable erstellt.",
@@ -2634,16 +2629,328 @@
           }
         },
         "eggConfigurations": {
-          "title": "Egg-Konfigurationen"
+          "title": "Egg-Konfigurationen",
+          "resourceName": "Egg-Konfiguration",
+          "table": {
+            "columns": {
+              "order": "Reihenfolge"
+            }
+          },
+          "tabs": {
+            "general": {
+              "page": {
+                "titleCreate": "Egg-Konfiguration erstellen",
+                "titleUpdate": "Egg-Konfiguration aktualisieren",
+                "form": {
+                  "order": "Reihenfolge",
+                  "eggs": "Eggs",
+                  "eggsPlaceholder": "Eggs auswählen"
+                },
+                "enum": {
+                  "deploymentType": {
+                    "random": "Zufällig",
+                    "range": "Port-Bereich",
+                    "addPrimary": "Zur Primären addieren",
+                    "subtractPrimary": "Von Primärer subtrahieren",
+                    "multiplyPrimary": "Primäre multiplizieren",
+                    "dividePrimary": "Primäre dividieren"
+                  }
+                },
+                "allocation": {
+                  "title": "Zuweisungs-Konfiguration",
+                  "form": {
+                    "userSelfAssign": "Benutzer-Selbstzuweisung",
+                    "userSelfAssignDescription": "Erlaube Benutzern, ihre eigenen Zuweisungen aus einem festgelegten Port-Bereich zu erstellen.",
+                    "requirePrimaryAllocation": "Primäre Zuweisung erforderlich",
+                    "requirePrimaryAllocationDescription": "Ob Benutzer immer eine primäre Zuweisung haben müssen.",
+                    "automaticAllocationStart": "Automatischer Zuweisungs-Start",
+                    "automaticAllocationEnd": "Automatisches Zuweisungs-Ende",
+                    "dedicatedIp": "Dedizierte IP",
+                    "dedicatedIpDescription": "Weise Servern, die diese Egg-Konfiguration verwenden, eine dedizierte IP-Adresse zu.",
+                    "primaryAllocation": "Primäre Zuweisung",
+                    "primaryAllocationDescription": "Konfiguriere eine primäre Port-Zuweisung für das Deployment.",
+                    "primaryStartPort": "Primärer Start-Port",
+                    "primaryEndPort": "Primärer End-Port",
+                    "assignToVariable": "Variable zuweisen",
+                    "assignToVariablePlaceholder": "z. B. SERVER_PORT",
+                    "assignToVariableDescription": "Optionale Umgebungsvariable, die den zugewiesenen primären Port erhält."
+                  },
+                  "divider": {
+                    "deployment": "Deployment"
+                  },
+                  "additionalPorts": {
+                    "title": "Zusätzliche Ports",
+                    "button": "Regel hinzufügen",
+                    "empty": "Keine zusätzlichen Port-Regeln konfiguriert."
+                  },
+                  "deployment": {
+                    "form": {
+                      "startPort": "Start-Port",
+                      "endPort": "End-Port",
+                      "assignToVariable": "Variable zuweisen",
+                      "assignToVariableDescription": "Optionale Umgebungsvariable, die den von dieser Regel zugewiesenen Port erhält.",
+                      "assignToVariablePlaceholder": "z. B. SERVER_PORT"
+                    },
+                    "removeRule": "Deployment-Regel entfernen"
+                  }
+                },
+                "startup": {
+                  "title": "Startup-Konfiguration",
+                  "form": {
+                    "allowCustomStartupCommand": "Benutzerdefinierten Startup-Befehl erlauben",
+                    "allowCustomStartupCommandDescription": "Erlaube Benutzern, ihre eigenen, nicht vordefinierten Startup-Befehle festzulegen."
+                  }
+                },
+                "routes": {
+                  "title": "Routen-Konfiguration",
+                  "label": {
+                    "route": "Route",
+                    "divider": "Trenner",
+                    "redirect": "Weiterleitung"
+                  },
+                  "empty": "Keine Routen konfiguriert. Füge unten Routen, Trenner oder Weiterleitungen hinzu.",
+                  "unnamed": "(unbenannt)",
+                  "dividerPlaceholder": "Trenner-Bezeichnung (optional)",
+                  "redirectNamePlaceholder": "Weiterleitungsname",
+                  "destinationPlaceholder": "Ziel-URL (z. B. https://...)",
+                  "selectRoutePlaceholder": "Route auswählen…",
+                  "button": {
+                    "addDivider": "Trenner hinzufügen",
+                    "addRedirect": "Weiterleitung hinzufügen"
+                  }
+                },
+                "modal": {
+                  "delete": {
+                    "title": "Löschen der Egg-Konfiguration bestätigen",
+                    "content": "Bist du sicher, dass du **{name}** löschen möchtest?"
+                  }
+                }
+              }
+            }
+          }
         },
         "eggRepositories": {
-          "title": "Egg-Repositories"
+          "title": "Egg-Repositories",
+          "resourceName": "Egg Repository",
+          "table": {
+            "columns": {
+              "gitRepository": "Git Repository"
+            }
+          },
+          "tabs": {
+            "general": {
+              "page": {
+                "titleCreate": "Egg Repository erstellen",
+                "titleUpdate": "Egg Repository aktualisieren",
+                "form": {
+                  "gitRepository": "Git Repository"
+                },
+                "button": {
+                  "sync": "Synchronisieren"
+                },
+                "toast": {
+                  "synced": "Egg Repository synchronisiert, {eggs} gefunden."
+                },
+                "modal": {
+                  "delete": {
+                    "title": "Egg Repository Löschung bestätigen",
+                    "content": "Bist du sicher, dass du **{name}** löschen möchtest?"
+                  }
+                }
+              }
+            },
+            "eggs": {
+              "title": "Eggs",
+              "page": {
+                "title": "Egg Repository Eggs",
+                "table": {
+                  "columns": {
+                    "path": "Pfad"
+                  }
+                },
+                "toast": {
+                  "installed": "Egg installiert.",
+                  "installedBulk": "{eggs} installiert."
+                },
+                "modal": {
+                  "install": {
+                    "title": "Egg Repository Egg installieren"
+                  },
+                  "installBulk": {
+                    "title": "Egg Repository Eggs installieren",
+                    "button": "{eggs} installieren"
+                  }
+                }
+              }
+            }
+          }
         },
         "databaseHosts": {
-          "title": "Datenbank-Hosts"
+          "title": "Datenbank-Hosts",
+          "resourceName": "Datenbank-Host",
+          "tabs": {
+            "general": {
+              "page": {
+                "titleCreate": "Datenbank-Host erstellen",
+                "titleUpdate": "Datenbank-Host aktualisieren",
+                "form": {
+                  "publicHost": "Öffentlicher Host",
+                  "publicPort": "Öffentlicher Port",
+                  "connectionCredentials": "Verbindungs-Anmeldedaten",
+                  "credentialType": "Anmeldedaten-Typ",
+                  "connectionString": "Verbindungszeichenfolge",
+                  "connectionStringPlaceholder": "mysql://username:password@host:port"
+                },
+                "enum": {
+                  "credentialType": {
+                    "connectionString": "Verbindungszeichenfolge",
+                    "details": "Details"
+                  }
+                },
+                "button": {
+                  "testConnection": "Verbindung testen"
+                },
+                "toast": {
+                  "tested": "Test erfolgreich abgeschlossen."
+                },
+                "modal": {
+                  "delete": {
+                    "title": "Datenbank-Host-Löschung bestätigen",
+                    "content": "Bist du sicher, dass du **{name}** löschen möchtest?"
+                  }
+                }
+              }
+            },
+            "databases": {
+              "title": "Datenbanken",
+              "page": {
+                "title": "Datenbank-Host Datenbanken"
+              }
+            }
+          }
         },
         "oAuthProviders": {
-          "title": "OAuth-Anbieter"
+          "title": "OAuth-Anbieter",
+          "resourceName": "OAuth-Anbieter",
+          "dropzone": {
+            "title": "Lege einige Dateien hier ab, um sie als OAuth-Anbieter zu importieren",
+            "subtitle": "Loslassen, um den Import zu starten"
+          },
+          "table": {
+            "columns": {
+              "loginOnly": "Nur Login",
+              "linkViewable": "Verknüpfung sichtbar",
+              "userManageable": "Vom Benutzer verwaltbar"
+            }
+          },
+          "toast": {
+            "imported": "OAuth-Anbieter importiert.",
+            "parseFailed": "OAuth-Anbieter konnte nicht verarbeitet werden: {error}"
+          },
+          "tabs": {
+            "general": {
+              "page": {
+                "titleCreate": "OAuth-Anbieter erstellen",
+                "titleUpdate": "OAuth-Anbieter aktualisieren",
+                "card": {
+                  "redirectUrl": {
+                    "title": "Weiterleitungs-URL",
+                    "unavailable": "Verfügbar nach der Erstellung"
+                  }
+                },
+                "form": {
+                  "clientId": "Client-ID",
+                  "clientSecret": "Client-Secret",
+                  "authUrl": "Auth-URL",
+                  "tokenUrl": "Token-URL",
+                  "infoUrl": "Info-URL",
+                  "basicAuth": "Basic Auth",
+                  "basicAuthDescription": "Verwendet HTTP Basic Authentication, um Client-ID und Secret zu übertragen, heute nicht mehr verbreitet.",
+                  "scopes": "Scopes",
+                  "scopesDescription": "Die anzufordernden OAuth2-Scopes; achte darauf, bei Bedarf Scopes für E-Mail- und Profilinformationen einzuschließen.",
+                  "identifierPath": "Identifier-Pfad",
+                  "identifierPathDescription": "Der Pfad, mit dem die eindeutige Benutzerkennung aus der Antwort der Info-URL extrahiert wird (https://serdejsonpath.live).",
+                  "emailPath": "E-Mail-Pfad",
+                  "emailPathDescription": "Der Pfad, mit dem die E-Mail aus der Antwort der Info-URL extrahiert wird (https://serdejsonpath.live).",
+                  "usernamePath": "Benutzername-Pfad",
+                  "usernamePathDescription": "Der Pfad, mit dem der Benutzername aus der Antwort der Info-URL extrahiert wird (https://serdejsonpath.live).",
+                  "nameFirstPath": "Vorname-Pfad",
+                  "nameFirstPathPlaceholder": "Vorname-URL",
+                  "nameFirstPathDescription": "Der Pfad, mit dem der Vorname aus der Antwort der Info-URL extrahiert wird (https://serdejsonpath.live).",
+                  "nameLastPath": "Nachname-Pfad",
+                  "nameLastPathDescription": "Der Pfad, mit dem der Nachname aus der Antwort der Info-URL extrahiert wird (https://serdejsonpath.live).",
+                  "loginOnly": "Nur Login erlauben",
+                  "loginBypass2fa": "2FA beim Login umgehen",
+                  "loginBypass2faDescription": "Erlaubt Benutzern, die sich mit diesem Anbieter anmelden, ihre Panel-2FA zu umgehen.",
+                  "linkViewable": "Verknüpfung für Benutzer sichtbar",
+                  "linkViewableDescription": "Erlaubt dem Benutzer, die Verbindung und deren Identifier in der Client-Oberfläche zu sehen.",
+                  "userManageable": "Verknüpfung vom Benutzer verwaltbar",
+                  "userManageableDescription": "Erlaubt dem Benutzer, sich mit diesem Anbieter zu verbinden und die Verbindung zu trennen."
+                },
+                "toast": {
+                  "exported": "OAuth-Anbieter exportiert."
+                },
+                "modal": {
+                  "delete": {
+                    "title": "OAuth-Anbieter-Löschung bestätigen",
+                    "content": "Bist du sicher, dass du **{name}** löschen möchtest?"
+                  }
+                }
+              }
+            },
+            "mappings": {
+              "title": "Zuordnungen",
+              "page": {
+                "title": "OAuth-Anbieter Zuordnungen",
+                "table": {
+                  "columns": {
+                    "scopes": "Scopes"
+                  }
+                },
+                "enum": {
+                  "mappingType": {
+                    "role": "Rolle",
+                    "serverSubuser": "Server-Unterbenutzer"
+                  }
+                },
+                "toast": {
+                  "created": "OAuth-Anbieter-Zuordnung erstellt.",
+                  "updated": "OAuth-Anbieter-Zuordnung aktualisiert.",
+                  "deleted": "OAuth-Anbieter-Zuordnung gelöscht."
+                },
+                "form": {
+                  "scopes": "Scopes",
+                  "scopesDescription": "OAuth-Scopes, die erforderlich sind, damit diese Zuordnung angewendet wird.",
+                  "mappingType": "Zuordnungstyp",
+                  "role": "Rolle",
+                  "permissions": "Berechtigungen"
+                },
+                "modal": {
+                  "add": {
+                    "title": "OAuth-Anbieter-Zuordnung hinzufügen"
+                  },
+                  "edit": {
+                    "title": "OAuth-Anbieter-Zuordnung bearbeiten"
+                  },
+                  "delete": {
+                    "title": "OAuth-Anbieter-Zuordnung löschen",
+                    "content": "Bist du sicher, dass du diese Zuordnung löschen möchtest? Diese Aktion kann nicht rückgängig gemacht werden."
+                  }
+                }
+              }
+            },
+            "users": {
+              "title": "Benutzer",
+              "page": {
+                "title": "OAuth-Anbieter Benutzer",
+                "table": {
+                  "columns": {
+                    "user": "Benutzer"
+                  }
+                }
+              }
+            }
+          }
         },
         "backupConfigurations": {
           "title": "Backup-Konfigurationen"
@@ -2778,7 +3085,6 @@
             "openInNewWindow": "In neuem Fenster öffnen",
             "rename": "Umbenennen",
             "copy": "Kopieren",
-            "move": "Verschieben",
             "fingerprint": "Fingerabdruck",
             "permissions": "Berechtigungen",
             "unarchive": "Entpacken",
@@ -3006,8 +3312,6 @@
           },
           "table": {
             "columns": {
-              "type": "Typ",
-              "address": "Adresse",
               "locked": "Gesperrt?"
             }
           },
@@ -3204,8 +3508,7 @@
           "preCondition": {
             "valueSeconds": "Wert (Sekunden)",
             "valuePercent": "Wert (%)",
-            "value": "Wert",
-            "filePath": "Dateipfad"
+            "value": "Wert"
           },
           "triggers": {
             "cron": {
@@ -3358,7 +3661,6 @@
             "writeFile": {
               "title": "Datei schreiben",
               "form": {
-                "filePath": "Dateipfad",
                 "content": "Inhalt",
                 "appendToFile": "An Datei anhängen"
               },
@@ -3441,10 +3743,6 @@
             },
             "updateStartupVariable": {
               "title": "Startvariable aktualisieren",
-              "form": {
-                "envVariable": "Umgebungsvariable",
-                "value": "Wert"
-              },
               "renderer": {
                 "compact": "Setze {variable} auf {value}",
                 "detail": {

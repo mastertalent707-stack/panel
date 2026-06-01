@@ -32,7 +32,7 @@ export default function OAuthProviderMappingRow({
   const doDelete = async () => {
     await deleteOAuthProviderMapping(oauthProvider.uuid, mapping.uuid)
       .then(() => {
-        addToast('OAuth provider mapping deleted.', 'success');
+        addToast(t('pages.admin.oAuthProviders.tabs.mappings.page.toast.deleted', {}), 'success');
         onChanged();
       })
       .catch((msg) => {
@@ -45,11 +45,11 @@ export default function OAuthProviderMappingRow({
       <ConfirmationModal
         opened={openModal === 'delete'}
         onClose={() => setOpenModal(null)}
-        title='Delete OAuth Provider Mapping'
+        title={t('pages.admin.oAuthProviders.tabs.mappings.page.modal.delete.title', {})}
         confirm={t('common.button.delete', {})}
         onConfirmed={doDelete}
       >
-        Are you sure you want to delete this mapping? This action cannot be undone.
+        {t('pages.admin.oAuthProviders.tabs.mappings.page.modal.delete.content', {})}
       </ConfirmationModal>
 
       <OAuthProviderMappingModal
@@ -88,7 +88,9 @@ export default function OAuthProviderMappingRow({
 
             <TableData>
               <Badge color={mapping.mapping.type === 'role' ? 'blue' : 'grape'}>
-                {mapping.mapping.type === 'role' ? 'Role' : 'Server Subuser'}
+                {mapping.mapping.type === 'role'
+                  ? t('pages.admin.oAuthProviders.tabs.mappings.page.enum.mappingType.role', {})
+                  : t('pages.admin.oAuthProviders.tabs.mappings.page.enum.mappingType.serverSubuser', {})}
               </Badge>
             </TableData>
 

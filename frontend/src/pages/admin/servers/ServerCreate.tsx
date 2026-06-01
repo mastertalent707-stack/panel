@@ -334,7 +334,7 @@ export default function ServerCreate() {
 
                 <Select
                   withAsterisk
-                  label={t('pages.admin.servers.tabs.general.page.form.nest', {})}
+                  label={t('common.form.nest', {})}
                   value={selectedNestUuid}
                   onChange={(value) => setSelectedNestUuid(value)}
                   data={nests.items.map((nest) => ({

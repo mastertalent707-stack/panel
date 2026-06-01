@@ -49,6 +49,7 @@ const baseTranslations = defineTranslations({
         export: 'Export',
         exportAs: 'Export as {format}',
         recreate: 'Recreate',
+        move: 'Move',
         transfer: 'Transfer',
         reattach: 'Reattach',
         detach: 'Detach',
@@ -62,6 +63,7 @@ const baseTranslations = defineTranslations({
         setPrimary: 'Set Primary',
         unsetPrimary: 'Unset Primary',
         leavePage: 'Leave Page',
+        viewDocumentation: 'View Documentation',
       },
       alert: {
         error: 'Error',
@@ -80,12 +82,14 @@ const baseTranslations = defineTranslations({
         resetToDefault: 'Reset to default',
         edit: 'Edit',
         delete: 'Delete',
+        remove: 'Remove',
         primary: 'Primary',
       },
       form: {
         name: 'Name',
         description: 'Description',
         author: 'Author',
+        type: 'Type',
         password: 'Password',
         host: 'Host',
         username: 'Username',
@@ -135,6 +139,7 @@ const baseTranslations = defineTranslations({
         additionalAllocations: 'Additional Allocations',
         externalId: 'External ID',
         mount: 'Mount',
+        nest: 'Nest',
         lines: 'Lines',
         databaseHost: 'Database Host',
         timezone: 'Timezone',
@@ -151,9 +156,14 @@ const baseTranslations = defineTranslations({
         authenticationCode: 'Authentication Code',
         restoreStartup: 'Restore the startup command, image, and variables from this backup.',
         lineContains: 'Line Contains',
+        filePath: 'File Path',
+        envVariable: 'Environment Variable',
+        value: 'Value',
         eggs: 'Eggs',
         ignoredFiles: 'Ignored Files',
         yourControlPanelPassword: 'Your Control Panel Password',
+        deploymentEnabled: 'Deployment Enabled',
+        maintenanceEnabled: 'Maintenance Enabled',
         truncateDirectory:
           'Do you want to delete all files of this server before performing this action? This cannot be undone.',
       },
@@ -191,6 +201,9 @@ const baseTranslations = defineTranslations({
           target: 'Target',
           checksum: 'Checksum',
           files: 'Files',
+          server: 'Server',
+          address: 'Address',
+          eggs: 'Eggs',
         },
       },
       tabs: {
@@ -1066,11 +1079,6 @@ const baseTranslations = defineTranslations({
           tooltip: {
             limitReached: 'You are limited to {max} command snippets.',
           },
-          table: {
-            columns: {
-              eggs: 'Eggs',
-            },
-          },
           modal: {
             createCommandSnippet: {
               title: 'Create Command Snippet',
@@ -1622,7 +1630,6 @@ const baseTranslations = defineTranslations({
                   },
                 },
                 form: {
-                  type: 'Type',
                   dismissibleEnd: 'Dismissible End',
                   enabledStart: 'Enabled Start',
                   enabledEnd: 'Enabled End',
@@ -1911,8 +1918,6 @@ const baseTranslations = defineTranslations({
                   urlDescription: 'Used for internal communication with the node.',
                   publicUrlDescription: 'Used for websocket connections and downloads.',
                   backupConfigurationPlaceholder: 'Inherit from Location',
-                  deploymentEnabled: 'Deployment Enabled',
-                  maintenanceEnabled: 'Maintenance Enabled',
                 },
                 button: {
                   resetToken: 'Reset Token',
@@ -2071,11 +2076,6 @@ const baseTranslations = defineTranslations({
                 input: {
                   detachedOnly: 'Only show detached backups',
                 },
-                table: {
-                  columns: {
-                    server: 'Server',
-                  },
-                },
                 tooltip: {
                   backupNotOnSameNode:
                     'This backup is not on the same node as the server. It is not viewable from the Client API.',
@@ -2212,7 +2212,6 @@ const baseTranslations = defineTranslations({
                   externalIdPlaceholder: 'Optional external identifier',
                   descriptionPlaceholder: 'Server description',
                   owner: 'Owner',
-                  nest: 'Nest',
                   egg: 'Egg',
                   backupConfigurationPlaceholder: 'Inherit from Node/Location',
                   cpuLimit: 'CPU Limit (%)',
@@ -2471,11 +2470,7 @@ const baseTranslations = defineTranslations({
                   title: 'Drop some files here to import as Eggs',
                   subtitle: 'Release to start importing',
                 },
-                form: {
-                  nest: 'Nest',
-                },
                 button: {
-                  move: 'Move',
                   updateFromRepository: 'Update from Repository',
                 },
                 toast: {
@@ -2520,7 +2515,6 @@ const baseTranslations = defineTranslations({
                         stopType: 'Stop Type',
                         stopCommand: 'Stop Command',
                         stopSignal: 'Stop Signal',
-                        filePath: 'File Path',
                         parser: 'Parser',
                         createNewFile: 'Create New File',
                         createNewFileDescription:
@@ -2558,8 +2552,6 @@ const baseTranslations = defineTranslations({
                         addConfigFile: 'Add Config File',
                         fromFile: 'from File',
                         fromRepository: 'from Repository',
-                        asJson: 'as JSON',
-                        asYaml: 'as YAML',
                       },
                       toast: {
                         exported: 'Egg exported.',
@@ -2592,7 +2584,6 @@ const baseTranslations = defineTranslations({
                       title: 'Egg Variables',
                       form: {
                         supportsMarkdown: 'Supports Markdown formatting.',
-                        envVariable: 'Environment Variable',
                         defaultValue: 'Default Value',
                         defaultValuePlaceholder: 'server.jar',
                         userViewable: 'User Viewable',
@@ -2600,7 +2591,7 @@ const baseTranslations = defineTranslations({
                         secret: 'Secret',
                         rules: 'Rules',
                         rulesDescription:
-                          'Inspired by https://laravel.com/docs/12.x/validation#available-validation-rules',
+                          'See https://laravel.com/docs/12.x/validation#available-validation-rules for the available validation rules.',
                       },
                       toast: {
                         created: 'Egg variable created.',
@@ -2648,15 +2639,337 @@ const baseTranslations = defineTranslations({
         },
         eggConfigurations: {
           title: 'Egg Configurations',
+          resourceName: 'Egg Configuration',
+          table: {
+            columns: {
+              order: 'Order',
+            },
+          },
+          tabs: {
+            general: {
+              page: {
+                titleCreate: 'Create Egg Configuration',
+                titleUpdate: 'Update Egg Configuration',
+                form: {
+                  order: 'Order',
+                  eggs: 'Eggs',
+                  eggsPlaceholder: 'Select Eggs',
+                },
+                enum: {
+                  deploymentType: {
+                    random: 'Random',
+                    range: 'Port Range',
+                    addPrimary: 'Add to Primary',
+                    subtractPrimary: 'Subtract from Primary',
+                    multiplyPrimary: 'Multiply Primary',
+                    dividePrimary: 'Divide Primary',
+                  },
+                },
+                allocation: {
+                  title: 'Allocation Configuration',
+                  form: {
+                    userSelfAssign: 'User Self Assign',
+                    userSelfAssignDescription:
+                      'Allow users to create their own allocations from a specified port range.',
+                    requirePrimaryAllocation: 'Require Primary Allocation',
+                    requirePrimaryAllocationDescription: 'Whether users must always have a primary allocation.',
+                    automaticAllocationStart: 'Automatic Allocation Start',
+                    automaticAllocationEnd: 'Automatic Allocation End',
+                    dedicatedIp: 'Dedicated IP',
+                    dedicatedIpDescription: 'Assign a dedicated ip address for servers using this egg configuration.',
+                    primaryAllocation: 'Primary Allocation',
+                    primaryAllocationDescription: 'Configure a primary port assignment for deployment.',
+                    primaryStartPort: 'Primary Start Port',
+                    primaryEndPort: 'Primary End Port',
+                    assignToVariable: 'Assign to Variable',
+                    assignToVariablePlaceholder: 'e.g. SERVER_PORT',
+                    assignToVariableDescription: 'Optional environment variable to receive the assigned primary port.',
+                  },
+                  divider: {
+                    deployment: 'Deployment',
+                  },
+                  additionalPorts: {
+                    title: 'Additional Ports',
+                    button: 'Add Rule',
+                    empty: 'No additional port rules configured.',
+                  },
+                  deployment: {
+                    form: {
+                      startPort: 'Start Port',
+                      endPort: 'End Port',
+                      assignToVariable: 'Assign to Variable',
+                      assignToVariableDescription:
+                        'Optional environment variable to receive the assigned port from this rule.',
+                      assignToVariablePlaceholder: 'e.g. SERVER_PORT',
+                    },
+                    removeRule: 'Remove deployment rule',
+                  },
+                },
+                startup: {
+                  title: 'Startup Configuration',
+                  form: {
+                    allowCustomStartupCommand: 'Allow Custom Startup Command',
+                    allowCustomStartupCommandDescription:
+                      'Allow users to set their own, non-predefined startup commands.',
+                  },
+                },
+                routes: {
+                  title: 'Route Configuration',
+                  label: {
+                    route: 'Route',
+                    divider: 'Divider',
+                    redirect: 'Redirect',
+                  },
+                  empty: 'No routes configured. Add routes, dividers, or redirects below.',
+                  unnamed: '(unnamed)',
+                  dividerPlaceholder: 'Divider label (optional)',
+                  redirectNamePlaceholder: 'Redirect name',
+                  destinationPlaceholder: 'Destination URL (e.g. https://...)',
+                  selectRoutePlaceholder: 'Select a route…',
+                  button: {
+                    addDivider: 'Add Divider',
+                    addRedirect: 'Add Redirect',
+                  },
+                },
+                modal: {
+                  delete: {
+                    title: 'Confirm Egg Configuration Deletion',
+                    content: 'Are you sure you want to delete **{name}**?',
+                  },
+                },
+              },
+            },
+          },
         },
         eggRepositories: {
           title: 'Egg Repositories',
+          resourceName: 'Egg Repository',
+          table: {
+            columns: {
+              gitRepository: 'Git Repository',
+            },
+          },
+          tabs: {
+            general: {
+              page: {
+                titleCreate: 'Create Egg Repository',
+                titleUpdate: 'Update Egg Repository',
+                form: {
+                  gitRepository: 'Git Repository',
+                },
+                button: {
+                  sync: 'Sync',
+                },
+                toast: {
+                  synced: 'Egg repository synchronised, found {eggs}.',
+                },
+                modal: {
+                  delete: {
+                    title: 'Confirm Egg Repository Deletion',
+                    content: 'Are you sure you want to delete **{name}**?',
+                  },
+                },
+              },
+            },
+            eggs: {
+              title: 'Eggs',
+              page: {
+                title: 'Egg Repository Eggs',
+                table: {
+                  columns: {
+                    path: 'Path',
+                  },
+                },
+                toast: {
+                  installed: 'Egg installed.',
+                  installedBulk: '{eggs} installed.',
+                },
+                modal: {
+                  install: {
+                    title: 'Install Egg Repository Egg',
+                  },
+                  installBulk: {
+                    title: 'Install Egg Repository Eggs',
+                    button: 'Install {eggs}',
+                  },
+                },
+              },
+            },
+          },
         },
         databaseHosts: {
           title: 'Database Hosts',
+          resourceName: 'Database host',
+          tabs: {
+            general: {
+              page: {
+                titleCreate: 'Create Database Host',
+                titleUpdate: 'Update Database Host',
+                form: {
+                  publicHost: 'Public Host',
+                  publicPort: 'Public Port',
+                  connectionCredentials: 'Connection Credentials',
+                  credentialType: 'Credential Type',
+                  connectionString: 'Connection String',
+                  connectionStringPlaceholder: 'mysql://username:password@host:port',
+                },
+                enum: {
+                  credentialType: {
+                    connectionString: 'Connection String',
+                    details: 'Details',
+                  },
+                },
+                button: {
+                  testConnection: 'Test Connection',
+                },
+                toast: {
+                  tested: 'Test successfully completed.',
+                },
+                modal: {
+                  delete: {
+                    title: 'Confirm Database Host Deletion',
+                    content: 'Are you sure you want to delete **{name}**?',
+                  },
+                },
+              },
+            },
+            databases: {
+              title: 'Databases',
+              page: {
+                title: 'Database Host Databases',
+              },
+            },
+          },
         },
         oAuthProviders: {
           title: 'OAuth Providers',
+          resourceName: 'OAuth Provider',
+          dropzone: {
+            title: 'Drop some files here to import as OAuth Providers',
+            subtitle: 'Release to start importing',
+          },
+          table: {
+            columns: {
+              loginOnly: 'Login Only',
+              linkViewable: 'Link Viewable',
+              userManageable: 'User Manageable',
+            },
+          },
+          toast: {
+            imported: 'OAuth Provider imported.',
+            parseFailed: 'Failed to parse OAuth provider: {error}',
+          },
+          tabs: {
+            general: {
+              page: {
+                titleCreate: 'Create OAuth Provider',
+                titleUpdate: 'Update OAuth Provider',
+                card: {
+                  redirectUrl: {
+                    title: 'Redirect URL',
+                    unavailable: 'Available after creation',
+                  },
+                },
+                form: {
+                  clientId: 'Client Id',
+                  clientSecret: 'Client Secret',
+                  authUrl: 'Auth URL',
+                  tokenUrl: 'Token URL',
+                  infoUrl: 'Info URL',
+                  basicAuth: 'Basic Auth',
+                  basicAuthDescription:
+                    'Uses HTTP Basic Authentication to transmit the client id and secret, not common anymore.',
+                  scopes: 'Scopes',
+                  scopesDescription:
+                    'The OAuth2 scopes to request, make sure to include scopes for email and profile info when needed.',
+                  identifierPath: 'Identifier Path',
+                  identifierPathDescription:
+                    'The path used to extract the unique user identifier from the Info URL response (https://serdejsonpath.live).',
+                  emailPath: 'Email Path',
+                  emailPathDescription:
+                    'The path used to extract the email from the Info URL response (https://serdejsonpath.live).',
+                  usernamePath: 'Username Path',
+                  usernamePathDescription:
+                    'The path used to extract the username from the Info URL response (https://serdejsonpath.live).',
+                  nameFirstPath: 'First Name Path',
+                  nameFirstPathPlaceholder: 'First Name URL',
+                  nameFirstPathDescription:
+                    'The path used to extract the first name from the Info URL response (https://serdejsonpath.live).',
+                  nameLastPath: 'Last Name Path',
+                  nameLastPathDescription:
+                    'The path used to extract the last name from the Info URL response (https://serdejsonpath.live).',
+                  loginOnly: 'Only allow Login',
+                  loginBypass2fa: 'Bypass 2FA on Login',
+                  loginBypass2faDescription: 'Allows users logging in with this provider to bypass their panel 2FA.',
+                  linkViewable: 'Link Viewable to User',
+                  linkViewableDescription: 'Allows the user to see the connection and its identifier in the client UI.',
+                  userManageable: 'Link Manageable by User',
+                  userManageableDescription: 'Allows the user to connect and disconnect with this provider.',
+                },
+                toast: {
+                  exported: 'OAuth Provider exported.',
+                },
+                modal: {
+                  delete: {
+                    title: 'Confirm OAuth Provider Deletion',
+                    content: 'Are you sure you want to delete **{name}**?',
+                  },
+                },
+              },
+            },
+            mappings: {
+              title: 'Mappings',
+              page: {
+                title: 'OAuth Provider Mappings',
+                table: {
+                  columns: {
+                    scopes: 'Scopes',
+                  },
+                },
+                enum: {
+                  mappingType: {
+                    role: 'Role',
+                    serverSubuser: 'Server Subuser',
+                  },
+                },
+                toast: {
+                  created: 'OAuth provider mapping created.',
+                  updated: 'OAuth provider mapping updated.',
+                  deleted: 'OAuth provider mapping deleted.',
+                },
+                form: {
+                  scopes: 'Scopes',
+                  scopesDescription: 'OAuth scopes required for this mapping to apply.',
+                  mappingType: 'Mapping Type',
+                  role: 'Role',
+                  permissions: 'Permissions',
+                },
+                modal: {
+                  add: {
+                    title: 'Add OAuth Provider Mapping',
+                  },
+                  edit: {
+                    title: 'Edit OAuth Provider Mapping',
+                  },
+                  delete: {
+                    title: 'Delete OAuth Provider Mapping',
+                    content: 'Are you sure you want to delete this mapping? This action cannot be undone.',
+                  },
+                },
+              },
+            },
+            users: {
+              title: 'Users',
+              page: {
+                title: 'OAuth Provider Users',
+                table: {
+                  columns: {
+                    user: 'User',
+                  },
+                },
+              },
+            },
+          },
         },
         backupConfigurations: {
           title: 'Backup Configs',
@@ -2796,7 +3109,6 @@ const baseTranslations = defineTranslations({
             openInNewWindow: 'Open in new Window',
             rename: 'Rename',
             copy: 'Copy',
-            move: 'Move',
             fingerprint: 'Fingerprint',
             permissions: 'Permissions',
             unarchive: 'Unarchive',
@@ -3027,8 +3339,6 @@ const baseTranslations = defineTranslations({
           },
           table: {
             columns: {
-              type: 'Type',
-              address: 'Address',
               locked: 'Locked?',
             },
           },
@@ -3228,7 +3538,6 @@ const baseTranslations = defineTranslations({
             valueSeconds: 'Value (seconds)',
             valuePercent: 'Value (%)',
             value: 'Value',
-            filePath: 'File Path',
           },
           triggers: {
             cron: {
@@ -3382,7 +3691,6 @@ const baseTranslations = defineTranslations({
             writeFile: {
               title: 'Write File',
               form: {
-                filePath: 'File Path',
                 content: 'Content',
                 appendToFile: 'Append to File',
               },
@@ -3465,10 +3773,6 @@ const baseTranslations = defineTranslations({
             },
             updateStartupVariable: {
               title: 'Update Startup Variable',
-              form: {
-                envVariable: 'Environment Variable',
-                value: 'Value',
-              },
               renderer: {
                 compact: 'Set {variable} to {value}',
                 detail: {

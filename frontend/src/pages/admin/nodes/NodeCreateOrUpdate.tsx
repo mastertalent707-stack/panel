@@ -252,12 +252,12 @@ export default function NodeCreateOrUpdate({ contextNode }: { contextNode?: z.in
           />
 
           <Switch
-            label={t('pages.admin.nodes.tabs.general.page.form.deploymentEnabled', {})}
+            label={t('common.form.deploymentEnabled', {})}
             key={form.key('deploymentEnabled')}
             {...form.getInputProps('deploymentEnabled', { type: 'checkbox' })}
           />
           <Switch
-            label={t('pages.admin.nodes.tabs.general.page.form.maintenanceEnabled', {})}
+            label={t('common.form.maintenanceEnabled', {})}
             key={form.key('maintenanceEnabled')}
             {...form.getInputProps('maintenanceEnabled', { type: 'checkbox' })}
           />
