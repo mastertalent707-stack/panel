@@ -83,6 +83,8 @@ export default function OobeNode({ onNext, onBack, canGoBack, skipFrom, data }: 
     setLoading(true);
 
     try {
+      let nodeIsAIO: boolean;
+
       if (isEdit) {
         await updateNode(existingNode.uuid, {
           name: form.values.name,
@@ -99,7 +101,9 @@ export default function OobeNode({ onNext, onBack, canGoBack, skipFrom, data }: 
           backupConfigurationUuid: existingNode.backupConfiguration?.uuid ?? null,
         });
 
-        if (isNodeAIO(existingNode) && allocationsForm.values.ip && resolvedPorts.length > 0) {
+        nodeIsAIO = isNodeAIO(existingNode);
+
+        if (nodeIsAIO && allocationsForm.values.ip && resolvedPorts.length > 0) {
           await createNodeAllocations(existingNode.uuid, {
             ip: allocationsForm.values.ip,
             ipAlias: null,
@@ -122,6 +126,7 @@ export default function OobeNode({ onNext, onBack, canGoBack, skipFrom, data }: 
           backupConfigurationUuid: null,
         });
         setExistingNode(node);
+        nodeIsAIO = isNodeAIO(node);
 
         await createNodeAllocations(node.uuid, {
           ip: allocationsForm.values.ip,
@@ -131,7 +136,7 @@ export default function OobeNode({ onNext, onBack, canGoBack, skipFrom, data }: 
       }
 
       data.refetch();
-      onNext();
+      onNext(nodeIsAIO ? 1 : 0);
     } catch (msg) {
       setError(httpErrorToHuman(msg));
     } finally {
