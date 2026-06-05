@@ -286,6 +286,12 @@ async fn handle_aio_wings(
 
 #[tokio::main]
 async fn main() {
+    backend::EXTENSIONS
+        .set(Arc::new(
+            shared::extensions::manager::ExtensionManager::new(extension_internal_list::list()),
+        ))
+        .ok();
+
     let (_guard, _env_guard, state) = backend::handle_startup().await;
 
     let router = state

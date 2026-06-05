@@ -1,5 +1,8 @@
 use axum::ServiceExt;
-use std::net::{IpAddr, SocketAddr};
+use std::{
+    net::{IpAddr, SocketAddr},
+    sync::Arc,
+};
 use tower::Layer;
 use tower_http::normalize_path::NormalizePathLayer;
 
@@ -9,6 +12,12 @@ static ALLOC: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 #[tokio::main]
 async fn main() {
+    backend::EXTENSIONS
+        .set(Arc::new(
+            shared::extensions::manager::ExtensionManager::new(extension_internal_list::list()),
+        ))
+        .ok();
+
     let (_guard, _env_guard, state) = backend::handle_startup().await;
 
     let router = state
