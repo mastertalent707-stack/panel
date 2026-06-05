@@ -437,6 +437,10 @@
           "title": "Nicht gefunden",
           "content": "Die gesuchte Seite konnte nicht gefunden werden."
         },
+        "suspended": {
+          "title": "Account gesperrt",
+          "content": "Dein Account wurde gesperrt. Du kannst keine Änderungen an deinem Account vornehmen. Bitte kontaktiere einen Administrator für weitere Informationen."
+        },
         "serverConflict": {
           "title": "Konflikt mit dem Server-Status",
           "contentSuspended": "Dieser Server ist suspendiert und kann nicht aufgerufen werden.",
@@ -896,6 +900,10 @@
             "requireTwoFactor": {
               "title": "Zwei-Faktor-Authentifizierung erforderlich",
               "description": "Zwei-Faktor-Authentifizierung ist für deinen Account erforderlich. Bitte richte sie unten ein, um das Panel weiter nutzen zu können."
+            },
+            "frozen": {
+              "title": "Account eingefroren",
+              "description": "Dein Account wurde eingefroren. Du kannst keine Änderungen an deinem Account vornehmen, bis er wieder freigegeben wird. Bitte kontaktiere einen Administrator für weitere Informationen."
             }
           },
           "containers": {
@@ -1806,6 +1814,11 @@
                 },
                 "form": {
                   "admin": "Administrator",
+                  "adminDescription": "Administratoren haben vollen, uneingeschränkten Zugriff auf alles im Panel.",
+                  "frozen": "Eingefroren",
+                  "frozenDescription": "Eingefrorene Benutzer können keine Änderungen an ihren Account-Informationen vornehmen.",
+                  "suspended": "Gesperrt",
+                  "suspendedDescription": "Gesperrte Benutzer können das Panel nicht auf sinnvolle Weise nutzen.",
                   "role": "Rolle"
                 },
                 "modal": {

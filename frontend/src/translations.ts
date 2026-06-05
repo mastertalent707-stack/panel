@@ -389,6 +389,11 @@ const baseTranslations = defineTranslations({
           title: 'Not Found',
           content: 'The page you are looking for could not be found.',
         },
+        suspended: {
+          title: 'Account Suspended',
+          content:
+            'Your account has been suspended. You cannot make changes to your account. Please contact an administrator for more information.',
+        },
         serverConflict: {
           title: 'Conflicting Server State',
           contentSuspended: 'This server is suspended and cannot be accessed.',
@@ -858,6 +863,11 @@ const baseTranslations = defineTranslations({
               title: 'Two-Factor Authentication Required',
               description:
                 'Two-Factor Authentication is required on your account. Please set it up below to continue using the panel.',
+            },
+            frozen: {
+              title: 'Account Frozen',
+              description:
+                'Your account has been frozen. You cannot make changes to your account until it is unfrozen. Please contact an administrator for more information.',
             },
           },
           containers: {
@@ -1793,6 +1803,11 @@ const baseTranslations = defineTranslations({
                 },
                 form: {
                   admin: 'Admin',
+                  adminDescription: 'Admin users have full, unrestricted access to everything on the panel.',
+                  frozen: 'Frozen',
+                  frozenDescription: 'Frozen users cannot make any changes to their account information.',
+                  suspended: 'Suspended',
+                  suspendedDescription: 'Suspended users cannot access the panel in any meaningful way.',
                   role: 'Role',
                 },
                 modal: {

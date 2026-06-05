@@ -415,6 +415,8 @@ pub fn router(state: &State) -> OpenApiRouter<State> {
                             name_last,
                             password: None,
                             admin: false,
+                            frozen: false,
+                            suspended: false,
                             send_email: false,
                             language: settings.app.language.clone(),
                         };

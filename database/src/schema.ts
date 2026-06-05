@@ -127,6 +127,8 @@ export const usersTable = pgTable(
     name_last: varchar({ length: 255 }).notNull(),
     password: text(),
     admin: boolean().default(false).notNull(),
+    frozen: boolean().default(false).notNull(),
+    suspended: boolean().default(false).notNull(),
     totp_enabled: boolean().default(false).notNull(),
     totp_last_used: timestamp(),
     totp_secret: char({ length: 32 }),

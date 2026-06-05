@@ -258,6 +258,8 @@ impl CreatableModel for ServerSubuser {
                     name_last: "Subuser".into(),
                     password: None,
                     admin: false,
+                    frozen: false,
+                    suspended: false,
                     send_email: true,
                     language: app_settings.app.language.clone(),
                 };

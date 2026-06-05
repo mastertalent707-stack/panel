@@ -48,6 +48,8 @@ export default function UserCreateOrUpdate({ contextUser }: { contextUser?: z.in
       nameLast: '',
       password: null,
       admin: false,
+      frozen: false,
+      suspended: false,
       language: settings.app.language,
       roleUuid: null,
     },
@@ -78,6 +80,8 @@ export default function UserCreateOrUpdate({ contextUser }: { contextUser?: z.in
         nameLast: contextUser.nameLast,
         password: null,
         admin: contextUser.admin,
+        frozen: contextUser.frozen,
+        suspended: contextUser.suspended,
         language: contextUser.language,
         roleUuid: contextUser.role?.uuid ?? null,
       });
@@ -240,8 +244,23 @@ export default function UserCreateOrUpdate({ contextUser }: { contextUser?: z.in
 
           <Switch
             label={t('pages.admin.users.tabs.general.page.form.admin', {})}
+            description={t('pages.admin.users.tabs.general.page.form.adminDescription', {})}
             key={form.key('admin')}
             {...form.getInputProps('admin', { type: 'checkbox' })}
+          />
+
+          <Switch
+            label={t('pages.admin.users.tabs.general.page.form.frozen', {})}
+            description={t('pages.admin.users.tabs.general.page.form.frozenDescription', {})}
+            key={form.key('frozen')}
+            {...form.getInputProps('frozen', { type: 'checkbox' })}
+          />
+
+          <Switch
+            label={t('pages.admin.users.tabs.general.page.form.suspended', {})}
+            description={t('pages.admin.users.tabs.general.page.form.suspendedDescription', {})}
+            key={form.key('suspended')}
+            {...form.getInputProps('suspended', { type: 'checkbox' })}
           />
         </div>
 

@@ -39,39 +39,44 @@ export default function DashboardRouter({ isNormal }: { isNormal: boolean }) {
               <NavLink to='/' className='w-full'>
                 <AppIcon />
               </NavLink>
-              <Sidebar.Divider />
-              <Sidebar.Link
-                to='/'
-                end
-                icon={faServer}
-                name={t('pages.account.home.title', {})}
-                activeMatches={['/grouped']}
-              />
-              {isAdmin(user) && (
-                <Sidebar.Link to='/admin' end icon={faGraduationCap} name={t('pages.account.admin.title', {})} />
+              {!user?.suspended && (
+                <>
+                  <Sidebar.Divider />
+                  <Sidebar.Link
+                    to='/'
+                    end
+                    icon={faServer}
+                    name={t('pages.account.home.title', {})}
+                    activeMatches={['/grouped']}
+                  />
+                  {isAdmin(user) && (
+                    <Sidebar.Link to='/admin' end icon={faGraduationCap} name={t('pages.account.admin.title', {})} />
+                  )}
+                  <Sidebar.Divider />
+                </>
               )}
-              <Sidebar.Divider />
             </>
           }
           footer={
             <>
-              <ServerSwitcher className='mb-2' />
+              {!user?.suspended && <ServerSwitcher className='mb-2' />}
               <Sidebar.Footer />
             </>
           }
         >
-          {allAccountRoutes
-            .filter((route) => !!route.name && (!route.filter || route.filter()))
-            .map((route) => (
-              <Sidebar.Link
-                key={route.path}
-                to={to(route.path, '/account')}
-                end={route.exact}
-                icon={route.icon}
-                name={typeof route.name === 'function' ? route.name() : route.name}
-                activeMatches={route.activeMatches}
-              />
-            ))}
+          {!user?.suspended &&
+            allAccountRoutes
+              .filter((route) => !!route.name && (!route.filter || route.filter()))
+              .map((route) => (
+                <Sidebar.Link
+                  key={route.path}
+                  to={to(route.path, '/account')}
+                  end={route.exact}
+                  icon={route.icon}
+                  name={typeof route.name === 'function' ? route.name() : route.name}
+                  activeMatches={route.activeMatches}
+                />
+              ))}
         </Sidebar>
       )}
 
@@ -80,45 +85,54 @@ export default function DashboardRouter({ isNormal }: { isNormal: boolean }) {
         className={isNormal ? 'max-w-[100vw] flex-1 lg:ml-0' : 'flex-1 lg:ml-0 overflow-auto h-full'}
       >
         <Container isNormal={isNormal}>
-          {window.extensionContext.extensionRegistry.pages.dashboard.prependedComponents.map((Component, i) => (
-            <Component key={`dashboard-prepended-component-${i}`} />
-          ))}
+          {user?.suspended ? (
+            <ScreenBlock
+              title={t('elements.screenBlock.suspended.title', {})}
+              content={t('elements.screenBlock.suspended.content', {})}
+            />
+          ) : (
+            <>
+              {window.extensionContext.extensionRegistry.pages.dashboard.prependedComponents.map((Component, i) => (
+                <Component key={`dashboard-prepended-component-${i}`} />
+              ))}
 
-          <Suspense fallback={<Spinner.Centered />}>
-            <Routes>
-              {user?.startOnGroupedServers ? (
-                <>
-                  <Route path='' element={<DashboardHomeGrouped />} />
-                  <Route path='/all' element={<DashboardHomeAll />} />
-                </>
-              ) : (
-                <>
-                  <Route path='' element={<DashboardHomeAll />} />
-                  <Route path='/grouped' element={<DashboardHomeGrouped />} />
-                </>
-              )}
-              {allAccountRoutes
-                .filter((route) => !route.filter || route.filter())
-                .map(({ path, element: Element }) => (
-                  <Route key={path} path={`/account/${path}`.replace('//', '/')} element={<Element />} />
-                ))}
-              <Route
-                path='*'
-                element={
-                  <AccountContentContainer title={t('elements.screenBlock.notFound.title', {})}>
-                    <ScreenBlock
-                      title={t('elements.screenBlock.notFound.title', {})}
-                      content={t('elements.screenBlock.notFound.content', {})}
-                    />
-                  </AccountContentContainer>
-                }
-              />
-            </Routes>
-          </Suspense>
+              <Suspense fallback={<Spinner.Centered />}>
+                <Routes>
+                  {user?.startOnGroupedServers ? (
+                    <>
+                      <Route path='' element={<DashboardHomeGrouped />} />
+                      <Route path='/all' element={<DashboardHomeAll />} />
+                    </>
+                  ) : (
+                    <>
+                      <Route path='' element={<DashboardHomeAll />} />
+                      <Route path='/grouped' element={<DashboardHomeGrouped />} />
+                    </>
+                  )}
+                  {allAccountRoutes
+                    .filter((route) => !route.filter || route.filter())
+                    .map(({ path, element: Element }) => (
+                      <Route key={path} path={`/account/${path}`.replace('//', '/')} element={<Element />} />
+                    ))}
+                  <Route
+                    path='*'
+                    element={
+                      <AccountContentContainer title={t('elements.screenBlock.notFound.title', {})}>
+                        <ScreenBlock
+                          title={t('elements.screenBlock.notFound.title', {})}
+                          content={t('elements.screenBlock.notFound.content', {})}
+                        />
+                      </AccountContentContainer>
+                    }
+                  />
+                </Routes>
+              </Suspense>
 
-          {window.extensionContext.extensionRegistry.pages.dashboard.appendedComponents.map((Component, i) => (
-            <Component key={`dashboard-appended-component-${i}`} />
-          ))}
+              {window.extensionContext.extensionRegistry.pages.dashboard.appendedComponents.map((Component, i) => (
+                <Component key={`dashboard-appended-component-${i}`} />
+              ))}
+            </>
+          )}
         </Container>
       </div>
     </div>

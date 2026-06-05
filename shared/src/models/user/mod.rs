@@ -43,6 +43,9 @@ pub struct User {
     pub name_last: compact_str::CompactString,
 
     pub admin: bool,
+    pub frozen: bool,
+    pub suspended: bool,
+
     pub totp_enabled: bool,
     pub totp_last_used: Option<chrono::NaiveDateTime>,
     pub totp_secret: Option<String>,
@@ -100,6 +103,14 @@ impl BaseModel for User {
                 compact_str::format_compact!("{prefix}name_last"),
             ),
             ("users.admin", compact_str::format_compact!("{prefix}admin")),
+            (
+                "users.frozen",
+                compact_str::format_compact!("{prefix}frozen"),
+            ),
+            (
+                "users.suspended",
+                compact_str::format_compact!("{prefix}suspended"),
+            ),
             (
                 "users.totp_enabled",
                 compact_str::format_compact!("{prefix}totp_enabled"),
@@ -163,6 +174,8 @@ impl BaseModel for User {
             name_first: row.try_get(compact_str::format_compact!("{prefix}name_first").as_str())?,
             name_last: row.try_get(compact_str::format_compact!("{prefix}name_last").as_str())?,
             admin: row.try_get(compact_str::format_compact!("{prefix}admin").as_str())?,
+            frozen: row.try_get(compact_str::format_compact!("{prefix}frozen").as_str())?,
+            suspended: row.try_get(compact_str::format_compact!("{prefix}suspended").as_str())?,
             totp_enabled: row
                 .try_get(compact_str::format_compact!("{prefix}totp_enabled").as_str())?,
             totp_last_used: row
@@ -703,6 +716,8 @@ impl User {
                 name_first: self.name_first,
                 name_last: self.name_last,
                 admin: self.admin,
+                frozen: self.frozen,
+                suspended: self.suspended,
                 totp_enabled: self.totp_enabled,
                 totp_last_used: self.totp_last_used.map(|dt| dt.and_utc()),
                 require_two_factor,
@@ -785,6 +800,8 @@ impl IntoAdminApiObject for User {
                 name_first: self.name_first,
                 name_last: self.name_last,
                 admin: self.admin,
+                frozen: self.frozen,
+                suspended: self.suspended,
                 totp_enabled: self.totp_enabled,
                 totp_last_used: self.totp_last_used.map(|dt| dt.and_utc()),
                 require_two_factor,
@@ -830,6 +847,12 @@ pub struct CreateUserOptions {
 
     #[garde(skip)]
     pub admin: bool,
+    #[garde(skip)]
+    #[serde(default)]
+    pub frozen: bool,
+    #[garde(skip)]
+    #[serde(default)]
+    pub suspended: bool,
     #[garde(skip)]
     #[serde(default)]
     pub send_email: bool,
@@ -885,6 +908,8 @@ impl CreatableModel for User {
 
         query_builder
             .set("admin", options.admin)
+            .set("frozen", options.frozen)
+            .set("suspended", options.suspended)
             .set("language", &options.language);
 
         let row = query_builder
@@ -996,6 +1021,10 @@ pub struct UpdateUserOptions {
 
     #[garde(skip)]
     pub admin: Option<bool>,
+    #[garde(skip)]
+    pub frozen: Option<bool>,
+    #[garde(skip)]
+    pub suspended: Option<bool>,
 
     #[garde(
         length(chars, min = 2, max = 15),
@@ -1051,6 +1080,8 @@ impl UpdatableModel for User {
             .set("name_first", options.name_first.as_ref())
             .set("name_last", options.name_last.as_ref())
             .set("admin", options.admin)
+            .set("frozen", options.frozen)
+            .set("suspended", options.suspended)
             .set("language", options.language.as_ref())
             .set("toast_position", options.toast_position.as_ref())
             .set("start_on_grouped_servers", options.start_on_grouped_servers)
@@ -1084,6 +1115,12 @@ impl UpdatableModel for User {
         }
         if let Some(admin) = options.admin {
             self.admin = admin;
+        }
+        if let Some(frozen) = options.frozen {
+            self.frozen = frozen;
+        }
+        if let Some(suspended) = options.suspended {
+            self.suspended = suspended;
         }
         if let Some(language) = options.language {
             self.language = language;
@@ -1228,6 +1265,9 @@ pub struct ApiFullUser {
     pub name_last: compact_str::CompactString,
 
     pub admin: bool,
+    pub frozen: bool,
+    pub suspended: bool,
+
     pub totp_enabled: bool,
     pub totp_last_used: Option<chrono::DateTime<chrono::Utc>>,
     pub require_two_factor: bool,
@@ -1259,6 +1299,9 @@ pub struct AdminApiUser {
     pub name_last: compact_str::CompactString,
 
     pub admin: bool,
+    pub frozen: bool,
+    pub suspended: bool,
+
     pub totp_enabled: bool,
     pub totp_last_used: Option<chrono::DateTime<chrono::Utc>>,
     pub require_two_factor: bool,
