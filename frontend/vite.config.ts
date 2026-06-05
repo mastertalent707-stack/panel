@@ -254,6 +254,11 @@ export default defineConfig({
               priority: 20,
             },
             {
+              name: 'recharts',
+              test: /node_modules\/(recharts|@mantine\/charts)\//,
+              priority: 15,
+            },
+            {
               name: 'common',
               minShareCount: 5,
               minSize: 10240,
