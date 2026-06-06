@@ -30,7 +30,8 @@ window.addEventListener('vite:preloadError', (event) => {
   const now = Date.now();
 
   if (now - parseInt(lastReload) < 5000) {
-    document.body.innerHTML = 'Failed to load application: Preload error occurred multiple times. Please check the console for more details.';
+    document.body.innerHTML =
+      'Failed to load application: Preload error occurred multiple times. Please check the console for more details.';
     throw new Error('Preload error occurred multiple times');
   }
 
