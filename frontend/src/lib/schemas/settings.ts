@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { eggConfigurationRouteItemSchema } from '@/lib/schemas/generic.ts';
 import { oobeStepKey } from '@/lib/schemas/oobe.ts';
 
 export const publicSettingsCaptchaProviderNoneSchema = z.object({
@@ -67,5 +68,7 @@ export const publicSettingsSchema = z.object({
     maxSshKeyCount: z.number(),
 
     allowChangingLanguage: z.boolean(),
+
+    routeOrder: z.array(eggConfigurationRouteItemSchema).nullable(),
   }),
 });

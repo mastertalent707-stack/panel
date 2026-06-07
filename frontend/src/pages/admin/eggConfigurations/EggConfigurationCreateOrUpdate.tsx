@@ -24,6 +24,7 @@ import Switch from '@/elements/input/Switch.tsx';
 import TextArea from '@/elements/input/TextArea.tsx';
 import TextInput from '@/elements/input/TextInput.tsx';
 import ConfirmationModal from '@/elements/modals/ConfirmationModal.tsx';
+import RouteOrderEditor from '@/elements/RouteOrderEditor.tsx';
 import { eggConfigurationDeploymentDefaultMapping, eggConfigurationDeploymentTypeLabelMapping } from '@/lib/enums.ts';
 import { queryKeys } from '@/lib/queryKeys.ts';
 import {
@@ -38,7 +39,6 @@ import { useResourceForm } from '@/plugins/useResourceForm.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import { useGlobalStore } from '@/stores/global.ts';
-import RouteOrderEditor from './RouteOrderEditor.tsx';
 
 type DeploymentModeType = EggConfigurationDeployment['mode']['type'];
 
@@ -564,7 +564,7 @@ export default function EggConfigurationCreateOrUpdate({
 
           <CollapsibleSection
             icon={<FontAwesomeIcon icon={faList} />}
-            title={t('pages.admin.eggConfigurations.tabs.general.page.routes.title', {})}
+            title={t('elements.routeOrderEditor.title', {})}
             className='col-span-full'
             enabled={form.values.configRoutes !== null}
             onToggle={(enabled) => form.setFieldValue('configRoutes', enabled ? { order: defaultRoutes.order } : null)}
@@ -573,7 +573,7 @@ export default function EggConfigurationCreateOrUpdate({
               <RouteOrderEditor
                 value={form.values.configRoutes.order}
                 onChange={(order) => form.setFieldValue('configRoutes.order', order)}
-                serverRoutes={defaultRoutes.entries}
+                routes={defaultRoutes.entries}
                 languages={languages}
               />
             )}

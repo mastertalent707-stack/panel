@@ -37,7 +37,7 @@ mod get {
     }
 
     #[derive(ToSchema, Serialize)]
-    struct ResponseUser {
+    struct ResponseUser<'a> {
         max_server_group_count: u64,
         max_api_key_count: u64,
         max_command_snippet_count: u64,
@@ -45,6 +45,8 @@ mod get {
         max_ssh_key_count: u64,
 
         allow_changing_language: bool,
+
+        route_order: Option<&'a [shared::settings::RouteOrderItem]>,
     }
 
     #[derive(ToSchema, Serialize)]
@@ -59,7 +61,7 @@ mod get {
         #[schema(inline)]
         server: ResponseServer<'a>,
         #[schema(inline)]
-        user: ResponseUser,
+        user: ResponseUser<'a>,
     }
 
     #[utoipa::path(get, path = "/", responses(
@@ -108,6 +110,8 @@ mod get {
                 max_ssh_key_count: settings.user.max_ssh_key_count,
 
                 allow_changing_language: settings.user.allow_changing_language,
+
+                route_order: settings.user.route_order.as_deref(),
             },
         })
         .ok()

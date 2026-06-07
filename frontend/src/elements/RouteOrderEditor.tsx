@@ -2,7 +2,7 @@ import { faArrowUpRightFromSquare, faGripVertical, faMinus, faPlus, faTrash } fr
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Box, Group, Paper, Stack, Text, useComputedColorScheme } from '@mantine/core';
 import { ComponentProps, useCallback, useMemo, useRef, useState } from 'react';
-import { ServerRouteDefinition } from 'shared';
+import { RouteDefinition } from 'shared';
 import { z } from 'zod';
 import ActionIcon from '@/elements/ActionIcon.tsx';
 import Badge from '@/elements/Badge.tsx';
@@ -27,7 +27,7 @@ interface DndRouteEntry extends DndItem {
 interface RouteOrderEditorProps {
   value: RouteItem[];
   onChange: (value: RouteItem[]) => void;
-  serverRoutes: ServerRouteDefinition[];
+  routes: RouteDefinition[];
   languages: string[];
   readOnly?: boolean;
 }
@@ -46,7 +46,7 @@ function itemContentKey(item: RouteItem, index: number): string {
 export default function RouteOrderEditor({
   value,
   onChange,
-  serverRoutes,
+  routes,
   languages,
   readOnly = false,
 }: RouteOrderEditorProps) {
@@ -81,8 +81,8 @@ export default function RouteOrderEditor({
   const usedPaths = useMemo(() => new Set(value.filter((i) => i.type === 'route').map((i) => i.path)), [value]);
 
   const availableRoutes = useMemo(
-    () => serverRoutes.filter((r) => r.name !== undefined && !usedPaths.has(r.path)),
-    [serverRoutes, usedPaths],
+    () => routes.filter((r) => r.name !== undefined && !usedPaths.has(r.path)),
+    [routes, usedPaths],
   );
 
   const emit = useCallback(
@@ -116,9 +116,9 @@ export default function RouteOrderEditor({
     emit([...value, { type: 'redirect', name: '', nameTranslations: {}, destination: '' }]);
   };
 
-  const getRouteInfo = (path: string) => serverRoutes.find((r) => r.path === path);
+  const getRouteInfo = (path: string) => routes.find((r) => r.path === path);
 
-  const handleDragEnd = (items: DndRouteEntry[], oldIndex: number, newIndex: number) => {
+  const handleDragEnd = (items: DndRouteEntry[]) => {
     emit(items.map((i) => i.item));
   };
 
@@ -145,7 +145,7 @@ export default function RouteOrderEditor({
             )}
 
             <Badge variant={isDark ? 'light' : 'filled'} color='blue' size='sm' style={{ flexShrink: 0 }}>
-              {t('pages.admin.eggConfigurations.tabs.general.page.routes.label.route', {})}
+              {t('elements.routeOrderEditor.label.route', {})}
             </Badge>
 
             {info?.icon && <FontAwesomeIcon icon={info.icon} style={{ fontSize: 14, opacity: 0.7, flexShrink: 0 }} />}
@@ -193,13 +193,13 @@ export default function RouteOrderEditor({
             <Badge variant={isDark ? 'light' : 'filled'} color='gray' size='sm' style={{ flexShrink: 0 }}>
               <Group gap={4}>
                 <FontAwesomeIcon icon={faMinus} style={{ fontSize: 10 }} />
-                {t('pages.admin.eggConfigurations.tabs.general.page.routes.label.divider', {})}
+                {t('elements.routeOrderEditor.label.divider', {})}
               </Group>
             </Badge>
 
             {readOnly ? (
               <Text size='sm' c='dimmed' style={{ flex: 1 }}>
-                {item.name || t('pages.admin.eggConfigurations.tabs.general.page.routes.unnamed', {})}
+                {item.name || t('elements.routeOrderEditor.unnamed', {})}
               </Text>
             ) : (
               <Box style={{ flex: 1 }}>
@@ -209,7 +209,7 @@ export default function RouteOrderEditor({
                   setValue={(v) => handleUpdate(index, { ...item, name: v })}
                   valueTranslations={item.nameTranslations}
                   setValueTranslations={(t) => handleUpdate(index, { ...item, nameTranslations: t })}
-                  placeholder={t('pages.admin.eggConfigurations.tabs.general.page.routes.dividerPlaceholder', {})}
+                  placeholder={t('elements.routeOrderEditor.dividerPlaceholder', {})}
                   size='sm'
                 />
               </Box>
@@ -253,13 +253,13 @@ export default function RouteOrderEditor({
               <Badge variant={isDark ? 'light' : 'filled'} color='orange' size='sm' style={{ flexShrink: 0 }}>
                 <Group gap={4}>
                   <FontAwesomeIcon icon={faArrowUpRightFromSquare} style={{ fontSize: 10 }} />
-                  {t('pages.admin.eggConfigurations.tabs.general.page.routes.label.redirect', {})}
+                  {t('elements.routeOrderEditor.label.redirect', {})}
                 </Group>
               </Badge>
 
               {readOnly ? (
                 <Text size='sm' fw={500} style={{ flex: 1 }}>
-                  {item.name || t('pages.admin.eggConfigurations.tabs.general.page.routes.unnamed', {})}
+                  {item.name || t('elements.routeOrderEditor.unnamed', {})}
                 </Text>
               ) : (
                 <Box style={{ flex: 1 }}>
@@ -269,10 +269,7 @@ export default function RouteOrderEditor({
                     setValue={(v) => handleUpdate(index, { ...item, name: v ?? '' })}
                     valueTranslations={item.nameTranslations}
                     setValueTranslations={(t) => handleUpdate(index, { ...item, nameTranslations: t })}
-                    placeholder={t(
-                      'pages.admin.eggConfigurations.tabs.general.page.routes.redirectNamePlaceholder',
-                      {},
-                    )}
+                    placeholder={t('elements.routeOrderEditor.redirectNamePlaceholder', {})}
                     size='sm'
                   />
                 </Box>
@@ -297,7 +294,7 @@ export default function RouteOrderEditor({
               {!readOnly ? (
                 <TextInput
                   size='sm'
-                  placeholder={t('pages.admin.eggConfigurations.tabs.general.page.routes.destinationPlaceholder', {})}
+                  placeholder={t('elements.routeOrderEditor.destinationPlaceholder', {})}
                   value={item.destination}
                   onChange={(e) => handleUpdate(index, { ...item, destination: e.currentTarget.value })}
                 />
@@ -343,7 +340,7 @@ export default function RouteOrderEditor({
         </DndContainer>
       ) : (
         <Text size='sm' c='dimmed' ta='center' py='md'>
-          {t('pages.admin.eggConfigurations.tabs.general.page.routes.empty', {})}
+          {t('elements.routeOrderEditor.empty', {})}
         </Text>
       )}
 
@@ -356,15 +353,9 @@ export default function RouteOrderEditor({
               value={addType}
               onChange={(v) => setAddType((v as 'route' | 'divider' | 'redirect') ?? 'route')}
               data={[
-                { value: 'route', label: t('pages.admin.eggConfigurations.tabs.general.page.routes.label.route', {}) },
-                {
-                  value: 'divider',
-                  label: t('pages.admin.eggConfigurations.tabs.general.page.routes.label.divider', {}),
-                },
-                {
-                  value: 'redirect',
-                  label: t('pages.admin.eggConfigurations.tabs.general.page.routes.label.redirect', {}),
-                },
+                { value: 'route', label: t('elements.routeOrderEditor.label.route', {}) },
+                { value: 'divider', label: t('elements.routeOrderEditor.label.divider', {}) },
+                { value: 'redirect', label: t('elements.routeOrderEditor.label.redirect', {}) },
               ]}
               allowDeselect={false}
               w={120}
@@ -373,7 +364,7 @@ export default function RouteOrderEditor({
             {addType === 'route' && (
               <Select
                 size='sm'
-                placeholder={t('pages.admin.eggConfigurations.tabs.general.page.routes.selectRoutePlaceholder', {})}
+                placeholder={t('elements.routeOrderEditor.selectRoutePlaceholder', {})}
                 data={availableRoutes.map((r) => ({
                   value: r.path,
                   label: typeof r.name === 'string' ? r.name : r.name!(),
@@ -397,8 +388,8 @@ export default function RouteOrderEditor({
                 onClick={addType === 'divider' ? handleAddDivider : handleAddRedirect}
               >
                 {addType === 'divider'
-                  ? t('pages.admin.eggConfigurations.tabs.general.page.routes.button.addDivider', {})
-                  : t('pages.admin.eggConfigurations.tabs.general.page.routes.button.addRedirect', {})}
+                  ? t('elements.routeOrderEditor.button.addDivider', {})
+                  : t('elements.routeOrderEditor.button.addRedirect', {})}
               </Button>
             )}
           </Group>

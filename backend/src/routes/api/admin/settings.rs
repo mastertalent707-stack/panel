@@ -125,6 +125,11 @@ mod put {
 
         #[garde(skip)]
         allow_changing_language: Option<bool>,
+
+        #[garde(length(max = 100))]
+        #[schema(max_items = 100)]
+        #[serde(default, with = "::serde_with::rust::double_option")]
+        route_order: Option<Option<Vec<shared::settings::RouteOrderItem>>>,
     }
 
     #[derive(ToSchema, Validate, Deserialize)]
@@ -303,6 +308,9 @@ mod put {
             }
             if let Some(allow_changing_language) = user.allow_changing_language {
                 settings.user.allow_changing_language = allow_changing_language;
+            }
+            if let Some(route_order) = user.route_order {
+                settings.user.route_order = route_order;
             }
         }
         if let Some(webauthn) = data.webauthn {

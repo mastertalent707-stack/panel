@@ -301,6 +301,24 @@ const baseTranslations = defineTranslations({
       impersonatedBy: 'Impersonated by {username}',
     },
     elements: {
+      routeOrderEditor: {
+        title: 'Route Configuration',
+        label: {
+          route: 'Route',
+          divider: 'Divider',
+          redirect: 'Redirect',
+        },
+        empty: 'No routes configured. Add routes, dividers, or redirects below.',
+        unnamed: '(unnamed)',
+        dividerPlaceholder: 'Divider label (optional)',
+        redirectNamePlaceholder: 'Redirect name',
+        destinationPlaceholder: 'Destination URL (e.g. https://...)',
+        selectRoutePlaceholder: 'Select a route…',
+        button: {
+          addDivider: 'Add Divider',
+          addRedirect: 'Add Redirect',
+        },
+      },
       errorBoundary: {
         message:
           'An unexpected error occurred while rendering this page. Try refreshing. If the problem persists, contact your system administrator.',
@@ -1584,6 +1602,9 @@ const baseTranslations = defineTranslations({
                   allowChangingLanguageDescription:
                     'If enabled, users will be able to change their language preferences.',
                 },
+                routeOrder: {
+                  title: 'Client Route Order',
+                },
                 toast: {
                   updated: 'User settings updated.',
                 },
@@ -2727,24 +2748,6 @@ const baseTranslations = defineTranslations({
                     allowCustomStartupCommand: 'Allow Custom Startup Command',
                     allowCustomStartupCommandDescription:
                       'Allow users to set their own, non-predefined startup commands.',
-                  },
-                },
-                routes: {
-                  title: 'Route Configuration',
-                  label: {
-                    route: 'Route',
-                    divider: 'Divider',
-                    redirect: 'Redirect',
-                  },
-                  empty: 'No routes configured. Add routes, dividers, or redirects below.',
-                  unnamed: '(unnamed)',
-                  dividerPlaceholder: 'Divider label (optional)',
-                  redirectNamePlaceholder: 'Redirect name',
-                  destinationPlaceholder: 'Destination URL (e.g. https://...)',
-                  selectRoutePlaceholder: 'Select a route…',
-                  button: {
-                    addDivider: 'Add Divider',
-                    addRedirect: 'Add Redirect',
                   },
                 },
                 modal: {

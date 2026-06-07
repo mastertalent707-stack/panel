@@ -10,7 +10,7 @@ use compact_str::ToCompactString;
 use garde::Validate;
 use serde::{Deserialize, Serialize};
 use std::{
-    collections::HashMap,
+    collections::{BTreeMap, HashMap},
     ops::{Deref, DerefMut},
     path::Path,
     str::FromStr,
@@ -28,6 +28,23 @@ pub mod ratelimits;
 pub mod server;
 pub mod user;
 pub mod webauthn;
+
+#[derive(ToSchema, Serialize, Deserialize, Clone)]
+#[serde(tag = "type", rename_all = "snake_case")]
+pub enum RouteOrderItem {
+    Route {
+        path: compact_str::CompactString,
+    },
+    Divider {
+        name: Option<compact_str::CompactString>,
+        name_translations: BTreeMap<compact_str::CompactString, compact_str::CompactString>,
+    },
+    Redirect {
+        name: compact_str::CompactString,
+        name_translations: BTreeMap<compact_str::CompactString, compact_str::CompactString>,
+        destination: compact_str::CompactString,
+    },
+}
 
 #[derive(ToSchema, Validate, Serialize, Deserialize, Clone, Copy)]
 #[serde(rename_all = "snake_case")]

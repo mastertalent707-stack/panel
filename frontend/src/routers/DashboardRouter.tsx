@@ -1,4 +1,4 @@
-import { faGraduationCap, faServer } from '@fortawesome/free-solid-svg-icons';
+import { faArrowUpRightFromSquare, faGraduationCap, faServer } from '@fortawesome/free-solid-svg-icons';
 import { Suspense, useMemo } from 'react';
 import { NavLink, Route, Routes } from 'react-router';
 import AppIcon from '@/elements/AppIcon.tsx';
@@ -15,10 +15,12 @@ import DashboardHomeGrouped from '@/pages/dashboard/home/DashboardHomeGrouped.ts
 import { useAuth } from '@/providers/AuthProvider.tsx';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import accountRoutes from '@/routers/routes/accountRoutes.ts';
+import { useGlobalStore } from '@/stores/global.ts';
 
 export default function DashboardRouter({ isNormal }: { isNormal: boolean }) {
-  const { t } = useTranslations();
+  const { t, language } = useTranslations();
   const { user } = useAuth();
+  const routeOrder = useGlobalStore((state) => state.settings.user?.routeOrder);
 
   const allAccountRoutes = useMemo(() => {
     const routes = [...accountRoutes, ...window.extensionContext.extensionRegistry.routes.accountRoutes];
@@ -29,6 +31,36 @@ export default function DashboardRouter({ isNormal }: { isNormal: boolean }) {
 
     return routes;
   }, []);
+
+  const sidebarItems = useMemo(() => {
+    if (!routeOrder) {
+      return allAccountRoutes
+        .filter((route) => !!route.name && (!route.filter || route.filter()))
+        .map((route) => ({ type: 'route' as const, route }));
+    }
+
+    return routeOrder
+      .map((item) => {
+        if (item.type === 'route') {
+          const route = allAccountRoutes.find((r) => r.path === item.path);
+          if (!route || !route.name || (route.filter && !route.filter())) return null;
+          return { type: 'route' as const, route };
+        }
+
+        if (item.type === 'divider') {
+          const label = (language !== 'en' && item.nameTranslations[language]) || item.name || undefined;
+          return { type: 'divider' as const, label };
+        }
+
+        if (item.type === 'redirect') {
+          const name = (language !== 'en' && item.nameTranslations[language]) || item.name;
+          return { type: 'redirect' as const, name, destination: item.destination };
+        }
+
+        return null;
+      })
+      .filter(Boolean);
+  }, [routeOrder, allAccountRoutes, language]);
 
   return (
     <div className='lg:flex h-full'>
@@ -65,9 +97,27 @@ export default function DashboardRouter({ isNormal }: { isNormal: boolean }) {
           }
         >
           {!user?.suspended &&
-            allAccountRoutes
-              .filter((route) => !!route.name && (!route.filter || route.filter()))
-              .map((route) => (
+            sidebarItems.map((item, index) => {
+              if (!item) return null;
+
+              if (item.type === 'divider') {
+                return <Sidebar.Divider key={`divider-${index}`} label={item.label} />;
+              }
+
+              if (item.type === 'redirect') {
+                return (
+                  <Sidebar.Link
+                    key={`redirect-${index}`}
+                    to={item.destination}
+                    icon={faArrowUpRightFromSquare}
+                    name={item.name}
+                  />
+                );
+              }
+
+              const { route } = item;
+
+              return (
                 <Sidebar.Link
                   key={route.path}
                   to={to(route.path, '/account')}
@@ -76,7 +126,8 @@ export default function DashboardRouter({ isNormal }: { isNormal: boolean }) {
                   name={typeof route.name === 'function' ? route.name() : route.name}
                   activeMatches={route.activeMatches}
                 />
-              ))}
+              );
+            })}
         </Sidebar>
       )}
 

@@ -351,6 +351,24 @@
       "impersonatedBy": "Impersoniert von {username}"
     },
     "elements": {
+      "routeOrderEditor": {
+        "title": "Routen-Konfiguration",
+        "label": {
+          "route": "Route",
+          "divider": "Trenner",
+          "redirect": "Weiterleitung"
+        },
+        "empty": "Keine Routen konfiguriert. Füge unten Routen, Trenner oder Weiterleitungen hinzu.",
+        "unnamed": "(unbenannt)",
+        "dividerPlaceholder": "Trenner-Bezeichnung (optional)",
+        "redirectNamePlaceholder": "Weiterleitungsname",
+        "destinationPlaceholder": "Ziel-URL (z. B. https://...)",
+        "selectRoutePlaceholder": "Route auswählen…",
+        "button": {
+          "addDivider": "Trenner hinzufügen",
+          "addRedirect": "Weiterleitung hinzufügen"
+        }
+      },
       "errorBoundary": {
         "message": "Beim Rendern dieser Ansicht ist in der Anwendung ein Fehler aufgetreten. Versuche, die Seite neu zu laden.",
         "hideDetails": "Details ausblenden",
@@ -1599,6 +1617,9 @@
                   "allowChangingLanguage": "Sprache ändern erlauben",
                   "allowChangingLanguageDescription": "Wenn aktiviert, können Benutzer ihre Spracheinstellungen ändern."
                 },
+                "routeOrder": {
+                  "title": "Client-Routenreihenfolge"
+                },
                 "toast": {
                   "updated": "Benutzereinstellungen aktualisiert."
                 }
@@ -1999,6 +2020,9 @@
                 "card": {
                   "resources": "Ressourcen",
                   "graphs": "Diagramme"
+                },
+                "toast": {
+                  "connectionLost": "Verbindung zum Node-Statistik-Stream verloren."
                 },
                 "label": {
                   "cpu": "CPU",
@@ -2706,24 +2730,6 @@
                   "form": {
                     "allowCustomStartupCommand": "Benutzerdefinierten Startup-Befehl erlauben",
                     "allowCustomStartupCommandDescription": "Erlaube Benutzern, ihre eigenen, nicht vordefinierten Startup-Befehle festzulegen."
-                  }
-                },
-                "routes": {
-                  "title": "Routen-Konfiguration",
-                  "label": {
-                    "route": "Route",
-                    "divider": "Trenner",
-                    "redirect": "Weiterleitung"
-                  },
-                  "empty": "Keine Routen konfiguriert. Füge unten Routen, Trenner oder Weiterleitungen hinzu.",
-                  "unnamed": "(unbenannt)",
-                  "dividerPlaceholder": "Trenner-Bezeichnung (optional)",
-                  "redirectNamePlaceholder": "Weiterleitungsname",
-                  "destinationPlaceholder": "Ziel-URL (z. B. https://...)",
-                  "selectRoutePlaceholder": "Route auswählen…",
-                  "button": {
-                    "addDivider": "Trenner hinzufügen",
-                    "addRedirect": "Weiterleitung hinzufügen"
                   }
                 },
                 "modal": {

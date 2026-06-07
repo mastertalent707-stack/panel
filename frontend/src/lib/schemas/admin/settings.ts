@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { oobeStepKey } from '@/lib/schemas/oobe.ts';
 import { nullableNumber, nullableString } from '@/lib/transformers.ts';
-import { hostnameSchema } from '../generic.ts';
+import { eggConfigurationRouteItemSchema, hostnameSchema } from '../generic.ts';
 
 export const adminSettingsApplicationSchema = z.object({
   name: z.string().min(1).max(64),
@@ -140,6 +140,7 @@ export const adminSettingsUserSchema = z.object({
   maxSecurityKeyCount: z.number().min(0),
   maxSshKeyCount: z.number().min(0),
   allowChangingLanguage: z.boolean(),
+  routeOrder: z.array(eggConfigurationRouteItemSchema).max(100).nullable(),
 });
 
 export const adminSettingsActivitySchema = z.object({
