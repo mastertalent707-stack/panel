@@ -272,7 +272,11 @@ export default defineConfig({
   server: {
     proxy: {
       '/openapi.json': `http://localhost:${process.env.BACKEND_PORT ?? 8000}`,
-      '/api': `http://localhost:${process.env.BACKEND_PORT ?? 8000}`,
+      '/api': {
+        target: `http://localhost:${process.env.BACKEND_PORT ?? 8000}`,
+        changeOrigin: true,
+        ws: true,
+      },
       '/assets': `http://localhost:${process.env.BACKEND_PORT ?? 8000}`,
       '/avatars': `http://localhost:${process.env.BACKEND_PORT ?? 8000}`,
     },

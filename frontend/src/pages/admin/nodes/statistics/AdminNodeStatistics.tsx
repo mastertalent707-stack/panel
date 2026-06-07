@@ -15,7 +15,6 @@ import { Group, Title } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import { z } from 'zod';
-import { axiosInstance, httpErrorToHuman } from '@/api/axios.ts';
 import Card from '@/elements/Card.tsx';
 import ChartBlock from '@/elements/ChartBlock.tsx';
 import AdminSubContentContainer from '@/elements/containers/AdminSubContentContainer.tsx';
@@ -24,9 +23,9 @@ import Spinner from '@/elements/Spinner.tsx';
 import TitleCard from '@/elements/TitleCard.tsx';
 import Tooltip from '@/elements/Tooltip.tsx';
 import { useChart, useChartTickLabel } from '@/lib/chart.ts';
-import { getNodeUrl } from '@/lib/node.ts';
 import { adminNodeSchema } from '@/lib/schemas/admin/nodes.ts';
 import { bytesToString } from '@/lib/size.ts';
+import { transformKeysToCamelCase } from '@/lib/transformers.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
 
@@ -115,26 +114,27 @@ export default function AdminNodeStatistics({ node }: { node: z.infer<typeof adm
   });
 
   useEffect(() => {
-    const run = () => {
-      axiosInstance
-        .get(getNodeUrl(node, '/api/system/stats'), {
-          headers: {
-            Authorization: `Bearer ${node.token}`,
-          },
-        })
-        .then(({ data }) => {
-          setStats(data.stats);
-        })
-        .catch((msg) => {
-          addToast(httpErrorToHuman(msg), 'error');
-        });
+    const url = new URL(`/api/admin/nodes/${node.uuid}/system/stats/ws`, window.location.origin);
+    url.protocol = url.protocol === 'https:' ? 'wss:' : 'ws:';
+
+    const socket = new WebSocket(url);
+
+    socket.onmessage = (event) => {
+      try {
+        const data = transformKeysToCamelCase(JSON.parse(event.data)) as NodeStatistics & {
+          stats?: NodeStatistics;
+        };
+        setStats(data.stats ?? data);
+      } catch {
+        // ignore malformed messages
+      }
     };
 
-    run();
+    socket.onerror = () => {
+      addToast(t('pages.admin.nodes.tabs.statistics.page.toast.connectionLost', {}), 'error');
+    };
 
-    const interval = setInterval(run, 1000);
-
-    return () => clearInterval(interval);
+    return () => socket.close();
   }, []);
 
   useEffect(() => {

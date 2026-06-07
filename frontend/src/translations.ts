@@ -1990,6 +1990,9 @@ const baseTranslations = defineTranslations({
                   resources: 'Resources',
                   graphs: 'Graphs',
                 },
+                toast: {
+                  connectionLost: 'Lost connection to the node statistics stream.',
+                },
                 label: {
                   cpu: 'CPU',
                   memory: 'Memory',
