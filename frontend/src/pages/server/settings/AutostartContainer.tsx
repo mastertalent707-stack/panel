@@ -19,6 +19,7 @@ export default function AutostartContainer() {
   const { t } = useTranslations();
   const { addToast } = useToast();
   const server = useServerStore((state) => state.server);
+  const updateServer = useServerStore((state) => state.updateServer);
 
   const [loading, setLoading] = useState(false);
 
@@ -35,6 +36,7 @@ export default function AutostartContainer() {
     updateAutostart(server.uuid, form.values)
       .then(() => {
         addToast(t('pages.server.settings.autostart.toast.updated', {}), 'success');
+        updateServer({ autoStartBehavior: form.values.behavior });
       })
       .catch((msg) => {
         addToast(httpErrorToHuman(msg), 'error');

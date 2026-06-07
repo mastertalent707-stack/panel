@@ -20,6 +20,7 @@ export default function AutokillContainer() {
   const { t } = useTranslations();
   const { addToast } = useToast();
   const server = useServerStore((state) => state.server);
+  const updateServer = useServerStore((state) => state.updateServer);
 
   const [loading, setLoading] = useState(false);
 
@@ -37,6 +38,7 @@ export default function AutokillContainer() {
     updateAutokill(server.uuid, form.values)
       .then(() => {
         addToast(t('pages.server.settings.autokill.toast.updated', {}), 'success');
+        updateServer({ autoKill: form.values });
       })
       .catch((msg) => {
         addToast(httpErrorToHuman(msg), 'error');
