@@ -806,6 +806,9 @@ const baseTranslations = defineTranslations({
             noGroups: 'No groups available to add server to',
             noGroup: 'This server is not in any group',
           },
+          badge: {
+            foreign: 'Foreign',
+          },
           tabs: {
             groupedServers: {
               title: 'Grouped Servers',

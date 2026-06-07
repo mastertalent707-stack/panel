@@ -20,6 +20,7 @@ import { useState } from 'react';
 import { NavLink } from 'react-router';
 import { z } from 'zod';
 import ActionIcon from '@/elements/ActionIcon.tsx';
+import Badge from '@/elements/Badge.tsx';
 import Card from '@/elements/Card.tsx';
 import ContextMenu from '@/elements/ContextMenu.tsx';
 import CopyOnClick from '@/elements/CopyOnClick.tsx';
@@ -41,6 +42,7 @@ import ServerAddGroupModal from './modals/ServerAddGroupModal.tsx';
 export default function ServerItem({
   server,
   showGroupAddButton = false,
+  showForeignServerBadge = false,
   showContextMenu = false,
   onGroupRemove,
   isSelected = false,
@@ -51,6 +53,7 @@ export default function ServerItem({
 }: {
   server: z.infer<typeof serverSchema>;
   showGroupAddButton?: boolean;
+  showForeignServerBadge?: boolean;
   showContextMenu?: boolean;
   onGroupRemove?: () => void;
   isSelected?: boolean;
@@ -181,6 +184,11 @@ export default function ServerItem({
                       )}
                       <span className='text-xl font-medium flex items-center gap-2 min-w-0 flex-1' title={server.name}>
                         <span className='truncate flex-1'>{server.name}</span>
+                        {showForeignServerBadge && !server.isOwner && (
+                          <Badge color='yellow' variant='light' className='shrink-0'>
+                            {t('pages.account.home.badge.foreign', {})}
+                          </Badge>
+                        )}
                         {!serverListShowOthers && serverGroups.every((g) => !g.serverOrder.includes(server.uuid)) && (
                           <Tooltip label={t('pages.account.home.tooltip.noGroup', {})}>
                             <FontAwesomeIcon size='sm' icon={faInfoCircle} className='shrink-0' />

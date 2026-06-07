@@ -298,7 +298,7 @@ export default function ServerGroupItem({
                 renderOverlay={(activeServer) =>
                   activeServer ? (
                     <div style={{ cursor: 'grabbing' }}>
-                      <MemoizedServerItem server={activeServer} onGroupRemove={() => null} />
+                      <MemoizedServerItem server={activeServer} showForeignServerBadge onGroupRemove={() => null} />
                     </div>
                   ) : null
                 }
@@ -316,6 +316,7 @@ export default function ServerGroupItem({
                               ? (selected) => onServerSelectionChange(server, selected)
                               : undefined
                           }
+                          showForeignServerBadge
                           onClick={onServerClick ? (event) => onServerClick(server, event) : undefined}
                           onGroupRemove={() => {
                             const serverOrder = serverGroup.serverOrder.filter(

@@ -146,7 +146,8 @@ export default function DashboardHomeAll() {
                 key={server.uuid}
                 server={server}
                 showContextMenu
-                showGroupAddButton={!serverListShowOthers}
+                showGroupAddButton
+                showForeignServerBadge
                 isSelected={selectedServers.has(server.uuid)}
                 onSelectionChange={(selected) => handleServerSelectionChange(server, selected)}
                 onClick={(e) => handleServerClick(server, e)}

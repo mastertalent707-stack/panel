@@ -580,7 +580,7 @@ impl Server {
 
     pub async fn by_user_uuid_server_order_with_pagination(
         database: &crate::database::Database,
-        owner_uuid: uuid::Uuid,
+        user: &super::user::User,
         server_order: &[uuid::Uuid],
         page: i64,
         per_page: i64,
@@ -600,18 +600,23 @@ impl Server {
             JOIN nests ON nests.uuid = nest_eggs.nest_uuid
             LEFT JOIN server_subusers ON server_subusers.server_uuid = servers.uuid AND server_subusers.user_uuid = $1
             WHERE servers.uuid = ANY($2)
-                AND (servers.owner_uuid = $1 OR server_subusers.user_uuid = $1)
+                AND (servers.owner_uuid = $1 OR server_subusers.user_uuid = $1 OR $6)
                 AND ($3 IS NULL OR servers.name ILIKE '%' || $3 || '%' OR users.username ILIKE '%' || $3 || '%' OR users.email ILIKE '%' || $3 || '%')
             ORDER BY array_position($2, servers.uuid), servers.created
             LIMIT $4 OFFSET $5
             "#,
             Self::columns_sql(None)
         )))
-        .bind(owner_uuid)
+        .bind(user.uuid)
         .bind(server_order)
         .bind(search)
         .bind(per_page)
         .bind(offset)
+        .bind(
+            user.role.as_ref().map_or(user.admin, |r| {
+                r.admin_permissions.iter().any(|p| p == "servers.read")
+            }),
+        )
         .fetch_all(database.read())
         .await?;
 

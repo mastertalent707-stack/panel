@@ -844,6 +844,9 @@
             "noGroups": "Keine Gruppen zum Hinzufügen verfügbar",
             "noGroup": "Dieser Server ist noch in keiner Gruppe"
           },
+          "badge": {
+            "foreign": "Fremd"
+          },
           "tabs": {
             "groupedServers": {
               "title": "Gruppierte Server",
