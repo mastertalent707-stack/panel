@@ -199,8 +199,16 @@ export default function Terminal() {
     fitAddonRef.current = fitAddon;
     searchAddonRef.current = searchAddon;
 
+    let fitFrame: number | null = null;
     const resizeObserver = new ResizeObserver(() => {
-      fitAddon.fit();
+      if (fitFrame !== null) return;
+      fitFrame = requestAnimationFrame(() => {
+        fitFrame = null;
+        const dims = fitAddon.proposeDimensions();
+        if (dims && (dims.cols !== term.cols || dims.rows !== term.rows)) {
+          fitAddon.fit();
+        }
+      });
     });
     resizeObserver.observe(terminalRef.current);
 
@@ -227,6 +235,7 @@ export default function Terminal() {
 
     return () => {
       resizeObserver.disconnect();
+      if (fitFrame !== null) cancelAnimationFrame(fitFrame);
       term.dispose();
       xtermInstance.current = null;
       fitAddonRef.current = null;

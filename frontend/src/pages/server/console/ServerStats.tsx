@@ -74,10 +74,10 @@ export default function ServerStats() {
         legend={
           <>
             <Tooltip label={t('pages.server.console.stats.inbound', {})}>
-              <FontAwesomeIcon icon={faCloudArrowDown} className='mr-2 h-4 w-4 text-cyan-400 light:text-cyan-600' />
+              <FontAwesomeIcon icon={faCloudArrowDown} className='mr-2 h-4 w-4 text-(--chart-series-1-border)' />
             </Tooltip>
             <Tooltip label={t('pages.server.console.stats.outbound', {})}>
-              <FontAwesomeIcon icon={faCloudArrowUp} className='h-4 w-4 text-yellow-400 light:text-amber-600' />
+              <FontAwesomeIcon icon={faCloudArrowUp} className='h-4 w-4 text-(--chart-series-2-border)' />
             </Tooltip>
           </>
         }
