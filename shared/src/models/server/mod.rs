@@ -1698,7 +1698,7 @@ impl super::IntoAdminApiObject for Server {
             self.egg.into_admin_api_object(state, ())
         );
 
-        let api_objct = finish_extendible!(
+        let api_object = finish_extendible!(
             AdminApiServer {
                 uuid: self.uuid,
                 uuid_short: format!("{:08x}", self.uuid_short).into(),
@@ -1740,7 +1740,7 @@ impl super::IntoAdminApiObject for Server {
             state
         )?;
 
-        Ok(api_objct)
+        Ok(api_object)
     }
 }
 

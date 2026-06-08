@@ -382,9 +382,9 @@ export default function ServerCreate() {
                   {...form.getInputProps('backupConfigurationUuid')}
                 />
 
-                {window.extensionContext.extensionRegistry.pages.admin.servers.create.resourceLimitsFormContainer.prependedComponents.map(
+                {window.extensionContext.extensionRegistry.pages.admin.servers.create.resourceLimitsFormContainer.appendedComponents.map(
                   (Component, i) => (
-                    <Component key={`resource-limits-form-container-prepended-${i}`} form={form as never} />
+                    <Component key={`resource-limits-form-container-appended-${i}`} form={form as never} />
                   ),
                 )}
               </div>

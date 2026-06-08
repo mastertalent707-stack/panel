@@ -89,7 +89,7 @@ impl SettingsDeserializeExt for AppSettingsUserDeserializer {
                 .unwrap_or(true),
             route_order: deserializer
                 .read_serde_setting("route_order")
-                .unwrap_or(None),
+                .unwrap_or_default(),
         }))
     }
 }

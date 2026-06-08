@@ -133,7 +133,7 @@ const baseTranslations = defineTranslations({
         compressionLevel: 'Compression Level',
         multiplexChannels: 'Multiplex Channels',
         multiplexChannelsDescription:
-          'Add additional HTTP connections (and therefore also threads) for transfering split archives, total streams is 1 + multiplex channels.',
+          'Add additional HTTP connections (and therefore also threads) for transferring split archives, total streams is 1 + multiplex channels.',
         deleteSourceBackups: 'Delete source backups',
         deleteSourceBackupsDescription: 'Deletes the transferred backups on the source node once transfer finishes.',
         node: 'Node',

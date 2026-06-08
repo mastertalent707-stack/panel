@@ -323,14 +323,14 @@ export default function AdminNodeStatistics({ node }: { node: z.infer<typeof adm
                   title={t('pages.admin.nodes.tabs.statistics.page.chart.networkTraffic', {})}
                   legend={
                     <>
+                      <Tooltip label={t('pages.admin.nodes.tabs.statistics.page.chart.outbound', {})}>
+                        <FontAwesomeIcon icon={faCloudArrowUp} className='h-4 w-4 text-(--chart-series-1-border)' />
+                      </Tooltip>
                       <Tooltip label={t('pages.admin.nodes.tabs.statistics.page.chart.inbound', {})}>
                         <FontAwesomeIcon
                           icon={faCloudArrowDown}
-                          className='mr-2 h-4 w-4 text-(--chart-series-1-border)'
+                          className='mr-2 h-4 w-4 text-(--chart-series-2-border)'
                         />
-                      </Tooltip>
-                      <Tooltip label={t('pages.admin.nodes.tabs.statistics.page.chart.outbound', {})}>
-                        <FontAwesomeIcon icon={faCloudArrowUp} className='h-4 w-4 text-(--chart-series-2-border)' />
                       </Tooltip>
                     </>
                   }
