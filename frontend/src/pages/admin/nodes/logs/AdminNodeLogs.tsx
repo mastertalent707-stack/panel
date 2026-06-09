@@ -197,10 +197,16 @@ export default function AdminNodeLogs({ node }: { node: z.infer<typeof adminNode
             </div>
 
             <div className='flex flex-row items-end gap-2'>
-              <Button onClick={doDownload} disabled={!selectedLog} loading={loading}>
+              <Button onClick={doDownload} disabled={!selectedLog} loading={loading} className='min-w-fit'>
                 {t('pages.admin.nodes.tabs.logs.page.button.download', {})}
               </Button>
-              <Button onClick={doView} variant='outline' disabled={!selectedLog || connected} loading={loading}>
+              <Button
+                onClick={doView}
+                variant='outline'
+                disabled={!selectedLog || connected}
+                loading={loading}
+                className='min-w-fit'
+              >
                 {t('common.button.loadLogs', {})}
               </Button>
               <div className='flex h-9 items-center self-end'>

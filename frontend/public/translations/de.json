@@ -3273,6 +3273,17 @@
               "button": {
                 "accept": "EULA Akzeptieren"
               }
+            },
+            "javaVersion": {
+              "title": "Nicht unterstützte Java-Version",
+              "content": "Dieser Server verwendet derzeit eine nicht unterstützte Java-Version und kann nicht gestartet werden.",
+              "contentDetails": "Bitte wähle ein unterstütztes Docker-Image aus der folgenden Liste, um den Server zu starten.",
+              "toast": {
+                "updated": "Docker-Image erfolgreich aktualisiert."
+              },
+              "button": {
+                "update": "Docker-Image aktualisieren"
+              }
             }
           },
           "details": {

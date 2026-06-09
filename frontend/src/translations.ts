@@ -3312,6 +3312,18 @@ const baseTranslations = defineTranslations({
                 accept: 'Accept EULA',
               },
             },
+            javaVersion: {
+              title: 'Unsupported Java Version',
+              content: 'This server is currently running an unsupported version of Java and cannot be started.',
+              contentDetails:
+                'Please select a supported Docker image from the list below to continue starting the server.',
+              toast: {
+                updated: 'Docker image updated successfully.',
+              },
+              button: {
+                update: 'Update Docker Image',
+              },
+            },
           },
           details: {
             address: 'Address',
