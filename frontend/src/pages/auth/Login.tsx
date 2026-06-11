@@ -1,6 +1,6 @@
 import { faExclamationTriangle, faFingerprint, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Alert, Divider, Stack, Text, Title } from '@mantine/core';
+import { Divider, Stack, Text, Title } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { zod4Resolver } from 'mantine-form-zod-resolver';
 import { startTransition, useEffect, useRef, useState } from 'react';
@@ -11,6 +11,7 @@ import getSecurityKeys from '@/api/auth/getSecurityKeys.ts';
 import login from '@/api/auth/login.ts';
 import postSecurityKeyChallenge from '@/api/auth/postSecurityKeyChallenge.ts';
 import { httpErrorToHuman } from '@/api/axios.ts';
+import Alert from '@/elements/Alert.tsx';
 import Anchor from '@/elements/Anchor.tsx';
 import Button from '@/elements/Button.tsx';
 import Captcha, { CaptchaRef } from '@/elements/Captcha.tsx';
