@@ -26,7 +26,12 @@ mod get {
     ) -> ApiResponseResult {
         permissions.has_admin_permission("nodes.read")?;
 
-        let config = node.fetch_configuration(&state.database).await?;
+        let mut config = node.fetch_configuration(&state.database).await?;
+
+        if permissions.has_admin_permission("nodes.token").is_err() {
+            config.token_id = "redacted".into();
+            config.token = "redacted".into();
+        }
 
         ApiResponse::new_serialized(Response { config }).ok()
     }

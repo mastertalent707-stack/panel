@@ -8,9 +8,13 @@ pub fn parse_validation_rule(
     let rule_args: Vec<compact_str::CompactString> = rule_parts
         .next()
         .map(|args| {
-            args.split(',')
-                .map(compact_str::CompactString::from)
-                .collect()
+            if matches!(rule_name, "regex" | "not_regex") {
+                vec![compact_str::CompactString::from(args)]
+            } else {
+                args.split(',')
+                    .map(compact_str::CompactString::from)
+                    .collect()
+            }
         })
         .unwrap_or_default();
 
