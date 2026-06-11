@@ -31,7 +31,7 @@ mod get {
         permissions: GetPermissionManager,
         node: GetNode,
     ) -> ApiResponseResult {
-        permissions.has_admin_permission("nodes.token")?;
+        permissions.has_admin_permission("nodes.read-token")?;
 
         ApiResponse::new_serialized(Response {
             token_id: node.token_id.to_string(),
