@@ -22,6 +22,46 @@ pub use events::NodeEvent;
 
 pub type GetNode = crate::extract::ConsumingExtension<Node>;
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum NodeDeploymentBlocker {
+    /// No nodes exist in the selected location(s).
+    NoNodes,
+    /// Nodes exist but deployment is disabled on all of them.
+    DeploymentDisabled,
+    /// No node has enough unallocated memory.
+    InsufficientMemory,
+    /// No node has enough unallocated disk.
+    InsufficientDisk,
+    /// No node has enough unallocated memory or disk.
+    InsufficientResources,
+    /// Memory and disk are each available somewhere, but no single node has
+    /// enough of both at once.
+    ResourcesSplitAcrossNodes,
+}
+
+impl NodeDeploymentBlocker {
+    pub fn message(self) -> &'static str {
+        match self {
+            Self::NoNodes => "no nodes exist in the selected location(s)",
+            Self::DeploymentDisabled => {
+                "deployment is disabled on every node in the selected location(s)"
+            }
+            Self::InsufficientMemory => {
+                "no node in the selected location(s) has enough unallocated memory"
+            }
+            Self::InsufficientDisk => {
+                "no node in the selected location(s) has enough unallocated disk"
+            }
+            Self::InsufficientResources => {
+                "no node in the selected location(s) has enough unallocated memory or disk"
+            }
+            Self::ResourcesSplitAcrossNodes => {
+                "no single node in the selected location(s) has enough unallocated memory and disk at the same time"
+            }
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, Clone)]
 pub struct Node {
     pub uuid: uuid::Uuid,
@@ -415,6 +455,73 @@ impl Node {
         .bind(location_uuid)
         .fetch_one(database.read())
         .await
+    }
+
+    pub async fn find_deployment_blocker(
+        database: &crate::database::Database,
+        location_uuids: &[uuid::Uuid],
+        limits: super::server::AdminApiServerLimits,
+        allow_overallocation: bool,
+    ) -> Result<Option<NodeDeploymentBlocker>, crate::database::DatabaseError> {
+        let row = sqlx::query(
+            r#"
+            WITH server_usage AS (
+                SELECT
+                    node_uuid,
+                    COALESCE(SUM(memory), 0)::BIGINT AS used_memory,
+                    COALESCE(SUM(disk), 0)::BIGINT AS used_disk
+                FROM servers
+                GROUP BY node_uuid
+            )
+            SELECT
+                COUNT(*) AS total,
+                COUNT(*) FILTER (WHERE nodes.deployment_enabled) AS deployable,
+                COUNT(*) FILTER (
+                    WHERE nodes.deployment_enabled
+                    AND ($4 OR COALESCE(u.used_memory, 0) + $2 <= nodes.memory)
+                ) AS memory_ok,
+                COUNT(*) FILTER (
+                    WHERE nodes.deployment_enabled
+                    AND ($4 OR COALESCE(u.used_disk, 0) + $3 <= nodes.disk)
+                ) AS disk_ok,
+                COUNT(*) FILTER (
+                    WHERE nodes.deployment_enabled
+                    AND ($4 OR COALESCE(u.used_memory, 0) + $2 <= nodes.memory)
+                    AND ($4 OR COALESCE(u.used_disk, 0) + $3 <= nodes.disk)
+                ) AS resource_ok
+            FROM nodes
+            LEFT JOIN server_usage u ON nodes.uuid = u.node_uuid
+            WHERE nodes.location_uuid = ANY($1)
+            "#,
+        )
+        .bind(location_uuids)
+        .bind(limits.memory)
+        .bind(limits.disk)
+        .bind(allow_overallocation)
+        .fetch_one(database.read())
+        .await?;
+
+        let total: i64 = row.try_get("total")?;
+        let deployable: i64 = row.try_get("deployable")?;
+        let memory_ok: i64 = row.try_get("memory_ok")?;
+        let disk_ok: i64 = row.try_get("disk_ok")?;
+        let resource_ok: i64 = row.try_get("resource_ok")?;
+
+        Ok(Some(if total == 0 {
+            NodeDeploymentBlocker::NoNodes
+        } else if deployable == 0 {
+            NodeDeploymentBlocker::DeploymentDisabled
+        } else if resource_ok > 0 {
+            return Ok(None);
+        } else if memory_ok == 0 && disk_ok == 0 {
+            NodeDeploymentBlocker::InsufficientResources
+        } else if memory_ok == 0 {
+            NodeDeploymentBlocker::InsufficientMemory
+        } else if disk_ok == 0 {
+            NodeDeploymentBlocker::InsufficientDisk
+        } else {
+            NodeDeploymentBlocker::ResourcesSplitAcrossNodes
+        }))
     }
 
     /// Fetch the current configuration of this node

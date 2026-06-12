@@ -191,6 +191,10 @@ mod post {
         let mut allocation_uuid = data.allocation_uuid;
         let mut allocation_uuids = data.allocation_uuids;
 
+        // When the deployment couldn't be placed, the last allocation-assignment
+        // failure (if any) is the most specific explanation we can give.
+        let mut allocation_error: Option<String> = None;
+
         let mut node_uuid = None;
         if (allocation_uuid.is_none() || allocation_uuids.is_none())
             && let Some(allocations) = &allocation_configuration
@@ -206,13 +210,22 @@ mod post {
                     .await
                     {
                         Ok(result) => result,
-                        Err(_) => continue,
+                        Err(shared::database::DatabaseError::Any(err)) => {
+                            allocation_error = Some(err.to_string());
+                            continue;
+                        }
+                        Err(err) => return ApiResponse::from(err).ok(),
                     };
 
                 // Defense in depth: never deploy a server with fewer additional
                 // allocations than the rule configured. `get_from_deployment` already
                 // guarantees this, but a partial set must never silently slip through.
                 if deployment_allocation_uuids.len() != allocations.additional.len() {
+                    allocation_error = Some(format!(
+                        "a node could only satisfy {} of the {} required additional allocations",
+                        deployment_allocation_uuids.len(),
+                        allocations.additional.len()
+                    ));
                     continue;
                 }
 
@@ -231,7 +244,20 @@ mod post {
         }
 
         let Some(node_uuid) = node_uuid else {
-            return ApiResponse::error("no eligible node found for server deployment")
+            let reason = match Node::find_deployment_blocker(
+                &state.database,
+                &data.deployment.location_uuids,
+                data.limits,
+                data.deployment.allow_overallocation,
+            )
+            .await?
+            {
+                Some(blocker) => blocker.message().to_string(),
+                None => allocation_error
+                    .unwrap_or_else(|| "no eligible node found for server deployment".to_string()),
+            };
+
+            return ApiResponse::error(&format!("could not deploy server: {reason}"))
                 .with_status(StatusCode::BAD_REQUEST)
                 .ok();
         };
