@@ -185,7 +185,7 @@ pub async fn auth(
             req.extensions_mut().insert(None::<UserImpersonator>);
         }
 
-        req.extensions_mut().insert(auth_method);
+        req.extensions_mut().insert(Arc::new(auth_method));
     } else if let Some(session_id) = cookies.get(&settings.app.session_cookie) {
         drop(settings);
 
@@ -301,7 +301,7 @@ pub async fn auth(
             req.extensions_mut().insert(None::<UserImpersonator>);
         }
 
-        req.extensions_mut().insert(AuthMethod::Session(session));
+        req.extensions_mut().insert(Arc::new(AuthMethod::Session(session)));
     } else if let Some(api_token) = req.headers().get("Authorization") {
         drop(settings);
 
@@ -417,7 +417,7 @@ pub async fn auth(
             req.extensions_mut().insert(None::<UserImpersonator>);
         }
 
-        req.extensions_mut().insert(AuthMethod::ApiKey(api_key));
+        req.extensions_mut().insert(Arc::new(AuthMethod::ApiKey(api_key)));
     } else {
         return Ok(ApiResponse::error("missing authorization")
             .with_status(StatusCode::UNAUTHORIZED)
