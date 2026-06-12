@@ -1,5 +1,4 @@
 import getSessions from '@/api/me/sessions/getSessions.ts';
-
 import AccountContentContainer from '@/elements/containers/AccountContentContainer.tsx';
 import Table from '@/elements/Table.tsx';
 import { queryKeys } from '@/lib/queryKeys.ts';

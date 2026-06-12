@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { z } from 'zod';
 import getServerBackups from '@/api/admin/servers/backups/getServerBackups.ts';
-
 import AdminSubContentContainer from '@/elements/containers/AdminSubContentContainer.tsx';
 import Switch from '@/elements/input/Switch.tsx';
 import Table from '@/elements/Table.tsx';

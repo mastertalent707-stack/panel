@@ -29,6 +29,7 @@ import Tooltip from '@/elements/Tooltip.tsx';
 import { matchesShortcut, useKeyboardShortcut } from '@/plugins/useKeyboardShortcuts.ts';
 import { SocketEvent, SocketRequest } from '@/plugins/useWebsocketEvent.ts';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
+import { useGlobalStore } from '@/stores/global.ts';
 import { useServerStore } from '@/stores/server.ts';
 import CommandHistoryDrawer from './drawers/CommandHistoryDrawer.tsx';
 import FeatureProvider from './features/FeatureProvider.tsx';
@@ -36,7 +37,6 @@ import SshDetailsModal from './modals/SshDetailsModal.tsx';
 
 import '@xterm/xterm/css/xterm.css';
 import './xterm.css';
-import { useGlobalStore } from '@/stores/global.ts';
 
 const commandSnippetFilter: OptionsFilter = ({ options, search }) => {
   if (!search.startsWith('!')) {

@@ -5,7 +5,6 @@ import { z } from 'zod';
 import getServerAllocations from '@/api/admin/servers/allocations/getServerAllocations.ts';
 import Button from '@/elements/Button.tsx';
 import { AdminCan } from '@/elements/Can.tsx';
-
 import AdminSubContentContainer from '@/elements/containers/AdminSubContentContainer.tsx';
 import Table from '@/elements/Table.tsx';
 import { queryKeys } from '@/lib/queryKeys.ts';
