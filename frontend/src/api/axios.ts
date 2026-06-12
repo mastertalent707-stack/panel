@@ -31,6 +31,10 @@ axiosInstance.interceptors.response.use(
       }
     }
 
+    if (error.response?.status === 401 && !error.config?.url?.includes('/api/auth/')) {
+      window.dispatchEvent(new Event('session-expired'));
+    }
+
     return Promise.reject(error);
   },
 );

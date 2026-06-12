@@ -39,6 +39,15 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
       .finally(() => setLoading(false));
   }, []);
 
+  useEffect(() => {
+    const handleSessionExpired = () => {
+      sessionStorage.setItem('post-login-redirect', window.location.pathname + window.location.search);
+      setUser(null);
+    };
+    window.addEventListener('session-expired', handleSessionExpired);
+    return () => window.removeEventListener('session-expired', handleSessionExpired);
+  }, []);
+
   const doImpersonate = (user: z.infer<typeof fullUserSchema>) => {
     localStorage.setItem('impersonated_user', user.uuid);
 
