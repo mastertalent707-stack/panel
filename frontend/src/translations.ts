@@ -3388,7 +3388,9 @@ const baseTranslations = defineTranslations({
           },
           button: {
             new: 'New',
-            sftpDetails: 'SFTP Details',
+            connect: 'Connect',
+            connectSftp: 'via SFTP',
+            connectVscode: 'via VS Code',
             openInNewWindow: 'Open in new Window',
             rename: 'Rename',
             copy: 'Copy',
@@ -3443,6 +3445,7 @@ const baseTranslations = defineTranslations({
             preferPhysicalSize: 'Show physical size instead of logical size',
             editorMinimap: 'Show File Minimap',
             editorLineOverflow: 'Wrap Line Overflow',
+            vscodeUriScheme: 'VS Code URI Scheme',
             imageViewerSmoothing: 'Smoothen Image (Anti-Aliasing)',
           },
           toast: {

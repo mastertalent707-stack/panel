@@ -9,7 +9,6 @@ import FileRenameModal from '@/pages/server/files/modals/FileRenameModal.tsx';
 import FileSearchModal from '@/pages/server/files/modals/FileSearchModal.tsx';
 import LargestDirectoriesModal from '@/pages/server/files/modals/LargestDirectoriesModal.tsx';
 import PullFileModal from '@/pages/server/files/modals/PullFileModal.tsx';
-import SftpDetailsModal from '@/pages/server/files/modals/SftpDetailsModal.tsx';
 import { useFileManager } from '@/providers/contexts/fileManagerContext.ts';
 import FileDetailsModal from './modals/FileDetailsModal.tsx';
 
@@ -35,7 +34,6 @@ export default function FileModals() {
       <ArchiveCreateModal files={modalDirectoryEntries} opened={openModal === 'archive'} onClose={doCloseModal} />
       <FileDeleteModal files={modalDirectoryEntries} opened={openModal === 'delete'} onClose={doCloseModal} />
 
-      <SftpDetailsModal opened={openModal === 'sftpDetails'} onClose={doCloseModal} />
       <DirectoryNameModal opened={openModal === 'nameDirectory'} onClose={doCloseModal} />
       <PullFileModal opened={openModal === 'pullFile'} onClose={doCloseModal} />
 

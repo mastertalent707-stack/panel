@@ -17,7 +17,6 @@ export type ModalType =
   | 'permissions'
   | 'archive'
   | 'delete'
-  | 'sftpDetails'
   | 'details'
   | 'nameDirectory'
   | 'pullFile'
@@ -72,6 +71,8 @@ export interface FileManagerContextType {
   setEditorMinimap: (state: boolean) => void;
   editorLineOverflow: boolean;
   setEditorLineOverflow: (state: boolean) => void;
+  vscodeUriScheme: string;
+  setVscodeUriScheme: (scheme: string) => void;
   imageViewerSmoothing: boolean;
   setImageViewerSmoothing: (state: boolean) => void;
   audioPlayerVolume: number;

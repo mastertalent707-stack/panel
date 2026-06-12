@@ -52,6 +52,7 @@ const FileManagerProvider = ({ children }: { children: ReactNode }) => {
   const [editorLineOverflow, setEditorLineOverflow] = useState(
     localStorage.getItem('file_editor_lineoverflow') === 'true',
   );
+  const [vscodeUriScheme, setVscodeUriScheme] = useState(localStorage.getItem('file_vscode_uri_scheme') || 'vscode');
   const [imageViewerSmoothing, setImageViewerSmoothing] = useState(
     localStorage.getItem('file_image_viewer_smoothing') !== 'false',
   );
@@ -186,6 +187,10 @@ const FileManagerProvider = ({ children }: { children: ReactNode }) => {
   }, [editorLineOverflow]);
 
   useEffect(() => {
+    localStorage.setItem('file_vscode_uri_scheme', vscodeUriScheme);
+  }, [vscodeUriScheme]);
+
+  useEffect(() => {
     localStorage.setItem('file_image_viewer_smoothing', imageViewerSmoothing.toString());
   }, [imageViewerSmoothing]);
 
@@ -239,6 +244,8 @@ const FileManagerProvider = ({ children }: { children: ReactNode }) => {
         setEditorMinimap,
         editorLineOverflow,
         setEditorLineOverflow,
+        vscodeUriScheme,
+        setVscodeUriScheme,
         imageViewerSmoothing,
         setImageViewerSmoothing,
         audioPlayerVolume,

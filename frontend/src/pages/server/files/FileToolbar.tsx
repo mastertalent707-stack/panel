@@ -5,7 +5,6 @@ import {
   faFileUpload,
   faFolderOpen,
   faFolderPlus,
-  faServer,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Group } from '@mantine/core';
@@ -16,6 +15,7 @@ import ContextMenu, { ContextMenuProvider } from '@/elements/ContextMenu.tsx';
 import { useFileManager } from '@/providers/FileManagerProvider.tsx';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import { useServerStore } from '@/stores/server.ts';
+import FileConnectButton from './FileConnectButton.tsx';
 
 export default function FileToolbar() {
   const { t } = useTranslations();
@@ -30,15 +30,7 @@ export default function FileToolbar() {
           <Component key={`files-fileToolbar-prepended-${i}`} />
         ),
       )}
-      <ServerCan action='files.sftp'>
-        <Button
-          variant='outline'
-          leftSection={<FontAwesomeIcon icon={faServer} />}
-          onClick={() => doOpenModal('sftpDetails')}
-        >
-          {t('pages.server.files.button.sftpDetails', {})}
-        </Button>
-      </ServerCan>
+      <FileConnectButton />
       {browsingWritableDirectory && (
         <ServerCan action='files.create'>
           <ContextMenuProvider>

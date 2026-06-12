@@ -3,12 +3,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Popover } from '@mantine/core';
 import Button from '@/elements/Button.tsx';
 import Checkbox from '@/elements/input/Checkbox.tsx';
+import TextInput from '@/elements/input/TextInput.tsx';
 import { useFileManager } from '@/providers/FileManagerProvider.tsx';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
 
 export default function FileSettings() {
   const { t } = useTranslations();
-  const { clickOnce, preferPhysicalSize, setClickOnce, setPreferPhysicalSize } = useFileManager();
+  const { clickOnce, preferPhysicalSize, vscodeUriScheme, setClickOnce, setPreferPhysicalSize, setVscodeUriScheme } =
+    useFileManager();
 
   return (
     <Popover position='bottom' withArrow shadow='md'>
@@ -34,6 +36,11 @@ export default function FileSettings() {
             label={t('pages.server.files.settings.preferPhysicalSize', {})}
             checked={preferPhysicalSize}
             onChange={(e) => setPreferPhysicalSize(e.target.checked)}
+          />
+          <TextInput
+            label={t('pages.server.files.settings.vscodeUriScheme', {})}
+            value={vscodeUriScheme}
+            onChange={(e) => setVscodeUriScheme(e.target.value)}
           />
 
           {window.extensionContext.extensionRegistry.pages.server.files.fileSettings.appendedComponents.map(

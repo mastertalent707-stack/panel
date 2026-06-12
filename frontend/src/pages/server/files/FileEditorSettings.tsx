@@ -3,12 +3,20 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Popover } from '@mantine/core';
 import Button from '@/elements/Button.tsx';
 import Checkbox from '@/elements/input/Checkbox.tsx';
+import TextInput from '@/elements/input/TextInput.tsx';
 import { useFileManager } from '@/providers/FileManagerProvider.tsx';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
 
 export default function FileEditorSettings() {
   const { t } = useTranslations();
-  const { editorMinimap, editorLineOverflow, setEditorMinimap, setEditorLineOverflow } = useFileManager();
+  const {
+    editorMinimap,
+    editorLineOverflow,
+    vscodeUriScheme,
+    setEditorMinimap,
+    setEditorLineOverflow,
+    setVscodeUriScheme,
+  } = useFileManager();
 
   return (
     <Popover position='bottom' withArrow shadow='md'>
@@ -36,6 +44,12 @@ export default function FileEditorSettings() {
             className='order-20'
             checked={editorLineOverflow}
             onChange={(e) => setEditorLineOverflow(e.target.checked)}
+          />
+          <TextInput
+            label={t('pages.server.files.settings.vscodeUriScheme', {})}
+            className='order-30'
+            value={vscodeUriScheme}
+            onChange={(e) => setVscodeUriScheme(e.target.value)}
           />
 
           {window.extensionContext.extensionRegistry.pages.server.files.fileEditorSettings.appendedComponents.map(

@@ -31,6 +31,7 @@ import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import { useServerStore } from '@/stores/server.ts';
 import FileRevisionsDrawer from './drawers/FileRevisionsDrawer.tsx';
 import FileBreadcrumbs from './FileBreadcrumbs.tsx';
+import FileConnectButton from './FileConnectButton.tsx';
 import FileEditorSettings from './FileEditorSettings.tsx';
 import FileImageViewerSettings from './FileImageViewerSettings.tsx';
 import FileNameModal from './modals/FileNameModal.tsx';
@@ -312,38 +313,39 @@ function FileEditorComponent() {
         {matchedFileEditorAction?.header.rightSection ? (
           <matchedFileEditorAction.header.rightSection />
         ) : (
-          <div hidden={!browsingWritableDirectory || params.action === 'image' || params.action === 'audio'}>
-            {params.action === 'edit' ? (
-              <div className='flex flex-row items-center'>
-                <ServerCan action='files.read-content'>
-                  {fileName && browsingPrimaryFilesystem && (
-                    <Tooltip label={t('pages.server.files.tooltip.fileHistory', {})}>
-                      <ActionIcon
-                        size='sm'
-                        variant='subtle'
-                        color='gray'
-                        onClick={() => setRevisionsOpen(true)}
-                        className='mr-2'
-                      >
-                        <FontAwesomeIcon icon={faClockRotateLeft} />
-                      </ActionIcon>
-                    </Tooltip>
-                  )}
-                </ServerCan>
+          <Group>
+            <ServerCan action='files.read-content'>
+              {params.action === 'edit' && fileName && browsingPrimaryFilesystem && (
+                <Tooltip label={t('pages.server.files.tooltip.fileHistory', {})}>
+                  <ActionIcon
+                    size='sm'
+                    variant='subtle'
+                    color='gray'
+                    onClick={() => setRevisionsOpen(true)}
+                    className='mr-2'
+                  >
+                    <FontAwesomeIcon icon={faClockRotateLeft} />
+                  </ActionIcon>
+                </Tooltip>
+              )}
+            </ServerCan>
+            <FileConnectButton file={fileName ? join(browsingDirectory, fileName) : undefined} />
+            <div hidden={!browsingWritableDirectory || params.action === 'image' || params.action === 'audio'}>
+              {params.action === 'edit' ? (
                 <ServerCan action='files.update'>
                   <Button loading={saving} onClick={() => saveFile()}>
                     {t('common.button.save', {})}
                   </Button>
                 </ServerCan>
-              </div>
-            ) : (
-              <ServerCan action='files.create'>
-                <Button loading={saving} onClick={() => setNameModalOpen(true)}>
-                  {t('common.button.create', {})}
-                </Button>
-              </ServerCan>
-            )}
-          </div>
+              ) : (
+                <ServerCan action='files.create'>
+                  <Button loading={saving} onClick={() => setNameModalOpen(true)}>
+                    {t('common.button.create', {})}
+                  </Button>
+                </ServerCan>
+              )}
+            </div>
+          </Group>
         )}
       </div>
 
