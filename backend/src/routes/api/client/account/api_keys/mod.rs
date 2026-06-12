@@ -131,7 +131,7 @@ mod post {
     ) -> ApiResponseResult {
         permissions.has_user_permission("api-keys.create")?;
 
-        if let AuthMethod::ApiKey(api_key) = &*auth
+        if let AuthMethod::ApiKey(api_key) = &**auth
             && (!data
                 .user_permissions
                 .iter()

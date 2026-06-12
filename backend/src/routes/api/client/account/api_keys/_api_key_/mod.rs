@@ -110,7 +110,7 @@ mod patch {
     ) -> ApiResponseResult {
         permissions.has_user_permission("api-keys.update")?;
 
-        if let AuthMethod::ApiKey(api_key) = &*auth
+        if let AuthMethod::ApiKey(api_key) = &**auth
             && (data.user_permissions.as_ref().is_some_and(|req_perms| {
                 req_perms
                     .iter()

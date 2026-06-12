@@ -120,7 +120,7 @@ pub fn tungstenite_to_axum(
 }
 
 pub fn api_key_scope(auth: Option<&GetAuthMethod>) -> Option<&[compact_str::CompactString]> {
-    match &**auth? {
+    match &***auth? {
         AuthMethod::ApiKey(api_key) => Some(&api_key.server_permissions),
         _ => None,
     }

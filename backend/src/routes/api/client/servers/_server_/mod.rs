@@ -101,7 +101,7 @@ pub async fn auth(
         user_admin: user.admin,
         user_owner: user.uuid == server.owner.uuid,
         user_subuser: server.subuser_permissions.is_some(),
-        api_key_uuid: match auth.0 {
+        api_key_uuid: match &**auth {
             crate::routes::api::client::AuthMethod::ApiKey(api_key) => Some(api_key.uuid),
             _ => None,
         },

@@ -60,7 +60,7 @@ pub async fn auth(
         state: Arc::clone(&state),
         user_uuid: user.uuid,
         impersonator_uuid: user_impersonator.as_ref().map(|i| i.uuid),
-        api_key_uuid: match &*auth {
+        api_key_uuid: match &**auth {
             AuthMethod::ApiKey(api_key) => Some(api_key.uuid),
             AuthMethod::Session(_) => None,
         },

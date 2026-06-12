@@ -238,7 +238,7 @@ impl IntoApiObject for UserSession {
                 uuid: self.uuid,
                 ip: self.ip.ip().to_compact_string(),
                 user_agent: self.user_agent,
-                is_using: match &**auth {
+                is_using: match &***auth {
                     AuthMethod::Session(session) => session.uuid == self.uuid,
                     _ => false,
                 },

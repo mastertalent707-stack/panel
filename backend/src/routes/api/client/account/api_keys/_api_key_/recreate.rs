@@ -51,7 +51,7 @@ mod post {
                 }
             };
 
-        if let AuthMethod::ApiKey(auth_api_key) = &*auth
+        if let AuthMethod::ApiKey(auth_api_key) = &**auth
             && (api_key
                 .user_permissions
                 .iter()

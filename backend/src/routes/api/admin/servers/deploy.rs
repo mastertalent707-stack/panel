@@ -257,7 +257,7 @@ mod post {
                     .unwrap_or_else(|| "no eligible node found for server deployment".to_string()),
             };
 
-            return ApiResponse::error(&format!("could not deploy server: {reason}"))
+            return ApiResponse::error(format!("could not deploy server: {reason}"))
                 .with_status(StatusCode::BAD_REQUEST)
                 .ok();
         };

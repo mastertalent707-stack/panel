@@ -30,7 +30,7 @@ impl DerefMut for UserImpersonator {
 
 pub type GetUser = crate::extract::ConsumingExtension<super::User>;
 pub type GetUserImpersonator = crate::extract::ConsumingExtension<Option<UserImpersonator>>;
-pub type GetAuthMethod = crate::extract::ConsumingExtension<AuthMethod>;
+pub type GetAuthMethod = axum::extract::Extension<Arc<AuthMethod>>;
 pub type GetPermissionManager = axum::extract::Extension<PermissionManager>;
 
 #[derive(Clone)]

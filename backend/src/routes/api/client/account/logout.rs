@@ -27,7 +27,7 @@ mod post {
         auth: GetAuthMethod,
         cookies: Cookies,
     ) -> ApiResponseResult {
-        let session = match auth.0 {
+        let session = match &**auth {
             AuthMethod::Session(session) => session,
             _ => {
                 return ApiResponse::error(
