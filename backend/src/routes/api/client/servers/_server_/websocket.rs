@@ -7,7 +7,10 @@ mod get {
     use shared::{
         GetState,
         jwt::BasePayload,
-        models::{server::GetServer, user::GetUser},
+        models::{
+            server::GetServer,
+            user::{GetAuthMethod, GetUser},
+        },
         response::{ApiResponse, ApiResponseResult},
     };
     use utoipa::ToSchema;
@@ -28,7 +31,12 @@ mod get {
             example = "123e4567-e89b-12d3-a456-426614174000",
         ),
     ))]
-    pub async fn route(state: GetState, user: GetUser, server: GetServer) -> ApiResponseResult {
+    pub async fn route(
+        state: GetState,
+        auth: GetAuthMethod,
+        user: GetUser,
+        server: GetServer,
+    ) -> ApiResponseResult {
         #[derive(Serialize)]
         struct WebsocketJwt<'a> {
             #[serde(flatten)]
@@ -58,7 +66,11 @@ mod get {
                 },
                 user_uuid: user.uuid,
                 server_uuid: server.uuid,
-                permissions: server.wings_permissions(&*state.settings.get().await?, &user),
+                permissions: server.wings_permissions(
+                    &*state.settings.get().await?,
+                    &user,
+                    Some(&auth),
+                ),
                 ignored_files: server.subuser_ignored_files.as_deref().unwrap_or(&[]),
             },
         )?;

@@ -12,7 +12,7 @@ mod get {
 
     #[derive(ToSchema, Serialize)]
     struct Response {
-        token_id: String,
+        token_id: compact_str::CompactString,
         token: compact_str::CompactString,
     }
 
@@ -34,8 +34,8 @@ mod get {
         permissions.has_admin_permission("nodes.read-token")?;
 
         ApiResponse::new_serialized(Response {
-            token_id: node.token_id.to_string(),
-            token: state.database.decrypt(node.token.clone()).await?,
+            token_id: node.0.token_id,
+            token: state.database.decrypt(node.0.token.clone()).await?,
         })
         .ok()
     }

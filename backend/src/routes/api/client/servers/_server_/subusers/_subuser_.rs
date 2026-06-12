@@ -171,7 +171,7 @@ mod patch {
         models::{
             UpdatableModel,
             server::{GetServer, GetServerActivityLogger},
-            user::{GetPermissionManager, GetUser},
+            user::{GetAuthMethod, GetPermissionManager, GetUser},
         },
         response::{ApiResponse, ApiResponseResult},
     };
@@ -205,9 +205,11 @@ mod patch {
             example = "123e4567-e89b-12d3-a456-426614174000",
         ),
     ), request_body = inline(Payload))]
+    #[allow(clippy::too_many_arguments)]
     pub async fn route(
         state: GetState,
         permissions: GetPermissionManager,
+        auth: GetAuthMethod,
         user: GetUser,
         server: GetServer,
         activity_logger: GetServerActivityLogger,
@@ -292,7 +294,8 @@ mod patch {
                                     Ok(settings) => settings,
                                     Err(_) => return,
                                 },
-                                &subuser
+                                &subuser,
+                                Some(&auth)
                             )
                                 .into_iter()
                                 .map(compact_str::CompactString::from)
