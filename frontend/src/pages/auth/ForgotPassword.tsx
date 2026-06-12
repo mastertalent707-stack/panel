@@ -1,6 +1,5 @@
 import { faExclamationTriangle, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Stack, Text, Title } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { zod4Resolver } from 'mantine-form-zod-resolver';
 import { useRef, useState } from 'react';
@@ -14,6 +13,9 @@ import Captcha, { CaptchaRef } from '@/elements/Captcha.tsx';
 import Card from '@/elements/Card.tsx';
 import Divider from '@/elements/Divider.tsx';
 import TextInput from '@/elements/input/TextInput.tsx';
+import Stack from '@/elements/Stack.tsx';
+import Text from '@/elements/Text.tsx';
+import Title from '@/elements/Title.tsx';
 import { authForgotPasswordSchema } from '@/lib/schemas/auth.ts';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import { useGlobalStore } from '@/stores/global.ts';

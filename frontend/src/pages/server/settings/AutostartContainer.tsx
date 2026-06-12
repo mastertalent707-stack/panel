@@ -1,6 +1,5 @@
 import { faPlay } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Group, Stack } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { zod4Resolver } from 'mantine-form-zod-resolver';
 import { useState } from 'react';
@@ -8,7 +7,9 @@ import { z } from 'zod';
 import { httpErrorToHuman } from '@/api/axios.ts';
 import updateAutostart from '@/api/server/settings/updateAutostart.ts';
 import Button from '@/elements/Button.tsx';
+import Group from '@/elements/Group.tsx';
 import Select from '@/elements/input/Select.tsx';
+import Stack from '@/elements/Stack.tsx';
 import TitleCard from '@/elements/TitleCard.tsx';
 import { serverSettingsAutostartSchema } from '@/lib/schemas/server/settings.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';

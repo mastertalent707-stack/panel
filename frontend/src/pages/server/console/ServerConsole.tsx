@@ -1,6 +1,7 @@
-import { Group, Title } from '@mantine/core';
 import { ServerCan } from '@/elements/Can.tsx';
 import ServerContentContainer from '@/elements/containers/ServerContentContainer.tsx';
+import Group from '@/elements/Group.tsx';
+import Title from '@/elements/Title.tsx';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import { useServerStore } from '@/stores/server.ts';
 import Console from './Console.tsx';

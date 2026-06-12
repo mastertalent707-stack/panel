@@ -1,10 +1,11 @@
-import { Group, Stack } from '@mantine/core';
 import { UseFormReturnType } from '@mantine/form';
 import { useEffect } from 'react';
 import { z } from 'zod';
+import Group from '@/elements/Group.tsx';
 import NumberInput from '@/elements/input/NumberInput.tsx';
 import PasswordInput from '@/elements/input/PasswordInput.tsx';
 import TextInput from '@/elements/input/TextInput.tsx';
+import Stack from '@/elements/Stack.tsx';
 import { adminDatabaseCredentialsDetailsSchema } from '@/lib/schemas/admin/databaseHosts.ts';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
 

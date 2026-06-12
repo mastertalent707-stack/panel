@@ -1,6 +1,6 @@
-import { Breadcrumbs } from '@mantine/core';
 import { ReactNode } from 'react';
 import { createSearchParams, NavLink } from 'react-router';
+import Breadcrumbs from '@/elements/Breadcrumbs.tsx';
 
 export default function AssetBreadcrumbs({ directory }: { directory: string }) {
   const segments = directory.split('/').filter(Boolean);

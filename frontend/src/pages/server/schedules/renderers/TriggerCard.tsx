@@ -1,10 +1,12 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Group, Text, ThemeIcon } from '@mantine/core';
 import { CronExpressionParser } from 'cron-parser';
 import cronstrue from 'cronstrue/i18n';
 import { z } from 'zod';
 import Card from '@/elements/Card.tsx';
 import Code from '@/elements/Code.tsx';
+import Group from '@/elements/Group.tsx';
+import Text from '@/elements/Text.tsx';
+import ThemeIcon from '@/elements/ThemeIcon.tsx';
 import Tooltip from '@/elements/Tooltip.tsx';
 import FormattedTimestamp from '@/elements/time/FormattedTimestamp.tsx';
 import { scheduleTriggerColorMapping, scheduleTriggerIconMapping } from '@/lib/enums.ts';

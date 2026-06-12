@@ -1,6 +1,6 @@
 import { faUpload } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ModalProps, Stack } from '@mantine/core';
+import { ModalProps } from '@mantine/core';
 import { zod4Resolver } from 'mantine-form-zod-resolver';
 import { ChangeEvent, useRef } from 'react';
 import { z } from 'zod';
@@ -10,6 +10,7 @@ import TextArea from '@/elements/input/TextArea.tsx';
 import TextInput from '@/elements/input/TextInput.tsx';
 import FormModal from '@/elements/modals/FormModal.tsx';
 import { ModalFooter } from '@/elements/modals/Modal.tsx';
+import Stack from '@/elements/Stack.tsx';
 import { useModalForm } from '@/plugins/useModalForm.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';

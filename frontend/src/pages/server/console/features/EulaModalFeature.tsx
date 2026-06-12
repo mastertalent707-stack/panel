@@ -1,10 +1,10 @@
-import { Text } from '@mantine/core';
 import { useState } from 'react';
 import { httpErrorToHuman } from '@/api/axios.ts';
 import getFileContent from '@/api/server/files/getFileContent.ts';
 import saveFileContent from '@/api/server/files/saveFileContent.ts';
 import Button from '@/elements/Button.tsx';
 import { Modal, ModalFooter } from '@/elements/modals/Modal.tsx';
+import Text from '@/elements/Text.tsx';
 import useWebsocketEvent, { SocketEvent } from '@/plugins/useWebsocketEvent.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';

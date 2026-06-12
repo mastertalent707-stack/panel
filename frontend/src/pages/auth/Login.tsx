@@ -1,6 +1,5 @@
 import { faExclamationTriangle, faFingerprint, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Stack, Text, Title } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { zod4Resolver } from 'mantine-form-zod-resolver';
 import { startTransition, useEffect, useRef, useState } from 'react';
@@ -19,6 +18,9 @@ import Card from '@/elements/Card.tsx';
 import Divider from '@/elements/Divider.tsx';
 import PasswordInput from '@/elements/input/PasswordInput.tsx';
 import TextInput from '@/elements/input/TextInput.tsx';
+import Stack from '@/elements/Stack.tsx';
+import Text from '@/elements/Text.tsx';
+import Title from '@/elements/Title.tsx';
 import { authPasswordSchema, authUsernameSchema } from '@/lib/schemas/auth.ts';
 import { oAuthProviderSchema } from '@/lib/schemas/generic.ts';
 import { useAuth } from '@/providers/AuthProvider.tsx';

@@ -1,12 +1,12 @@
 import { faDoorOpen, faMagnifyingGlassChart, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Breadcrumbs } from '@mantine/core';
 import { join } from 'pathe';
 import { ReactNode, useEffect } from 'react';
 import { createSearchParams, NavLink } from 'react-router';
 import { httpErrorToHuman } from '@/api/axios.ts';
 import getBackup from '@/api/server/backups/getBackup.ts';
 import ActionIcon from '@/elements/ActionIcon.tsx';
+import Breadcrumbs from '@/elements/Breadcrumbs.tsx';
 import Button from '@/elements/Button.tsx';
 import Checkbox from '@/elements/input/Checkbox.tsx';
 import Tooltip from '@/elements/Tooltip.tsx';

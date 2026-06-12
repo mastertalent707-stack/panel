@@ -1,6 +1,5 @@
 import { faAddressCard, faChevronLeft, faFloppyDisk, faRainbow } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Group, Stack, Title } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { zod4Resolver } from 'mantine-form-zod-resolver';
 import { basename } from 'pathe';
@@ -13,8 +12,11 @@ import updateLocation from '@/api/admin/locations/updateLocation.ts';
 import { httpErrorToHuman } from '@/api/axios.ts';
 import AlertError from '@/elements/alerts/AlertError.tsx';
 import Button from '@/elements/Button.tsx';
+import Group from '@/elements/Group.tsx';
 import Select from '@/elements/input/Select.tsx';
 import TextInput from '@/elements/input/TextInput.tsx';
+import Stack from '@/elements/Stack.tsx';
+import Title from '@/elements/Title.tsx';
 import { backupDiskLabelMapping } from '@/lib/enums.ts';
 import {
   adminBackupConfigurationResticSchema,

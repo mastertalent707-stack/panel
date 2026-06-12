@@ -10,7 +10,7 @@ import {
   faTrash,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Collapse, Menu, useComputedColorScheme } from '@mantine/core';
+import { useComputedColorScheme } from '@mantine/core';
 import classNames from 'classnames';
 import { ComponentProps, memo, startTransition, useEffect, useState } from 'react';
 import { z } from 'zod';
@@ -21,9 +21,11 @@ import updateServerGroup from '@/api/me/servers/groups/updateServerGroup.ts';
 import ActionIcon from '@/elements/ActionIcon.tsx';
 import Badge from '@/elements/Badge.tsx';
 import Card from '@/elements/Card.tsx';
+import Collapse from '@/elements/Collapse.tsx';
 import Divider from '@/elements/Divider.tsx';
 import { DndContainer, DndItem, SortableItem } from '@/elements/DragAndDrop.tsx';
 import TextInput from '@/elements/input/TextInput.tsx';
+import Menu from '@/elements/Menu.tsx';
 import ConfirmationModal from '@/elements/modals/ConfirmationModal.tsx';
 import Spinner from '@/elements/Spinner.tsx';
 import { Pagination } from '@/elements/Table.tsx';

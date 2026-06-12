@@ -1,6 +1,5 @@
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Text, UnstyledButton } from '@mantine/core';
 import { useRef } from 'react';
 import uploadAssets from '@/api/admin/assets/uploadAssets.ts';
 import Button from '@/elements/Button.tsx';
@@ -8,7 +7,9 @@ import CloseButton from '@/elements/CloseButton.tsx';
 import Popover from '@/elements/Popover.tsx';
 import Progress from '@/elements/Progress.tsx';
 import RingProgress from '@/elements/RingProgress.tsx';
+import Text from '@/elements/Text.tsx';
 import Tooltip from '@/elements/Tooltip.tsx';
+import UnstyledButton from '@/elements/UnstyledButton.tsx';
 import { bytesToString } from '@/lib/size.ts';
 import { useFileUpload } from '@/plugins/useFileUpload.ts';
 import { useImportDragAndDrop } from '@/plugins/useImportDragAndDrop.ts';

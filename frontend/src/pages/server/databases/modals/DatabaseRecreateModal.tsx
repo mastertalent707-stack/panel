@@ -1,10 +1,12 @@
-import { ModalProps, Stack, Text } from '@mantine/core';
+import { ModalProps } from '@mantine/core';
 import { z } from 'zod';
 import recreateDatabase from '@/api/server/databases/recreateDatabase.ts';
 import Button from '@/elements/Button.tsx';
 import TextInput from '@/elements/input/TextInput.tsx';
 import FormModal from '@/elements/modals/FormModal.tsx';
 import { ModalFooter } from '@/elements/modals/Modal.tsx';
+import Stack from '@/elements/Stack.tsx';
+import Text from '@/elements/Text.tsx';
 import { serverDatabaseSchema } from '@/lib/schemas/server/databases.ts';
 import { useModalForm } from '@/plugins/useModalForm.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';

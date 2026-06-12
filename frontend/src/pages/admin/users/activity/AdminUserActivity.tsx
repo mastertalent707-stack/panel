@@ -1,9 +1,9 @@
-import { Group } from '@mantine/core';
 import { z } from 'zod';
 import getUserActivity from '@/api/admin/users/getUserActivity.ts';
 import ActivityInfoButton from '@/elements/activity/ActivityInfoButton.tsx';
 import Code from '@/elements/Code.tsx';
 import AdminSubContentContainer from '@/elements/containers/AdminSubContentContainer.tsx';
+import Group from '@/elements/Group.tsx';
 import Table, { TableData, TableRow } from '@/elements/Table.tsx';
 import FormattedTimestamp from '@/elements/time/FormattedTimestamp.tsx';
 import { queryKeys } from '@/lib/queryKeys.ts';

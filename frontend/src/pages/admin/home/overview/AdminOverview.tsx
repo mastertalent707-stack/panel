@@ -18,7 +18,6 @@ import {
   faUsers,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Text, Title } from '@mantine/core';
 import { startTransition, useEffect, useState } from 'react';
 import getBackupStats, { type BackupStats } from '@/api/admin/stats/getBackupStats.ts';
 import getGeneralStats, { type GeneralStats } from '@/api/admin/stats/getGeneralStats.ts';
@@ -28,6 +27,8 @@ import Alert from '@/elements/Alert.tsx';
 import { AdminCan } from '@/elements/Can.tsx';
 import Card from '@/elements/Card.tsx';
 import Spinner from '@/elements/Spinner.tsx';
+import Text from '@/elements/Text.tsx';
+import Title from '@/elements/Title.tsx';
 import TitleCard from '@/elements/TitleCard.tsx';
 import { bytesToString } from '@/lib/size.ts';
 import { parseVersion } from '@/lib/version.ts';

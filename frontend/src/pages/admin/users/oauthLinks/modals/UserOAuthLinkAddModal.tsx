@@ -1,4 +1,4 @@
-import { ModalProps, Stack } from '@mantine/core';
+import { ModalProps } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { z } from 'zod';
 import getOAuthProviders from '@/api/admin/oauth-providers/getOAuthProviders.ts';
@@ -8,6 +8,7 @@ import Button from '@/elements/Button.tsx';
 import Select from '@/elements/input/Select.tsx';
 import TextInput from '@/elements/input/TextInput.tsx';
 import { Modal, ModalFooter } from '@/elements/modals/Modal.tsx';
+import Stack from '@/elements/Stack.tsx';
 import { queryKeys } from '@/lib/queryKeys.ts';
 import { adminOAuthProviderSchema } from '@/lib/schemas/admin/oauthProviders.ts';
 import { fullUserSchema } from '@/lib/schemas/user.ts';

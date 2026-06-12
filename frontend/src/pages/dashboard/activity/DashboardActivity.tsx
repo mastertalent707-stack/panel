@@ -1,4 +1,3 @@
-import { Group } from '@mantine/core';
 import { useState } from 'react';
 import { z } from 'zod';
 import { getEmptyPaginationSet } from '@/api/axios.ts';
@@ -6,6 +5,7 @@ import getUserActivity from '@/api/me/getUserActivity.ts';
 import ActivityInfoButton from '@/elements/activity/ActivityInfoButton.tsx';
 import Code from '@/elements/Code.tsx';
 import AccountContentContainer from '@/elements/containers/AccountContentContainer.tsx';
+import Group from '@/elements/Group.tsx';
 import Table, { TableData, TableRow } from '@/elements/Table.tsx';
 import FormattedTimestamp from '@/elements/time/FormattedTimestamp.tsx';
 import { queryKeys } from '@/lib/queryKeys.ts';

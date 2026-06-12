@@ -9,7 +9,6 @@ import {
   faUsers,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Group, Paper, Stack, Text, ThemeIcon, Title } from '@mantine/core';
 import { useNavigate } from 'react-router';
 import { z } from 'zod';
 import getEggRepositories from '@/api/admin/egg-repositories/getEggRepositories.ts';
@@ -20,6 +19,12 @@ import updateOobeSettings from '@/api/admin/settings/updateOobeSettings.ts';
 import Badge from '@/elements/Badge.tsx';
 import Button from '@/elements/Button.tsx';
 import Divider from '@/elements/Divider.tsx';
+import Group from '@/elements/Group.tsx';
+import Paper from '@/elements/Paper.tsx';
+import Stack from '@/elements/Stack.tsx';
+import Text from '@/elements/Text.tsx';
+import ThemeIcon from '@/elements/ThemeIcon.tsx';
+import Title from '@/elements/Title.tsx';
 import { queryKeys } from '@/lib/queryKeys.ts';
 import { adminEggRepositorySchema } from '@/lib/schemas/admin/eggRepositories.ts';
 import { adminLocationSchema } from '@/lib/schemas/admin/locations.ts';

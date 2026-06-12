@@ -1,10 +1,12 @@
 import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Group, Stack, Text } from '@mantine/core';
 import { z } from 'zod';
 import ActionIcon from '@/elements/ActionIcon.tsx';
 import Button from '@/elements/Button.tsx';
+import Group from '@/elements/Group.tsx';
 import Select from '@/elements/input/Select.tsx';
+import Stack from '@/elements/Stack.tsx';
+import Text from '@/elements/Text.tsx';
 import { scheduleConditionLabelMapping } from '@/lib/enums.ts';
 import { serverScheduleConditionSchema } from '@/lib/schemas/server/schedules.ts';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';

@@ -1,4 +1,4 @@
-import { ModalProps, Stack } from '@mantine/core';
+import { ModalProps } from '@mantine/core';
 import { useEffect } from 'react';
 import { z } from 'zod';
 import createOAuthProviderMapping from '@/api/admin/oauth-providers/mappings/createOAuthProviderMapping.ts';
@@ -11,6 +11,7 @@ import TagsInput from '@/elements/input/TagsInput.tsx';
 import FormModal from '@/elements/modals/FormModal.tsx';
 import { ModalFooter } from '@/elements/modals/Modal.tsx';
 import PermissionSelector from '@/elements/PermissionSelector.tsx';
+import Stack from '@/elements/Stack.tsx';
 import { queryKeys } from '@/lib/queryKeys.ts';
 import { adminOAuthProviderMappingSchema, adminOAuthProviderSchema } from '@/lib/schemas/admin/oauthProviders.ts';
 import { adminServerSchema } from '@/lib/schemas/admin/servers.ts';

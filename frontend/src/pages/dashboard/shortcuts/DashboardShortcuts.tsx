@@ -1,10 +1,12 @@
 import { faApple, faWindows } from '@fortawesome/free-brands-svg-icons';
 import { faCopy, faKeyboard, faPaste, faRotateLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Flex, Stack, Text } from '@mantine/core';
 import { ReactNode, useState } from 'react';
 import Button from '@/elements/Button.tsx';
 import AccountContentContainer from '@/elements/containers/AccountContentContainer.tsx';
+import Flex from '@/elements/Flex.tsx';
+import Stack from '@/elements/Stack.tsx';
+import Text from '@/elements/Text.tsx';
 import TitleCard from '@/elements/TitleCard.tsx';
 import { handleRawCopyToClipboard } from '@/lib/copy.ts';
 import { buildCoreShortcutCategories, getShortcutDefinitions } from '@/lib/coreShortcuts.tsx';

@@ -1,6 +1,6 @@
 import { faSave } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ModalProps, Stack, Text } from '@mantine/core';
+import { ModalProps } from '@mantine/core';
 import { zod4Resolver } from 'mantine-form-zod-resolver';
 import { useEffect } from 'react';
 import { z } from 'zod';
@@ -11,6 +11,8 @@ import Divider from '@/elements/Divider.tsx';
 import Select from '@/elements/input/Select.tsx';
 import FormModal from '@/elements/modals/FormModal.tsx';
 import { ModalFooter } from '@/elements/modals/Modal.tsx';
+import Stack from '@/elements/Stack.tsx';
+import Text from '@/elements/Text.tsx';
 import { scheduleStepDefaultMapping, scheduleStepLabelMapping } from '@/lib/enums.ts';
 import {
   serverScheduleSchema,

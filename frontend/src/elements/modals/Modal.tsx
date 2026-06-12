@@ -19,6 +19,9 @@ export const Modal = makeComponentHookable(
       </MantineModal>
     );
   }),
+  {
+    Stack: MantineModal.Stack,
+  },
 );
 
 export const ModalFooter = makeComponentHookable(({ children }: { children: React.ReactNode }) => {

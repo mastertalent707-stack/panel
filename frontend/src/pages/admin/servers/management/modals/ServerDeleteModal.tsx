@@ -1,4 +1,4 @@
-import { ModalProps, Stack, Text } from '@mantine/core';
+import { ModalProps } from '@mantine/core';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { z } from 'zod';
@@ -8,6 +8,8 @@ import Button from '@/elements/Button.tsx';
 import Switch from '@/elements/input/Switch.tsx';
 import TextInput from '@/elements/input/TextInput.tsx';
 import { Modal, ModalFooter } from '@/elements/modals/Modal.tsx';
+import Stack from '@/elements/Stack.tsx';
+import Text from '@/elements/Text.tsx';
 import { adminServerSchema } from '@/lib/schemas/admin/servers.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';

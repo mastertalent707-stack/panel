@@ -1,4 +1,3 @@
-import { Stack, Text } from '@mantine/core';
 import { zod4Resolver } from 'mantine-form-zod-resolver';
 import { basename } from 'pathe';
 import { z } from 'zod';
@@ -11,6 +10,8 @@ import TextArea from '@/elements/input/TextArea.tsx';
 import TextInput from '@/elements/input/TextInput.tsx';
 import FormModal from '@/elements/modals/FormModal.tsx';
 import { ModalFooter } from '@/elements/modals/Modal.tsx';
+import Stack from '@/elements/Stack.tsx';
+import Text from '@/elements/Text.tsx';
 import { queryKeys } from '@/lib/queryKeys.ts';
 import { adminBackupConfigurationSchema } from '@/lib/schemas/admin/backupConfigurations.ts';
 import { adminLocationUpdateSchema } from '@/lib/schemas/admin/locations.ts';

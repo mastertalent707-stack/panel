@@ -1,6 +1,6 @@
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Modal as MantineModal, Stack, Text, useModalsStack } from '@mantine/core';
+import { useModalsStack } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { zod4Resolver } from 'mantine-form-zod-resolver';
 import QRCode from 'qrcode';
@@ -17,6 +17,8 @@ import PasswordInput from '@/elements/input/PasswordInput.tsx';
 import TextInput from '@/elements/input/TextInput.tsx';
 import { Modal, ModalFooter } from '@/elements/modals/Modal.tsx';
 import Spinner from '@/elements/Spinner.tsx';
+import Stack from '@/elements/Stack.tsx';
+import Text from '@/elements/Text.tsx';
 import { dashboardTwoFactorEnableSchema } from '@/lib/schemas/dashboard.ts';
 import { useAuth } from '@/providers/AuthProvider.tsx';
 import { useToast } from '@/providers/ToastProvider.tsx';
@@ -92,7 +94,7 @@ export default function TwoFactorSetupButton() {
 
   return (
     <>
-      <MantineModal.Stack>
+      <Modal.Stack>
         <Modal
           {...stageStack.register('setup')}
           title={t('pages.account.account.containers.twoFactor.modal.setupTwoFactor.title', {})}
@@ -186,7 +188,7 @@ export default function TwoFactorSetupButton() {
             </ModalFooter>
           </Stack>
         </Modal>
-      </MantineModal.Stack>
+      </Modal.Stack>
 
       <Button onClick={() => stageStack.open('setup')}>
         {t('pages.account.account.containers.twoFactor.button.setupTwoFactor', {})}

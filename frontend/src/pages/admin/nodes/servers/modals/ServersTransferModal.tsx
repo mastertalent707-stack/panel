@@ -1,4 +1,4 @@
-import { ModalProps, Stack } from '@mantine/core';
+import { ModalProps } from '@mantine/core';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { z } from 'zod';
@@ -11,6 +11,7 @@ import Select from '@/elements/input/Select.tsx';
 import Switch from '@/elements/input/Switch.tsx';
 import ConfirmationModal from '@/elements/modals/ConfirmationModal.tsx';
 import { Modal, ModalFooter } from '@/elements/modals/Modal.tsx';
+import Stack from '@/elements/Stack.tsx';
 import { compressionLevelLabelMapping, transferArchiveFormatLabelMapping } from '@/lib/enums.ts';
 import { ObjectSet } from '@/lib/objectSet.ts';
 import { queryKeys } from '@/lib/queryKeys.ts';

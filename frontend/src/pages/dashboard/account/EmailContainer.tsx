@@ -1,6 +1,5 @@
 import { faAt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Group, Stack } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import classNames from 'classnames';
 import { zod4Resolver } from 'mantine-form-zod-resolver';
@@ -9,9 +8,11 @@ import { z } from 'zod';
 import { httpErrorToHuman } from '@/api/axios.ts';
 import updateEmail from '@/api/me/account/updateEmail.ts';
 import Button from '@/elements/Button.tsx';
+import Group from '@/elements/Group.tsx';
 import PasswordInput from '@/elements/input/PasswordInput.tsx';
 import TextInput from '@/elements/input/TextInput.tsx';
 import Spinner from '@/elements/Spinner.tsx';
+import Stack from '@/elements/Stack.tsx';
 import TitleCard from '@/elements/TitleCard.tsx';
 import { dashboardEmailSchema } from '@/lib/schemas/dashboard.ts';
 import { useAuth } from '@/providers/AuthProvider.tsx';

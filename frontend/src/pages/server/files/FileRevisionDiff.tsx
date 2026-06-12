@@ -1,6 +1,5 @@
 import { faArrowLeft, faRotateLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Group, Title } from '@mantine/core';
 import type { editor } from 'monaco-editor';
 import { basename, dirname } from 'pathe';
 import { useEffect, useRef, useState } from 'react';
@@ -12,8 +11,10 @@ import saveFileContent from '@/api/server/files/saveFileContent.ts';
 import ActionIcon from '@/elements/ActionIcon.tsx';
 import Button from '@/elements/Button.tsx';
 import ServerContentContainer from '@/elements/containers/ServerContentContainer.tsx';
+import Group from '@/elements/Group.tsx';
 import { MonacoDiffEditor } from '@/elements/MonacoEditor.tsx';
 import Spinner from '@/elements/Spinner.tsx';
+import Title from '@/elements/Title.tsx';
 import { useCurrentWindow } from '@/providers/CurrentWindowProvider.tsx';
 import { FileManagerProvider, useFileManager } from '@/providers/FileManagerProvider.tsx';
 import { useToast } from '@/providers/ToastProvider.tsx';

@@ -1,10 +1,13 @@
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Group, Text, ThemeIcon, Timeline } from '@mantine/core';
 import { z } from 'zod';
 import AnimatedHourglass from '@/elements/AnimatedHourglass.tsx';
 import Badge from '@/elements/Badge.tsx';
 import Card from '@/elements/Card.tsx';
+import Group from '@/elements/Group.tsx';
+import Text from '@/elements/Text.tsx';
+import ThemeIcon from '@/elements/ThemeIcon.tsx';
+import Timeline from '@/elements/Timeline.tsx';
 import Tooltip from '@/elements/Tooltip.tsx';
 import { scheduleStepIconMapping, scheduleStepLabelMapping } from '@/lib/enums.ts';
 import { serverScheduleStepSchema } from '@/lib/schemas/server/schedules.ts';

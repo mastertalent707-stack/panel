@@ -1,12 +1,12 @@
 import { faCheckDouble, faPlus, faX } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Group } from '@mantine/core';
 import { MouseEvent as ReactMouseEvent, Ref, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { z } from 'zod';
 import getNodeAllocations from '@/api/admin/nodes/allocations/getNodeAllocations.ts';
 import ActionIcon from '@/elements/ActionIcon.tsx';
 import Button from '@/elements/Button.tsx';
 import AdminSubContentContainer from '@/elements/containers/AdminSubContentContainer.tsx';
+import Group from '@/elements/Group.tsx';
 import Select from '@/elements/input/Select.tsx';
 import SelectionArea from '@/elements/SelectionArea.tsx';
 import Table from '@/elements/Table.tsx';

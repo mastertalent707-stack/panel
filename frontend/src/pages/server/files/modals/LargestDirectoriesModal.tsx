@@ -1,5 +1,5 @@
 import { Treemap } from '@mantine/charts';
-import { ModalProps, Stack, Text } from '@mantine/core';
+import { ModalProps } from '@mantine/core';
 import { join } from 'pathe';
 import { useCallback, useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router';
@@ -9,6 +9,8 @@ import getLargestDirectories from '@/api/server/files/getLargestDirectories.ts';
 import Button from '@/elements/Button.tsx';
 import { Modal, ModalFooter } from '@/elements/modals/Modal.tsx';
 import Spinner from '@/elements/Spinner.tsx';
+import Stack from '@/elements/Stack.tsx';
+import Text from '@/elements/Text.tsx';
 import { serverDirectoryEntrySchema } from '@/lib/schemas/server/files.ts';
 import { bytesToString } from '@/lib/size.ts';
 import { useFileManager } from '@/providers/contexts/fileManagerContext.ts';

@@ -11,11 +11,13 @@ import {
   IconDefinition,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Flex, Group, Text } from '@mantine/core';
 import { useEffect } from 'react';
 import ActionIcon from '@/elements/ActionIcon.tsx';
 import Badge from '@/elements/Badge.tsx';
+import Flex from '@/elements/Flex.tsx';
+import Group from '@/elements/Group.tsx';
 import KbdKey from '@/elements/KbdKey.tsx';
+import Text from '@/elements/Text.tsx';
 import Tooltip from '@/elements/Tooltip.tsx';
 import { bindingFromEvent, ModifierKey, ShortcutBinding, ShortcutDefinition } from '@/lib/shortcuts.ts';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';

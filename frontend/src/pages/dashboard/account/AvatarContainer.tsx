@@ -1,6 +1,5 @@
 import { faImage } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Group, Stack } from '@mantine/core';
 import classNames from 'classnames';
 import { useRef, useState } from 'react';
 import AvatarEditor, { AvatarEditorRef } from 'react-avatar-editor';
@@ -8,7 +7,9 @@ import { httpErrorToHuman } from '@/api/axios.ts';
 import removeAvatar from '@/api/me/account/removeAvatar.ts';
 import updateAvatar from '@/api/me/account/updateAvatar.ts';
 import Button from '@/elements/Button.tsx';
+import Group from '@/elements/Group.tsx';
 import FileInput from '@/elements/input/FileInput.tsx';
+import Stack from '@/elements/Stack.tsx';
 import TitleCard from '@/elements/TitleCard.tsx';
 import { useAuth } from '@/providers/AuthProvider.tsx';
 import { useToast } from '@/providers/ToastProvider.tsx';

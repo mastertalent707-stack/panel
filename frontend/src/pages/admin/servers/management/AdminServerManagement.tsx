@@ -1,11 +1,12 @@
 import { faPause, faPlay, faReply, faSatellite, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Group, Stack } from '@mantine/core';
 import { useState } from 'react';
 import { z } from 'zod';
 import Button from '@/elements/Button.tsx';
 import { AdminCan } from '@/elements/Can.tsx';
 import AdminSubContentContainer from '@/elements/containers/AdminSubContentContainer.tsx';
+import Group from '@/elements/Group.tsx';
+import Stack from '@/elements/Stack.tsx';
 import TitleCard from '@/elements/TitleCard.tsx';
 import { adminServerSchema } from '@/lib/schemas/admin/servers.ts';
 import ServerDeleteModal from '@/pages/admin/servers/management/modals/ServerDeleteModal.tsx';

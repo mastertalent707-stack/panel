@@ -1,4 +1,4 @@
-import { ModalProps, Stack, Switch } from '@mantine/core';
+import { ModalProps } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { z } from 'zod';
 import restoreNodeBackup from '@/api/admin/nodes/backups/restoreNodeBackup.ts';
@@ -7,7 +7,9 @@ import getServers from '@/api/admin/servers/getServers.ts';
 import { httpErrorToHuman } from '@/api/axios.ts';
 import Button from '@/elements/Button.tsx';
 import Select from '@/elements/input/Select.tsx';
+import Switch from '@/elements/input/Switch.tsx';
 import { Modal, ModalFooter } from '@/elements/modals/Modal.tsx';
+import Stack from '@/elements/Stack.tsx';
 import { queryKeys } from '@/lib/queryKeys.ts';
 import { adminNodeSchema } from '@/lib/schemas/admin/nodes.ts';
 import { adminServerBackupSchema, adminServerSchema } from '@/lib/schemas/admin/servers.ts';

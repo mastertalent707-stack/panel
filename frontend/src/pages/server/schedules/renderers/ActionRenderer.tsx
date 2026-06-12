@@ -1,6 +1,7 @@
-import { Stack, Text } from '@mantine/core';
 import { z } from 'zod';
 import Code from '@/elements/Code.tsx';
+import Stack from '@/elements/Stack.tsx';
+import Text from '@/elements/Text.tsx';
 import { serverScheduleStepActionSchema } from '@/lib/schemas/server/schedules.ts';
 import { formatMilliseconds } from '@/lib/time.ts';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';

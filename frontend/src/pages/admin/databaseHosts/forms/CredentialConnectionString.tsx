@@ -1,8 +1,8 @@
-import { Stack } from '@mantine/core';
 import { UseFormReturnType } from '@mantine/form';
 import { useEffect } from 'react';
 import { z } from 'zod';
 import PasswordInput from '@/elements/input/PasswordInput.tsx';
+import Stack from '@/elements/Stack.tsx';
 import { adminDatabaseCredentialsConnectionStringSchema } from '@/lib/schemas/admin/databaseHosts.ts';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
 

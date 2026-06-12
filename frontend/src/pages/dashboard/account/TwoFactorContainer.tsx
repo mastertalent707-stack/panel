@@ -1,6 +1,6 @@
 import { faMobilePhone } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Stack } from '@mantine/core';
+import Stack from '@/elements/Stack.tsx';
 import TitleCard from '@/elements/TitleCard.tsx';
 import FormattedTimestamp from '@/elements/time/FormattedTimestamp.tsx';
 import { useAuth } from '@/providers/AuthProvider.tsx';

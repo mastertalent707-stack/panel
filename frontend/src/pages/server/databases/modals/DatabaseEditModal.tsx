@@ -1,4 +1,4 @@
-import { ModalProps, Stack } from '@mantine/core';
+import { ModalProps } from '@mantine/core';
 import { zod4Resolver } from 'mantine-form-zod-resolver';
 import { z } from 'zod';
 import updateDatabase from '@/api/server/databases/updateDatabase.ts';
@@ -6,6 +6,7 @@ import Button from '@/elements/Button.tsx';
 import Switch from '@/elements/input/Switch.tsx';
 import FormModal from '@/elements/modals/FormModal.tsx';
 import { ModalFooter } from '@/elements/modals/Modal.tsx';
+import Stack from '@/elements/Stack.tsx';
 import { serverDatabaseEditSchema, serverDatabaseSchema } from '@/lib/schemas/server/databases.ts';
 import { useModalForm } from '@/plugins/useModalForm.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';

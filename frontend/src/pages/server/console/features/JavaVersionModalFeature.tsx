@@ -1,4 +1,3 @@
-import { Text } from '@mantine/core';
 import { useEffect, useRef, useState } from 'react';
 import { httpErrorToHuman } from '@/api/axios.ts';
 import updateDockerImage from '@/api/server/startup/updateDockerImage.ts';
@@ -6,6 +5,7 @@ import Button from '@/elements/Button.tsx';
 import { ServerCan } from '@/elements/Can.tsx';
 import Select from '@/elements/input/Select.tsx';
 import { Modal, ModalFooter } from '@/elements/modals/Modal.tsx';
+import Text from '@/elements/Text.tsx';
 import useWebsocketEvent, { SocketEvent } from '@/plugins/useWebsocketEvent.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';

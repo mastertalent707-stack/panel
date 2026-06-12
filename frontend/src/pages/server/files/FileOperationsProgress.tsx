@@ -1,13 +1,15 @@
-import { Popover, Text, UnstyledButton } from '@mantine/core';
 import { memo, useCallback, useMemo } from 'react';
 import { httpErrorToHuman } from '@/api/axios.ts';
 import cancelOperation from '@/api/server/files/cancelOperation.ts';
 import Button from '@/elements/Button.tsx';
 import CloseButton from '@/elements/CloseButton.tsx';
 import ConfirmationModal from '@/elements/modals/ConfirmationModal.tsx';
+import Popover from '@/elements/Popover.tsx';
 import Progress from '@/elements/Progress.tsx';
 import RingProgress from '@/elements/RingProgress.tsx';
+import Text from '@/elements/Text.tsx';
 import Tooltip from '@/elements/Tooltip.tsx';
+import UnstyledButton from '@/elements/UnstyledButton.tsx';
 import { bytesToString } from '@/lib/size.ts';
 import { useBlocker } from '@/plugins/useBlocker.ts';
 import { useToast } from '@/providers/contexts/toastContext.ts';

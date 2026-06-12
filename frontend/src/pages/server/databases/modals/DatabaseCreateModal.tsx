@@ -1,4 +1,4 @@
-import { ModalProps, Stack } from '@mantine/core';
+import { ModalProps } from '@mantine/core';
 import { zod4Resolver } from 'mantine-form-zod-resolver';
 import { useEffect, useState } from 'react';
 import { z } from 'zod';
@@ -9,6 +9,7 @@ import Select from '@/elements/input/Select.tsx';
 import TextInput from '@/elements/input/TextInput.tsx';
 import FormModal from '@/elements/modals/FormModal.tsx';
 import { ModalFooter } from '@/elements/modals/Modal.tsx';
+import Stack from '@/elements/Stack.tsx';
 import { databaseTypeLabelMapping } from '@/lib/enums.ts';
 import { databaseHostSchema } from '@/lib/schemas/generic.ts';
 import { serverDatabaseCreateSchema } from '@/lib/schemas/server/databases.ts';

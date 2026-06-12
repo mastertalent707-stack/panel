@@ -1,6 +1,6 @@
-import { ThemeIcon } from '@mantine/core';
 import type { ReactNode } from 'react';
 import Card from '@/elements/Card.tsx';
+import ThemeIcon from '@/elements/ThemeIcon.tsx';
 
 interface DetailCardProps {
   icon: React.ReactNode;

@@ -6,7 +6,6 @@ import {
   faNetworkWired,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Group, Stack, Title } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { zod4Resolver } from 'mantine-form-zod-resolver';
 import { useEffect, useState } from 'react';
@@ -18,10 +17,13 @@ import { httpErrorToHuman } from '@/api/axios.ts';
 import AlertError from '@/elements/alerts/AlertError.tsx';
 import Button from '@/elements/Button.tsx';
 import Card from '@/elements/Card.tsx';
+import Group from '@/elements/Group.tsx';
 import NumberInput from '@/elements/input/NumberInput.tsx';
 import SizeInput from '@/elements/input/SizeInput.tsx';
 import TagsInput from '@/elements/input/TagsInput.tsx';
 import TextInput from '@/elements/input/TextInput.tsx';
+import Stack from '@/elements/Stack.tsx';
+import Title from '@/elements/Title.tsx';
 import { resolvePorts } from '@/lib/ip.ts';
 import { isNodeAIO } from '@/lib/node.ts';
 import { adminNodeAllocationsSchema } from '@/lib/schemas/admin/nodes.ts';

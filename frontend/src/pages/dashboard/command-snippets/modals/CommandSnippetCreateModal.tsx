@@ -1,4 +1,4 @@
-import { ModalProps, Stack } from '@mantine/core';
+import { ModalProps } from '@mantine/core';
 import { zod4Resolver } from 'mantine-form-zod-resolver';
 import { z } from 'zod';
 import createCommandSnippet from '@/api/me/command-snippets/createCommandSnippet.ts';
@@ -9,6 +9,7 @@ import TextArea from '@/elements/input/TextArea.tsx';
 import TextInput from '@/elements/input/TextInput.tsx';
 import FormModal from '@/elements/modals/FormModal.tsx';
 import { ModalFooter } from '@/elements/modals/Modal.tsx';
+import Stack from '@/elements/Stack.tsx';
 import { queryKeys } from '@/lib/queryKeys.ts';
 import { serverEggSchema } from '@/lib/schemas/server/server.ts';
 import { userCommandSnippetUpdateSchema } from '@/lib/schemas/user/commandSnippets.ts';

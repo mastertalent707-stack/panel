@@ -7,7 +7,6 @@ import {
   faServer,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Title } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import getDebugMode from '@/api/admin/system/debug/getDebugMode.ts';
 import setDebugMode from '@/api/admin/system/debug/setDebugMode.ts';
@@ -21,6 +20,7 @@ import Card from '@/elements/Card.tsx';
 import Code from '@/elements/Code.tsx';
 import Spinner from '@/elements/Spinner.tsx';
 import Table, { TableData, TableRow } from '@/elements/Table.tsx';
+import Title from '@/elements/Title.tsx';
 import TitleCard from '@/elements/TitleCard.tsx';
 import { queryKeys } from '@/lib/queryKeys.ts';
 import { nodeTableColumns } from '@/lib/tableColumns.ts';

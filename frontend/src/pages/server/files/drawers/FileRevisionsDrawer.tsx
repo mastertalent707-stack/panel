@@ -1,6 +1,6 @@
 import { faArrowsLeftRight, faCodeCompare, faRotateLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { DrawerProps, ScrollArea, Stack } from '@mantine/core';
+import { DrawerProps } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { createSearchParams, useNavigate } from 'react-router';
@@ -12,7 +12,9 @@ import ActionIcon from '@/elements/ActionIcon.tsx';
 import Badge from '@/elements/Badge.tsx';
 import Card from '@/elements/Card.tsx';
 import Drawer from '@/elements/Drawer.tsx';
+import ScrollArea from '@/elements/ScrollArea.tsx';
 import Spinner from '@/elements/Spinner.tsx';
+import Stack from '@/elements/Stack.tsx';
 import Tooltip from '@/elements/Tooltip.tsx';
 import FormattedTimestamp from '@/elements/time/FormattedTimestamp.tsx';
 import { queryKeys } from '@/lib/queryKeys.ts';

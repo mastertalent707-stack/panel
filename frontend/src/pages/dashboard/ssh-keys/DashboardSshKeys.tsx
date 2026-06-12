@@ -1,11 +1,11 @@
 import { faDownload, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Group } from '@mantine/core';
 import { useState } from 'react';
 import getSshKeys from '@/api/me/ssh-keys/getSshKeys.ts';
 import Button from '@/elements/Button.tsx';
 import ConditionalTooltip from '@/elements/ConditionalTooltip.tsx';
 import AccountContentContainer from '@/elements/containers/AccountContentContainer.tsx';
+import Group from '@/elements/Group.tsx';
 import Table from '@/elements/Table.tsx';
 import { queryKeys } from '@/lib/queryKeys.ts';
 import { useSearchablePaginatedTable } from '@/plugins/useSearchablePageableTable.ts';

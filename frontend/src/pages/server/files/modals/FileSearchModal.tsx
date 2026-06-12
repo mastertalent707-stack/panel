@@ -7,19 +7,26 @@ import {
   faSliders,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Box, Collapse, Flex, Group, ModalProps, Stack, Text, UnstyledButton } from '@mantine/core';
+import { ModalProps } from '@mantine/core';
 import { zod4Resolver } from 'mantine-form-zod-resolver';
 import { startTransition, useEffect, useState } from 'react';
 import { z } from 'zod';
 import searchFiles from '@/api/server/files/searchFiles.ts';
+import Box from '@/elements/Box.tsx';
 import Button from '@/elements/Button.tsx';
+import Collapse from '@/elements/Collapse.tsx';
 import CollapsibleSection from '@/elements/CollapsibleSection.tsx';
+import Flex from '@/elements/Flex.tsx';
+import Group from '@/elements/Group.tsx';
 import SizeInput from '@/elements/input/SizeInput.tsx';
 import Switch from '@/elements/input/Switch.tsx';
 import TagsInput from '@/elements/input/TagsInput.tsx';
 import TextInput from '@/elements/input/TextInput.tsx';
 import FormModal from '@/elements/modals/FormModal.tsx';
 import { ModalFooter } from '@/elements/modals/Modal.tsx';
+import Stack from '@/elements/Stack.tsx';
+import Text from '@/elements/Text.tsx';
+import UnstyledButton from '@/elements/UnstyledButton.tsx';
 import { serverFilesSearchSchema } from '@/lib/schemas/server/files.ts';
 import { useModalForm } from '@/plugins/useModalForm.ts';
 import { useFileManager } from '@/providers/contexts/fileManagerContext.ts';

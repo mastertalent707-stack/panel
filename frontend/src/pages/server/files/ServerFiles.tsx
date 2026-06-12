@@ -1,6 +1,5 @@
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Group, Title } from '@mantine/core';
 import classNames from 'classnames';
 import { join } from 'pathe';
 import { type Ref, useCallback, useEffect, useRef } from 'react';
@@ -11,9 +10,11 @@ import { httpErrorToHuman } from '@/api/axios.ts';
 import copyFile from '@/api/server/files/copyFile.ts';
 import Card from '@/elements/Card.tsx';
 import ServerContentContainer from '@/elements/containers/ServerContentContainer.tsx';
+import Group from '@/elements/Group.tsx';
 import SelectionArea from '@/elements/SelectionArea.tsx';
 import Spinner from '@/elements/Spinner.tsx';
 import Table from '@/elements/Table.tsx';
+import Title from '@/elements/Title.tsx';
 import { isOpenableFile } from '@/lib/files.ts';
 import { ObjectSet } from '@/lib/objectSet.ts';
 import { serverDirectoryEntrySchema, serverDirectorySortingModeSchema } from '@/lib/schemas/server/files.ts';

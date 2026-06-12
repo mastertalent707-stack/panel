@@ -1,4 +1,3 @@
-import { Group, Stack } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { zod4Resolver } from 'mantine-form-zod-resolver';
 import { useEffect, useState } from 'react';
@@ -9,12 +8,14 @@ import updateEggVariable from '@/api/admin/nests/eggs/variables/updateEggVariabl
 import { httpErrorToHuman } from '@/api/axios.ts';
 import Button from '@/elements/Button.tsx';
 import Card from '@/elements/Card.tsx';
+import Group from '@/elements/Group.tsx';
 import LocalizedTextArea from '@/elements/input/LocalizedTextArea.tsx';
 import LocalizedTextInput from '@/elements/input/LocalizedTextInput.tsx';
 import Switch from '@/elements/input/Switch.tsx';
 import TagsInput from '@/elements/input/TagsInput.tsx';
 import TextInput from '@/elements/input/TextInput.tsx';
 import ConfirmationModal from '@/elements/modals/ConfirmationModal.tsx';
+import Stack from '@/elements/Stack.tsx';
 import { adminEggSchema, adminEggVariableSchema, adminEggVariableUpdateSchema } from '@/lib/schemas/admin/eggs.ts';
 import { adminNestSchema } from '@/lib/schemas/admin/nests.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';

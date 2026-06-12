@@ -1,4 +1,3 @@
-import { Group, Stack } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { zod4Resolver } from 'mantine-form-zod-resolver';
 import { useEffect, useState } from 'react';
@@ -7,8 +6,10 @@ import updateEggScript from '@/api/admin/nests/eggs/updateEggScript.ts';
 import { httpErrorToHuman } from '@/api/axios.ts';
 import Button from '@/elements/Button.tsx';
 import AdminSubContentContainer from '@/elements/containers/AdminSubContentContainer.tsx';
+import Group from '@/elements/Group.tsx';
 import TextInput from '@/elements/input/TextInput.tsx';
 import MonacoEditor from '@/elements/MonacoEditor.tsx';
+import Stack from '@/elements/Stack.tsx';
 import { adminEggConfigScriptSchema, adminEggSchema } from '@/lib/schemas/admin/eggs.ts';
 import { adminNestSchema } from '@/lib/schemas/admin/nests.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';

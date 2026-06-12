@@ -1,11 +1,11 @@
 import { faCodeCommit, faCog, faComputer, faFolderTree, faTerminal } from '@fortawesome/free-solid-svg-icons';
-import { Title } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router';
 import { z } from 'zod';
 import getEgg from '@/api/admin/nests/eggs/getEgg.ts';
 import Spinner from '@/elements/Spinner.tsx';
 import SubNavigation from '@/elements/SubNavigation.tsx';
+import Title from '@/elements/Title.tsx';
 import { adminNestSchema } from '@/lib/schemas/admin/nests.ts';
 import EggCreateOrUpdate from '@/pages/admin/nests/eggs/EggCreateOrUpdate.tsx';
 import AdminEggMounts from '@/pages/admin/nests/eggs/mounts/AdminEggMounts.tsx';

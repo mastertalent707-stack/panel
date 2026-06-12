@@ -1,4 +1,3 @@
-import { Popover, Stack, Text } from '@mantine/core';
 import { UseFormReturnType } from '@mantine/form';
 import cronstrue from 'cronstrue/i18n';
 import { useEffect, useState } from 'react';
@@ -6,6 +5,9 @@ import { z } from 'zod';
 import Select from '@/elements/input/Select.tsx';
 import Switch from '@/elements/input/Switch.tsx';
 import TextInput from '@/elements/input/TextInput.tsx';
+import Popover from '@/elements/Popover.tsx';
+import Stack from '@/elements/Stack.tsx';
+import Text from '@/elements/Text.tsx';
 import {
   serverBackupStatusLabelMapping,
   serverPowerActionLabelMapping,

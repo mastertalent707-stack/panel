@@ -8,7 +8,6 @@ import {
   faReply,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Group, Stack, Tabs, Timeline, Title } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import getSchedule from '@/api/server/schedules/getSchedule.ts';
@@ -21,7 +20,12 @@ import Button from '@/elements/Button.tsx';
 import { ServerCan } from '@/elements/Can.tsx';
 import ContextMenu from '@/elements/ContextMenu.tsx';
 import ServerContentContainer from '@/elements/containers/ServerContentContainer.tsx';
+import Group from '@/elements/Group.tsx';
 import Spinner from '@/elements/Spinner.tsx';
+import Stack from '@/elements/Stack.tsx';
+import Tabs from '@/elements/Tabs.tsx';
+import Timeline from '@/elements/Timeline.tsx';
+import Title from '@/elements/Title.tsx';
 import Tooltip from '@/elements/Tooltip.tsx';
 import FormattedTimestamp from '@/elements/time/FormattedTimestamp.tsx';
 import { useToast } from '@/providers/ToastProvider.tsx';

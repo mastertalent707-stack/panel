@@ -1,10 +1,11 @@
-import { ModalProps, Title } from '@mantine/core';
+import { ModalProps } from '@mantine/core';
 import { join } from 'pathe';
 import { z } from 'zod';
 import Button from '@/elements/Button.tsx';
 import Code from '@/elements/Code.tsx';
 import Divider from '@/elements/Divider.tsx';
 import { Modal, ModalFooter } from '@/elements/modals/Modal.tsx';
+import Title from '@/elements/Title.tsx';
 import FormattedTimestamp from '@/elements/time/FormattedTimestamp.tsx';
 import { serverDirectoryEntrySchema } from '@/lib/schemas/server/files.ts';
 import { bytesToString } from '@/lib/size.ts';

@@ -1,8 +1,8 @@
-import { Group } from '@mantine/core';
 import { useSearchParams } from 'react-router';
 import { z } from 'zod';
 import ActivityInfoButton from '@/elements/activity/ActivityInfoButton.tsx';
 import Code from '@/elements/Code.tsx';
+import Group from '@/elements/Group.tsx';
 import { TableData, TableRow } from '@/elements/Table.tsx';
 import TableLink from '@/elements/TableLink.tsx';
 import FormattedTimestamp from '@/elements/time/FormattedTimestamp.tsx';

@@ -1,8 +1,9 @@
 import { faCog } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Group, Stack } from '@mantine/core';
 import { useState } from 'react';
 import Button from '@/elements/Button.tsx';
+import Group from '@/elements/Group.tsx';
+import Stack from '@/elements/Stack.tsx';
 import TitleCard from '@/elements/TitleCard.tsx';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import SettingsReinstallModal from './modals/SettingsReinstallModal.tsx';

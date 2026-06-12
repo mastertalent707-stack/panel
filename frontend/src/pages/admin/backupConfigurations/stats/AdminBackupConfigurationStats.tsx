@@ -1,6 +1,5 @@
 import { faArchive } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Title } from '@mantine/core';
 import { Fragment, useEffect, useState } from 'react';
 import { z } from 'zod';
 import getBackupConfigurationStats, {
@@ -10,6 +9,7 @@ import { httpErrorToHuman } from '@/api/axios.ts';
 import Card from '@/elements/Card.tsx';
 import AdminSubContentContainer from '@/elements/containers/AdminSubContentContainer.tsx';
 import Spinner from '@/elements/Spinner.tsx';
+import Title from '@/elements/Title.tsx';
 import TitleCard from '@/elements/TitleCard.tsx';
 import { adminBackupConfigurationSchema } from '@/lib/schemas/admin/backupConfigurations.ts';
 import { bytesToString } from '@/lib/size.ts';

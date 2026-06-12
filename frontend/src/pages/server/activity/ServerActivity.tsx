@@ -1,6 +1,5 @@
 import { faCodeBranch, faX } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Group } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { NavLink, useSearchParams } from 'react-router';
 import { z } from 'zod';
@@ -11,6 +10,7 @@ import ActivityInfoButton from '@/elements/activity/ActivityInfoButton.tsx';
 import Button from '@/elements/Button.tsx';
 import Code from '@/elements/Code.tsx';
 import ServerContentContainer from '@/elements/containers/ServerContentContainer.tsx';
+import Group from '@/elements/Group.tsx';
 import Table, { TableData, TableRow } from '@/elements/Table.tsx';
 import TableLink from '@/elements/TableLink.tsx';
 import FormattedTimestamp from '@/elements/time/FormattedTimestamp.tsx';

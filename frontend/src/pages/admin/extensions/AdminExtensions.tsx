@@ -1,6 +1,5 @@
 import { faFileText, faRefresh, faUpload } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Group, Title } from '@mantine/core';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { z } from 'zod';
 import getAdminExtensions from '@/api/admin/extensions/getAdminExtensions.ts';
@@ -13,7 +12,9 @@ import Button from '@/elements/Button.tsx';
 import { AdminCan } from '@/elements/Can.tsx';
 import ConditionalTooltip from '@/elements/ConditionalTooltip.tsx';
 import AdminContentContainer from '@/elements/containers/AdminContentContainer.tsx';
+import Group from '@/elements/Group.tsx';
 import Spinner from '@/elements/Spinner.tsx';
+import Title from '@/elements/Title.tsx';
 import { adminBackendExtensionSchema } from '@/lib/schemas/admin/backendExtension.ts';
 import { useImportDragAndDrop } from '@/plugins/useImportDragAndDrop.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';

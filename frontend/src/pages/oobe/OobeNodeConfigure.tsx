@@ -1,6 +1,5 @@
 import { faCheck, faChevronLeft, faCopy } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Group, Stack, Title } from '@mantine/core';
 import jsYaml from 'js-yaml';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import getNodeToken from '@/api/admin/nodes/getNodeToken.ts';
@@ -10,7 +9,10 @@ import Alert from '@/elements/Alert.tsx';
 import AlertError from '@/elements/alerts/AlertError.tsx';
 import Button from '@/elements/Button.tsx';
 import Code from '@/elements/Code.tsx';
+import Group from '@/elements/Group.tsx';
 import HljsCode from '@/elements/HljsCode.tsx';
+import Stack from '@/elements/Stack.tsx';
+import Title from '@/elements/Title.tsx';
 import { handleCopyToClipboard } from '@/lib/copy.ts';
 import { getNodeConfiguration, getNodeConfigurationCommand, getNodeUrl } from '@/lib/node.ts';
 import { queryKeys } from '@/lib/queryKeys.ts';

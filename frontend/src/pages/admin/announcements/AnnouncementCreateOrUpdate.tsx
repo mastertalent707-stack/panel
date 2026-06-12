@@ -1,4 +1,3 @@
-import { Group } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { zod4Resolver } from 'mantine-form-zod-resolver';
 import { useEffect, useState } from 'react';
@@ -14,6 +13,7 @@ import { httpErrorToHuman } from '@/api/axios.ts';
 import Button from '@/elements/Button.tsx';
 import { AdminCan } from '@/elements/Can.tsx';
 import AdminContentContainer from '@/elements/containers/AdminContentContainer.tsx';
+import Group from '@/elements/Group.tsx';
 import DateTimePicker from '@/elements/input/DateTimePicker.tsx';
 import LocalizedTextArea from '@/elements/input/LocalizedTextArea.tsx';
 import LocalizedTextInput from '@/elements/input/LocalizedTextInput.tsx';

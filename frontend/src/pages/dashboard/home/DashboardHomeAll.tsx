@@ -1,4 +1,3 @@
-import { Group } from '@mantine/core';
 import { useEffect, useRef, useState } from 'react';
 import { z } from 'zod';
 import { httpErrorToHuman } from '@/api/axios.ts';
@@ -7,6 +6,7 @@ import getServers from '@/api/server/getServers.ts';
 import { AdminCan } from '@/elements/Can.tsx';
 import AccountContentContainer from '@/elements/containers/AccountContentContainer.tsx';
 import Divider from '@/elements/Divider.tsx';
+import Group from '@/elements/Group.tsx';
 import Switch from '@/elements/input/Switch.tsx';
 import TextInput from '@/elements/input/TextInput.tsx';
 import Spinner from '@/elements/Spinner.tsx';

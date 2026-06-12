@@ -1,11 +1,13 @@
-import { ModalProps, Stack, Switch } from '@mantine/core';
+import { ModalProps } from '@mantine/core';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { z } from 'zod';
 import { httpErrorToHuman } from '@/api/axios.ts';
 import restoreBackup from '@/api/server/backups/restoreBackup.ts';
 import Button from '@/elements/Button.tsx';
+import Switch from '@/elements/input/Switch.tsx';
 import { Modal, ModalFooter } from '@/elements/modals/Modal.tsx';
+import Stack from '@/elements/Stack.tsx';
 import { serverBackupSchema } from '@/lib/schemas/server/backups.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';

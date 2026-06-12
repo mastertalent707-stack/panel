@@ -1,6 +1,7 @@
 import { IconDefinition } from '@fortawesome/free-solid-svg-icons';
-import { Flex, Text } from '@mantine/core';
+import Flex from '@/elements/Flex.tsx';
 import KbdKey from '@/elements/KbdKey.tsx';
+import Text from '@/elements/Text.tsx';
 
 export interface ShortcutItemProps {
   keys: (string | { icon: IconDefinition })[];

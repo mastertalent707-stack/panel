@@ -1,13 +1,16 @@
 import { faGear, faPencil, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Group, Stack, Text, ThemeIcon } from '@mantine/core';
 import { useState } from 'react';
 import z from 'zod';
 import { httpErrorToHuman } from '@/api/axios.ts';
 import deleteScheduleStep from '@/api/server/schedules/steps/deleteScheduleStep.ts';
 import ActionIcon from '@/elements/ActionIcon.tsx';
 import Card from '@/elements/Card.tsx';
+import Group from '@/elements/Group.tsx';
 import ConfirmationModal from '@/elements/modals/ConfirmationModal.tsx';
+import Stack from '@/elements/Stack.tsx';
+import Text from '@/elements/Text.tsx';
+import ThemeIcon from '@/elements/ThemeIcon.tsx';
 import { scheduleStepIconMapping, scheduleStepLabelMapping } from '@/lib/enums.ts';
 import { serverScheduleSchema, serverScheduleStepSchema } from '@/lib/schemas/server/schedules.ts';
 import { useToast } from '@/providers/ToastProvider.tsx';
