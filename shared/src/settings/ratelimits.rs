@@ -97,7 +97,7 @@ impl SettingsDeserializeExt for AppSettingsRatelimitsDeserializer {
                 .read_serde_setting("client")
                 .unwrap_or(RatelimitConfiguration {
                     hits: 360,
-                    window_seconds: 60,
+                    window_seconds: 30,
                 }),
             client_servers_backups_create: deserializer
                 .read_serde_setting("client_servers_backups_create")

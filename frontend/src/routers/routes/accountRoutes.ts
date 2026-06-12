@@ -13,6 +13,7 @@ import type { RouteDefinition } from 'shared';
 import DashboardAccount from '@/pages/dashboard/account/DashboardAccount.tsx';
 import DashboardActivity from '@/pages/dashboard/activity/DashboardActivity.tsx';
 import DashboardApiKeys from '@/pages/dashboard/api-keys/DashboardApiKeys.tsx';
+import DashboardApiKeysCreate from '@/pages/dashboard/api-keys/DashboardApiKeysCreate.tsx';
 import DashboardCommandSnippets from '@/pages/dashboard/command-snippets/DashboardCommandSnippets.tsx';
 import DashboardOAuthLinks from '@/pages/dashboard/oauth-links/DashboardOAuthLinks.tsx';
 import DashboardSecurityKeys from '@/pages/dashboard/security-keys/DashboardSecurityKeys.tsx';
@@ -40,6 +41,11 @@ const routes: RouteDefinition[] = [
     icon: faCloud,
     path: '/api-keys',
     element: DashboardApiKeys,
+  },
+  {
+    name: undefined,
+    path: '/api-keys/create',
+    element: DashboardApiKeysCreate,
   },
   {
     name: () => getTranslations().t('pages.account.sshKeys.title', {}),

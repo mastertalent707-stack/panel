@@ -1270,6 +1270,19 @@
             "userPermissions": "Benutzer-Berechtigungen",
             "serverPermissions": "Server-Berechtigungen",
             "adminPermissions": "Admin-Berechtigungen"
+          },
+          "create": {
+            "title": "API-Schlüssel erstellen",
+            "subtitle": "Eine Anwendung fordert die Erstellung eines API-Schlüssels für deinen Account an.",
+            "alert": {
+              "adminPermissions": "Dieser API-Schlüssel fordert **Admin-Berechtigungen** an. Jeder, der diesen Schlüssel besitzt, kann in deinem Namen administrative Aktionen auf diesem Panel ausführen. Fahre nur fort, wenn du der anfragenden Anwendung absolut vertraust.",
+              "callbackUrl": "Nach der Erstellung wird der neue API-Schlüssel an **{url}** gesendet."
+            },
+            "noPermissions": "Dieser API-Schlüssel wird keine Berechtigungen haben.",
+            "keyCreated": "Dein neuer API-Schlüssel wurde erstellt. Kopiere ihn jetzt, da er nicht erneut angezeigt wird.",
+            "button": {
+              "goToApiKeys": "Zu den API-Schlüsseln"
+            }
           }
         },
         "activity": {

@@ -1270,6 +1270,19 @@
             "userPermissions": "User Permissions",
             "serverPermissions": "Server Permissions",
             "adminPermissions": "Admin Permissions"
+          },
+          "create": {
+            "title": "Create API Key",
+            "subtitle": "An application is requesting an API key to be created for your account.",
+            "alert": {
+              "adminPermissions": "This API key requests **admin permissions**. Anyone in possession of this key will be able to perform administrative actions on this panel in your name. Only continue if you absolutely trust the requesting application.",
+              "callbackUrl": "After creation, the new API key will be sent to **{url}**."
+            },
+            "noPermissions": "This API key will not have any permissions.",
+            "keyCreated": "Your new API key has been created. Make sure to copy it now, as it will not be shown again.",
+            "button": {
+              "goToApiKeys": "Go to API Keys"
+            }
           }
         },
         "activity": {

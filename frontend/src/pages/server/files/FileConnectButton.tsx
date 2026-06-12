@@ -16,7 +16,7 @@ export default function FileConnectButton({ file }: { file?: string }) {
   const [sftpDetailsOpen, setSftpDetailsOpen] = useState(false);
 
   const vscodeUrl =
-    `${vscodeUriScheme}://calagopus.calagopus/open?origin=${encodeURIComponent(window.location.origin)}&server=${server.uuid}&console=1` +
+    `${vscodeUriScheme}://calagopus.calagopus/open?origin=${encodeURIComponent(window.location.origin)}&server=${server.uuid}&create_path=/account/api-keys/create&console=1` +
     (file ? `&file=${encodeURIComponent(file)}` : '');
 
   return (
