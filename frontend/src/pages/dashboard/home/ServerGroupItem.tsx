@@ -148,7 +148,10 @@ export default function ServerGroupItem({
       <Card key={serverGroup.uuid} p={0} className='overflow-hidden rounded-xl!'>
         <div
           id='server-group-item-header'
-          className='flex flex-row items-end sm:items-center gap-3 px-3 bg-(--mantine-color-dark-7) light:bg-(--mantine-color-gray-0)! justify-between border-b border-(--mantine-color-default-border)'
+          className={classNames(
+            'flex flex-row items-end sm:items-center gap-3 px-3 bg-(--mantine-color-dark-7) light:bg-(--mantine-color-gray-0)! justify-between',
+            isExpanded && 'border-b border-(--mantine-color-default-border)',
+          )}
         >
           <div className='flex flex-col my-3 sm:my-0'>
             <div className='flex flex-row'>
