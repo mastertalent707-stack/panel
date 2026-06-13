@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "SELECT\n                COUNT(*) as servers,\n                COALESCE(SUM(cpu), 0)::int8 as cpu,\n                COALESCE(SUM(memory), 0)::int8 as memory,\n                COALESCE(SUM(memory_overhead), 0)::int8 as memory_overhead,\n                COALESCE(SUM(swap), 0)::int8 as swap,\n                COALESCE(SUM(disk), 0)::int8 as disk\n            FROM servers\n            WHERE servers.node_uuid = $1",
+  "query": "SELECT\n                COUNT(*) as servers,\n                COALESCE(SUM(cpu), 0)::int8 as cpu,\n                COALESCE(SUM(memory), 0)::int8 as memory,\n                COALESCE(SUM(memory_overhead), 0)::int8 as memory_overhead,\n                COALESCE(SUM(disk), 0)::int8 as disk\n            FROM servers\n            WHERE servers.node_uuid = $1",
   "describe": {
     "columns": [
       {
@@ -29,12 +29,6 @@
       },
       {
         "ordinal": 4,
-        "name": "swap",
-        "type_info": "Int8",
-        "origin": "Expression"
-      },
-      {
-        "ordinal": 5,
         "name": "disk",
         "type_info": "Int8",
         "origin": "Expression"
@@ -50,9 +44,8 @@
       null,
       null,
       null,
-      null,
       null
     ]
   },
-  "hash": "e935dff337ddff85ec072ad003331ed57af49f84121b41bf82d5459ecf3e07e8"
+  "hash": "c81ac839f807259fcdb062aca41ada0768de79f431e9f6dff3b4c99d1f8cfcf0"
 }
