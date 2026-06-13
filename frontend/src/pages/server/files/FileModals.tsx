@@ -8,6 +8,7 @@ import FilePermissionsModal from '@/pages/server/files/modals/FilePermissionsMod
 import FileRenameModal from '@/pages/server/files/modals/FileRenameModal.tsx';
 import FileSearchModal from '@/pages/server/files/modals/FileSearchModal.tsx';
 import LargestDirectoriesModal from '@/pages/server/files/modals/LargestDirectoriesModal.tsx';
+import MassRenameModal from '@/pages/server/files/modals/MassRenameModal.tsx';
 import PullFileModal from '@/pages/server/files/modals/PullFileModal.tsx';
 import { useFileManager } from '@/providers/contexts/fileManagerContext.ts';
 import FileDetailsModal from './modals/FileDetailsModal.tsx';
@@ -20,6 +21,7 @@ export default function FileModals() {
       <FileCopyModal file={modalDirectoryEntries[0]} opened={openModal === 'copy'} onClose={doCloseModal} />
       <FileCopyRemoteModal files={modalDirectoryEntries} opened={openModal === 'copy-remote'} onClose={doCloseModal} />
       <FileRenameModal file={modalDirectoryEntries[0]} opened={openModal === 'rename'} onClose={doCloseModal} />
+      <MassRenameModal files={modalDirectoryEntries} opened={openModal === 'mass-rename'} onClose={doCloseModal} />
       <FileDetailsModal file={modalDirectoryEntries[0]} opened={openModal === 'details'} onClose={doCloseModal} />
       <FileFingerprintModal
         file={modalDirectoryEntries[0]}

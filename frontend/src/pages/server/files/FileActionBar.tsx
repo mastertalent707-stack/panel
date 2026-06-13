@@ -6,6 +6,7 @@ import {
   faClone,
   faCopy,
   faFileDownload,
+  faPen,
   faTrash,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -248,6 +249,13 @@ function FileActionBar() {
                 <Tooltip label={t('pages.server.files.button.archive', {})}>
                   <Button onClick={() => doOpenModal('archive', selectedFiles.values())}>
                     <FontAwesomeIcon icon={faArchive} />
+                  </Button>
+                </Tooltip>
+              </ServerCan>
+              <ServerCan action='files.update'>
+                <Tooltip label={t('pages.server.files.button.rename', {})}>
+                  <Button onClick={() => doOpenModal('mass-rename', selectedFiles.values())}>
+                    <FontAwesomeIcon icon={faPen} />
                   </Button>
                 </Tooltip>
               </ServerCan>

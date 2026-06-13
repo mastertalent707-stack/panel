@@ -140,9 +140,9 @@ export default function AdminNodeCapacity({ node }: { node: z.infer<typeof admin
                         size: bytesToString(mbToBytes(Math.max(capacity.limits.memory - capacity.allocated.memory, 0))),
                       })}
                       {capacity.allocated.memoryOverhead > 0 &&
-                        ` - ${t('pages.admin.nodes.tabs.capacity.page.label.overhead', {
+                        t('pages.admin.nodes.tabs.capacity.page.label.overhead', {
                           size: bytesToString(mbToBytes(capacity.allocated.memoryOverhead)),
-                        })}`}
+                        })}
                     </p>
                   }
                 />

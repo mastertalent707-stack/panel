@@ -11,6 +11,7 @@ import { FileUploader } from '@/plugins/useFileUpload.ts';
 
 export type ModalType =
   | 'rename'
+  | 'mass-rename'
   | 'copy'
   | 'copy-remote'
   | 'fingerprint'

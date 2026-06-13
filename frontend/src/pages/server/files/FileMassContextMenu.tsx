@@ -1,4 +1,12 @@
-import { faAnglesUp, faClone, faCopy, faFileArrowDown, faFileZipper, faTrash } from '@fortawesome/free-solid-svg-icons';
+import {
+  faAnglesUp,
+  faClone,
+  faCopy,
+  faFileArrowDown,
+  faFileZipper,
+  faPen,
+  faTrash,
+} from '@fortawesome/free-solid-svg-icons';
 import { z } from 'zod';
 import { httpErrorToHuman } from '@/api/axios.ts';
 import downloadFiles from '@/api/server/files/downloadFiles.ts';
@@ -88,6 +96,14 @@ export default function FileMassContextMenu({ children }: FileMassContextMenuPro
           onClick: () => doOpenModal('archive', selectedFiles.values()),
           color: 'gray',
           canAccess: useServerCan('files.archive'),
+        },
+        {
+          icon: faPen,
+          label: t('pages.server.files.button.rename', {}),
+          hidden: !!actingMode || !browsingWritableDirectory,
+          onClick: () => doOpenModal('mass-rename', selectedFiles.values()),
+          color: 'gray',
+          canAccess: useServerCan('files.update'),
         },
         {
           icon: faAnglesUp,

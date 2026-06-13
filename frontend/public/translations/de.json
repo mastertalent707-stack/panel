@@ -3491,6 +3491,7 @@
             "filePullingStarted": "Datei-Pull hat begonnen.",
             "fileRenamed": "Datei wurde umbenannt.",
             "fileCouldNotBeRenamed": "Datei konnte nicht umbenannt werden.",
+            "filesRenamed": "{files} umbenannt.",
             "permissionsUpdated": "Berechtigungen wurden aktualisiert.",
             "permissionsUpdatedMany": "Berechtigungen für {files} wurden aktualisiert.",
             "permissionsCouldNotBeUpdated": "Berechtigungen konnten nicht aktualisiert werden.",
@@ -3606,6 +3607,62 @@
             },
             "renameFile": {
               "title": "Datei umbenennen"
+            },
+            "massRename": {
+              "title": "Dateien umbenennen",
+              "find": "Suchen",
+              "findPlaceholder": "Zu suchender Text",
+              "replace": "Ersetzen durch",
+              "replacePlaceholder": "Ersetzungstext",
+              "scope": "Anwenden auf",
+              "scopeName": "Name",
+              "scopeExtension": "Erweiterung",
+              "scopeFull": "Vollständiger Name",
+              "section": {
+                "matchOptions": "Suchoptionen",
+                "affixes": "Präfix & Suffix",
+                "caseConversion": "Groß-/Kleinschreibung",
+                "numbering": "Nummerierung"
+              },
+              "affix": {
+                "prefix": "Präfix",
+                "suffix": "Suffix",
+                "help": "Beide können {token} für die Nummer enthalten; ein Suffix hängt eine Zählung an jeden Namen an."
+              },
+              "option": {
+                "regex": "Regulären Ausdruck verwenden",
+                "regexDescription": "Behandelt den Suchtext als Regex; verweise mit $1, $2 auf Gruppen in der Ersetzung.",
+                "caseSensitive": "Groß-/Kleinschreibung beachten",
+                "allOccurrences": "Alle Vorkommen ersetzen"
+              },
+              "case": {
+                "label": "Groß-/Kleinschreibung umwandeln",
+                "none": "Keine Änderung",
+                "lower": "kleinbuchstaben",
+                "upper": "GROSSBUCHSTABEN",
+                "title": "Titelschreibweise",
+                "capitalize": "Ersten Buchstaben groß"
+              },
+              "numbering": {
+                "enable": "Nummerierung aktivieren",
+                "help": "Füge {token} im Such-, Ersetzungs-, Präfix- oder Suffixtext ein, wo die Nummer erscheinen soll.",
+                "start": "Beginnen bei",
+                "step": "Schritt",
+                "padding": "Mindestanzahl Ziffern"
+              },
+              "preview": {
+                "title": "Vorschau",
+                "original": "Original",
+                "newName": "Neuer Name",
+                "unchanged": "Unverändert",
+                "conflict": "Name bereits vergeben",
+                "duplicate": "Doppeltes Ziel",
+                "invalid": "Ungültiger Name",
+                "invalidRegex": "Ungültiger regulärer Ausdruck",
+                "empty": "Keine Dateien ausgewählt."
+              },
+              "summary": "{changed} von {total} werden umbenannt",
+              "conflictWarning": "Behebe die hervorgehobenen Namenskonflikte vor dem Umbenennen."
             },
             "largestDirectories": {
               "title": "Größte Verzeichnisse",
