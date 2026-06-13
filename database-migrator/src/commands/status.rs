@@ -120,8 +120,8 @@ impl shared::extensions::commands::CliCommand<StatusArgs> for StatusCommand {
 
                     let mut dir_entries = tokio::fs::read_dir(live_path).await?;
                     while let Some(entry) = dir_entries.next_entry().await? {
-                        let file_type = entry.file_type().await?;
-                        if file_type.is_dir() {
+                        let metadata = tokio::fs::metadata(entry.path()).await?;
+                        if metadata.is_dir() {
                             let extension_identifier =
                                 entry.file_name().to_string_lossy().to_string();
                             let migrations = crate::collect_extension_migrations(

@@ -162,19 +162,18 @@ impl shared::extensions::commands::CliCommand<ClearArgs> for ClearCommand {
 
                     let migrations_path = Path::new("database/extension-migrations")
                         .join(extension.metadata_toml.get_package_identifier());
+                    let had_migrations = tokio::fs::metadata(&migrations_path).await.is_ok();
 
-                    tokio::fs::remove_dir_all(frontend_path).await?;
-                    tokio::fs::remove_dir_all(backend_path).await?;
+                    super::remove_dir_or_symlink(&frontend_path).await?;
+                    super::remove_dir_or_symlink(&migrations_path).await?;
+                    super::remove_dir_or_symlink(&backend_path).await?;
                     tokio::fs::copy(
                         Path::new("backend-extensions/internal-list/Cargo.template.toml"),
                         Path::new("backend-extensions/internal-list/Cargo.toml"),
                     )
                     .await?;
 
-                    if args.remove_migrations && tokio::fs::metadata(&migrations_path).await.is_ok()
-                    {
-                        tokio::fs::remove_dir_all(migrations_path).await?;
-
+                    if args.remove_migrations && had_migrations {
                         println!("removed database migrations for this extension");
                         println!(
                             "this did NOT run any down migrations, it only removed the migration files from the filesystem, use with caution as this can lead to an inconsistent state if the migrations have already been applied to the database"

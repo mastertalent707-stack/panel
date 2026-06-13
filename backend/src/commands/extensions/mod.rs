@@ -1,4 +1,5 @@
 use shared::extensions::commands::CliCommandGroupBuilder;
+use std::path::Path;
 
 mod add;
 mod apply;
@@ -10,6 +11,94 @@ mod list;
 mod remove;
 mod resync;
 mod update;
+
+const FRONTEND_TSCONFIG: &str = r#"{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "moduleResolution": "bundler",
+    "module": "esnext",
+    "target": "esnext",
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "paths": {
+      "@/*": ["../../../frontend/src/*"]
+    },
+    "types": ["../../../frontend/src/vite-env.d.ts"]
+  },
+  "include": ["src"]
+}
+"#;
+
+#[cfg(unix)]
+fn symlink_dir(original: &Path, link: &Path) -> std::io::Result<()> {
+    std::os::unix::fs::symlink(original, link)
+}
+
+#[cfg(windows)]
+fn symlink_dir(original: &Path, link: &Path) -> std::io::Result<()> {
+    std::os::windows::fs::symlink_dir(original, link)
+}
+
+async fn remove_dir_or_symlink(path: &Path) -> std::io::Result<()> {
+    let metadata = match tokio::fs::symlink_metadata(path).await {
+        Ok(metadata) => metadata,
+        Err(err) if err.kind() == std::io::ErrorKind::NotFound => return Ok(()),
+        Err(err) => return Err(err),
+    };
+
+    if metadata.file_type().is_symlink() {
+        match tokio::fs::remove_dir(path).await {
+            Ok(()) => Ok(()),
+            Err(_) => tokio::fs::remove_file(path).await,
+        }
+    } else if metadata.is_dir() {
+        tokio::fs::remove_dir_all(path).await
+    } else {
+        tokio::fs::remove_file(path).await
+    }
+}
+
+async fn create_compat_links(identifier: &str) -> Result<(), anyhow::Error> {
+    let frontend_link = Path::new("frontend/extensions").join(identifier);
+    let migrations_link = Path::new("database/extension-migrations").join(identifier);
+
+    remove_dir_or_symlink(&frontend_link).await?;
+    remove_dir_or_symlink(&migrations_link).await?;
+
+    tokio::fs::write(
+        Path::new("backend-extensions")
+            .join(identifier)
+            .join("frontend")
+            .join("tsconfig.json"),
+        FRONTEND_TSCONFIG,
+    )
+    .await?;
+
+    symlink_dir(
+        &Path::new("../../backend-extensions")
+            .join(identifier)
+            .join("frontend"),
+        &frontend_link,
+    )?;
+    symlink_dir(
+        &Path::new("../../backend-extensions")
+            .join(identifier)
+            .join("migrations"),
+        &migrations_link,
+    )?;
+
+    let node_modules_link = Path::new("backend-extensions")
+        .join(identifier)
+        .join("frontend")
+        .join("node_modules");
+    remove_dir_or_symlink(&node_modules_link).await?;
+    symlink_dir(
+        Path::new("../../../frontend/node_modules"),
+        &node_modules_link,
+    )?;
+
+    Ok(())
+}
 
 pub fn commands(cli: CliCommandGroupBuilder) -> CliCommandGroupBuilder {
     cli.add_command(

@@ -311,6 +311,10 @@ impl User {
                 ),
                 5,
                 || async {
+                    let Some(key_start) = key.get(0..16) else {
+                        return Ok(None);
+                    };
+
                     let row = sqlx::query(sqlx::AssertSqlSafe(format!(
                         r#"
                         WITH user_api_keys AS MATERIALIZED (
@@ -327,7 +331,7 @@ impl User {
                         Self::columns_sql(None),
                         super::user_api_key::UserApiKey::columns_sql(Some("api_key_"))
                     )))
-                    .bind(&key[0..16])
+                    .bind(key_start)
                     .bind(key)
                     .fetch_optional(database.read())
                     .await?;

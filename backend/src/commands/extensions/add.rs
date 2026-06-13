@@ -211,12 +211,11 @@ impl shared::extensions::commands::CliCommand<AddArgs> for AddCommand {
                     }
                 }
 
-                let frontend_path = Path::new("frontend/extensions").join(&package_identifier);
-                tokio::fs::create_dir_all(&frontend_path).await?;
                 let backend_path = Path::new("backend-extensions").join(&package_identifier);
+                let frontend_path = backend_path.join("frontend");
+                let migrations_path = backend_path.join("migrations");
                 tokio::fs::create_dir_all(&backend_path).await?;
-                let migrations_path =
-                    Path::new("database/extension-migrations").join(&package_identifier);
+                tokio::fs::create_dir_all(&frontend_path).await?;
                 tokio::fs::create_dir_all(&migrations_path).await?;
 
                 let mut extension_distr = tokio::task::spawn_blocking(move || {
@@ -230,6 +229,8 @@ impl shared::extensions::commands::CliCommand<AddArgs> for AddCommand {
                     Ok::<_, anyhow::Error>(extension_distr)
                 })
                 .await??;
+
+                super::create_compat_links(&package_identifier).await?;
 
                 if extension_distr.has_migrations() {
                     println!("extension has database migrations...");

@@ -46,21 +46,6 @@ impl shared::extensions::commands::CliCommand<ExportArgs> for ExportCommand {
                     return Ok(1);
                 }
 
-                let frontend_path = Path::new("frontend/extensions").join(&package_identifier);
-                if tokio::fs::metadata(&frontend_path)
-                    .await
-                    .ok()
-                    .is_none_or(|e| !e.is_dir())
-                {
-                    eprintln!(
-                        "{} {} {}",
-                        "failed to find".red(),
-                        format!("frontend/extensions/{}", package_identifier).bright_red(),
-                        "directory, make sure you are in the panel root.".red()
-                    );
-                    return Ok(1);
-                }
-
                 let backend_path = Path::new("backend-extensions").join(&package_identifier);
                 if tokio::fs::metadata(&backend_path)
                     .await
@@ -80,8 +65,26 @@ impl shared::extensions::commands::CliCommand<ExportArgs> for ExportCommand {
                     return Ok(1);
                 }
 
-                let migrations_path =
-                    Path::new("database/extension-migrations").join(&package_identifier);
+                let frontend_path = backend_path.join("frontend");
+                if tokio::fs::metadata(&frontend_path)
+                    .await
+                    .ok()
+                    .is_none_or(|e| !e.is_dir())
+                {
+                    eprintln!(
+                        "{} {} {}",
+                        "failed to find".red(),
+                        format!("backend-extensions/{}/frontend", package_identifier).bright_red(),
+                        "directory, make sure you are in the panel root.".red()
+                    );
+                    return Ok(1);
+                }
+
+                let migrations_path = backend_path.join("migrations");
+                let has_migrations = match tokio::fs::read_dir(&migrations_path).await {
+                    Ok(mut entries) => entries.next_entry().await?.is_some(),
+                    Err(_) => false,
+                };
 
                 tokio::fs::create_dir_all("exported-extensions").await?;
 
@@ -99,7 +102,7 @@ impl shared::extensions::commands::CliCommand<ExportArgs> for ExportCommand {
                             .add_frontend(frontend_path)?
                             .add_backend(backend_path)?;
 
-                        if migrations_path.exists() {
+                        if has_migrations {
                             builder = builder.add_migrations(migrations_path)?;
                         }
 

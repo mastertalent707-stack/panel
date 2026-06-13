@@ -578,8 +578,9 @@ impl SlimExtensionDistrFile {
             let cargo_toml: CargoToml = toml::from_str(&cargo_toml)?;
 
             let package_json = filesystem.read_to_string(
-                Path::new("frontend/extensions")
+                Path::new("backend-extensions")
                     .join(&name)
+                    .join("frontend")
                     .join("package.json"),
             )?;
             let package_json: PackageJson = serde_json::from_str(&package_json)?;
@@ -633,9 +634,17 @@ impl ExtensionDistrFileBuilder {
             FileOptions::<()>::default().compression_level(Some(9)),
         )?;
 
-        let ignored = &[GitignoreBuilder::new("/")
+        // Respect the extension's own `.gitignore` and never bundle the git
+        // directory, the generated `Metadata.toml`, or the co-located frontend
+        // code and database migrations (exported separately).
+        let mut ignore_builder = GitignoreBuilder::new(path.as_ref());
+        ignore_builder.add(path.as_ref().join(".gitignore"));
+        ignore_builder
+            .add_line(None, ".git/")?
             .add_line(None, "Metadata.toml")?
-            .build()?];
+            .add_line(None, "/frontend/")?
+            .add_line(None, "/migrations/")?;
+        let ignored = &[ignore_builder.build()?];
 
         let mut walker = filesystem.walk_dir(path)?.with_ignored(ignored);
         while let Some(Ok((_, name))) = walker.next_entry() {
@@ -675,9 +684,18 @@ impl ExtensionDistrFileBuilder {
             FileOptions::<()>::default().compression_level(Some(9)),
         )?;
 
-        let ignored = &[GitignoreBuilder::new("/")
-            .add_line(None, "node_modules/")?
-            .build()?];
+        // Respect the extension's own `.gitignore` and never bundle the git
+        // directory, node_modules, or the `tsconfig.json` generated on install
+        // to make editors resolve the panel's TypeScript config.
+        let mut ignore_builder = GitignoreBuilder::new(path.as_ref());
+        ignore_builder.add(path.as_ref().join(".gitignore"));
+        // `node_modules` is matched without a trailing slash so the symlink
+        // created on install (reported as a non-directory) is excluded too.
+        ignore_builder
+            .add_line(None, ".git/")?
+            .add_line(None, "node_modules")?
+            .add_line(None, "/tsconfig.json")?;
+        let ignored = &[ignore_builder.build()?];
 
         let mut walker = filesystem.walk_dir(path)?.with_ignored(ignored);
         while let Some(Ok((_, name))) = walker.next_entry() {
@@ -717,7 +735,13 @@ impl ExtensionDistrFileBuilder {
             FileOptions::<()>::default().compression_level(Some(9)),
         )?;
 
-        let mut walker = filesystem.walk_dir(path)?;
+        // Respect the extension's own `.gitignore` and never bundle the git directory.
+        let mut ignore_builder = GitignoreBuilder::new(path.as_ref());
+        ignore_builder.add(path.as_ref().join(".gitignore"));
+        ignore_builder.add_line(None, ".git/")?;
+        let ignored = &[ignore_builder.build()?];
+
+        let mut walker = filesystem.walk_dir(path)?.with_ignored(ignored);
         while let Some(Ok((_, name))) = walker.next_entry() {
             let metadata = filesystem.metadata(&name)?;
             let virtual_path = Path::new("migrations").join(&name);

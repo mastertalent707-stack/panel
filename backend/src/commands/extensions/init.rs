@@ -131,8 +131,10 @@ impl shared::extensions::commands::CliCommand<InitArgs> for InitCommand {
                 extension_distr.validate()?;
                 extension_distr.metadata_toml.package_name = old_package_name;
 
-                tokio::fs::create_dir_all(&frontend_path).await?;
+                let frontend_path = backend_path.join("frontend");
+                let migrations_path = backend_path.join("migrations");
                 tokio::fs::create_dir_all(&backend_path).await?;
+                tokio::fs::create_dir_all(&frontend_path).await?;
                 tokio::fs::create_dir_all(&migrations_path).await?;
 
                 let extension_distr = tokio::task::spawn_blocking({
@@ -152,6 +154,11 @@ impl shared::extensions::commands::CliCommand<InitArgs> for InitCommand {
                     }
                 })
                 .await??;
+
+                super::create_compat_links(&MetadataToml::convert_package_name_to_identifier(
+                    &args.package_name,
+                ))
+                .await?;
 
                 let cargo_toml_path = backend_path.join("Cargo.toml");
                 let mut cargo_toml = tokio::fs::read_to_string(&cargo_toml_path).await?;

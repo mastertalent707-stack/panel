@@ -165,14 +165,61 @@ impl shared::extensions::commands::CliCommand<RemoveArgs> for RemoveCommand {
                     return Ok(1);
                 }
 
-                tokio::fs::remove_dir_all(frontend_path).await?;
+                if args.remove_migrations && tokio::fs::metadata(&migrations_path).await.is_ok() {
+                    let state = match shared::AppState::new_cli(env).await {
+                        Ok(state) => state,
+                        Err(err) => {
+                            eprintln!(
+                                "{} {}: {}",
+                                "failed to initialize application state".red(),
+                                "(required to remove migrations)".bright_red(),
+                                err.to_string().red()
+                            );
+                            eprintln!(
+                                "{} {}",
+                                "re-run without --remove-migrations to remove the extension without touching the database, or manually roll back".red(),
+                                migrations_path.to_string_lossy().bright_red()
+                            );
+                            return Ok(1);
+                        }
+                    };
+
+                    let extension_migrations = database_migrator::collect_extension_migrations(
+                        &migrations_path,
+                        &args.package_name,
+                    )
+                    .await?;
+
+                    for migration in extension_migrations.iter().rev() {
+                        println!("running down migration: {}", migration.name.bright_blue());
+                        if let Err(err) = database_migrator::rollback_extension_migration(
+                            state.database.write(),
+                            migration,
+                        )
+                        .await
+                        {
+                            eprintln!(
+                                "{} {}: {}",
+                                "failed to run down migration".red(),
+                                migration.name.bright_red(),
+                                err.to_string().red()
+                            );
+                            return Ok(1);
+                        }
+                    }
+
+                    println!("rolled back database migrations for this extension");
+                }
+
+                super::remove_dir_or_symlink(&frontend_path).await?;
                 if tokio::fs::metadata(&frontend_translations_path)
                     .await
                     .is_ok()
                 {
                     tokio::fs::remove_file(frontend_translations_path).await?;
                 }
-                tokio::fs::remove_dir_all(backend_path).await?;
+                super::remove_dir_or_symlink(&migrations_path).await?;
+                super::remove_dir_or_symlink(&backend_path).await?;
                 tokio::fs::copy(
                     Path::new("backend-extensions/internal-list/Cargo.template.toml"),
                     Path::new("backend-extensions/internal-list/Cargo.toml"),
@@ -209,58 +256,6 @@ impl shared::extensions::commands::CliCommand<RemoveArgs> for RemoveCommand {
                         "pnpm install".bright_red(),
                         "did not run successfully, ignoring".red()
                     );
-                }
-
-                if args.remove_migrations && tokio::fs::metadata(&migrations_path).await.is_ok() {
-                    let state = match shared::AppState::new_cli(env).await {
-                        Ok(state) => state,
-                        Err(err) => {
-                            eprintln!(
-                                "{} {}: {}",
-                                "failed to initialize application state".red(),
-                                "(required to remove migrations)".bright_red(),
-                                err.to_string().red()
-                            );
-                            eprintln!(
-                                "{} {}",
-                                "if your sole purpose is to remove the extension migrations, you can safely delete the directory".red(),
-                                migrations_path.to_string_lossy().bright_red()
-                            );
-                            println!(
-                                "besides this, {} has been removed successfully.",
-                                args.package_name.cyan()
-                            );
-                            return Ok(1);
-                        }
-                    };
-
-                    let extension_migrations = database_migrator::collect_extension_migrations(
-                        &migrations_path,
-                        &args.package_name,
-                    )
-                    .await?;
-
-                    for migration in extension_migrations.iter().rev() {
-                        println!("running down migration: {}", migration.name.bright_blue());
-                        if let Err(err) = database_migrator::rollback_extension_migration(
-                            state.database.write(),
-                            migration,
-                        )
-                        .await
-                        {
-                            eprintln!(
-                                "{} {}: {}",
-                                "failed to run down migration".red(),
-                                migration.name.bright_red(),
-                                err.to_string().red()
-                            );
-                            return Ok(1);
-                        }
-                    }
-
-                    tokio::fs::remove_dir_all(migrations_path).await?;
-
-                    println!("removed and rolled back database migrations for this extension");
                 }
 
                 println!("successfully removed {}", args.package_name.cyan());
