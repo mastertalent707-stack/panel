@@ -845,6 +845,13 @@ const baseTranslations = defineTranslations({
                       added: 'Server added to group.',
                     },
                   },
+                  removeServerFromGroup: {
+                    title: 'Confirm Server Removal',
+                    content: 'Are you sure you want to remove **{server}** from **{group}**?',
+                    toast: {
+                      removed: 'Server removed from group.',
+                    },
+                  },
                 },
                 noGroups: 'No Groups could be found, time to create one?',
               },

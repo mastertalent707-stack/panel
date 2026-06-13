@@ -896,6 +896,13 @@
                     "toast": {
                       "added": "Server zur Gruppe hinzugefügt."
                     }
+                  },
+                  "removeServerFromGroup": {
+                    "title": "Entfernen des Servers bestätigen",
+                    "content": "Bist du sicher, dass du **{server}** aus **{group}** entfernen möchtest?",
+                    "toast": {
+                      "removed": "Server aus der Gruppe entfernt."
+                    }
                   }
                 },
                 "noGroups": "Es konnten keine Gruppen gefunden werden, Zeit eine zu erstellen?"

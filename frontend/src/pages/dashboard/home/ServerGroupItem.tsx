@@ -83,7 +83,11 @@ export default function ServerGroupItem({
     localStorage.getItem(`server-group-expanded-${serverGroup.uuid}`) !== 'false',
   );
   const [servers, setServers] = useState(getEmptyPaginationSet<z.infer<typeof serverSchema>>());
-  const [openModal, setOpenModal] = useState<'edit' | 'delete' | 'add-server' | null>(null);
+  const [openModal, setOpenModal] = useState<'edit' | 'delete' | 'add-server' | 'remove-server' | null>(null);
+  const [serverToRemove, setServerToRemove] = useState<{
+    server: z.infer<typeof serverSchema>;
+    index: number;
+  } | null>(null);
 
   const { handleBulkPowerAction, bulkActionLoading: groupActionLoading } = useBulkPowerActions();
 
@@ -111,6 +115,30 @@ export default function ServerGroupItem({
 
   const handleGroupPowerAction = async (action: z.infer<typeof serverPowerAction>) => {
     await handleBulkPowerAction(serverGroup.serverOrder, action);
+  };
+
+  const doRemoveServer = async () => {
+    if (!serverToRemove) {
+      return;
+    }
+
+    const { index } = serverToRemove;
+    const serverOrder = serverGroup.serverOrder.filter(
+      (_, orderI) => (servers.page - 1) * servers.perPage + index !== orderI,
+    );
+    updateStateServerGroup(serverGroup.uuid, { serverOrder });
+    setServers((prev) => ({ ...prev, data: prev.data.filter((_, dataI) => index !== dataI) }));
+
+    await updateServerGroup(serverGroup.uuid, { serverOrder })
+      .then(() => {
+        addToast(
+          t('pages.account.home.tabs.groupedServers.page.modal.removeServerFromGroup.toast.removed', {}),
+          'success',
+        );
+      })
+      .catch((msg) => {
+        addToast(httpErrorToHuman(msg), 'error');
+      });
   };
 
   const dndServers: DndServer[] = servers.data.map((s) => ({
@@ -141,6 +169,18 @@ export default function ServerGroupItem({
         onConfirmed={doDelete}
       >
         {t('pages.account.home.tabs.groupedServers.page.modal.deleteServerGroup.content', {
+          group: serverGroup.name,
+        }).md()}
+      </ConfirmationModal>
+      <ConfirmationModal
+        opened={openModal === 'remove-server'}
+        onClose={() => setOpenModal(null)}
+        title={t('pages.account.home.tabs.groupedServers.page.modal.removeServerFromGroup.title', {})}
+        confirm={t('common.button.remove', {})}
+        onConfirmed={doRemoveServer}
+      >
+        {t('pages.account.home.tabs.groupedServers.page.modal.removeServerFromGroup.content', {
+          server: serverToRemove?.server.name ?? '',
           group: serverGroup.name,
         }).md()}
       </ConfirmationModal>
@@ -324,17 +364,8 @@ export default function ServerGroupItem({
                           showForeignServerBadge
                           onClick={onServerClick ? (event) => onServerClick(server, event) : undefined}
                           onGroupRemove={() => {
-                            const serverOrder = serverGroup.serverOrder.filter(
-                              (_, orderI) => (servers.page - 1) * servers.perPage + i !== orderI,
-                            );
-                            updateStateServerGroup(serverGroup.uuid, {
-                              serverOrder,
-                            });
-                            setServers((prev) => ({ ...prev, data: prev.data.filter((_, dataI) => i !== dataI) }));
-
-                            updateServerGroup(serverGroup.uuid, { serverOrder }).catch((msg) => {
-                              addToast(httpErrorToHuman(msg), 'error');
-                            });
+                            setServerToRemove({ server, index: i });
+                            setOpenModal('remove-server');
                           }}
                           sKeyPressedRef={sKeyPressedRef}
                         />
