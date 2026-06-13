@@ -34,7 +34,9 @@ pub fn router(state: &State) -> OpenApiRouter<State> {
                         .await
                     {
                         Ok(stream) => stream,
-                        Err(_) => {
+                        Err(err) => {
+                            tracing::warn!("failed to connect to stats ws: {:?}", err);
+
                             return ApiResponse::error("failed to connect to upstream")
                                 .with_status(StatusCode::BAD_GATEWAY)
                                 .ok();
