@@ -578,9 +578,8 @@ impl SlimExtensionDistrFile {
             let cargo_toml: CargoToml = toml::from_str(&cargo_toml)?;
 
             let package_json = filesystem.read_to_string(
-                Path::new("backend-extensions")
+                Path::new("frontend/extensions")
                     .join(&name)
-                    .join("frontend")
                     .join("package.json"),
             )?;
             let package_json: PackageJson = serde_json::from_str(&package_json)?;
