@@ -239,14 +239,14 @@ export default function AdminExtensions() {
     >
       <BuildLogsModal opened={openModal === 'logs'} onClose={() => setOpenModal(null)} />
       <LicenseModal
-        opened
+        opened={!!pendingLicense}
         packageName={pendingLicense?.extension.metadataToml.packageName}
         licenseText={pendingLicense?.extension.metadataToml.licenseText ?? ''}
         onAccept={handleLicenseAccept}
         onClose={() => setPendingLicense(null)}
       />
       <RemoveExtensionModal
-        opened
+        opened={!!removalExtension}
         extension={removalExtension}
         onRemove={(removeMigrations) => handleRemove(removalExtension!, removeMigrations)}
         onClose={() => setRemovalExtension(null)}
