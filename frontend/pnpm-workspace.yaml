@@ -1,5 +1,6 @@
 packages:
   - 'extensions/*'
+  - '../backend-extensions/*/frontend'
 allowBuilds:
   "@tailwindcss/oxide": true
   esbuild: true
