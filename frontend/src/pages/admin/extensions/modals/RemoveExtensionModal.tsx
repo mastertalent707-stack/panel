@@ -9,7 +9,7 @@ import { adminBackendExtensionSchema } from '@/lib/schemas/admin/backendExtensio
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
 
 interface Props extends ModalProps {
-  extension: z.infer<typeof adminBackendExtensionSchema>;
+  extension: z.infer<typeof adminBackendExtensionSchema> | null;
   onRemove: (removeMigrations: boolean) => void;
 }
 
@@ -21,7 +21,7 @@ export default function RemoveExtensionModal({ extension, onRemove, onClose, ...
     <Modal title={t('pages.admin.extensions.modal.remove.title', {})} onClose={onClose} {...rest}>
       <p>
         {t('pages.admin.extensions.modal.remove.content', {
-          packageName: extension.metadataToml.packageName,
+          packageName: extension?.metadataToml.packageName || '',
         }).md()}
       </p>
 

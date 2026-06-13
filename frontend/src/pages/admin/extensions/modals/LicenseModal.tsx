@@ -4,17 +4,18 @@ import { Modal, ModalFooter } from '@/elements/modals/Modal.tsx';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
 
 interface Props extends ModalProps {
-  packageName: string;
+  packageName?: string;
   licenseText: string;
   onAccept: () => void;
 }
 
 export default function LicenseModal({ packageName, licenseText, onAccept, onClose, ...rest }: Props) {
   const { t } = useTranslations();
+
   return (
     <Modal title={t('pages.admin.extensions.modal.license.title', {})} size='lg' onClose={onClose} {...rest}>
       <p className='text-sm text-(--mantine-color-dimmed) mb-3'>
-        {t('pages.admin.extensions.modal.license.description', { packageName }).md()}
+        {t('pages.admin.extensions.modal.license.description', { packageName: packageName ?? '' }).md()}
       </p>
       <div>{licenseText.md()}</div>
 
