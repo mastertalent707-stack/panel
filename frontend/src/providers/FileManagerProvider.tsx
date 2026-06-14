@@ -1,11 +1,12 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { AxiosRequestConfig } from 'axios';
-import { ReactNode, useEffect, useRef, useState } from 'react';
+import { ReactNode, startTransition, useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router';
 import { z } from 'zod';
 import { axiosInstance, getEmptyPaginationSet } from '@/api/axios.ts';
 import getFileUploadUrl from '@/api/server/files/getFileUploadUrl.ts';
 import loadDirectory from '@/api/server/files/loadDirectory.ts';
+import searchFiles from '@/api/server/files/searchFiles.ts';
 import { ObjectSet } from '@/lib/objectSet.ts';
 import { serverBackupSchema } from '@/lib/schemas/server/backups.ts';
 import { serverDirectoryEntrySchema, serverDirectorySortingModeSchema } from '@/lib/schemas/server/files.ts';
@@ -84,6 +85,17 @@ const FileManagerProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const invalidateFilemanager = () => {
+    if (searchInfo) {
+      searchFiles(server.uuid, { root: browsingDirectory, ...searchInfo.filters }).then((entries) => {
+        startTransition(() => {
+          setBrowsingEntries({ total: entries.length, page: 1, perPage: entries.length, data: entries });
+          doSelectFiles([]);
+          clearActingFiles();
+        });
+      });
+      return;
+    }
+
     queryClient
       .invalidateQueries({
         queryKey: ['server', server.uuid, 'files'],
