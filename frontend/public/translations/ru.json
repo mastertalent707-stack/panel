@@ -587,10 +587,6 @@
           "step": {
             "username": {
               "title": "Вход",
-              "subtitle": "Введите имя пользователя для продолжения",
-              "form": {
-                "usernamePlaceholder": "Введите имя пользователя"
-              },
               "link": {
                 "forgotPassword": "Забыли пароль",
                 "notRegistered": "Нет аккаунта?",

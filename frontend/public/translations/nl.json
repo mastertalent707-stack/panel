@@ -592,10 +592,6 @@
           "step": {
             "username": {
               "title": "Inloggen",
-              "subtitle": "Voer uw gebruikersnaam in om door te gaan",
-              "form": {
-                "usernamePlaceholder": "Voer uw gebruikersnaam in"
-              },
               "link": {
                 "forgotPassword": "Wachtwoord vergeten",
                 "notRegistered": "Nog niet geregistreerd?",

@@ -592,10 +592,6 @@
           "step": {
             "username": {
               "title": "Iniciar sesión",
-              "subtitle": "Introduce tu usuario para continuar",
-              "form": {
-                "usernamePlaceholder": "Introduce tu usuario"
-              },
               "link": {
                 "forgotPassword": "Olvidé mi contraseña",
                 "notRegistered": "¿No estás registrado?",

@@ -752,10 +752,6 @@
           "step": {
             "username": {
               "title": "Prihlásenie",
-              "subtitle": "Ak chcete pokračovať, zadajte svoje používateľské meno",
-              "form": {
-                "usernamePlaceholder": "Zadajte svoje používateľské meno"
-              },
               "link": {
                 "forgotPassword": "Zabudnuté heslo",
                 "notRegistered": "Nie ste zaregistrovaný?",

@@ -588,10 +588,6 @@
           "step": {
             "username": {
               "title": "Đăng nhập",
-              "subtitle": "Nhập tên người dùng của bạn để tiếp tục",
-              "form": {
-                "usernamePlaceholder": "Nhập tên người dùng của bạn"
-              },
               "link": {
                 "forgotPassword": "Quên mật khẩu?",
                 "notRegistered": "Chưa đăng ký?",

@@ -596,10 +596,6 @@
           "step": {
             "username": {
               "title": "Logga in",
-              "subtitle": "Ange ditt användarnamn för att fortsätta",
-              "form": {
-                "usernamePlaceholder": "Ange ditt användarnamn"
-              },
               "link": {
                 "forgotPassword": "Glömt lösenord",
                 "notRegistered": "Inte registrerad?",

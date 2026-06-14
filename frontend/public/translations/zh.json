@@ -602,10 +602,6 @@
           "step": {
             "username": {
               "title": "登入",
-              "subtitle": "輸入你的使用者名稱以繼續",
-              "form": {
-                "usernamePlaceholder": "輸入你的使用者名稱"
-              },
               "link": {
                 "forgotPassword": "忘記密碼",
                 "notRegistered": "尚未註冊？",

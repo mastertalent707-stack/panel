@@ -592,10 +592,6 @@
           "step": {
             "username": {
               "title": "تسجيل الدخول",
-              "subtitle": "أدخل اسم المستخدم للمتابعة",
-              "form": {
-                "usernamePlaceholder": "أدخل اسم المستخدم"
-              },
               "link": {
                 "forgotPassword": "نسيت كلمة المرور",
                 "notRegistered": "غير مسجل؟",

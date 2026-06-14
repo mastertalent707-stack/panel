@@ -592,10 +592,6 @@
           "step": {
             "username": {
               "title": "Giriş Yap",
-              "subtitle": "Devam etmek için kullanıcı adınızı girin",
-              "form": {
-                "usernamePlaceholder": "Kullanıcı adınızı girin"
-              },
               "link": {
                 "forgotPassword": "Şifremi Unuttum",
                 "notRegistered": "Kayıtlı değil misiniz?",

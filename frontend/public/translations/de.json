@@ -163,6 +163,7 @@
         "password": "Passwort",
         "host": "Host",
         "username": "Benutzername",
+        "usernameOrEmail": "Benutzername/E-Mail",
         "server": "Server",
         "url": "URL",
         "email": "E-Mail",
@@ -768,9 +769,9 @@
           "step": {
             "username": {
               "title": "Anmelden",
-              "subtitle": "Gib deinen Benutzernamen ein, um fortzufahren",
+              "subtitle": "Gib deinen Benutzernamen oder deine E-Mail-Adresse ein, um fortzufahren",
               "form": {
-                "usernamePlaceholder": "Gib deinen Benutzernamen ein"
+                "usernameOrEmailPlaceholder": "Dein Benutzername oder deine E-Mail-Adresse"
               },
               "link": {
                 "forgotPassword": "Passwort vergessen",

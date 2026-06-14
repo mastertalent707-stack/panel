@@ -95,6 +95,10 @@ export const createSettingsSlice: StateCreator<AdminStore, [], [], SettingsSlice
       hits: 0,
       windowSeconds: 0,
     },
+    authPasswordReset: {
+      hits: 0,
+      windowSeconds: 0,
+    },
     client: {
       hits: 0,
       windowSeconds: 0,
@@ -108,6 +112,14 @@ export const createSettingsSlice: StateCreator<AdminStore, [], [], SettingsSlice
       windowSeconds: 0,
     },
     clientServersFilesPullQuery: {
+      hits: 0,
+      windowSeconds: 0,
+    },
+    remote: {
+      hits: 0,
+      windowSeconds: 0,
+    },
+    remoteSftpAuth: {
       hits: 0,
       windowSeconds: 0,
     },
