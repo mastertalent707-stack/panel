@@ -306,6 +306,7 @@ pub async fn auth(
     } else if let Some(api_token) = req.headers().get("Authorization") {
         drop(settings);
 
+        // "Bearer ".len() + 48 character token
         if api_token.len() != 55 {
             return Ok(ApiResponse::error("invalid authorization header")
                 .with_status(StatusCode::UNAUTHORIZED)

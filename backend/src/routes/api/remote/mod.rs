@@ -14,7 +14,29 @@ mod schedule;
 pub mod servers;
 mod sftp;
 
-pub async fn auth(state: GetState, mut req: Request, next: Next) -> Result<Response, StatusCode> {
+pub async fn auth(
+    state: GetState,
+    ip: shared::GetIp,
+    mut req: Request,
+    next: Next,
+) -> Result<Response, StatusCode> {
+    let ratelimit = match state.settings.get_as(|s| s.ratelimits.remote).await {
+        Ok(ratelimit) => ratelimit,
+        Err(err) => return Ok(ApiResponse::from(err).into_response()),
+    };
+    if let Err(err) = state
+        .cache
+        .ratelimit(
+            "remote",
+            ratelimit.hits,
+            ratelimit.window_seconds,
+            ip.to_string(),
+        )
+        .await
+    {
+        return Ok(err.into_response());
+    }
+
     let authorization = match req
         .headers()
         .get("Authorization")
@@ -27,25 +49,22 @@ pub async fn auth(state: GetState, mut req: Request, next: Next) -> Result<Respo
                 .into_response());
         }
     };
-    let mut parts = authorization.splitn(2, " ");
-    let r#type = parts.next().unwrap();
-    let token = parts.next();
+    let Some((r#type, token)) = authorization.split_once(" ") else {
+        return Ok(ApiResponse::error("invalid authorization header")
+            .with_status(StatusCode::UNAUTHORIZED)
+            .into_response());
+    };
 
-    if r#type != "Bearer" || token.is_none() || token.unwrap().len() != 81 {
+    if r#type != "Bearer" || token.len() != 81 {
         return Ok(ApiResponse::error("invalid authorization header")
             .with_status(StatusCode::UNAUTHORIZED)
             .into_response());
     }
 
-    let mut parts = token.unwrap().splitn(2, ".");
-    let token_id = parts.next().unwrap();
-    let token = match parts.next() {
-        Some(value) => value,
-        None => {
-            return Ok(ApiResponse::error("invalid authorization header")
-                .with_status(StatusCode::UNAUTHORIZED)
-                .into_response());
-        }
+    let Some((token_id, token)) = token.split_once('.') else {
+        return Ok(ApiResponse::error("invalid authorization header")
+            .with_status(StatusCode::UNAUTHORIZED)
+            .into_response());
     };
 
     let node = Node::by_token_id_token_cached(&state.database, token_id, token).await;

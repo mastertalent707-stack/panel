@@ -21,12 +21,15 @@ pub struct AppSettingsRatelimits {
     pub auth_login_checkpoint: RatelimitConfiguration,
     pub auth_login_security_key: RatelimitConfiguration,
     pub auth_password_forgot: RatelimitConfiguration,
+    pub auth_password_reset: RatelimitConfiguration,
 
     pub client: RatelimitConfiguration,
-
     pub client_servers_backups_create: RatelimitConfiguration,
     pub client_servers_files_pull: RatelimitConfiguration,
     pub client_servers_files_pull_query: RatelimitConfiguration,
+
+    pub remote: RatelimitConfiguration,
+    pub remote_sftp_auth: RatelimitConfiguration,
 }
 
 #[async_trait::async_trait]
@@ -41,6 +44,7 @@ impl SettingsSerializeExt for AppSettingsRatelimits {
             .write_serde_setting("auth_login_checkpoint", &self.auth_login_checkpoint)?
             .write_serde_setting("auth_login_security_key", &self.auth_login_security_key)?
             .write_serde_setting("auth_password_forgot", &self.auth_password_forgot)?
+            .write_serde_setting("auth_password_reset", &self.auth_password_reset)?
             .write_serde_setting("client", &self.client)?
             .write_serde_setting(
                 "client_servers_backups_create",
@@ -50,7 +54,9 @@ impl SettingsSerializeExt for AppSettingsRatelimits {
             .write_serde_setting(
                 "client_servers_files_pull_query",
                 &self.client_servers_files_pull_query,
-            )?)
+            )?
+            .write_serde_setting("remote", &self.remote)?
+            .write_serde_setting("remote_sftp_auth", &self.remote_sftp_auth)?)
     }
 }
 
@@ -93,6 +99,12 @@ impl SettingsDeserializeExt for AppSettingsRatelimitsDeserializer {
                     hits: 10,
                     window_seconds: 3600,
                 }),
+            auth_password_reset: deserializer
+                .read_serde_setting("auth_password_reset")
+                .unwrap_or(RatelimitConfiguration {
+                    hits: 10,
+                    window_seconds: 300,
+                }),
             client: deserializer
                 .read_serde_setting("client")
                 .unwrap_or(RatelimitConfiguration {
@@ -116,6 +128,18 @@ impl SettingsDeserializeExt for AppSettingsRatelimitsDeserializer {
                 .unwrap_or(RatelimitConfiguration {
                     hits: 10,
                     window_seconds: 60,
+                }),
+            remote: deserializer
+                .read_serde_setting("remote")
+                .unwrap_or(RatelimitConfiguration {
+                    hits: 720,
+                    window_seconds: 30,
+                }),
+            remote_sftp_auth: deserializer
+                .read_serde_setting("remote_sftp_auth")
+                .unwrap_or(RatelimitConfiguration {
+                    hits: 60,
+                    window_seconds: 30,
                 }),
         }))
     }

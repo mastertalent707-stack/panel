@@ -175,6 +175,8 @@ mod put {
         #[garde(dive)]
         auth_password_forgot: Option<shared::settings::ratelimits::RatelimitConfiguration>,
         #[garde(dive)]
+        auth_password_reset: Option<shared::settings::ratelimits::RatelimitConfiguration>,
+        #[garde(dive)]
         client: Option<shared::settings::ratelimits::RatelimitConfiguration>,
         #[garde(dive)]
         client_servers_backups_create: Option<shared::settings::ratelimits::RatelimitConfiguration>,
@@ -183,6 +185,10 @@ mod put {
         #[garde(dive)]
         client_servers_files_pull_query:
             Option<shared::settings::ratelimits::RatelimitConfiguration>,
+        #[garde(dive)]
+        remote: Option<shared::settings::ratelimits::RatelimitConfiguration>,
+        #[garde(dive)]
+        remote_sftp_auth: Option<shared::settings::ratelimits::RatelimitConfiguration>,
     }
 
     #[derive(ToSchema, Validate, Deserialize)]
@@ -404,6 +410,9 @@ mod put {
             if let Some(auth_password_forgot) = ratelimits.auth_password_forgot {
                 settings.ratelimits.auth_password_forgot = auth_password_forgot;
             }
+            if let Some(auth_password_reset) = ratelimits.auth_password_reset {
+                settings.ratelimits.auth_password_reset = auth_password_reset;
+            }
             if let Some(client) = ratelimits.client {
                 settings.ratelimits.client = client;
             }
@@ -418,6 +427,12 @@ mod put {
             {
                 settings.ratelimits.client_servers_files_pull_query =
                     client_servers_files_pull_query;
+            }
+            if let Some(remote) = ratelimits.remote {
+                settings.ratelimits.remote = remote;
+            }
+            if let Some(remote_sftp_auth) = ratelimits.remote_sftp_auth {
+                settings.ratelimits.remote_sftp_auth = remote_sftp_auth;
             }
         }
 

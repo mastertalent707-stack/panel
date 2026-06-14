@@ -165,10 +165,13 @@ export const adminSettingsRatelimitsSchema = z.object({
   authLoginCheckpoint: adminSettingsRatelimitConfigurationSchema,
   authLoginSecurityKey: adminSettingsRatelimitConfigurationSchema,
   authPasswordForgot: adminSettingsRatelimitConfigurationSchema,
+  authPasswordReset: adminSettingsRatelimitConfigurationSchema,
   client: adminSettingsRatelimitConfigurationSchema,
   clientServersBackupsCreate: adminSettingsRatelimitConfigurationSchema,
   clientServersFilesPull: adminSettingsRatelimitConfigurationSchema,
   clientServersFilesPullQuery: adminSettingsRatelimitConfigurationSchema,
+  remote: adminSettingsRatelimitConfigurationSchema,
+  remoteSftpAuth: adminSettingsRatelimitConfigurationSchema,
 });
 
 export const adminSettingsStorageFilesystemSchema = z.object({

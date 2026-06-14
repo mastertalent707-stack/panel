@@ -6,7 +6,7 @@ mod post {
     use serde::{Deserialize, Serialize};
     use shared::{
         ApiError, GetState,
-        models::{server::Server, user::User},
+        models::{node::GetNode, server::Server, user::User},
         response::{ApiResponse, ApiResponseResult},
     };
     use utoipa::ToSchema;
@@ -40,24 +40,27 @@ mod post {
     ), request_body = inline(Payload))]
     pub async fn route(
         state: GetState,
+        node: GetNode,
         shared::Payload(data): shared::Payload<Payload>,
     ) -> ApiResponseResult {
-        let mut parts = data.username.splitn(2, '.');
-        let user = match parts.next() {
-            Some(user) => user,
-            None => {
-                return ApiResponse::error("invalid username")
-                    .with_status(StatusCode::EXPECTATION_FAILED)
-                    .ok();
-            }
-        };
-        let server = match parts.next() {
-            Some(server) => server,
-            None => {
-                return ApiResponse::error("invalid username")
-                    .with_status(StatusCode::EXPECTATION_FAILED)
-                    .ok();
-            }
+        let ratelimit = state
+            .settings
+            .get_as(|s| s.ratelimits.remote_sftp_auth)
+            .await?;
+        state
+            .cache
+            .ratelimit(
+                "remote/sftp/auth",
+                ratelimit.hits,
+                ratelimit.window_seconds,
+                node.uuid.to_string(),
+            )
+            .await?;
+
+        let Some((user, server)) = data.username.split_once('.') else {
+            return ApiResponse::error("invalid username")
+                .with_status(StatusCode::EXPECTATION_FAILED)
+                .ok();
         };
 
         let user = match data.r#type {

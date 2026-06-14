@@ -31,10 +31,13 @@ const ENDPOINTS: Endpoint[] = [
   { label: 'auth/login/checkpoint', key: 'authLoginCheckpoint' },
   { label: 'auth/login/security-key', key: 'authLoginSecurityKey' },
   { label: 'auth/password/forgot', key: 'authPasswordForgot' },
+  { label: 'auth/password/reset', key: 'authPasswordReset' },
   { label: 'client', key: 'client' },
   { label: 'client/servers/backups/create', key: 'clientServersBackupsCreate' },
   { label: 'client/servers/files/pull', key: 'clientServersFilesPull' },
   { label: 'client/servers/files/pull/query', key: 'clientServersFilesPullQuery' },
+  { label: 'remote', key: 'remote' },
+  { label: 'remote/sftp/auth', key: 'remoteSftpAuth' },
 ];
 
 const DEFAULT_VALUES: RatelimitsSchema = Object.fromEntries(

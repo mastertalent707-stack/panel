@@ -43,6 +43,20 @@ mod post {
                 .ok();
         }
 
+        let ratelimit = state
+            .settings
+            .get_as(|s| s.ratelimits.auth_password_reset)
+            .await?;
+        state
+            .cache
+            .ratelimit(
+                "auth/password/reset",
+                ratelimit.hits,
+                ratelimit.window_seconds,
+                ip.to_string(),
+            )
+            .await?;
+
         let mut token =
             match UserPasswordReset::delete_by_token(&state.database, &data.token).await? {
                 Some(token) => token,

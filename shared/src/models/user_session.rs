@@ -7,7 +7,7 @@ use crate::{
 };
 use compact_str::ToCompactString;
 use garde::Validate;
-use rand::distr::SampleString;
+use rand::{RngExt, distr::SampleString};
 use serde::{Deserialize, Serialize};
 use sha2::Digest;
 use sqlx::{Row, postgres::PgRow};
@@ -293,6 +293,7 @@ impl CreatableModel for UserSession {
         let mut hash = sha2::Sha256::new();
         hash.update(chrono::Utc::now().timestamp().to_le_bytes());
         hash.update(options.user_uuid.to_bytes_le());
+        hash.update(rand::rng().random::<[u8; 32]>());
         let hash = hex::encode(hash.finalize());
 
         query_builder
