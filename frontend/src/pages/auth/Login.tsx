@@ -248,8 +248,8 @@ export default function Login() {
               <Stack>
                 <div className='flex flex-col gap-1'>
                   <TextInput
-                    label={t('common.form.username', {})}
-                    placeholder={t('pages.auth.login.step.username.form.usernamePlaceholder', {})}
+                    label={t('common.form.usernameOrEmail', {})}
+                    placeholder={t('pages.auth.login.step.username.form.usernameOrEmailPlaceholder', {})}
                     autoComplete='username'
                     onKeyDown={(e) => e.key === 'Enter' && doSubmitUsername()}
                     leftSection={<FontAwesomeIcon icon={faUser} />}

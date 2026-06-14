@@ -97,6 +97,7 @@ const baseTranslations = defineTranslations({
         password: 'Password',
         host: 'Host',
         username: 'Username',
+        usernameOrEmail: 'Username/Email',
         server: 'Server',
         url: 'URL',
         email: 'Email',
@@ -716,9 +717,9 @@ const baseTranslations = defineTranslations({
           step: {
             username: {
               title: 'Login',
-              subtitle: 'Enter your username to continue',
+              subtitle: 'Enter your username or email address to continue',
               form: {
-                usernamePlaceholder: 'Enter your username',
+                usernameOrEmailPlaceholder: 'Your username or email address',
               },
               link: {
                 forgotPassword: 'Forgot Password',
