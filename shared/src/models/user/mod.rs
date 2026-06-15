@@ -232,7 +232,6 @@ impl User {
             SELECT {}
             FROM users
             LEFT JOIN roles ON roles.uuid = users.role_uuid
-            JOIN user_security_keys ON user_security_keys.user_uuid = users.uuid
             WHERE users.external_id = $1
             "#,
             Self::columns_sql(None)
