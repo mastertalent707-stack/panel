@@ -19,8 +19,7 @@ import { useAdminStore } from '@/stores/admin.tsx';
 
 export default function LocationDatabaseHostCreateModal({
   location,
-  opened,
-  onClose,
+  ...props
 }: ModalProps & { location: z.infer<typeof adminLocationSchema> }) {
   const { t } = useTranslations();
   const { addToast } = useToast();
@@ -45,7 +44,7 @@ export default function LocationDatabaseHostCreateModal({
       .then(() => {
         addToast(t('pages.admin.locations.tabs.databaseHosts.page.toast.created', {}), 'success');
 
-        onClose();
+        props.onClose();
         addLocationDatabaseHost({ databaseHost, created: new Date() });
       })
       .catch((msg) => {
@@ -55,11 +54,7 @@ export default function LocationDatabaseHostCreateModal({
   };
 
   return (
-    <Modal
-      title={t('pages.admin.locations.tabs.databaseHosts.page.modal.create.title', {})}
-      onClose={onClose}
-      opened={opened}
-    >
+    <Modal title={t('pages.admin.locations.tabs.databaseHosts.page.modal.create.title', {})} {...props}>
       <Stack>
         <Select
           withAsterisk
@@ -88,7 +83,7 @@ export default function LocationDatabaseHostCreateModal({
           <Button onClick={doCreate} loading={loading} disabled={!databaseHost}>
             {t('common.button.create', {})}
           </Button>
-          <Button variant='default' onClick={onClose}>
+          <Button variant='default' onClick={props.onClose}>
             {t('common.button.close', {})}
           </Button>
         </ModalFooter>

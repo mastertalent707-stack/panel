@@ -18,7 +18,7 @@ import { useToast } from '@/providers/ToastProvider.tsx';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import { useServerStore } from '@/stores/server.ts';
 
-export default function DatabaseCreateModal({ opened, onClose }: ModalProps) {
+export default function DatabaseCreateModal({ ...props }: ModalProps) {
   const { t } = useTranslations();
   const { addToast } = useToast();
   const { server, addDatabase } = useServerStore();
@@ -30,7 +30,7 @@ export default function DatabaseCreateModal({ opened, onClose }: ModalProps) {
   >({
     initialValues: { name: '', databaseHostUuid: '' },
     validate: zod4Resolver(serverDatabaseCreateSchema),
-    onClose,
+    onClose: props.onClose,
     onSubmit: async (values) => {
       const database = await createDatabase(server.uuid, values);
       addToast(t('pages.server.databases.modal.createDatabase.toast.created', {}), 'success');
@@ -45,11 +45,11 @@ export default function DatabaseCreateModal({ opened, onClose }: ModalProps) {
   return (
     <FormModal
       title={t('pages.server.databases.modal.createDatabase.title', {})}
-      onClose={handleClose}
-      onSubmit={handleSubmit}
       isDirty={isDirty}
       loading={loading}
-      opened={opened}
+      {...props}
+      onClose={handleClose}
+      onSubmit={handleSubmit}
     >
       <Stack>
         <TextInput

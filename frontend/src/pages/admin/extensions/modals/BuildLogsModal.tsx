@@ -9,7 +9,7 @@ import Stack from '@/elements/Stack.tsx';
 import { useToast } from '@/providers/ToastProvider.tsx';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
 
-export default function BuildLogsModal({ opened, onClose }: ModalProps) {
+export default function BuildLogsModal({ ...props }: ModalProps) {
   const { t } = useTranslations();
   const { addToast } = useToast();
 
@@ -19,7 +19,7 @@ export default function BuildLogsModal({ opened, onClose }: ModalProps) {
   const errorCount = useRef(0);
 
   useEffect(() => {
-    if (!opened) return;
+    if (!props.opened) return;
 
     errorCount.current = 0;
 
@@ -40,7 +40,7 @@ export default function BuildLogsModal({ opened, onClose }: ModalProps) {
     const interval = setInterval(fetchLogs, 2000);
 
     return () => clearInterval(interval);
-  }, [opened]);
+  }, [props.opened]);
 
   useEffect(() => {
     const el = scrollRef.current;
@@ -61,14 +61,14 @@ export default function BuildLogsModal({ opened, onClose }: ModalProps) {
   };
 
   return (
-    <Modal title={t('pages.admin.extensions.modal.buildLogs.title', {})} onClose={onClose} opened={opened} size='lg'>
+    <Modal title={t('pages.admin.extensions.modal.buildLogs.title', {})} size='lg' {...props}>
       <Stack>
         <div ref={scrollRef} onScroll={handleScroll} className='overflow-y-auto max-h-96'>
           <Code block>{logs || t('pages.admin.extensions.modal.buildLogs.empty', {})}</Code>
         </div>
 
         <ModalFooter>
-          <Button variant='default' onClick={onClose}>
+          <Button variant='default' onClick={props.onClose}>
             {t('common.button.close', {})}
           </Button>
         </ModalFooter>

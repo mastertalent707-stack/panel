@@ -26,7 +26,7 @@ type Props = ModalProps & {
 type PermissionKey = 'owner' | 'group' | 'other';
 type PermissionType = 'read' | 'write' | 'execute';
 
-export default function FilePermissionsModal({ file, opened, onClose }: Props) {
+export default function FilePermissionsModal({ file, ...props }: Props) {
   const { t, tItem } = useTranslations();
   const { addToast } = useToast();
   const { server } = useServerStore();
@@ -41,10 +41,10 @@ export default function FilePermissionsModal({ file, opened, onClose }: Props) {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!opened) {
+    if (!props.opened) {
       setRecursive(false);
     }
-  }, [opened]);
+  }, [props.opened]);
 
   useEffect(() => {
     if (file?.mode) {
@@ -144,7 +144,7 @@ export default function FilePermissionsModal({ file, opened, onClose }: Props) {
       files: [{ file: file.name, mode: newPermissions.toString(), recursive }],
     })
       .then(({ updated }) => {
-        onClose();
+        props.onClose();
         if (updated > 0) {
           if (updated === 1) {
             addToast(t('pages.server.files.toast.permissionsUpdated', {}), 'success');
@@ -165,7 +165,7 @@ export default function FilePermissionsModal({ file, opened, onClose }: Props) {
   };
 
   return (
-    <Modal title={t('pages.server.files.modal.filePermissions.title', {})} onClose={onClose} opened={opened} size='lg'>
+    <Modal title={t('pages.server.files.modal.filePermissions.title', {})} size='lg' {...props}>
       <Card>
         <div className='flex flex-row justify-between'>
           <Title order={3}>{t('pages.server.files.modal.filePermissions.symbolic', {})}</Title>
@@ -228,7 +228,7 @@ export default function FilePermissionsModal({ file, opened, onClose }: Props) {
         <Button onClick={doChmod} loading={loading} disabled={!browsingWritableDirectory}>
           {t('common.button.save', {})}
         </Button>
-        <Button variant='default' onClick={onClose}>
+        <Button variant='default' onClick={props.onClose}>
           {t('common.button.close', {})}
         </Button>
       </ModalFooter>

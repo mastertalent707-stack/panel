@@ -20,8 +20,7 @@ import { useAdminStore } from '@/stores/admin.tsx';
 export default function EggMountAddModal({
   nest,
   egg,
-  opened,
-  onClose,
+  ...props
 }: ModalProps & { nest: z.infer<typeof adminNestSchema>; egg: z.infer<typeof adminEggSchema> }) {
   const { addToast } = useToast();
   const { addEggMount } = useAdminStore();
@@ -46,7 +45,7 @@ export default function EggMountAddModal({
       .then(() => {
         addToast(t('pages.admin.nests.tabs.eggs.page.tabs.mounts.page.toast.added', {}), 'success');
 
-        onClose();
+        props.onClose();
         addEggMount({ mount, created: new Date() });
       })
       .catch((msg) => {
@@ -56,11 +55,7 @@ export default function EggMountAddModal({
   };
 
   return (
-    <Modal
-      title={t('pages.admin.nests.tabs.eggs.page.tabs.mounts.page.modal.add.title', {})}
-      onClose={onClose}
-      opened={opened}
-    >
+    <Modal title={t('pages.admin.nests.tabs.eggs.page.tabs.mounts.page.modal.add.title', {})} {...props}>
       <Stack>
         <Select
           withAsterisk
@@ -81,7 +76,7 @@ export default function EggMountAddModal({
           <Button onClick={doAdd} loading={loading} disabled={!mount}>
             {t('common.button.add', {})}
           </Button>
-          <Button variant='default' onClick={onClose}>
+          <Button variant='default' onClick={props.onClose}>
             {t('common.button.close', {})}
           </Button>
         </ModalFooter>

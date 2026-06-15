@@ -18,8 +18,7 @@ import { useTranslations } from '@/providers/TranslationProvider.tsx';
 export default function NodeAllocationsCreateModal({
   node,
   loadAllocations,
-  opened,
-  onClose,
+  ...props
 }: ModalProps & { node: z.infer<typeof adminNodeSchema>; loadAllocations: () => void }) {
   const { t, tItem } = useTranslations();
   const { addToast } = useToast();
@@ -63,7 +62,7 @@ export default function NodeAllocationsCreateModal({
           'success',
         );
 
-        onClose();
+        props.onClose();
         loadAllocations();
       })
       .catch((msg) => {
@@ -73,11 +72,7 @@ export default function NodeAllocationsCreateModal({
   };
 
   return (
-    <Modal
-      title={t('pages.admin.nodes.tabs.allocations.page.modal.create.title', {})}
-      onClose={onClose}
-      opened={opened}
-    >
+    <Modal title={t('pages.admin.nodes.tabs.allocations.page.modal.create.title', {})} {...props}>
       <Stack>
         <TextInput
           withAsterisk
@@ -103,7 +98,7 @@ export default function NodeAllocationsCreateModal({
           <Button onClick={doCreate} loading={loading} disabled={!form.isValid() || !resolvedPorts.length}>
             {t('pages.admin.nodes.tabs.allocations.page.modal.create.button.create', { count: resolvedPorts.length })}
           </Button>
-          <Button variant='default' onClick={onClose}>
+          <Button variant='default' onClick={props.onClose}>
             {t('common.button.close', {})}
           </Button>
         </ModalFooter>

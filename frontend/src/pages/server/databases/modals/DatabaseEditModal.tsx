@@ -17,7 +17,7 @@ type Props = ModalProps & {
   database: z.infer<typeof serverDatabaseSchema>;
 };
 
-export default function DatabaseEditModal({ database, opened, onClose }: Props) {
+export default function DatabaseEditModal({ database, ...props }: Props) {
   const { t } = useTranslations();
   const { addToast } = useToast();
   const server = useServerStore((state) => state.server);
@@ -27,7 +27,7 @@ export default function DatabaseEditModal({ database, opened, onClose }: Props) 
       locked: database.isLocked,
     },
     validate: zod4Resolver(serverDatabaseEditSchema),
-    onClose,
+    onClose: props.onClose,
     onSubmit: async (values) => {
       await updateDatabase(server.uuid, database.uuid, values);
       database.isLocked = values.locked;
@@ -38,11 +38,11 @@ export default function DatabaseEditModal({ database, opened, onClose }: Props) 
   return (
     <FormModal
       title={t('pages.server.databases.modal.editDatabase.title', {})}
-      onClose={handleClose}
-      onSubmit={handleSubmit}
       isDirty={isDirty}
       loading={loading}
-      opened={opened}
+      {...props}
+      onClose={handleClose}
+      onSubmit={handleSubmit}
     >
       <Stack>
         <Switch

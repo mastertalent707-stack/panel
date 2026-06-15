@@ -27,7 +27,7 @@ type Props = ModalProps & {
   files: z.infer<typeof serverDirectoryEntrySchema>[];
 };
 
-export default function ArchiveCreateModal({ files, opened, onClose }: Props) {
+export default function ArchiveCreateModal({ files, ...props }: Props) {
   const { t } = useTranslations();
   const { addToast } = useToast();
   const { server } = useServerStore();
@@ -41,7 +41,7 @@ export default function ArchiveCreateModal({ files, opened, onClose }: Props) {
       format: 'tar_gz',
     },
     validate: zod4Resolver(serverFilesArchiveCreateSchema),
-    onClose,
+    onClose: props.onClose,
     onSubmit: async (values) => {
       await compressFiles(server.uuid, {
         name: values.name
@@ -59,11 +59,11 @@ export default function ArchiveCreateModal({ files, opened, onClose }: Props) {
   return (
     <FormModal
       title={t('pages.server.files.modal.createArchive.title', {})}
-      onClose={handleClose}
-      onSubmit={handleSubmit}
       isDirty={isDirty}
       loading={loading}
-      opened={opened}
+      {...props}
+      onClose={handleClose}
+      onSubmit={handleSubmit}
     >
       <Stack>
         <TextInput label={t('common.form.archiveName', {})} data-autofocus {...form.getInputProps('name')} />

@@ -15,7 +15,7 @@ import { useFileManager } from '@/providers/FileManagerProvider.tsx';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import { useServerStore } from '@/stores/server.ts';
 
-export default function DirectoryNameModal({ opened, onClose }: ModalProps) {
+export default function DirectoryNameModal({ ...props }: ModalProps) {
   const { t } = useTranslations();
   const [_, setSearchParams] = useSearchParams();
   const { server } = useServerStore();
@@ -28,7 +28,7 @@ export default function DirectoryNameModal({ opened, onClose }: ModalProps) {
       name: '',
     },
     validate: zod4Resolver(serverFilesDirectoryCreateSchema),
-    onClose,
+    onClose: props.onClose,
     onSubmit: async (values) => {
       await createDirectory(server.uuid, browsingDirectory, values.name);
       setSearchParams({ directory: join(browsingDirectory, values.name) });
@@ -38,11 +38,11 @@ export default function DirectoryNameModal({ opened, onClose }: ModalProps) {
   return (
     <FormModal
       title={t('pages.server.files.modal.createDirectory.title', {})}
-      onClose={handleClose}
-      onSubmit={handleSubmit}
       isDirty={isDirty}
       loading={loading}
-      opened={opened}
+      {...props}
+      onClose={handleClose}
+      onSubmit={handleSubmit}
     >
       <TextInput
         withAsterisk

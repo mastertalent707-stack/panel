@@ -16,7 +16,7 @@ type Props = ModalProps & {
   files: z.infer<typeof serverDirectoryEntrySchema>[];
 };
 
-export default function FileDeleteModal({ files, opened, onClose }: Props) {
+export default function FileDeleteModal({ files, ...props }: Props) {
   const { t } = useTranslations();
   const { addToast } = useToast();
   const { server } = useServerStore();
@@ -34,7 +34,7 @@ export default function FileDeleteModal({ files, opened, onClose }: Props) {
     )
       .then(() => {
         addToast(t('pages.server.files.toast.filesDeleted', {}), 'success');
-        onClose();
+        props.onClose();
         doSelectFiles([]);
         invalidateFilemanager();
       })
@@ -45,7 +45,7 @@ export default function FileDeleteModal({ files, opened, onClose }: Props) {
   };
 
   return (
-    <Modal title={t('pages.server.files.modal.deleteFile.title', {})} onClose={onClose} opened={opened}>
+    <Modal title={t('pages.server.files.modal.deleteFile.title', {})} {...props}>
       {files.length === 1 ? (
         <p>{t('pages.server.files.modal.deleteFile.singleFileWarning', { file: files[0].name }).md()}</p>
       ) : (
@@ -67,7 +67,7 @@ export default function FileDeleteModal({ files, opened, onClose }: Props) {
         <Button color='red' onClick={doDelete} loading={loading}>
           {t('common.button.delete', {})}
         </Button>
-        <Button variant='default' onClick={onClose}>
+        <Button variant='default' onClick={props.onClose}>
           {t('common.button.close', {})}
         </Button>
       </ModalFooter>

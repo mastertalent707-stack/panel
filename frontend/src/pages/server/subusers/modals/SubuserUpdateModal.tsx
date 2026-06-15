@@ -19,7 +19,7 @@ type Props = ModalProps & {
   subuser: z.infer<typeof serverSubuserSchema>;
 };
 
-export default function SubuserUpdateModal({ subuser, opened, onClose }: Props) {
+export default function SubuserUpdateModal({ subuser, ...props }: Props) {
   const { t } = useTranslations();
   const { addToast } = useToast();
   const { server } = useServerStore();
@@ -32,7 +32,7 @@ export default function SubuserUpdateModal({ subuser, opened, onClose }: Props) 
         ignoredFiles: subuser.ignoredFiles,
       },
       validate: zod4Resolver(serverSubuserUpdateSchema),
-      onClose,
+      onClose: props.onClose,
       onSubmit: async (values) => {
         await updateSubuser(server.uuid, subuser.user.uuid, {
           permissions: Array.from(values.permissions),
@@ -48,12 +48,12 @@ export default function SubuserUpdateModal({ subuser, opened, onClose }: Props) 
   return (
     <FormModal
       title={t('pages.server.subusers.modal.updateSubuser.title', {})}
-      onClose={handleClose}
-      onSubmit={handleSubmit}
       isDirty={isDirty}
       loading={loading}
-      opened={opened}
       size='95%'
+      {...props}
+      onClose={handleClose}
+      onSubmit={handleSubmit}
     >
       <Stack>
         <PermissionSelector

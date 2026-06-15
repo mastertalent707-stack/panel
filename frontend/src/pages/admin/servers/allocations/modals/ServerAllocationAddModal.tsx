@@ -19,8 +19,7 @@ import { useTranslations } from '@/providers/TranslationProvider.tsx';
 
 export default function ServerAllocationAddModal({
   server,
-  opened,
-  onClose,
+  ...props
 }: ModalProps & { server: z.infer<typeof adminServerSchema> }) {
   const { t } = useTranslations();
   const { addToast } = useToast();
@@ -35,11 +34,11 @@ export default function ServerAllocationAddModal({
   });
 
   useEffect(() => {
-    if (!opened) {
+    if (!props.opened) {
       availableAllocations.setSearch('');
       setSelectedAllocationUuids([]);
     }
-  }, [opened]);
+  }, [props.opened]);
 
   const doAdd = async () => {
     setLoading(true);
@@ -53,7 +52,7 @@ export default function ServerAllocationAddModal({
         t('pages.admin.servers.tabs.allocations.page.toast.added', { count: selectedAllocationUuids.length }),
         'success',
       );
-      onClose();
+      props.onClose();
     } catch (msg) {
       addToast(httpErrorToHuman(msg), 'error');
     } finally {
@@ -62,7 +61,7 @@ export default function ServerAllocationAddModal({
   };
 
   return (
-    <Modal title={t('pages.admin.servers.tabs.allocations.page.modal.add.title', {})} onClose={onClose} opened={opened}>
+    <Modal title={t('pages.admin.servers.tabs.allocations.page.modal.add.title', {})} {...props}>
       <Stack>
         <MultiSelect
           withAsterisk
@@ -85,7 +84,7 @@ export default function ServerAllocationAddModal({
               count: selectedAllocationUuids.length,
             })}
           </Button>
-          <Button variant='default' onClick={onClose}>
+          <Button variant='default' onClick={props.onClose}>
             {t('common.button.close', {})}
           </Button>
         </ModalFooter>

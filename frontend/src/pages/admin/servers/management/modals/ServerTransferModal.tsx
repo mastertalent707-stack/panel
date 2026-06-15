@@ -31,8 +31,7 @@ import { useTranslations } from '@/providers/TranslationProvider.tsx';
 
 export default function ServerTransferModal({
   server,
-  opened,
-  onClose,
+  ...props
 }: ModalProps & { server: z.infer<typeof adminServerSchema> }) {
   const { t } = useTranslations();
   const { addToast } = useToast();
@@ -75,11 +74,11 @@ export default function ServerTransferModal({
   const backups = useSearchableResource<z.infer<typeof adminServerBackupSchema>>({
     queryKey: queryKeys.admin.servers.backups(server.uuid),
     fetcher: (search) => getServerBackups(server.uuid, 1, search),
-    canRequest: opened,
+    canRequest: props.opened,
   });
 
   const closeAll = () => {
-    onClose();
+    props.onClose();
     setOpenModal(null);
   };
 
@@ -127,8 +126,8 @@ export default function ServerTransferModal({
 
       <Modal
         title={t('pages.admin.servers.tabs.management.page.transfer.modal.title', {})}
-        onClose={onClose}
-        opened={opened && !openModal}
+        {...props}
+        opened={props.opened && !openModal}
       >
         <Stack>
           <Select
@@ -257,7 +256,7 @@ export default function ServerTransferModal({
               {t('common.button.transfer', {})}
             </Button>
           </ConditionalTooltip>
-          <Button variant='default' onClick={onClose}>
+          <Button variant='default' onClick={props.onClose}>
             {t('common.button.cancel', {})}
           </Button>
         </ModalFooter>

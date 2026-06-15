@@ -22,7 +22,7 @@ type Props = ModalProps & {
   file: z.infer<typeof serverDirectoryEntrySchema> | null;
 };
 
-export default function FileFingerprintsModal({ file, opened, onClose }: Props) {
+export default function FileFingerprintsModal({ file, ...props }: Props) {
   const { t } = useTranslations();
   const { browsingDirectory } = useFileManager();
   const { server } = useServerStore();
@@ -55,7 +55,7 @@ export default function FileFingerprintsModal({ file, opened, onClose }: Props) 
   };
 
   return (
-    <Modal title={t('pages.server.files.modal.fileFingerprints.title', {})} onClose={onClose} opened={opened} size='sm'>
+    <Modal title={t('pages.server.files.modal.fileFingerprints.title', {})} size='sm' {...props}>
       <form onSubmit={form.onSubmit(() => doGetFingerprint())}>
         <div className='grid grid-cols-3 gap-2'>
           <Select
@@ -82,7 +82,7 @@ export default function FileFingerprintsModal({ file, opened, onClose }: Props) 
           <Button type='submit' loading={loading}>
             {t('pages.server.files.modal.fileFingerprints.button.calculate', {})}
           </Button>
-          <Button variant='default' onClick={onClose}>
+          <Button variant='default' onClick={props.onClose}>
             {t('common.button.close', {})}
           </Button>
         </ModalFooter>

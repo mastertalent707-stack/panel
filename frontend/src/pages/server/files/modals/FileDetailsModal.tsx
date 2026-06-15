@@ -17,12 +17,12 @@ type Props = ModalProps & {
   file: z.infer<typeof serverDirectoryEntrySchema> | null;
 };
 
-export default function FileDetailsModal({ file, opened, onClose }: Props) {
+export default function FileDetailsModal({ file, ...props }: Props) {
   const { t } = useTranslations();
   const { browsingDirectory } = useFileManager();
 
   return (
-    <Modal title={t('pages.server.files.modal.details.title', {})} onClose={onClose} opened={opened} size='sm'>
+    <Modal title={t('pages.server.files.modal.details.title', {})} size='sm' {...props}>
       <div className='flex flex-col space-y-1'>
         <Title order={3} className='break-all'>
           <FileRowIcon className='mr-2' file={file} />
@@ -74,7 +74,7 @@ export default function FileDetailsModal({ file, opened, onClose }: Props) {
       </div>
 
       <ModalFooter>
-        <Button variant='default' onClick={onClose}>
+        <Button variant='default' onClick={props.onClose}>
           {t('common.button.close', {})}
         </Button>
       </ModalFooter>

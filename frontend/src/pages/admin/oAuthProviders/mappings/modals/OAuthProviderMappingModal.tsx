@@ -36,9 +36,8 @@ type FormValues = {
 export default function OAuthProviderMappingModal({
   oauthProvider,
   mapping,
-  opened,
-  onClose,
   onSaved,
+  ...props
 }: ModalProps & {
   oauthProvider: z.infer<typeof adminOAuthProviderSchema>;
   mapping?: z.infer<typeof adminOAuthProviderMappingSchema>;
@@ -69,7 +68,7 @@ export default function OAuthProviderMappingModal({
       permissions: [],
       ignoredFiles: [],
     },
-    onClose,
+    onClose: props.onClose,
     onSubmit: async (values) => {
       const mappingData =
         values.type === 'role'
@@ -96,7 +95,7 @@ export default function OAuthProviderMappingModal({
   });
 
   useEffect(() => {
-    if (!opened) {
+    if (!props.opened) {
       return;
     }
 
@@ -112,7 +111,7 @@ export default function OAuthProviderMappingModal({
     } else {
       form.reset();
     }
-  }, [opened, mapping]);
+  }, [props.opened, mapping]);
 
   const roleOptions = roles.items.map((role) => ({ label: role.name, value: role.uuid }));
   if (form.values.roleUuid && !roleOptions.some((o) => o.value === form.values.roleUuid)) {
@@ -134,12 +133,12 @@ export default function OAuthProviderMappingModal({
           : 'pages.admin.oAuthProviders.tabs.mappings.page.modal.add.title',
         {},
       )}
-      onClose={handleClose}
-      onSubmit={handleSubmit}
       isDirty={isDirty}
       loading={loading}
-      opened={opened}
       size={form.values.type === 'role' ? 'md' : '95%'}
+      {...props}
+      onClose={handleClose}
+      onSubmit={handleSubmit}
     >
       <Stack>
         <TagsInput

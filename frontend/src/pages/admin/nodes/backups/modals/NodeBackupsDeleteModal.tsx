@@ -18,7 +18,7 @@ type Props = ModalProps & {
   backup: z.infer<typeof adminServerBackupSchema>;
 };
 
-export default function NodeBackupsDeleteModal({ node, backup, opened, onClose }: Props) {
+export default function NodeBackupsDeleteModal({ node, backup, ...props }: Props) {
   const { t } = useTranslations();
   const { addToast } = useToast();
   const { removeNodeBackup } = useAdminStore();
@@ -33,7 +33,7 @@ export default function NodeBackupsDeleteModal({ node, backup, opened, onClose }
     })
       .then(() => {
         addToast(t('pages.admin.nodes.tabs.backups.page.toast.deleted', {}), 'success');
-        onClose();
+        props.onClose();
         removeNodeBackup(backup);
       })
       .catch((msg) => {
@@ -44,7 +44,7 @@ export default function NodeBackupsDeleteModal({ node, backup, opened, onClose }
 
   return (
     <>
-      <Modal title={t('pages.admin.nodes.tabs.backups.page.modal.delete.title', {})} onClose={onClose} opened={opened}>
+      <Modal title={t('pages.admin.nodes.tabs.backups.page.modal.delete.title', {})} {...props}>
         <Stack>
           <Switch
             label={t('pages.admin.nodes.tabs.backups.page.modal.delete.form.force', {})}
@@ -58,7 +58,7 @@ export default function NodeBackupsDeleteModal({ node, backup, opened, onClose }
           <Button color='red' loading={loading} onClick={doDelete}>
             {t('common.button.okay', {})}
           </Button>
-          <Button variant='default' onClick={() => onClose()}>
+          <Button variant='default' onClick={() => props.onClose()}>
             {t('common.button.cancel', {})}
           </Button>
         </ModalFooter>

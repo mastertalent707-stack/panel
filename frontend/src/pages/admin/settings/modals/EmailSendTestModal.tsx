@@ -13,7 +13,7 @@ import { useAuth } from '@/providers/AuthProvider.tsx';
 import { useToast } from '@/providers/ToastProvider.tsx';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
 
-export default function EmailSendTestModal({ opened, onClose }: ModalProps) {
+export default function EmailSendTestModal({ ...props }: ModalProps) {
   const { user } = useAuth();
   const { addToast } = useToast();
   const { t } = useTranslations();
@@ -34,7 +34,7 @@ export default function EmailSendTestModal({ opened, onClose }: ModalProps) {
     testSystemEmail(form.values.email)
       .then(() => {
         addToast(t('pages.admin.settings.tabs.mail.page.modal.sendTestEmail.toast.sent', {}), 'success');
-        onClose();
+        props.onClose();
       })
       .catch((msg) => {
         addToast(httpErrorToHuman(msg), 'error');
@@ -43,11 +43,7 @@ export default function EmailSendTestModal({ opened, onClose }: ModalProps) {
   };
 
   return (
-    <Modal
-      title={t('pages.admin.settings.tabs.mail.page.modal.sendTestEmail.title', {})}
-      onClose={onClose}
-      opened={opened}
-    >
+    <Modal title={t('pages.admin.settings.tabs.mail.page.modal.sendTestEmail.title', {})} {...props}>
       <form onSubmit={form.onSubmit(() => doSendTestEmail())}>
         <TextInput
           withAsterisk
@@ -60,7 +56,7 @@ export default function EmailSendTestModal({ opened, onClose }: ModalProps) {
           <Button type='submit' loading={loading} disabled={!form.isValid()}>
             {t('common.button.sendTestEmail', {})}
           </Button>
-          <Button variant='default' onClick={onClose}>
+          <Button variant='default' onClick={props.onClose}>
             {t('common.button.close', {})}
           </Button>
         </ModalFooter>

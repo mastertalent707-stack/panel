@@ -27,7 +27,7 @@ type Props = ModalProps & {
   contextApiKey?: z.infer<typeof userApiKeySchema>;
 };
 
-export default function ApiKeyCreateOrUpdateModal({ contextApiKey, opened, onClose }: Props) {
+export default function ApiKeyCreateOrUpdateModal({ contextApiKey, ...props }: Props) {
   const { t } = useTranslations();
   const { addToast } = useToast();
   const { addApiKey, updateApiKey: updateStateApiKey } = useUserStore();
@@ -44,7 +44,7 @@ export default function ApiKeyCreateOrUpdateModal({ contextApiKey, opened, onClo
       expires: null,
     },
     validate: zod4Resolver(userApiKeyUpdateSchema),
-    onClose,
+    onClose: props.onClose,
     onSubmit: async (values) => {
       if (contextApiKey) {
         await updateApiKey(contextApiKey.uuid, values);
@@ -90,12 +90,12 @@ export default function ApiKeyCreateOrUpdateModal({ contextApiKey, opened, onClo
           ? t('pages.account.apiKeys.modal.updateApiKey.title', {})
           : t('pages.account.apiKeys.modal.createApiKey.title', {})
       }
-      onClose={handleClose}
-      onSubmit={handleSubmit}
       isDirty={isDirty}
       loading={loading}
-      opened={opened}
       size='95%'
+      {...props}
+      onClose={handleClose}
+      onSubmit={handleSubmit}
     >
       <Stack>
         <Group grow>

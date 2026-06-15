@@ -13,12 +13,12 @@ interface Props extends ModalProps {
   onRemove: (removeMigrations: boolean) => void;
 }
 
-export default function RemoveExtensionModal({ extension, onRemove, onClose, ...rest }: Props) {
+export default function RemoveExtensionModal({ extension, onRemove, ...props }: Props) {
   const { t } = useTranslations();
   const [removeMigrations, setRemoveMigrations] = useState(false);
 
   return (
-    <Modal title={t('pages.admin.extensions.modal.remove.title', {})} onClose={onClose} {...rest}>
+    <Modal title={t('pages.admin.extensions.modal.remove.title', {})} {...props}>
       <p>
         {t('pages.admin.extensions.modal.remove.content', {
           packageName: extension?.metadataToml.packageName || '',
@@ -38,7 +38,7 @@ export default function RemoveExtensionModal({ extension, onRemove, onClose, ...
         <Button color='red' onClick={() => onRemove(removeMigrations)}>
           {t('common.button.delete', {})}
         </Button>
-        <Button variant='default' onClick={() => onClose()}>
+        <Button variant='default' onClick={() => props.onClose()}>
           {t('common.button.close', {})}
         </Button>
       </ModalFooter>

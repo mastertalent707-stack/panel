@@ -21,7 +21,7 @@ type Props = ModalProps & {
   sshKey: z.infer<typeof userSshKeySchema>;
 };
 
-export default function SshKeyEditModal({ sshKey, opened, onClose }: Props) {
+export default function SshKeyEditModal({ sshKey, ...props }: Props) {
   const { t } = useTranslations();
   const { addToast } = useToast();
   const { updateSshKey: updateStateSshKey } = useUserStore();
@@ -31,7 +31,7 @@ export default function SshKeyEditModal({ sshKey, opened, onClose }: Props) {
       name: sshKey.name,
     },
     validate: zod4Resolver(schema),
-    onClose,
+    onClose: props.onClose,
     onSubmit: async (values) => {
       await updateSshKey(sshKey.uuid, values);
       updateStateSshKey(sshKey.uuid, values);
@@ -42,11 +42,11 @@ export default function SshKeyEditModal({ sshKey, opened, onClose }: Props) {
   return (
     <FormModal
       title={t('pages.account.sshKeys.modal.editSshKey.title', {})}
-      onClose={handleClose}
-      onSubmit={handleSubmit}
       isDirty={isDirty}
       loading={loading}
-      opened={opened}
+      {...props}
+      onClose={handleClose}
+      onSubmit={handleSubmit}
     >
       <Stack>
         <TextInput withAsterisk label={t('common.form.name', {})} {...form.getInputProps('name')} />

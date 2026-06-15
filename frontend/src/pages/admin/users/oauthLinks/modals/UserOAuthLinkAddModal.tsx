@@ -19,8 +19,7 @@ import { useAdminStore } from '@/stores/admin.tsx';
 
 export default function UserOAuthLinkAddModal({
   user,
-  opened,
-  onClose,
+  ...props
 }: ModalProps & { user: z.infer<typeof fullUserSchema> }) {
   const { addToast } = useToast();
   const { t } = useTranslations();
@@ -38,11 +37,11 @@ export default function UserOAuthLinkAddModal({
   });
 
   useEffect(() => {
-    if (!opened) {
+    if (!props.opened) {
       oauthProviders.setSearch('');
       setSelectedOAuthProvider(null);
     }
-  }, [opened]);
+  }, [props.opened]);
 
   const doAdd = () => {
     if (!selectedOAuthProvider) {
@@ -55,7 +54,7 @@ export default function UserOAuthLinkAddModal({
       .then((oauthLink) => {
         addToast(t('pages.admin.users.tabs.oauthLinks.page.toast.added', {}), 'success');
 
-        onClose();
+        props.onClose();
         addUserOAuthLink(oauthLink);
       })
       .catch((msg) => {
@@ -65,7 +64,7 @@ export default function UserOAuthLinkAddModal({
   };
 
   return (
-    <Modal title={t('pages.admin.users.tabs.oauthLinks.page.modal.add.title', {})} onClose={onClose} opened={opened}>
+    <Modal title={t('pages.admin.users.tabs.oauthLinks.page.modal.add.title', {})} {...props}>
       <Stack>
         <Select
           withAsterisk
@@ -95,7 +94,7 @@ export default function UserOAuthLinkAddModal({
           <Button onClick={doAdd} loading={loading} disabled={!selectedOAuthProvider || !identifier}>
             {t('common.button.add', {})}
           </Button>
-          <Button variant='default' onClick={onClose}>
+          <Button variant='default' onClick={props.onClose}>
             {t('common.button.close', {})}
           </Button>
         </ModalFooter>

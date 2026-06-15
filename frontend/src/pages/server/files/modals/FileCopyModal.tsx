@@ -19,7 +19,7 @@ type Props = ModalProps & {
   file: z.infer<typeof serverDirectoryEntrySchema> | null;
 };
 
-export default function FileCopyModal({ file, opened, onClose }: Props) {
+export default function FileCopyModal({ file, ...props }: Props) {
   const { t } = useTranslations();
   const { addToast } = useToast();
   const { server } = useServerStore();
@@ -30,7 +30,7 @@ export default function FileCopyModal({ file, opened, onClose }: Props) {
       name: '',
     },
     validate: zod4Resolver(serverFilesCopySchema),
-    onClose,
+    onClose: props.onClose,
     onSubmit: async (values) => {
       if (!file) return;
       await copyFile(server.uuid, join(browsingDirectory, file.name), values.name || null);
@@ -84,11 +84,11 @@ export default function FileCopyModal({ file, opened, onClose }: Props) {
   return (
     <FormModal
       title={t('pages.server.files.modal.copyFile.title', {})}
-      onClose={handleClose}
-      onSubmit={handleSubmit}
       isDirty={isDirty}
       loading={loading}
-      opened={opened}
+      {...props}
+      onClose={handleClose}
+      onSubmit={handleSubmit}
     >
       <TextInput label={t('common.form.fileName', {})} data-autofocus {...form.getInputProps('name')} />
 

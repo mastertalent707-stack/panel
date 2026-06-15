@@ -20,7 +20,7 @@ type Props = ModalProps & {
   onServerAdded?: () => void;
 };
 
-export default function GroupAddServerModal({ serverGroup, opened, onClose, onServerAdded }: Props) {
+export default function GroupAddServerModal({ serverGroup, onServerAdded, ...props }: Props) {
   const { t } = useTranslations();
   const { addToast } = useToast();
   const { updateServerGroup: updateStateServerGroup } = useUserStore();
@@ -49,7 +49,7 @@ export default function GroupAddServerModal({ serverGroup, opened, onClose, onSe
         });
 
         onServerAdded?.();
-        onClose();
+        props.onClose();
         addToast(t('pages.account.home.tabs.groupedServers.page.modal.addServerToGroup.toast.added', {}), 'success');
       })
       .catch((msg) => {
@@ -61,8 +61,7 @@ export default function GroupAddServerModal({ serverGroup, opened, onClose, onSe
   return (
     <Modal
       title={t('pages.account.home.tabs.groupedServers.page.modal.addServerToGroup.title', { group: serverGroup.name })}
-      onClose={onClose}
-      opened={opened}
+      {...props}
     >
       <Select
         withAsterisk
@@ -87,7 +86,7 @@ export default function GroupAddServerModal({ serverGroup, opened, onClose, onSe
         >
           {t('common.button.add', {})}
         </Button>
-        <Button variant='default' onClick={onClose}>
+        <Button variant='default' onClick={props.onClose}>
           {t('common.button.close', {})}
         </Button>
       </ModalFooter>

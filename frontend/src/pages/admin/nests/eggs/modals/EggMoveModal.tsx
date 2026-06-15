@@ -19,8 +19,7 @@ import { useTranslations } from '@/providers/TranslationProvider.tsx';
 export default function EggMoveModal({
   nest,
   egg,
-  opened,
-  onClose,
+  ...props
 }: ModalProps & { nest: z.infer<typeof adminNestSchema>; egg: z.infer<typeof adminEggSchema> }) {
   const { addToast } = useToast();
   const { t } = useTranslations();
@@ -46,7 +45,7 @@ export default function EggMoveModal({
         addToast(t('pages.admin.nests.tabs.eggs.page.toast.moved', {}), 'success');
         navigate(`/admin/nests/${selectedNest.uuid}/eggs/${egg.uuid}`);
 
-        onClose();
+        props.onClose();
       })
       .catch((msg) => {
         addToast(httpErrorToHuman(msg), 'error');
@@ -55,7 +54,7 @@ export default function EggMoveModal({
   };
 
   return (
-    <Modal title={t('pages.admin.nests.tabs.eggs.page.modal.move.title', {})} onClose={onClose} opened={opened}>
+    <Modal title={t('pages.admin.nests.tabs.eggs.page.modal.move.title', {})} {...props}>
       <Stack>
         <Select
           withAsterisk
@@ -76,7 +75,7 @@ export default function EggMoveModal({
           <Button onClick={doMove} loading={loading} disabled={!selectedNest}>
             {t('common.button.move', {})}
           </Button>
-          <Button variant='default' onClick={onClose}>
+          <Button variant='default' onClick={props.onClose}>
             {t('common.button.close', {})}
           </Button>
         </ModalFooter>

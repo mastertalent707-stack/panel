@@ -24,7 +24,7 @@ type Props = ModalProps & {
   commandSnippet: z.infer<typeof userCommandSnippetSchema>;
 };
 
-export default function CommandSnippetEditModal({ commandSnippet, opened, onClose }: Props) {
+export default function CommandSnippetEditModal({ commandSnippet, ...props }: Props) {
   const { t } = useTranslations();
   const { addToast } = useToast();
   const { updateCommandSnippet: updateStateCommandSnippet } = useUserStore();
@@ -43,7 +43,7 @@ export default function CommandSnippetEditModal({ commandSnippet, opened, onClos
       command: '',
     },
     validate: zod4Resolver(userCommandSnippetUpdateSchema),
-    onClose,
+    onClose: props.onClose,
     onSubmit: async (values) => {
       await updateCommandSnippet(commandSnippet.uuid, values);
       updateStateCommandSnippet(commandSnippet.uuid, values);
@@ -62,11 +62,11 @@ export default function CommandSnippetEditModal({ commandSnippet, opened, onClos
   return (
     <FormModal
       title={t('pages.account.commandSnippets.modal.editCommandSnippet.title', {})}
-      onClose={handleClose}
-      onSubmit={handleSubmit}
       isDirty={isDirty}
       loading={loading}
-      opened={opened}
+      {...props}
+      onClose={handleClose}
+      onSubmit={handleSubmit}
     >
       <Stack>
         <TextInput withAsterisk label={t('common.form.name', {})} {...form.getInputProps('name')} />

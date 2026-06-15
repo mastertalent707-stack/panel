@@ -10,8 +10,7 @@ import { useAdminStore } from '@/stores/admin.tsx';
 
 export default function ServerUnsuspendModal({
   server,
-  opened,
-  onClose,
+  ...props
 }: ModalProps & { server: z.infer<typeof adminServerSchema> }) {
   const { t } = useTranslations();
   const { addToast } = useToast();
@@ -23,7 +22,7 @@ export default function ServerUnsuspendModal({
     })
       .then(() => {
         addToast(t('pages.admin.servers.tabs.management.page.unsuspend.toast.unsuspended', {}), 'success');
-        onClose();
+        props.onClose();
         updateStoreServer({ ...server, isSuspended: false });
         server.isSuspended = false;
       })
@@ -35,8 +34,8 @@ export default function ServerUnsuspendModal({
   return (
     <>
       <ConfirmationModal
-        opened={opened}
-        onClose={() => onClose()}
+        {...props}
+        onClose={() => props.onClose()}
         title={t('pages.admin.servers.tabs.management.page.unsuspend.modal.title', {})}
         confirm={t('pages.admin.servers.tabs.management.page.unsuspend.button', {})}
         confirmColor='green'

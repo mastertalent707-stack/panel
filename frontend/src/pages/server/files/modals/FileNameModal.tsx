@@ -13,7 +13,7 @@ type Props = ModalProps & {
   onFileName: (name: string) => void;
 };
 
-export default function FileNameModal({ onFileName, opened, onClose }: Props) {
+export default function FileNameModal({ onFileName, ...props }: Props) {
   const { t } = useTranslations();
 
   const { form, handleClose, handleSubmit, isDirty, loading } = useModalForm<z.infer<typeof serverFilesNameSchema>>({
@@ -21,7 +21,7 @@ export default function FileNameModal({ onFileName, opened, onClose }: Props) {
       name: '',
     },
     validate: zod4Resolver(serverFilesNameSchema),
-    onClose,
+    onClose: props.onClose,
     onSubmit: async (values) => {
       onFileName(values.name);
     },
@@ -30,11 +30,11 @@ export default function FileNameModal({ onFileName, opened, onClose }: Props) {
   return (
     <FormModal
       title={t('pages.server.files.modal.createFile.title', {})}
-      onClose={handleClose}
-      onSubmit={handleSubmit}
       isDirty={isDirty}
       loading={loading}
-      opened={opened}
+      {...props}
+      onClose={handleClose}
+      onSubmit={handleSubmit}
     >
       <TextInput withAsterisk label={t('common.form.fileName', {})} data-autofocus {...form.getInputProps('name')} />
 

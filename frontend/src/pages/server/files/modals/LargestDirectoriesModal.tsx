@@ -94,7 +94,7 @@ function TreemapCell({
   );
 }
 
-export default function LargestDirectoriesModal({ opened, onClose }: ModalProps) {
+export default function LargestDirectoriesModal({ ...props }: ModalProps) {
   const { t } = useTranslations();
   const { addToast } = useToast();
   const { server } = useServerStore();
@@ -105,7 +105,7 @@ export default function LargestDirectoriesModal({ opened, onClose }: ModalProps)
   const [entries, setEntries] = useState<z.infer<typeof serverDirectoryEntrySchema>[]>([]);
 
   useEffect(() => {
-    if (!opened) {
+    if (!props.opened) {
       setEntries([]);
       return;
     }
@@ -115,14 +115,14 @@ export default function LargestDirectoriesModal({ opened, onClose }: ModalProps)
       .then(setEntries)
       .catch((err) => addToast(httpErrorToHuman(err), 'error'))
       .finally(() => setLoading(false));
-  }, [opened, server.uuid, browsingDirectory]);
+  }, [props.opened, server.uuid, browsingDirectory]);
 
   const handleNavigate = useCallback(
     (name: string) => {
-      onClose();
+      props.onClose();
       setSearchParams({ directory: join(browsingDirectory, name) });
     },
-    [onClose, browsingDirectory, setSearchParams],
+    [props.onClose, browsingDirectory, setSearchParams],
   );
 
   const treemapData = entries.map((entry, i) => ({
@@ -133,12 +133,7 @@ export default function LargestDirectoriesModal({ opened, onClose }: ModalProps)
   }));
 
   return (
-    <Modal
-      title={t('pages.server.files.modal.largestDirectories.title', {})}
-      onClose={onClose}
-      opened={opened}
-      size='xl'
-    >
+    <Modal title={t('pages.server.files.modal.largestDirectories.title', {})} size='xl' {...props}>
       <Stack gap='md'>
         {loading ? (
           <Spinner.Centered />
@@ -157,7 +152,7 @@ export default function LargestDirectoriesModal({ opened, onClose }: ModalProps)
       </Stack>
 
       <ModalFooter>
-        <Button variant='default' onClick={onClose}>
+        <Button variant='default' onClick={props.onClose}>
           {t('common.button.close', {})}
         </Button>
       </ModalFooter>

@@ -18,7 +18,7 @@ import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import { useGlobalStore } from '@/stores/global.ts';
 import { useServerStore } from '@/stores/server.ts';
 
-export default function SubuserCreateModal({ opened, onClose }: ModalProps) {
+export default function SubuserCreateModal({ ...props }: ModalProps) {
   const { t } = useTranslations();
   const { addToast } = useToast();
   const { server, addSubuser } = useServerStore();
@@ -34,7 +34,7 @@ export default function SubuserCreateModal({ opened, onClose }: ModalProps) {
         ignoredFiles: [],
       },
       validate: zod4Resolver(serverSubuserCreateSchema),
-      onClose,
+      onClose: props.onClose,
       onSubmit: async (values) => {
         const captcha = (await captchaRef.current?.getToken()) ?? null;
         const subuser = await createSubuser(server.uuid, {
@@ -52,12 +52,12 @@ export default function SubuserCreateModal({ opened, onClose }: ModalProps) {
   return (
     <FormModal
       title={t('pages.server.subusers.modal.createSubuser.title', {})}
-      onClose={handleClose}
-      onSubmit={handleSubmit}
       isDirty={isDirty}
       loading={loading}
-      opened={opened}
       size='95%'
+      {...props}
+      onClose={handleClose}
+      onSubmit={handleSubmit}
     >
       <Stack>
         <TextInput

@@ -9,11 +9,11 @@ interface Props extends ModalProps {
   onAccept: () => void;
 }
 
-export default function LicenseModal({ packageName, licenseText, onAccept, onClose, ...rest }: Props) {
+export default function LicenseModal({ packageName, licenseText, onAccept, ...props }: Props) {
   const { t } = useTranslations();
 
   return (
-    <Modal title={t('pages.admin.extensions.modal.license.title', {})} size='lg' onClose={onClose} {...rest}>
+    <Modal title={t('pages.admin.extensions.modal.license.title', {})} size='lg' {...props}>
       <p className='text-sm text-(--mantine-color-dimmed) mb-3'>
         {t('pages.admin.extensions.modal.license.description', { packageName: packageName ?? '' }).md()}
       </p>
@@ -23,7 +23,7 @@ export default function LicenseModal({ packageName, licenseText, onAccept, onClo
         <Button color='green' onClick={onAccept}>
           {t('pages.admin.extensions.button.accept', {})}
         </Button>
-        <Button variant='default' onClick={() => onClose()}>
+        <Button variant='default' onClick={() => props.onClose()}>
           {t('pages.admin.extensions.button.decline', {})}
         </Button>
       </ModalFooter>

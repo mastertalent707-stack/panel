@@ -10,8 +10,7 @@ import { useAdminStore } from '@/stores/admin.tsx';
 
 export default function ServerClearStateModal({
   server,
-  opened,
-  onClose,
+  ...props
 }: ModalProps & { server: z.infer<typeof adminServerSchema> }) {
   const { t } = useTranslations();
   const { addToast } = useToast();
@@ -21,7 +20,7 @@ export default function ServerClearStateModal({
     await clearServerState(server.uuid)
       .then(() => {
         addToast(t('pages.admin.servers.tabs.management.page.clearState.toast.cleared', {}), 'success');
-        onClose();
+        props.onClose();
         updateServer({ ...server, status: null });
         server.status = null;
       })
@@ -33,8 +32,8 @@ export default function ServerClearStateModal({
   return (
     <>
       <ConfirmationModal
-        opened={opened}
-        onClose={() => onClose()}
+        {...props}
+        onClose={() => props.onClose()}
         title={t('pages.admin.servers.tabs.management.page.clearState.modal.title', {})}
         confirm={t('pages.admin.servers.tabs.management.page.clearState.button', {})}
         onConfirmed={doClearState}
