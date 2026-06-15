@@ -9,11 +9,14 @@ mod post {
         models::{EventEmittingModel, node::GetNode, server::GetServer},
         response::{ApiResponse, ApiResponseResult},
     };
+    use std::collections::BTreeMap;
     use utoipa::ToSchema;
 
     #[derive(ToSchema, Deserialize)]
     pub struct Payload {
         backups: Vec<uuid::Uuid>,
+        #[serde(default)]
+        backup_checksums: BTreeMap<uuid::Uuid, (String, String)>,
     }
 
     #[derive(ToSchema, Serialize)]
@@ -55,21 +58,17 @@ mod post {
 
         let (allocations, _) = tokio::try_join!(
             sqlx::query!(
-                r#"
-                SELECT server_allocations.uuid, node_allocations.node_uuid FROM server_allocations
+                "SELECT server_allocations.uuid, node_allocations.node_uuid FROM server_allocations
                 JOIN node_allocations ON node_allocations.uuid = server_allocations.allocation_uuid
-                WHERE server_allocations.server_uuid = $1 AND node_allocations.node_uuid != $2
-                "#,
+                WHERE server_allocations.server_uuid = $1 AND node_allocations.node_uuid != $2",
                 server.uuid,
                 destination_node.uuid
             )
             .fetch_all(state.database.read()),
             sqlx::query!(
-                r#"
-                UPDATE servers
+                "UPDATE servers
                 SET node_uuid = $1, allocation_uuid = $2, destination_allocation_uuid = NULL, destination_node_uuid = NULL
-                WHERE servers.uuid = $3
-                "#,
+                WHERE servers.uuid = $3",
                 destination_node.uuid,
                 server.destination_allocation_uuid,
                 server.uuid
@@ -78,22 +77,38 @@ mod post {
         )?;
 
         sqlx::query!(
-            r#"
-            UPDATE server_backups
+            "UPDATE server_backups
             SET node_uuid = $3
-            WHERE server_backups.server_uuid = $1 AND server_backups.uuid = ANY($2)
-            "#,
+            WHERE server_backups.server_uuid = $1 AND server_backups.uuid = ANY($2)",
             server.uuid,
             &data.backups,
             destination_node.uuid
         )
         .execute(&mut *transaction)
         .await?;
+
+        let mut backup_checksum_update_uuids = Vec::new();
+        let mut backup_checksum_update_checksums = Vec::new();
+
+        for (backup_uuid, (checksum_type, checksum)) in data.backup_checksums {
+            backup_checksum_update_uuids.push(backup_uuid);
+            backup_checksum_update_checksums.push(format!("{}:{}", checksum_type, checksum));
+        }
         sqlx::query!(
-            r#"
-            DELETE FROM server_allocations
-            WHERE server_allocations.uuid = ANY($1)
-            "#,
+            "UPDATE server_backups
+            SET checksum = v.checksum
+            FROM UNNEST($2::uuid[], $3::text[]) AS v(uuid, checksum)
+            WHERE server_backups.server_uuid = $1 AND server_backups.uuid = v.uuid",
+            server.uuid,
+            &backup_checksum_update_uuids,
+            &backup_checksum_update_checksums
+        )
+        .execute(&mut *transaction)
+        .await?;
+
+        sqlx::query!(
+            "DELETE FROM server_allocations
+            WHERE server_allocations.uuid = ANY($1)",
             &allocations.into_iter().map(|a| a.uuid).collect::<Vec<_>>()
         )
         .execute(&mut *transaction)
