@@ -13,7 +13,7 @@ import { useToast } from '@/providers/ToastProvider.tsx';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import { useServerStore } from '@/stores/server.ts';
 
-export default function SettingsReinstallModal({ opened, onClose }: ModalProps) {
+export default function SettingsReinstallModal({ ...props }: ModalProps) {
   const { t } = useTranslations();
   const { addToast } = useToast();
   const { server, updateServer } = useServerStore();
@@ -26,7 +26,7 @@ export default function SettingsReinstallModal({ opened, onClose }: ModalProps) 
       truncateDirectory: false,
     },
     validate: zod4Resolver(serverSettingsReinstallSchema),
-    onClose,
+    onClose: props.onClose,
     onSubmit: async (values) => {
       await installServer(server.uuid, values);
       addToast(t('pages.server.settings.reinstall.modal.toast.reinstalling', {}), 'success');
@@ -38,11 +38,11 @@ export default function SettingsReinstallModal({ opened, onClose }: ModalProps) 
   return (
     <FormModal
       title={t('pages.server.settings.reinstall.modal.title', {})}
-      onClose={handleClose}
-      onSubmit={handleSubmit}
       isDirty={isDirty}
       loading={loading}
-      opened={opened}
+      {...props}
+      onClose={handleClose}
+      onSubmit={handleSubmit}
     >
       <Switch
         label={t('common.form.truncateDirectory', {})}

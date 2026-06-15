@@ -18,8 +18,7 @@ import { useTranslations } from '@/providers/TranslationProvider.tsx';
 export default function MountAddNodeModal({
   mount,
   refetch,
-  opened,
-  onClose,
+  ...props
 }: ModalProps & { mount: z.infer<typeof adminMountSchema>; refetch: () => void }) {
   const { addToast } = useToast();
   const { t } = useTranslations();
@@ -33,11 +32,11 @@ export default function MountAddNodeModal({
   });
 
   useEffect(() => {
-    if (!opened) {
+    if (!props.opened) {
       nodes.setSearch('');
       setSelectedNode(null);
     }
-  }, [opened]);
+  }, [props.opened]);
 
   const doAdd = () => {
     if (!selectedNode) {
@@ -50,7 +49,7 @@ export default function MountAddNodeModal({
       .then(() => {
         addToast(t('pages.admin.mounts.tabs.nodes.page.toast.added', {}), 'success');
 
-        onClose();
+        props.onClose();
         refetch();
       })
       .catch((msg) => {
@@ -60,7 +59,7 @@ export default function MountAddNodeModal({
   };
 
   return (
-    <Modal title={t('pages.admin.mounts.tabs.nodes.page.modal.add.title', {})} onClose={onClose} opened={opened}>
+    <Modal title={t('pages.admin.mounts.tabs.nodes.page.modal.add.title', {})} {...props}>
       <Stack>
         <Select
           withAsterisk
@@ -81,7 +80,7 @@ export default function MountAddNodeModal({
           <Button onClick={doAdd} loading={loading} disabled={!selectedNode}>
             {t('common.button.add', {})}
           </Button>
-          <Button variant='default' onClick={onClose}>
+          <Button variant='default' onClick={props.onClose}>
             {t('common.button.close', {})}
           </Button>
         </ModalFooter>

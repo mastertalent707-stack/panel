@@ -18,8 +18,7 @@ import { useAdminStore } from '@/stores/admin.tsx';
 
 export default function ServerMountAddModal({
   server,
-  opened,
-  onClose,
+  ...props
 }: ModalProps & { server: z.infer<typeof adminServerSchema> }) {
   const { t } = useTranslations();
   const { addToast } = useToast();
@@ -34,11 +33,11 @@ export default function ServerMountAddModal({
   });
 
   useEffect(() => {
-    if (!opened) {
+    if (!props.opened) {
       mounts.setSearch('');
       setSelectedMount(null);
     }
-  }, [opened]);
+  }, [props.opened]);
 
   const doAdd = () => {
     if (!selectedMount) return;
@@ -49,7 +48,7 @@ export default function ServerMountAddModal({
       .then(() => {
         addToast(t('pages.admin.servers.tabs.mounts.page.toast.added', {}), 'success');
 
-        onClose();
+        props.onClose();
         addServerMount({ mount: selectedMount.mount, created: new Date() });
       })
       .catch((msg) => {
@@ -59,7 +58,7 @@ export default function ServerMountAddModal({
   };
 
   return (
-    <Modal title={t('pages.admin.servers.tabs.mounts.page.modal.add.title', {})} onClose={onClose} opened={opened}>
+    <Modal title={t('pages.admin.servers.tabs.mounts.page.modal.add.title', {})} {...props}>
       <Stack>
         <Select
           withAsterisk
@@ -80,7 +79,7 @@ export default function ServerMountAddModal({
           <Button onClick={doAdd} loading={loading} disabled={!selectedMount}>
             {t('common.button.add', {})}
           </Button>
-          <Button variant='default' onClick={onClose}>
+          <Button variant='default' onClick={props.onClose}>
             {t('common.button.close', {})}
           </Button>
         </ModalFooter>

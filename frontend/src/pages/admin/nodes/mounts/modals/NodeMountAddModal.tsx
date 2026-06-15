@@ -16,11 +16,7 @@ import { useToast } from '@/providers/ToastProvider.tsx';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import { useAdminStore } from '@/stores/admin.tsx';
 
-export default function NodeMountAddModal({
-  node,
-  opened,
-  onClose,
-}: ModalProps & { node: z.infer<typeof adminNodeSchema> }) {
+export default function NodeMountAddModal({ node, ...props }: ModalProps & { node: z.infer<typeof adminNodeSchema> }) {
   const { t } = useTranslations();
   const { addToast } = useToast();
   const { addNodeMount } = useAdminStore();
@@ -34,11 +30,11 @@ export default function NodeMountAddModal({
   });
 
   useEffect(() => {
-    if (!opened) {
+    if (!props.opened) {
       mounts.setSearch('');
       setSelectedMount(null);
     }
-  }, [opened]);
+  }, [props.opened]);
 
   const doAdd = () => {
     if (!selectedMount) {
@@ -51,7 +47,7 @@ export default function NodeMountAddModal({
       .then(() => {
         addToast(t('pages.admin.nodes.tabs.mounts.page.toast.added', {}), 'success');
 
-        onClose();
+        props.onClose();
         addNodeMount({ mount: selectedMount, created: new Date() });
       })
       .catch((msg) => {
@@ -61,7 +57,7 @@ export default function NodeMountAddModal({
   };
 
   return (
-    <Modal title={t('pages.admin.nodes.tabs.mounts.page.modal.add.title', {})} onClose={onClose} opened={opened}>
+    <Modal title={t('pages.admin.nodes.tabs.mounts.page.modal.add.title', {})} {...props}>
       <Stack>
         <Select
           withAsterisk
@@ -82,7 +78,7 @@ export default function NodeMountAddModal({
           <Button onClick={doAdd} loading={loading} disabled={!selectedMount}>
             {t('common.button.add', {})}
           </Button>
-          <Button variant='default' onClick={onClose}>
+          <Button variant='default' onClick={props.onClose}>
             {t('common.button.close', {})}
           </Button>
         </ModalFooter>

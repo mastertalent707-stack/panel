@@ -10,13 +10,13 @@ import { useAuth } from '@/providers/AuthProvider.tsx';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import { useServerStore } from '@/stores/server.ts';
 
-export default function SftpDetailsModal({ opened, onClose }: ModalProps) {
+export default function SftpDetailsModal({ ...props }: ModalProps) {
   const { t } = useTranslations();
   const { user } = useAuth();
   const { server } = useServerStore();
 
   return (
-    <Modal title={t('pages.server.files.modal.sftpDetails.title', {})} onClose={onClose} opened={opened}>
+    <Modal title={t('pages.server.files.modal.sftpDetails.title', {})} {...props}>
       <div className='grid grid-cols-4 gap-2'>
         <CopyOnClick content='SFTP' className='text-left'>
           <TextInput label={t('common.form.protocol', {})} value='SFTP' className='pointer-events-none' readOnly />
@@ -57,11 +57,11 @@ export default function SftpDetailsModal({ opened, onClose }: ModalProps) {
 
       <ModalFooter>
         <Anchor href={`sftp://${user!.username}.${server.uuidShort}@${server.sftpHost}:${server.sftpPort}`}>
-          <Button onClick={onClose} leftSection={<FontAwesomeIcon icon={faExternalLink} />}>
+          <Button onClick={props.onClose} leftSection={<FontAwesomeIcon icon={faExternalLink} />}>
             {t('pages.server.files.modal.sftpDetails.launch', {})}
           </Button>
         </Anchor>
-        <Button variant='default' onClick={onClose}>
+        <Button variant='default' onClick={props.onClose}>
           {t('common.button.close', {})}
         </Button>
       </ModalFooter>

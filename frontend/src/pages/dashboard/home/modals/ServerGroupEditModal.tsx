@@ -22,7 +22,7 @@ type Props = ModalProps & {
   serverGroup: z.infer<typeof userServerGroupSchema>;
 };
 
-export default function ServerGroupEditModal({ serverGroup, opened, onClose }: Props) {
+export default function ServerGroupEditModal({ serverGroup, ...props }: Props) {
   const { t } = useTranslations();
   const { addToast } = useToast();
   const { updateServerGroup: updateStateServerGroup } = useUserStore();
@@ -44,7 +44,7 @@ export default function ServerGroupEditModal({ serverGroup, opened, onClose }: P
       .then(() => {
         updateStateServerGroup(serverGroup.uuid, form.values);
 
-        onClose();
+        props.onClose();
         addToast(t('pages.account.home.tabs.groupedServers.page.modal.editServerGroup.toast.updated', {}), 'success');
       })
       .catch((msg) => {
@@ -54,11 +54,7 @@ export default function ServerGroupEditModal({ serverGroup, opened, onClose }: P
   };
 
   return (
-    <Modal
-      title={t('pages.account.home.tabs.groupedServers.page.modal.editServerGroup.title', {})}
-      onClose={onClose}
-      opened={opened}
-    >
+    <Modal title={t('pages.account.home.tabs.groupedServers.page.modal.editServerGroup.title', {})} {...props}>
       <Stack>
         <TextInput withAsterisk label={t('common.form.name', {})} {...form.getInputProps('name')} />
 
@@ -66,7 +62,7 @@ export default function ServerGroupEditModal({ serverGroup, opened, onClose }: P
           <Button onClick={doUpdate} loading={loading} disabled={!form.isValid()}>
             {t('common.button.save', {})}
           </Button>
-          <Button variant='default' onClick={onClose}>
+          <Button variant='default' onClick={props.onClose}>
             {t('common.button.close', {})}
           </Button>
         </ModalFooter>

@@ -17,7 +17,7 @@ type Props = ModalProps & {
   backup: z.infer<typeof serverBackupSchema>;
 };
 
-export default function BackupRestoreModal({ backup, opened, onClose }: Props) {
+export default function BackupRestoreModal({ backup, ...props }: Props) {
   const { t } = useTranslations();
   const { addToast } = useToast();
   const { server, updateServer } = useServerStore();
@@ -32,7 +32,7 @@ export default function BackupRestoreModal({ backup, opened, onClose }: Props) {
 
     restoreBackup(server.uuid, backup.uuid, { truncateDirectory, restoreStartup })
       .then(() => {
-        onClose();
+        props.onClose();
         addToast(t('pages.server.backups.toast.restoringBackup', {}), 'success');
 
         navigate(`/server/${server.uuidShort}`);
@@ -45,7 +45,7 @@ export default function BackupRestoreModal({ backup, opened, onClose }: Props) {
   };
 
   return (
-    <Modal title={t('pages.server.backups.modal.restoreBackup.title', {})} onClose={onClose} opened={opened}>
+    <Modal title={t('pages.server.backups.modal.restoreBackup.title', {})} {...props}>
       <Stack>
         <Switch
           label={t('common.form.truncateDirectory', {})}
@@ -67,7 +67,7 @@ export default function BackupRestoreModal({ backup, opened, onClose }: Props) {
         <Button color={truncateDirectory ? 'red' : undefined} onClick={doRestore} loading={loading}>
           {t('common.button.restore', {})}
         </Button>
-        <Button variant='default' onClick={onClose}>
+        <Button variant='default' onClick={props.onClose}>
           {t('common.button.close', {})}
         </Button>
       </ModalFooter>

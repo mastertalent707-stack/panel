@@ -16,7 +16,7 @@ const schema = z.object({
   name: z.string().min(2).max(31),
 });
 
-export default function ServerGroupCreateModal({ opened, onClose }: ModalProps) {
+export default function ServerGroupCreateModal({ ...props }: ModalProps) {
   const { t } = useTranslations();
   const { addToast } = useToast();
   const { addServerGroup } = useUserStore();
@@ -41,7 +41,7 @@ export default function ServerGroupCreateModal({ opened, onClose }: ModalProps) 
       .then((serverGroup) => {
         addServerGroup(serverGroup);
 
-        onClose();
+        props.onClose();
         addToast(t('pages.account.home.tabs.groupedServers.page.modal.createServerGroup.toast.created', {}), 'success');
       })
       .catch((msg) => {
@@ -51,18 +51,14 @@ export default function ServerGroupCreateModal({ opened, onClose }: ModalProps) 
   };
 
   return (
-    <Modal
-      title={t('pages.account.home.tabs.groupedServers.page.modal.createServerGroup.title', {})}
-      onClose={onClose}
-      opened={opened}
-    >
+    <Modal title={t('pages.account.home.tabs.groupedServers.page.modal.createServerGroup.title', {})} {...props}>
       <TextInput withAsterisk label={t('common.form.name', {})} {...form.getInputProps('name')} />
 
       <ModalFooter>
         <Button onClick={doCreate} loading={loading} disabled={!form.isValid()}>
           {t('common.button.create', {})}
         </Button>
-        <Button variant='default' onClick={onClose}>
+        <Button variant='default' onClick={props.onClose}>
           {t('common.button.close', {})}
         </Button>
       </ModalFooter>

@@ -18,7 +18,7 @@ const schema = z.object({
   name: z.string().min(3).max(31),
 });
 
-export default function SecurityKeyCreateModal({ opened, onClose }: ModalProps) {
+export default function SecurityKeyCreateModal({ ...props }: ModalProps) {
   const { t } = useTranslations();
   const { addToast } = useToast();
   const { addSecurityKey } = useUserStore();
@@ -28,7 +28,7 @@ export default function SecurityKeyCreateModal({ opened, onClose }: ModalProps) 
       name: '',
     },
     validate: zod4Resolver(schema),
-    onClose,
+    onClose: props.onClose,
     onSubmit: async (values) => {
       const [key, options] = await createSecurityKey(values);
 
@@ -59,11 +59,11 @@ export default function SecurityKeyCreateModal({ opened, onClose }: ModalProps) 
   return (
     <FormModal
       title={t('pages.account.securityKeys.modal.createSecurityKey.title', {})}
-      onClose={handleClose}
-      onSubmit={handleSubmit}
       isDirty={isDirty}
       loading={loading}
-      opened={opened}
+      {...props}
+      onClose={handleClose}
+      onSubmit={handleSubmit}
     >
       <TextInput withAsterisk label={t('common.form.name', {})} {...form.getInputProps('name')} />
 

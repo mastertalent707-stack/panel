@@ -18,7 +18,7 @@ type Props = ModalProps & {
   backup: z.infer<typeof serverBackupSchema>;
 };
 
-export default function BackupEditModal({ backup, opened, onClose }: Props) {
+export default function BackupEditModal({ backup, ...props }: Props) {
   const { t } = useTranslations();
   const { addToast } = useToast();
   const server = useServerStore((state) => state.server);
@@ -29,7 +29,7 @@ export default function BackupEditModal({ backup, opened, onClose }: Props) {
       locked: backup.isLocked,
     },
     validate: zod4Resolver(serverBackupEditSchema),
-    onClose,
+    onClose: props.onClose,
     onSubmit: async (values) => {
       await updateBackup(server.uuid, backup.uuid, values);
       backup.name = values.name;
@@ -41,11 +41,11 @@ export default function BackupEditModal({ backup, opened, onClose }: Props) {
   return (
     <FormModal
       title={t('pages.server.backups.modal.editBackup.title', {})}
-      onClose={handleClose}
-      onSubmit={handleSubmit}
       isDirty={isDirty}
       loading={loading}
-      opened={opened}
+      {...props}
+      onClose={handleClose}
+      onSubmit={handleSubmit}
     >
       <Stack>
         <TextInput withAsterisk label={t('common.form.name', {})} {...form.getInputProps('name')} />

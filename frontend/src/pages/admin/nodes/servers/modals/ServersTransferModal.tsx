@@ -27,8 +27,7 @@ export default function ServersTransferModal({
   contextNode,
   servers,
   clearSelected,
-  opened,
-  onClose,
+  ...props
 }: ModalProps & {
   contextNode: z.infer<typeof adminNodeSchema>;
   servers: ObjectSet<z.infer<typeof adminServerSchema>, 'uuid'>;
@@ -55,7 +54,7 @@ export default function ServersTransferModal({
   });
 
   const closeAll = () => {
-    onClose();
+    props.onClose();
     setOpenModal(null);
   };
 
@@ -104,8 +103,8 @@ export default function ServersTransferModal({
 
       <Modal
         title={t('pages.admin.nodes.tabs.servers.page.modal.transfer.title', {})}
-        onClose={onClose}
-        opened={opened && !openModal}
+        {...props}
+        opened={props.opened && !openModal}
       >
         <Stack>
           <Select
@@ -220,7 +219,7 @@ export default function ServersTransferModal({
           <Button color='blue' onClick={() => setOpenModal('confirm')} disabled={!selectedNodeUuid}>
             {t('common.button.transfer', {})}
           </Button>
-          <Button variant='default' onClick={onClose}>
+          <Button variant='default' onClick={props.onClose}>
             {t('common.button.cancel', {})}
           </Button>
         </ModalFooter>

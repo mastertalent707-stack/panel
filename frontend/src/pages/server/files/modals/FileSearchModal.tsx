@@ -34,7 +34,7 @@ import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import { useGlobalStore } from '@/stores/global.ts';
 import { useServerStore } from '@/stores/server.ts';
 
-export default function FileSearchModal({ opened, onClose }: ModalProps) {
+export default function FileSearchModal({ ...props }: ModalProps) {
   const { t } = useTranslations();
   const { settings } = useGlobalStore();
   const { server } = useServerStore();
@@ -57,7 +57,7 @@ export default function FileSearchModal({ opened, onClose }: ModalProps) {
       contentFilter: null,
     },
     validate: zod4Resolver(serverFilesSearchSchema),
-    onClose,
+    onClose: props.onClose,
     onSubmit: async (values) => {
       const searchFilters = {
         ...values,
@@ -85,12 +85,12 @@ export default function FileSearchModal({ opened, onClose }: ModalProps) {
   }, [form.values.contentFilter]);
 
   useEffect(() => {
-    if (!opened) {
+    if (!props.opened) {
       setQuery('');
       setShowAdvanced(false);
       form.reset();
     }
-  }, [opened]);
+  }, [props.opened]);
 
   const activeFiltersCount = [form.values.pathFilter, form.values.contentFilter, form.values.sizeFilter].filter(
     Boolean,
@@ -105,12 +105,12 @@ export default function FileSearchModal({ opened, onClose }: ModalProps) {
   return (
     <FormModal
       title={t('pages.server.files.modal.searchFiles.title', {})}
-      onClose={handleClose}
-      onSubmit={handleSubmit}
       isDirty={isDirty}
       loading={loading}
-      opened={opened}
       size='lg'
+      {...props}
+      onClose={handleClose}
+      onSubmit={handleSubmit}
     >
       <Stack gap='md'>
         <TextInput

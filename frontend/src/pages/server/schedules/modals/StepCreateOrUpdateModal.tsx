@@ -57,8 +57,7 @@ export default function StepCreateOrUpdateModal({
   nextStepOrder,
   onStepCreate,
   onStepUpdate,
-  opened,
-  onClose,
+  ...props
 }: Props) {
   const { t } = useTranslations();
   const { addToast } = useToast();
@@ -72,7 +71,7 @@ export default function StepCreateOrUpdateModal({
       action: scheduleStepDefaultMapping.sleep,
     },
     validate: zod4Resolver(serverScheduleStepUpdateSchema),
-    onClose,
+    onClose: props.onClose,
     onSubmit: async (values) => {
       if (propStep) {
         await updateScheduleStep(server.uuid, schedule.uuid, propStep.uuid, values);
@@ -97,9 +96,6 @@ export default function StepCreateOrUpdateModal({
 
   return (
     <FormModal
-      opened={opened}
-      onClose={handleClose}
-      onSubmit={handleSubmit}
       isDirty={isDirty}
       loading={loading}
       title={
@@ -107,6 +103,9 @@ export default function StepCreateOrUpdateModal({
           ? t('pages.server.schedules.modal.editStep.title', {})
           : t('pages.server.schedules.modal.createStep.title', {})
       }
+      {...props}
+      onClose={handleClose}
+      onSubmit={handleSubmit}
     >
       <Stack gap='md'>
         <Select

@@ -21,7 +21,7 @@ type Props = ModalProps & {
   backup: z.infer<typeof adminServerBackupSchema>;
 };
 
-export default function NodeBackupsReattachModal({ node, backup, opened, onClose }: Props) {
+export default function NodeBackupsReattachModal({ node, backup, ...props }: Props) {
   const { t } = useTranslations();
   const { addToast } = useToast();
 
@@ -34,11 +34,11 @@ export default function NodeBackupsReattachModal({ node, backup, opened, onClose
   });
 
   useEffect(() => {
-    if (!opened) {
+    if (!props.opened) {
       servers.setSearch('');
       setSelectedServer(backup.server ?? null);
     }
-  }, [opened]);
+  }, [props.opened]);
 
   const doReattach = () => {
     if (!selectedServer) {
@@ -50,7 +50,7 @@ export default function NodeBackupsReattachModal({ node, backup, opened, onClose
     reattachNodeBackup(node.uuid, backup.uuid, { serverUuid: selectedServer.uuid })
       .then(() => {
         backup.server = selectedServer;
-        onClose();
+        props.onClose();
         addToast(t('pages.admin.nodes.tabs.backups.page.toast.reattached', { name: selectedServer.name }), 'success');
       })
       .catch((msg) => {
@@ -60,7 +60,7 @@ export default function NodeBackupsReattachModal({ node, backup, opened, onClose
   };
 
   return (
-    <Modal title={t('pages.admin.nodes.tabs.backups.page.modal.reattach.title', {})} onClose={onClose} opened={opened}>
+    <Modal title={t('pages.admin.nodes.tabs.backups.page.modal.reattach.title', {})} {...props}>
       <Stack>
         <p>{t('pages.admin.nodes.tabs.backups.page.modal.reattach.description', {})}</p>
 
@@ -85,7 +85,7 @@ export default function NodeBackupsReattachModal({ node, backup, opened, onClose
         <Button color='red' onClick={doReattach} loading={loading} disabled={!selectedServer}>
           {t('common.button.reattach', {})}
         </Button>
-        <Button variant='default' onClick={onClose}>
+        <Button variant='default' onClick={props.onClose}>
           {t('common.button.close', {})}
         </Button>
       </ModalFooter>

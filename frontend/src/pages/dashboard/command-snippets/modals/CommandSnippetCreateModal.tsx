@@ -19,7 +19,7 @@ import { useToast } from '@/providers/ToastProvider.tsx';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import { useUserStore } from '@/stores/user.ts';
 
-export default function CommandSnippetCreateModal({ opened, onClose }: ModalProps) {
+export default function CommandSnippetCreateModal({ ...props }: ModalProps) {
   const { t } = useTranslations();
   const { addToast } = useToast();
   const { addCommandSnippet } = useUserStore();
@@ -38,7 +38,7 @@ export default function CommandSnippetCreateModal({ opened, onClose }: ModalProp
       command: 'say hello world',
     },
     validate: zod4Resolver(userCommandSnippetUpdateSchema),
-    onClose,
+    onClose: props.onClose,
     onSubmit: async (values) => {
       const snippet = await createCommandSnippet(values);
       addToast(t('pages.account.commandSnippets.modal.createCommandSnippet.toast.created', {}), 'success');
@@ -49,11 +49,11 @@ export default function CommandSnippetCreateModal({ opened, onClose }: ModalProp
   return (
     <FormModal
       title={t('pages.account.commandSnippets.modal.createCommandSnippet.title', {})}
-      onClose={handleClose}
-      onSubmit={handleSubmit}
       isDirty={isDirty}
       loading={loading}
-      opened={opened}
+      {...props}
+      onClose={handleClose}
+      onSubmit={handleSubmit}
     >
       <Stack>
         <TextInput withAsterisk label={t('common.form.name', {})} {...form.getInputProps('name')} />

@@ -20,8 +20,7 @@ export default function EggsMoveModal({
   nest,
   selectedEggs,
   invalidateEggs,
-  opened,
-  onClose,
+  ...props
 }: ModalProps & {
   nest: z.infer<typeof adminNestSchema>;
   selectedEggs: ObjectSet<z.infer<typeof adminEggSchema>, 'uuid'>;
@@ -49,7 +48,7 @@ export default function EggsMoveModal({
       .then(({ moved }) => {
         addToast(t('pages.admin.nests.tabs.eggs.page.toast.movedBulk', { eggs: tItem('egg', moved) }), 'success');
         invalidateEggs();
-        onClose();
+        props.onClose();
       })
       .catch((msg) => {
         addToast(httpErrorToHuman(msg), 'error');
@@ -58,7 +57,7 @@ export default function EggsMoveModal({
   };
 
   return (
-    <Modal title={t('pages.admin.nests.tabs.eggs.page.modal.moveBulk.title', {})} onClose={onClose} opened={opened}>
+    <Modal title={t('pages.admin.nests.tabs.eggs.page.modal.moveBulk.title', {})} {...props}>
       <Stack>
         <Select
           withAsterisk
@@ -81,7 +80,7 @@ export default function EggsMoveModal({
               eggs: tItem('egg', selectedEggs.size),
             })}
           </Button>
-          <Button variant='default' onClick={onClose}>
+          <Button variant='default' onClick={props.onClose}>
             {t('common.button.close', {})}
           </Button>
         </ModalFooter>

@@ -19,7 +19,7 @@ import { useToast } from '@/providers/ToastProvider.tsx';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import { useServerStore } from '@/stores/server.ts';
 
-export default function PullFileModal({ opened, onClose }: ModalProps) {
+export default function PullFileModal({ ...props }: ModalProps) {
   const { t } = useTranslations();
   const { addToast } = useToast();
   const { server } = useServerStore();
@@ -34,7 +34,7 @@ export default function PullFileModal({ opened, onClose }: ModalProps) {
       name: '',
     },
     validate: zod4Resolver(serverFilesPullSchema),
-    onClose,
+    onClose: props.onClose,
     onSubmit: async (values) => {
       await pullFile(server.uuid, {
         root: browsingDirectory,
@@ -67,11 +67,11 @@ export default function PullFileModal({ opened, onClose }: ModalProps) {
   return (
     <FormModal
       title={t('pages.server.files.modal.pullFile.title', {})}
-      onClose={handleClose}
-      onSubmit={handleSubmit}
       isDirty={isDirty}
       loading={loading}
-      opened={opened}
+      {...props}
+      onClose={handleClose}
+      onSubmit={handleSubmit}
     >
       <div className='grid grid-cols-4 gap-2'>
         <TextInput

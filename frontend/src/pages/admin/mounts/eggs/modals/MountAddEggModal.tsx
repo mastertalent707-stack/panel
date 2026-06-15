@@ -15,8 +15,7 @@ import { useTranslations } from '@/providers/TranslationProvider.tsx';
 export default function MountAddEggModal({
   mount,
   refetch,
-  opened,
-  onClose,
+  ...props
 }: ModalProps & { mount: z.infer<typeof adminMountSchema>; refetch: () => void }) {
   const { addToast } = useToast();
   const { t } = useTranslations();
@@ -47,7 +46,7 @@ export default function MountAddEggModal({
       .then(() => {
         addToast(t('pages.admin.mounts.tabs.eggs.page.toast.added', {}), 'success');
 
-        onClose();
+        props.onClose();
         refetch();
       })
       .catch((msg) => {
@@ -57,7 +56,7 @@ export default function MountAddEggModal({
   };
 
   return (
-    <Modal title={t('pages.admin.mounts.tabs.eggs.page.modal.add.title', {})} onClose={onClose} opened={opened}>
+    <Modal title={t('pages.admin.mounts.tabs.eggs.page.modal.add.title', {})} {...props}>
       <Stack>
         <Select
           withAsterisk
@@ -84,7 +83,7 @@ export default function MountAddEggModal({
           <Button onClick={doAdd} loading={loading} disabled={!selectedEgg}>
             {t('common.button.add', {})}
           </Button>
-          <Button variant='default' onClick={onClose}>
+          <Button variant='default' onClick={props.onClose}>
             {t('common.button.close', {})}
           </Button>
         </ModalFooter>

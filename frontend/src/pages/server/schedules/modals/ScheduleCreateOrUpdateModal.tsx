@@ -29,7 +29,7 @@ type Props = ModalProps & {
   onScheduleUpdate?: (schedule: z.infer<typeof serverScheduleUpdateSchema>) => void;
 };
 
-export default function ScheduleCreateOrUpdateModal({ propSchedule, onScheduleUpdate, opened, onClose }: Props) {
+export default function ScheduleCreateOrUpdateModal({ propSchedule, onScheduleUpdate, ...props }: Props) {
   const { t } = useTranslations();
   const { addToast } = useToast();
   const { server, addSchedule } = useServerStore();
@@ -46,7 +46,7 @@ export default function ScheduleCreateOrUpdateModal({ propSchedule, onScheduleUp
       },
     },
     validate: zod4Resolver(serverScheduleUpdateSchema),
-    onClose,
+    onClose: props.onClose,
     onSubmit: async (values) => {
       if (propSchedule?.uuid) {
         await updateSchedule(server.uuid, propSchedule.uuid, values);
@@ -85,12 +85,12 @@ export default function ScheduleCreateOrUpdateModal({ propSchedule, onScheduleUp
           ? t('pages.server.schedules.modal.updateSchedule.title', {})
           : t('pages.server.schedules.modal.createSchedule.title', {})
       }
-      onClose={handleClose}
-      onSubmit={handleSubmit}
       isDirty={isDirty}
       loading={loading}
-      opened={opened}
       size='lg'
+      {...props}
+      onClose={handleClose}
+      onSubmit={handleSubmit}
     >
       <Stack>
         <TextInput label={t('pages.server.schedules.form.scheduleName', {})} {...form.getInputProps('name')} />

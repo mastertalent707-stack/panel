@@ -10,8 +10,7 @@ import { useAdminStore } from '@/stores/admin.tsx';
 
 export default function ServerSuspendModal({
   server,
-  opened,
-  onClose,
+  ...props
 }: ModalProps & { server: z.infer<typeof adminServerSchema> }) {
   const { t } = useTranslations();
   const { addToast } = useToast();
@@ -23,7 +22,7 @@ export default function ServerSuspendModal({
     })
       .then(() => {
         addToast(t('pages.admin.servers.tabs.management.page.suspend.toast.suspended', {}), 'success');
-        onClose();
+        props.onClose();
         updateStoreServer({ ...server, isSuspended: true });
         server.isSuspended = true;
       })
@@ -35,8 +34,8 @@ export default function ServerSuspendModal({
   return (
     <>
       <ConfirmationModal
-        opened={opened}
-        onClose={() => onClose()}
+        {...props}
+        onClose={() => props.onClose()}
         title={t('pages.admin.servers.tabs.management.page.suspend.modal.title', {})}
         confirm={t('pages.admin.servers.tabs.management.page.suspend.button', {})}
         onConfirmed={doSuspend}

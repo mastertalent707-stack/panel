@@ -18,7 +18,7 @@ type Props = ModalProps & {
   setSizeLoading: (loading: boolean) => void;
 };
 
-export default function DatabaseRecreateModal({ database, setSizeLoading, opened, onClose }: Props) {
+export default function DatabaseRecreateModal({ database, setSizeLoading, ...props }: Props) {
   const { t } = useTranslations();
   const { addToast } = useToast();
   const server = useServerStore((state) => state.server);
@@ -26,7 +26,7 @@ export default function DatabaseRecreateModal({ database, setSizeLoading, opened
   const { form, handleClose, handleSubmit, loading, isDirty } = useModalForm({
     initialValues: { name: '' },
     validate: { name: (value) => (value !== database.name ? 'Name does not match' : null) },
-    onClose,
+    onClose: props.onClose,
     onSubmit: async () => {
       await recreateDatabase(server.uuid, database.uuid);
       addToast(t('pages.server.databases.modal.recreateDatabase.toast.recreated', {}), 'success');
@@ -37,11 +37,11 @@ export default function DatabaseRecreateModal({ database, setSizeLoading, opened
   return (
     <FormModal
       title={t('pages.server.databases.modal.recreateDatabase.title', {})}
-      onClose={handleClose}
-      onSubmit={handleSubmit}
       isDirty={isDirty}
       loading={loading}
-      opened={opened}
+      {...props}
+      onClose={handleClose}
+      onSubmit={handleSubmit}
     >
       <Stack>
         <Text>{t('pages.server.databases.modal.recreateDatabase.content', { name: database.name }).md()}</Text>

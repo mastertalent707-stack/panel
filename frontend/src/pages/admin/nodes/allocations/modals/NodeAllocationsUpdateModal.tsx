@@ -15,8 +15,7 @@ import { useAdminStore } from '@/stores/admin.tsx';
 export default function NodeAllocationsUpdateModal({
   node,
   loadAllocations,
-  opened,
-  onClose,
+  ...props
 }: ModalProps & { node: z.infer<typeof adminNodeSchema>; loadAllocations: () => void }) {
   const { t, tItem } = useTranslations();
   const { addToast } = useToast();
@@ -106,7 +105,7 @@ export default function NodeAllocationsUpdateModal({
         );
         setSelectedNodeAllocations([]);
 
-        onClose();
+        props.onClose();
         loadAllocations();
       })
       .catch((msg) => {
@@ -116,11 +115,7 @@ export default function NodeAllocationsUpdateModal({
   };
 
   return (
-    <Modal
-      title={t('pages.admin.nodes.tabs.allocations.page.modal.update.title', {})}
-      onClose={onClose}
-      opened={opened}
-    >
+    <Modal title={t('pages.admin.nodes.tabs.allocations.page.modal.update.title', {})} {...props}>
       <Stack>
         <TextInput
           withAsterisk
@@ -139,7 +134,7 @@ export default function NodeAllocationsUpdateModal({
           <Button onClick={doUpdate} loading={loading} disabled={!ip}>
             {t('common.button.update', {})}
           </Button>
-          <Button variant='default' onClick={onClose}>
+          <Button variant='default' onClick={props.onClose}>
             {t('common.button.close', {})}
           </Button>
         </ModalFooter>

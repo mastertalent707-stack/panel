@@ -19,7 +19,7 @@ const schema = z.object({
   username: z.string().min(3).max(31),
 });
 
-export default function SshKeyImportModal({ opened, onClose }: ModalProps) {
+export default function SshKeyImportModal({ ...props }: ModalProps) {
   const { t, tItem } = useTranslations();
   const { addToast } = useToast();
   const { addSshKey } = useUserStore();
@@ -30,7 +30,7 @@ export default function SshKeyImportModal({ opened, onClose }: ModalProps) {
       username: '',
     },
     validate: zod4Resolver(schema),
-    onClose,
+    onClose: props.onClose,
     onSubmit: async (values) => {
       const keys = await importSshKeys(values);
       addToast(
@@ -46,11 +46,11 @@ export default function SshKeyImportModal({ opened, onClose }: ModalProps) {
   return (
     <FormModal
       title={t('pages.account.sshKeys.modal.importSshKeys.title', {})}
-      onClose={handleClose}
-      onSubmit={handleSubmit}
       isDirty={isDirty}
       loading={loading}
-      opened={opened}
+      {...props}
+      onClose={handleClose}
+      onSubmit={handleSubmit}
     >
       <Stack>
         <div className='grid grid-cols-3 gap-2'>

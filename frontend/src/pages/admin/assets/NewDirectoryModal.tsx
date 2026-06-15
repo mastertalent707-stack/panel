@@ -20,7 +20,6 @@ export default function NewDirectoryModal({
   currentDirectory,
   existingEntries,
   onNavigate,
-  onClose,
   ...props
 }: NewDirectoryModalProps) {
   const { t } = useTranslations();
@@ -29,7 +28,7 @@ export default function NewDirectoryModal({
   >({
     initialValues: { name: '' },
     validate: zod4Resolver(assetDirectoryCreateSchema),
-    onClose,
+    onClose: props.onClose,
     onSubmit: async (values) => {
       const fullPath = currentDirectory ? `${currentDirectory}/${values.name}` : values.name;
       onNavigate(fullPath);
@@ -39,11 +38,11 @@ export default function NewDirectoryModal({
   return (
     <FormModal
       title={t('pages.admin.assets.modal.createDirectory.title', {})}
-      onClose={handleClose}
-      onSubmit={handleSubmit}
       isDirty={isDirty}
       loading={loading}
       {...props}
+      onClose={handleClose}
+      onSubmit={handleSubmit}
     >
       <TextInput
         withAsterisk

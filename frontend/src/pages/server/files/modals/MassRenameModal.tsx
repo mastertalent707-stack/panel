@@ -60,7 +60,7 @@ const defaultOptions: MassRenameOptions = {
 
 const blockingStatuses: RenameStatus[] = ['invalid', 'invalidRegex', 'conflict', 'duplicate'];
 
-export default function MassRenameModal({ files, opened, onClose }: Props) {
+export default function MassRenameModal({ files, ...props }: Props) {
   const { t, tReact, tItem } = useTranslations();
   const { addToast } = useToast();
   const { server } = useServerStore();
@@ -72,13 +72,13 @@ export default function MassRenameModal({ files, opened, onClose }: Props) {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!opened) {
+    if (!props.opened) {
       setOptions(defaultOptions);
       setExcluded(new Set());
       setExpanded('match');
       setLoading(false);
     }
-  }, [opened]);
+  }, [props.opened]);
 
   const existingNames = useMemo(() => new Set(browsingEntries.data.map((entry) => entry.name)), [browsingEntries.data]);
 
@@ -125,7 +125,7 @@ export default function MassRenameModal({ files, opened, onClose }: Props) {
       addToast(t('pages.server.files.toast.filesRenamed', { files: tItem('file', renamed) }), 'success');
       invalidateFilemanager();
       doSelectFiles([]);
-      onClose();
+      props.onClose();
     } catch (err) {
       addToast(err instanceof Error ? err.message : String(err), 'error');
     } finally {
@@ -144,11 +144,10 @@ export default function MassRenameModal({ files, opened, onClose }: Props) {
   return (
     <FormModal
       title={t('pages.server.files.modal.massRename.title', {})}
-      onClose={onClose}
-      onSubmit={handleSubmit}
       loading={loading}
-      opened={opened}
       size='xl'
+      {...props}
+      onSubmit={handleSubmit}
     >
       <Stack gap='md'>
         <Group grow align='start'>
@@ -393,7 +392,7 @@ export default function MassRenameModal({ files, opened, onClose }: Props) {
         <Button type='submit' loading={loading} disabled={!canSubmit}>
           {t('pages.server.files.button.rename', {})}
         </Button>
-        <Button variant='default' onClick={onClose}>
+        <Button variant='default' onClick={props.onClose}>
           {t('common.button.cancel', {})}
         </Button>
       </ModalFooter>

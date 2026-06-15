@@ -16,7 +16,7 @@ import { useToast } from '@/providers/ToastProvider.tsx';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import { useServerStore } from '@/stores/server.ts';
 
-export default function BackupCreateModal({ opened, onClose }: ModalProps) {
+export default function BackupCreateModal({ ...props }: ModalProps) {
   const { t } = useTranslations();
   const { addToast } = useToast();
   const { server, addBackup } = useServerStore();
@@ -27,7 +27,7 @@ export default function BackupCreateModal({ opened, onClose }: ModalProps) {
       ignoredFiles: [],
     },
     validate: zod4Resolver(serverBackupCreateSchema),
-    onClose,
+    onClose: props.onClose,
     onSubmit: async (values) => {
       const backup = await createBackup(server.uuid, values);
       addBackup(backup);
@@ -45,11 +45,11 @@ export default function BackupCreateModal({ opened, onClose }: ModalProps) {
   return (
     <FormModal
       title={t('pages.server.backups.modal.createBackup.title', {})}
-      onClose={handleClose}
-      onSubmit={handleSubmit}
       isDirty={isDirty}
       loading={loading}
-      opened={opened}
+      {...props}
+      onClose={handleClose}
+      onSubmit={handleSubmit}
     >
       <Stack>
         <TextInput withAsterisk label={t('common.form.name', {})} {...form.getInputProps('name')} />

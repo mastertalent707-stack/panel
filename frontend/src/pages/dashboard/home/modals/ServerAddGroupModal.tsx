@@ -16,7 +16,7 @@ type Props = ModalProps & {
   server: z.infer<typeof serverSchema>;
 };
 
-export default function ServerAddGroupModal({ server, opened, onClose }: Props) {
+export default function ServerAddGroupModal({ server, ...props }: Props) {
   const { t } = useTranslations();
   const { addToast } = useToast();
   const { serverGroups, updateServerGroup: updateStateServerGroup } = useUserStore();
@@ -37,7 +37,7 @@ export default function ServerAddGroupModal({ server, opened, onClose }: Props) 
           serverOrder: [...selectedServerGroup.serverOrder, server.uuid],
         });
 
-        onClose();
+        props.onClose();
       })
       .catch((msg) => {
         addToast(httpErrorToHuman(msg), 'error');
@@ -48,8 +48,7 @@ export default function ServerAddGroupModal({ server, opened, onClose }: Props) 
   return (
     <Modal
       title={t('pages.account.home.tabs.allServers.page.modal.addToServerGroup.title', { server: server.name })}
-      onClose={onClose}
-      opened={opened}
+      {...props}
     >
       <Select
         label={t('pages.account.home.tabs.allServers.page.modal.addToServerGroup.form.serverGroup', {})}
@@ -72,7 +71,7 @@ export default function ServerAddGroupModal({ server, opened, onClose }: Props) 
         >
           {t('common.button.add', {})}
         </Button>
-        <Button variant='default' onClick={onClose}>
+        <Button variant='default' onClick={props.onClose}>
           {t('common.button.close', {})}
         </Button>
       </ModalFooter>

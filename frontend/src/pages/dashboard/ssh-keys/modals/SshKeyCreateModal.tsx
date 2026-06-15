@@ -21,7 +21,7 @@ const schema = z.object({
   publicKey: z.string(),
 });
 
-export default function SshKeyCreateModal({ opened, onClose }: ModalProps) {
+export default function SshKeyCreateModal({ ...props }: ModalProps) {
   const { t } = useTranslations();
   const { addToast } = useToast();
   const { addSshKey } = useUserStore();
@@ -33,7 +33,7 @@ export default function SshKeyCreateModal({ opened, onClose }: ModalProps) {
       publicKey: '',
     },
     validate: zod4Resolver(schema),
-    onClose,
+    onClose: props.onClose,
     onSubmit: async (values) => {
       const key = await createSshKey(values);
       addToast(t('pages.account.sshKeys.modal.createSshKey.toast.created', {}), 'success');
@@ -62,11 +62,11 @@ export default function SshKeyCreateModal({ opened, onClose }: ModalProps) {
   return (
     <FormModal
       title={t('pages.account.sshKeys.modal.createSshKey.title', {})}
-      onClose={handleClose}
-      onSubmit={handleSubmit}
       isDirty={isDirty}
       loading={loading}
-      opened={opened}
+      {...props}
+      onClose={handleClose}
+      onSubmit={handleSubmit}
     >
       <Stack>
         <TextInput withAsterisk label={t('common.form.name', {})} {...form.getInputProps('name')} />

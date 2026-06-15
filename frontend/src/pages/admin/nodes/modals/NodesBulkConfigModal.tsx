@@ -16,8 +16,7 @@ import { useTranslations } from '@/providers/TranslationProvider.tsx';
 export default function NodesBulkConfigModal({
   selectedNodes,
   setSelectedNodes,
-  opened,
-  onClose,
+  ...props
 }: ModalProps & {
   selectedNodes: ObjectSet<z.infer<typeof adminNodeSchema>, 'uuid'>;
   setSelectedNodes: (nodes: ObjectSet<z.infer<typeof adminNodeSchema>, 'uuid'>) => void;
@@ -48,7 +47,7 @@ export default function NodesBulkConfigModal({
           'success',
         );
         setSelectedNodes(new ObjectSet('uuid'));
-        onClose();
+        props.onClose();
       })
       .catch((err) => {
         addToast(httpErrorToHuman(err), 'error');
@@ -63,9 +62,8 @@ export default function NodesBulkConfigModal({
       title={t('pages.admin.nodes.modal.bulkConfig.title', {
         nodes: tItem('node', selectedNodes.size),
       })}
-      onClose={onClose}
-      opened={opened}
       size='xl'
+      {...props}
     >
       <Stack>
         <div className='rounded-md overflow-hidden'>
@@ -99,7 +97,7 @@ export default function NodesBulkConfigModal({
               nodes: tItem('node', selectedNodes.size),
             })}
           </Button>
-          <Button variant='default' onClick={onClose}>
+          <Button variant='default' onClick={props.onClose}>
             {t('common.button.cancel', {})}
           </Button>
         </ModalFooter>

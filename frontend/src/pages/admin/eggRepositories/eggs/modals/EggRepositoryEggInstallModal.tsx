@@ -18,8 +18,7 @@ import { useTranslations } from '@/providers/TranslationProvider.tsx';
 export default function EggRepositoryEggInstallModal({
   eggRepository,
   egg,
-  opened,
-  onClose,
+  ...props
 }: ModalProps & {
   eggRepository: z.infer<typeof adminEggRepositorySchema>;
   egg: z.infer<typeof adminEggRepositoryEggSchema>;
@@ -32,17 +31,17 @@ export default function EggRepositoryEggInstallModal({
 
   const nests = useSearchableResource<z.infer<typeof adminNestSchema>>({
     queryKey: queryKeys.admin.nests.all(),
-    canRequest: opened,
+    canRequest: props.opened,
     fetcher: (search) => getNests(1, search),
-    deps: [opened],
+    deps: [props.opened],
   });
 
   useEffect(() => {
-    if (!opened) {
+    if (!props.opened) {
       nests.setSearch('');
       setSelectedNest(null);
     }
-  }, [opened]);
+  }, [props.opened]);
 
   const doInstall = () => {
     if (!selectedNest) {
@@ -55,7 +54,7 @@ export default function EggRepositoryEggInstallModal({
       .then(() => {
         addToast(t('pages.admin.eggRepositories.tabs.eggs.page.toast.installed', {}), 'success');
 
-        onClose();
+        props.onClose();
       })
       .catch((msg) => {
         addToast(httpErrorToHuman(msg), 'error');
@@ -64,11 +63,7 @@ export default function EggRepositoryEggInstallModal({
   };
 
   return (
-    <Modal
-      title={t('pages.admin.eggRepositories.tabs.eggs.page.modal.install.title', {})}
-      onClose={onClose}
-      opened={opened}
-    >
+    <Modal title={t('pages.admin.eggRepositories.tabs.eggs.page.modal.install.title', {})} {...props}>
       <Stack>
         <Select
           withAsterisk
@@ -89,7 +84,7 @@ export default function EggRepositoryEggInstallModal({
           <Button onClick={doInstall} loading={loading} disabled={!selectedNest}>
             {t('common.button.install', {})}
           </Button>
-          <Button variant='default' onClick={onClose}>
+          <Button variant='default' onClick={props.onClose}>
             {t('common.button.close', {})}
           </Button>
         </ModalFooter>

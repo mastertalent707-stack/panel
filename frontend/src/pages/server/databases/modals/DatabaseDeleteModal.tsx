@@ -17,7 +17,7 @@ type Props = ModalProps & {
   database: z.infer<typeof serverDatabaseSchema>;
 };
 
-export default function DatabaseDeleteModal({ database, opened, onClose }: Props) {
+export default function DatabaseDeleteModal({ database, ...props }: Props) {
   const { t } = useTranslations();
   const { addToast } = useToast();
   const server = useServerStore((state) => state.server);
@@ -26,7 +26,7 @@ export default function DatabaseDeleteModal({ database, opened, onClose }: Props
   const { form, handleClose, handleSubmit, loading, isDirty } = useModalForm({
     initialValues: { name: '' },
     validate: { name: (value) => (value !== database.name ? 'Name does not match' : null) },
-    onClose,
+    onClose: props.onClose,
     onSubmit: async () => {
       await deleteDatabase(server.uuid, database.uuid);
       addToast(t('pages.server.databases.modal.deleteDatabase.toast.deleted', {}), 'success');
@@ -37,11 +37,11 @@ export default function DatabaseDeleteModal({ database, opened, onClose }: Props
   return (
     <FormModal
       title={t('pages.server.databases.modal.deleteDatabase.title', {})}
-      onClose={handleClose}
-      onSubmit={handleSubmit}
       isDirty={isDirty}
       loading={loading}
-      opened={opened}
+      {...props}
+      onClose={handleClose}
+      onSubmit={handleSubmit}
     >
       <Stack>
         <Text>{t('pages.server.databases.modal.deleteDatabase.content', { name: database.name }).md()}</Text>

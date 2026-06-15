@@ -98,7 +98,7 @@ type Props = ModalProps & {
   files: z.infer<typeof serverDirectoryEntrySchema>[];
 };
 
-export default function FileCopyRemoteModal({ files, opened, onClose }: Props) {
+export default function FileCopyRemoteModal({ files, ...props }: Props) {
   const { t } = useTranslations();
   const { addToast } = useToast();
   const { server } = useServerStore();
@@ -112,7 +112,7 @@ export default function FileCopyRemoteModal({ files, opened, onClose }: Props) {
       destinationServer: '',
     },
     validate: zod4Resolver(serverFilesCopyRemoteSchema),
-    onClose,
+    onClose: props.onClose,
     onSubmit: async (values) => {
       await copyFilesRemote(server.uuid, {
         ...values,
@@ -136,12 +136,12 @@ export default function FileCopyRemoteModal({ files, opened, onClose }: Props) {
   return (
     <FormModal
       title={t('pages.server.files.modal.copyRemote.title', {})}
-      onClose={handleClose}
-      onSubmit={handleSubmit}
       isDirty={isDirty}
       loading={loading}
-      opened={opened}
       size='lg'
+      {...props}
+      onClose={handleClose}
+      onSubmit={handleSubmit}
     >
       <Stack>
         <Select

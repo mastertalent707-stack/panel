@@ -16,7 +16,7 @@ type Props = ModalProps & {
   database: z.infer<typeof serverDatabaseSchema>;
 };
 
-export default function DatabaseDetailsModal({ database, opened, onClose }: Props) {
+export default function DatabaseDetailsModal({ database, ...props }: Props) {
   const { t } = useTranslations();
   const { addToast } = useToast();
   const { server, databases, setDatabases } = useServerStore();
@@ -45,7 +45,7 @@ export default function DatabaseDetailsModal({ database, opened, onClose }: Prop
   };
 
   return (
-    <Modal title={t('pages.server.databases.modal.databaseDetails.title', {})} onClose={onClose} opened={opened}>
+    <Modal title={t('pages.server.databases.modal.databaseDetails.title', {})} {...props}>
       <Stack>
         <TextInput label={t('pages.server.databases.form.databaseName', {})} value={database.name} readOnly />
         <TextInput label={t('common.form.host', {})} placeholder={t('common.form.host', {})} value={host} readOnly />
@@ -61,7 +61,7 @@ export default function DatabaseDetailsModal({ database, opened, onClose }: Prop
           <Button color='red' onClick={onRotatePassword} loading={loading} disabled={database.isLocked}>
             {t('pages.server.databases.button.rotatePassword', {})}
           </Button>
-          <Button variant='default' onClick={onClose}>
+          <Button variant='default' onClick={props.onClose}>
             {t('common.button.close', {})}
           </Button>
         </ModalFooter>

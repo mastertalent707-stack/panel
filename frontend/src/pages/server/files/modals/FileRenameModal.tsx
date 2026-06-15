@@ -18,7 +18,7 @@ type Props = ModalProps & {
   file: z.infer<typeof serverDirectoryEntrySchema> | null;
 };
 
-export default function FileRenameModal({ file, opened, onClose }: Props) {
+export default function FileRenameModal({ file, ...props }: Props) {
   const { t } = useTranslations();
   const { addToast } = useToast();
   const { server } = useServerStore();
@@ -30,7 +30,7 @@ export default function FileRenameModal({ file, opened, onClose }: Props) {
       name: '',
     },
     validate: zod4Resolver(serverFilesNameSchema),
-    onClose,
+    onClose: props.onClose,
     onSubmit: async (values) => {
       if (!file) return;
 
@@ -71,11 +71,11 @@ export default function FileRenameModal({ file, opened, onClose }: Props) {
   return (
     <FormModal
       title={t('pages.server.files.modal.renameFile.title', {})}
-      onClose={handleClose}
-      onSubmit={handleSubmit}
       isDirty={isDirty}
       loading={loading}
-      opened={opened}
+      {...props}
+      onClose={handleClose}
+      onSubmit={handleSubmit}
     >
       <TextInput withAsterisk label={t('common.form.fileName', {})} data-autofocus {...form.getInputProps('name')} />
 

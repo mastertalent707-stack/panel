@@ -21,7 +21,7 @@ type Props = ModalProps & {
   securityKey: z.infer<typeof userSecurityKeySchema>;
 };
 
-export default function SecurityKeyEditModal({ securityKey, opened, onClose }: Props) {
+export default function SecurityKeyEditModal({ securityKey, ...props }: Props) {
   const { t } = useTranslations();
   const { addToast } = useToast();
   const { updateSecurityKey: updateStateSecurityKey } = useUserStore();
@@ -31,7 +31,7 @@ export default function SecurityKeyEditModal({ securityKey, opened, onClose }: P
       name: securityKey.name,
     },
     validate: zod4Resolver(schema),
-    onClose,
+    onClose: props.onClose,
     onSubmit: async (values) => {
       await updateSecurityKey(securityKey.uuid, values);
       updateStateSecurityKey(securityKey.uuid, values);
@@ -42,11 +42,11 @@ export default function SecurityKeyEditModal({ securityKey, opened, onClose }: P
   return (
     <FormModal
       title={t('pages.account.securityKeys.modal.editSecurityKey.title', {})}
-      onClose={handleClose}
-      onSubmit={handleSubmit}
       isDirty={isDirty}
       loading={loading}
-      opened={opened}
+      {...props}
+      onClose={handleClose}
+      onSubmit={handleSubmit}
     >
       <Stack>
         <TextInput withAsterisk label={t('common.form.name', {})} {...form.getInputProps('name')} />

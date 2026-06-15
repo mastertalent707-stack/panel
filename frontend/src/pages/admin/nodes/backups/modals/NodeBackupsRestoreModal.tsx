@@ -22,7 +22,7 @@ type Props = ModalProps & {
   backup: z.infer<typeof adminServerBackupSchema>;
 };
 
-export default function NodeBackupsRestoreModal({ node, backup, opened, onClose }: Props) {
+export default function NodeBackupsRestoreModal({ node, backup, ...props }: Props) {
   const { t } = useTranslations();
   const { addToast } = useToast();
 
@@ -37,11 +37,11 @@ export default function NodeBackupsRestoreModal({ node, backup, opened, onClose 
   });
 
   useEffect(() => {
-    if (!opened) {
+    if (!props.opened) {
       servers.setSearch('');
       setSelectedServer(null);
     }
-  }, [opened]);
+  }, [props.opened]);
 
   const doRestore = () => {
     if (!selectedServer) {
@@ -52,7 +52,7 @@ export default function NodeBackupsRestoreModal({ node, backup, opened, onClose 
 
     restoreNodeBackup(node.uuid, backup.uuid, { serverUuid: selectedServer.uuid, truncateDirectory, restoreStartup })
       .then(() => {
-        onClose();
+        props.onClose();
         addToast(t('pages.admin.nodes.tabs.backups.page.toast.restoring', { name: selectedServer.name }), 'success');
       })
       .catch((msg) => {
@@ -62,7 +62,7 @@ export default function NodeBackupsRestoreModal({ node, backup, opened, onClose 
   };
 
   return (
-    <Modal title={t('pages.admin.nodes.tabs.backups.page.modal.restore.title', {})} onClose={onClose} opened={opened}>
+    <Modal title={t('pages.admin.nodes.tabs.backups.page.modal.restore.title', {})} {...props}>
       <Stack>
         <Select
           withAsterisk
@@ -100,7 +100,7 @@ export default function NodeBackupsRestoreModal({ node, backup, opened, onClose 
         <Button color={truncateDirectory ? 'red' : undefined} onClick={doRestore} loading={loading}>
           {t('common.button.restore', {})}
         </Button>
-        <Button variant='default' onClick={onClose}>
+        <Button variant='default' onClick={props.onClose}>
           {t('common.button.close', {})}
         </Button>
       </ModalFooter>

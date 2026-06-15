@@ -16,8 +16,7 @@ import { useTranslations } from '@/providers/TranslationProvider.tsx';
 
 export default function ServerDeleteModal({
   server,
-  opened,
-  onClose,
+  ...props
 }: ModalProps & { server: z.infer<typeof adminServerSchema> }) {
   const { t } = useTranslations();
   const { addToast } = useToast();
@@ -36,7 +35,7 @@ export default function ServerDeleteModal({
     })
       .then(() => {
         addToast(t('pages.admin.servers.tabs.management.page.delete.toast.deleted', {}), 'success');
-        onClose();
+        props.onClose();
         navigate('/admin/servers');
       })
       .catch((msg) => {
@@ -47,11 +46,7 @@ export default function ServerDeleteModal({
 
   return (
     <>
-      <Modal
-        title={t('pages.admin.servers.tabs.management.page.delete.modal.title', {})}
-        onClose={onClose}
-        opened={opened}
-      >
+      <Modal title={t('pages.admin.servers.tabs.management.page.delete.modal.title', {})} {...props}>
         <Stack>
           <Text size='sm'>
             {t('pages.admin.servers.tabs.management.page.delete.modal.description', { name: server.name }).md()}
@@ -87,7 +82,7 @@ export default function ServerDeleteModal({
           <Button color='red' disabled={server.name != deleteServerName} loading={loading} onClick={doDelete}>
             {t('common.button.delete', {})}
           </Button>
-          <Button variant='default' onClick={() => onClose()}>
+          <Button variant='default' onClick={() => props.onClose()}>
             {t('common.button.cancel', {})}
           </Button>
         </ModalFooter>
