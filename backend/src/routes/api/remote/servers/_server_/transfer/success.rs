@@ -13,10 +13,19 @@ mod post {
     use utoipa::ToSchema;
 
     #[derive(ToSchema, Deserialize)]
+    pub struct PayloadBackupMigration {
+        pub checksum: String,
+        pub checksum_type: String,
+        pub browsable: bool,
+        pub streaming: bool,
+    }
+
+    #[derive(ToSchema, Deserialize)]
     pub struct Payload {
         backups: Vec<uuid::Uuid>,
         #[serde(default)]
-        backup_checksums: BTreeMap<uuid::Uuid, (String, String)>,
+        #[schema(inline)]
+        backup_migrations: BTreeMap<uuid::Uuid, PayloadBackupMigration>,
     }
 
     #[derive(ToSchema, Serialize)]
@@ -87,24 +96,35 @@ mod post {
         .execute(&mut *transaction)
         .await?;
 
-        let mut backup_checksum_update_uuids = Vec::new();
-        let mut backup_checksum_update_checksums = Vec::new();
+        {
+            let mut backup_migration_uuid = Vec::new();
+            let mut backup_migration_checksum = Vec::new();
+            let mut backup_migration_browsable = Vec::new();
+            let mut backup_migration_streaming = Vec::new();
 
-        for (backup_uuid, (checksum_type, checksum)) in data.backup_checksums {
-            backup_checksum_update_uuids.push(backup_uuid);
-            backup_checksum_update_checksums.push(format!("{}:{}", checksum_type, checksum));
+            for (backup_uuid, backup_migration) in data.backup_migrations {
+                backup_migration_uuid.push(backup_uuid);
+                backup_migration_checksum.push(format!(
+                    "{}:{}",
+                    backup_migration.checksum_type, backup_migration.checksum
+                ));
+                backup_migration_browsable.push(backup_migration.browsable);
+                backup_migration_streaming.push(backup_migration.streaming);
+            }
+            sqlx::query!(
+                "UPDATE server_backups
+                SET checksum = v.checksum, browsable = v.browsable, streaming = v.streaming
+                FROM UNNEST($2::uuid[], $3::text[], $4::boolean[], $5::boolean[]) AS v(uuid, checksum, browsable, streaming)
+                WHERE server_backups.server_uuid = $1 AND server_backups.uuid = v.uuid",
+                server.uuid,
+                &backup_migration_uuid,
+                &backup_migration_checksum,
+                &backup_migration_browsable,
+                &backup_migration_streaming
+            )
+            .execute(&mut *transaction)
+            .await?;
         }
-        sqlx::query!(
-            "UPDATE server_backups
-            SET checksum = v.checksum
-            FROM UNNEST($2::uuid[], $3::text[]) AS v(uuid, checksum)
-            WHERE server_backups.server_uuid = $1 AND server_backups.uuid = v.uuid",
-            server.uuid,
-            &backup_checksum_update_uuids,
-            &backup_checksum_update_checksums
-        )
-        .execute(&mut *transaction)
-        .await?;
 
         sqlx::query!(
             "DELETE FROM server_allocations
