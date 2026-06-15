@@ -15,7 +15,7 @@ mod post {
     #[derive(ToSchema, Deserialize)]
     pub struct PayloadBackupMigration {
         pub checksum: String,
-        pub checksum_type: String,
+        pub checksum_type: compact_str::CompactString,
         pub browsable: bool,
         pub streaming: bool,
     }
