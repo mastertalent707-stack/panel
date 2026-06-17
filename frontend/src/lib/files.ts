@@ -20,7 +20,9 @@ export function isArchiveType(file: z.infer<typeof serverDirectoryEntrySchema>) 
       'application/zstd', // .tar.zst, .zst
       'application/zip', // .zip
       'application/x-7z-compressed', // .7z
-    ].includes(file.mime) || file.name.endsWith('.ddup')
+    ].includes(file.mime) ||
+    file.name.endsWith('.ddup') ||
+    file.name.endsWith('.pxar')
   );
 }
 

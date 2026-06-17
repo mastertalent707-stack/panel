@@ -1132,6 +1132,19 @@ impl WingsClient {
         request_impl(self, Method::POST, "/api/transfers", None::<&()>, None).await
     }
 
+    pub async fn get_transfers_capabilities(
+        &self,
+    ) -> Result<super::transfers_capabilities::get::Response, ApiHttpError> {
+        request_impl(
+            self,
+            Method::GET,
+            "/api/transfers/capabilities",
+            None::<&()>,
+            None,
+        )
+        .await
+    }
+
     pub async fn post_transfers_files(
         &self,
     ) -> Result<super::transfers_files::post::Response, ApiHttpError> {
@@ -1143,6 +1156,12 @@ impl WingsClient {
             None,
         )
         .await
+    }
+
+    pub async fn get_transfers_query(
+        &self,
+    ) -> Result<super::transfers_query::get::Response, ApiHttpError> {
+        request_impl(self, Method::GET, "/api/transfers/query", None::<&()>, None).await
     }
 
     pub async fn delete_transfers_server(

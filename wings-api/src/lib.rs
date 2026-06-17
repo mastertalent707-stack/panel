@@ -197,7 +197,11 @@ nestify::nest! {
             #[schema(inline)]
             pub rx_bytes: u64,
             #[schema(inline)]
+            pub rx_packets: u64,
+            #[schema(inline)]
             pub tx_bytes: u64,
+            #[schema(inline)]
+            pub tx_packets: u64,
         },
 
         #[schema(inline)]
@@ -460,11 +464,19 @@ nestify::nest! {
             #[schema(inline)]
             pub received: u64,
             #[schema(inline)]
+            pub received_packets: u64,
+            #[schema(inline)]
             pub receiving_rate: f64,
+            #[schema(inline)]
+            pub received_packets_rate: f64,
             #[schema(inline)]
             pub sent: u64,
             #[schema(inline)]
+            pub sent_packets: u64,
+            #[schema(inline)]
             pub sending_rate: f64,
+            #[schema(inline)]
+            pub sending_packets_rate: f64,
         },
 
         #[schema(inline)]
@@ -526,6 +538,17 @@ pub enum TransferArchiveFormat {
     ItafLz4,
     #[serde(rename = "itaf_zstd")]
     ItafZstd,
+}
+
+nestify::nest! {
+    #[derive(Debug, ToSchema, Deserialize, Serialize, Clone)] pub struct TransferCapabilities {
+        #[schema(inline)]
+        pub wings_archive_format: ArchiveFormat,
+        #[schema(inline)]
+        pub wings_archive_compression_level: CompressionLevel,
+        #[schema(inline)]
+        pub disk_limiter_mode: DiskLimiterMode,
+    }
 }
 
 nestify::nest! {
@@ -2695,6 +2718,17 @@ pub mod transfers {
         pub type Response = Response200;
     }
 }
+pub mod transfers_capabilities {
+    use super::*;
+
+    pub mod get {
+        use super::*;
+
+        pub type Response200 = TransferCapabilities;
+
+        pub type Response = Response200;
+    }
+}
 pub mod transfers_files {
     use super::*;
 
@@ -2709,6 +2743,19 @@ pub mod transfers_files {
         pub type Response401 = ApiError;
 
         pub type Response409 = ApiError;
+
+        pub type Response = Response200;
+    }
+}
+pub mod transfers_query {
+    use super::*;
+
+    pub mod get {
+        use super::*;
+
+        pub type Response200 = TransferCapabilities;
+
+        pub type Response401 = ApiError;
 
         pub type Response = Response200;
     }

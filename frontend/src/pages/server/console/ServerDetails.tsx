@@ -27,9 +27,13 @@ export default function ServerDetails() {
   const networkRef = useRef({
     rxBytes: stats?.network.rxBytes || 0,
     txBytes: stats?.network.txBytes || 0,
+    rxPackets: stats?.network.rxPackets || 0,
+    txPackets: stats?.network.txPackets || 0,
     timestamp: Date.now(),
-    rxSpeed: 0,
-    txSpeed: 0,
+    rxBytesSpeed: 0,
+    txBytesSpeed: 0,
+    rxPacketsSpeed: 0,
+    txPacketsSpeed: 0,
   });
 
   useEffect(() => {
@@ -43,16 +47,27 @@ export default function ServerDetails() {
     const timeDelta = (now - networkRef.current.timestamp) / 1000;
 
     if (timeDelta >= 0.5) {
-      const rxDelta = stats.network.rxBytes - networkRef.current.rxBytes;
-      const txDelta = stats.network.txBytes - networkRef.current.txBytes;
+      const rxBytesDelta = stats.network.rxBytes - networkRef.current.rxBytes;
+      const txBytesDelta = stats.network.txBytes - networkRef.current.txBytes;
+      const rxPacketsDelta = stats.network.rxPackets - networkRef.current.rxPackets;
+      const txPacketsDelta = stats.network.txPackets - networkRef.current.txPackets;
 
       networkRef.current = {
         rxBytes: stats.network.rxBytes,
         txBytes: stats.network.txBytes,
+        rxPackets: stats.network.rxPackets,
+        txPackets: stats.network.txPackets,
         timestamp: now,
-        rxSpeed: rxDelta / timeDelta,
-        txSpeed: txDelta / timeDelta,
+        rxBytesSpeed: rxBytesDelta / timeDelta,
+        txBytesSpeed: txBytesDelta / timeDelta,
+        rxPacketsSpeed: rxPacketsDelta / timeDelta,
+        txPacketsSpeed: txPacketsDelta / timeDelta,
       };
+
+      if (networkRef.current.rxBytesSpeed < 0) networkRef.current.rxBytesSpeed = 0;
+      if (networkRef.current.txBytesSpeed < 0) networkRef.current.txBytesSpeed = 0;
+      if (networkRef.current.rxPacketsSpeed < 0) networkRef.current.rxPacketsSpeed = 0;
+      if (networkRef.current.txPacketsSpeed < 0) networkRef.current.txPacketsSpeed = 0;
     }
   }, [stats]);
 
@@ -136,7 +151,7 @@ export default function ServerDetails() {
         details={
           state === 'offline' && server.status !== 'installing'
             ? null
-            : `${bytesToString(Math.round(networkRef.current.rxSpeed), undefined, true)}/s`
+            : `${bytesToString(Math.round(networkRef.current.rxBytesSpeed), undefined, true)}/s, ${Math.round(networkRef.current.rxPacketsSpeed)} pps`
         }
       />
       <StatCard
@@ -151,7 +166,7 @@ export default function ServerDetails() {
         details={
           state === 'offline' && server.status !== 'installing'
             ? null
-            : `${bytesToString(Math.round(networkRef.current.txSpeed), undefined, true)}/s`
+            : `${bytesToString(Math.round(networkRef.current.txBytesSpeed), undefined, true)}/s, ${Math.round(networkRef.current.txPacketsSpeed)} pps`
         }
       />
       {window.extensionContext.extensionRegistry.pages.server.console.statCards.map((StatCard, i) => (

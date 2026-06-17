@@ -78,7 +78,9 @@ export const serverResourceUsageSchema = z.object({
   state: z.lazy(() => serverPowerState),
   network: z.object({
     rxBytes: z.number(),
+    rxPackets: z.number(),
     txBytes: z.number(),
+    txPackets: z.number(),
   }),
   cpuAbsolute: z.number(),
   uptime: z.number(),
