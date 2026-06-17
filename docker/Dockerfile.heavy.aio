@@ -9,8 +9,11 @@ WORKDIR /app/repo
 RUN cargo chef prepare --recipe-path recipe.json
 
 # ---
+FROM ghcr.io/calagopus/kopia:latest AS kopia
 FROM rust:slim AS builder
 
+RUN apk add --no-cache ca-certificates coreutils curl btrfs-progs xfsprogs-extra zfs restic && \
+	update-ca-certificates
 RUN apt-get update && apt-get install -y --no-install-recommends \
     inotify-tools \
     git \
@@ -19,6 +22,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     mold \
     clang \
     && rm -rf /var/lib/apt/lists/*
+
+COPY --from=kopia /usr/local/bin/kopia /usr/bin/kopia
 
 COPY --from=node_source /usr/local/lib/node_modules /usr/local/lib/node_modules
 COPY --from=node_source /usr/local/bin/node /usr/local/bin/node
