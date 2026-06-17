@@ -19,6 +19,7 @@ import Stack from '@/elements/Stack.tsx';
 import Title from '@/elements/Title.tsx';
 import { backupDiskLabelMapping } from '@/lib/enums.ts';
 import {
+  adminBackupConfigurationKopiaSchema,
   adminBackupConfigurationPbsSchema,
   adminBackupConfigurationResticSchema,
   adminBackupConfigurationS3Schema,
@@ -26,6 +27,7 @@ import {
 import { oobeLocationSchema } from '@/lib/schemas/oobe.ts';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import { OobeComponentProps } from '@/routers/OobeRouter.tsx';
+import BackupKopia from '../admin/backupConfigurations/forms/BackupKopia.tsx';
 import BackupPBS from '../admin/backupConfigurations/forms/BackupPBS.tsx';
 import BackupRestic from '../admin/backupConfigurations/forms/BackupRestic.tsx';
 import BackupS3 from '../admin/backupConfigurations/forms/BackupS3.tsx';
@@ -97,6 +99,23 @@ export default function OobeLocation({ onNext, onBack, canGoBack, skipFrom, data
     validate: zod4Resolver(adminBackupConfigurationPbsSchema),
   });
 
+  const backupConfigKopiaForm = useForm<z.infer<typeof adminBackupConfigurationKopiaSchema>>({
+    initialValues: existingBackupConfig?.backupConfigs?.kopia
+      ? {
+          ...existingBackupConfig.backupConfigs.kopia,
+          tags: existingBackupConfig.backupConfigs.kopia.tags ?? {},
+        }
+      : {
+          url: '',
+          username: '',
+          password: '',
+          fingerprint: '',
+          tags: {},
+        },
+    validateInputOnBlur: true,
+    validate: zod4Resolver(adminBackupConfigurationKopiaSchema),
+  });
+
   const onSubmit = async () => {
     setLoading(true);
 
@@ -107,6 +126,10 @@ export default function OobeLocation({ onNext, onBack, canGoBack, skipFrom, data
         pbs:
           form.values.backupDisk === 'proxmox-backup-server'
             ? adminBackupConfigurationPbsSchema.parse(backupConfigPbsForm.values)
+            : null,
+        kopia:
+          form.values.backupDisk === 'kopia'
+            ? adminBackupConfigurationKopiaSchema.parse(backupConfigKopiaForm.values)
             : null,
       };
 
@@ -133,7 +156,8 @@ export default function OobeLocation({ onNext, onBack, canGoBack, skipFrom, data
           shared:
             form.values.backupDisk === 's3' ||
             form.values.backupDisk === 'restic' ||
-            form.values.backupDisk === 'proxmox-backup-server',
+            form.values.backupDisk === 'proxmox-backup-server' ||
+            form.values.backupDisk === 'kopia',
           backupDisk: form.values.backupDisk,
           backupConfigs,
         });
@@ -225,6 +249,7 @@ export default function OobeLocation({ onNext, onBack, canGoBack, skipFrom, data
             {form.values.backupDisk === 's3' ? <BackupS3 form={backupConfigS3Form} /> : null}
             {form.values.backupDisk === 'restic' ? <BackupRestic form={backupConfigResticForm} /> : null}
             {form.values.backupDisk === 'proxmox-backup-server' ? <BackupPBS form={backupConfigPbsForm} /> : null}
+            {form.values.backupDisk === 'kopia' ? <BackupKopia form={backupConfigKopiaForm} /> : null}
           </div>
 
           <Group justify='flex-end'>
