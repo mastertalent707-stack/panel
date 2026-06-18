@@ -41,7 +41,9 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const handleSessionExpired = () => {
-      sessionStorage.setItem('post-login-redirect', window.location.pathname + window.location.search);
+      if (!window.location.pathname.startsWith('/auth/')) {
+        sessionStorage.setItem('post-login-redirect', window.location.pathname + window.location.search);
+      }
       setUser(null);
     };
     window.addEventListener('session-expired', handleSessionExpired);
