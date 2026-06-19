@@ -157,7 +157,6 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                             })
                             .collect();
 
-                        settings.oobe_step = None;
                         settings.app.url = source_app_url.to_compact_string();
                         if let Some(app_name) = source_settings.remove("settings::app:name") {
                             settings.app.name = app_name;
@@ -202,6 +201,11 @@ impl shared::extensions::commands::CliCommand<PterodactylArgs> for PterodactylCo
                 .await
                 {
                     tracing::error!("failed to process settings table: {:?}", err);
+                    return Ok(1);
+                }
+
+                if let Err(err) = settings.set_oobe_step(None).await {
+                    tracing::error!("failed to reset oobe step: {:?}", err);
                     return Ok(1);
                 }
 

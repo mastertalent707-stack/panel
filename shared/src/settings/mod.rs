@@ -326,8 +326,9 @@ impl SettingsSerializeExt for AppSettings {
                     .as_ref()
                     .map(|s| s.to_compact_string())
                     .unwrap_or_default(),
-            )
-            .write_raw_setting("oobe_step", self.oobe_step.clone().unwrap_or_default());
+            );
+        // Intentionally not writing oobe_step, persisting 'register' in a write will cause a lot of weird issues
+        // The seperate settings set_oobe_step should be used to manage this setting instead
 
         match &self.storage_driver {
             StorageDriver::Filesystem { path } => {
@@ -988,6 +989,23 @@ impl Settings {
             settings: Some(guard),
             _writer_token: writer_token,
         })
+    }
+
+    pub async fn set_oobe_step(
+        &self,
+        oobe_step: Option<compact_str::CompactString>,
+    ) -> Result<(), crate::database::DatabaseError> {
+        sqlx::query(
+            "INSERT INTO settings (key, value) VALUES ('oobe_step', $1)
+            ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value",
+        )
+        .bind(oobe_step.map(|s| s.to_string()).unwrap_or_default())
+        .execute(self.database.write())
+        .await?;
+
+        self.invalidate_cache().await;
+
+        Ok(())
     }
 
     pub async fn invalidate_cache(&self) {

@@ -185,7 +185,6 @@ impl shared::extensions::commands::CliCommand<PelicanArgs> for PelicanCommand {
                             })
                             .collect();
 
-                        settings.oobe_step = None;
                         settings.app.url = source_app_url.to_compact_string();
                         if let Some(app_name) = source_settings.remove("settings::app:name") {
                             settings.app.name = app_name;
@@ -230,6 +229,11 @@ impl shared::extensions::commands::CliCommand<PelicanArgs> for PelicanCommand {
                 .await
                 {
                     tracing::error!("failed to process settings table: {:?}", err);
+                    return Ok(1);
+                }
+
+                if let Err(err) = settings.set_oobe_step(None).await {
+                    tracing::error!("failed to reset oobe step: {:?}", err);
                     return Ok(1);
                 }
 

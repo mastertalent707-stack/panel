@@ -244,11 +244,12 @@ mod put {
 
         permissions.has_admin_permission("settings.update")?;
 
+        if let Some(oobe_step) = data.oobe_step {
+            state.settings.set_oobe_step(oobe_step).await?;
+        }
+
         let mut settings = state.settings.get_mut().await?;
 
-        if let Some(oobe_step) = data.oobe_step {
-            settings.oobe_step = oobe_step;
-        }
         if let Some(storage_driver) = data.storage_driver {
             settings.storage_driver = storage_driver;
         }
