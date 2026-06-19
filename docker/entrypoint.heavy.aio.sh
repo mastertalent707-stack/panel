@@ -140,9 +140,11 @@ execute_build() {
     # copy new binary to binaries directory
     cp "/app/repo/target/$PROFILE_PATH/panel-rs-aio" "$BINARY_PATH"
 
-    # Storage optimization: clean up old extension hashes for this panel version
-    echo "Cleaning up outdated binaries to reclaim storage space..."
-    find "/app/binaries/$PANEL_VERSION" -mindepth 1 -maxdepth 1 -type d ! -name "$EXT_HASH" -exec rm -rf {} +
+    # Storage optimization: keep only the 3 most recently compiled binaries
+    echo "Cleaning up outdated binaries to reclaim storage space, keeping the latest 3..."
+    ls -t /app/binaries/*/*/panel-rs-aio 2>/dev/null | tail -n +4 | while read -r old_bin; do
+      rm -rf "$(dirname "$old_bin")"
+    done
 
     # restart panel with new binary
     echo "Restarting panel-rs-aio with new binary."
