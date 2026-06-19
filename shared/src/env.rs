@@ -5,7 +5,7 @@ use dotenvy::dotenv;
 use std::sync::{Arc, atomic::AtomicBool};
 use tracing_subscriber::{
     Layer,
-    filter::LevelFilter,
+    filter::{LevelFilter, Targets},
     fmt::writer::MakeWriterExt,
     layer::{Layered, SubscriberExt},
     util::SubscriberInitExt,
@@ -36,10 +36,24 @@ pub struct EnvGuard(
     pub tracing_appender::non_blocking::WorkerGuard,
 );
 
-type ReloadHandle = tracing_subscriber::reload::Handle<
-    LevelFilter,
-    Layered<LevelFilter, tracing_subscriber::Registry>,
->;
+type ReloadHandle =
+    tracing_subscriber::reload::Handle<Targets, Layered<LevelFilter, tracing_subscriber::Registry>>;
+
+fn log_filter(debug: bool) -> Targets {
+    let crate_level = if debug {
+        LevelFilter::DEBUG
+    } else {
+        LevelFilter::INFO
+    };
+
+    Targets::new()
+        .with_default(LevelFilter::INFO)
+        .with_target("backend", crate_level)
+        .with_target("database_migrator", crate_level)
+        .with_target("shared", crate_level)
+        .with_target("panel_rs", crate_level)
+        .with_target("panel_rs_aio", crate_level)
+}
 
 pub struct Env {
     log_reload_handle: ReloadHandle,
@@ -154,13 +168,9 @@ impl Env {
             (None, None)
         };
 
-        let initial_level = if app_debug_default {
-            LevelFilter::DEBUG
-        } else {
-            LevelFilter::INFO
-        };
+        let initial_filter = log_filter(app_debug_default);
         let (reload_layer, log_reload_handle) =
-            tracing_subscriber::reload::Layer::new(initial_level);
+            tracing_subscriber::reload::Layer::new(initial_filter);
 
         let fmt_layer = tracing_subscriber::fmt::layer()
             .with_timer(tracing_subscriber::fmt::time::ChronoLocal::new(
@@ -293,14 +303,8 @@ impl Env {
         self.app_debug
             .store(debug, std::sync::atomic::Ordering::Relaxed);
 
-        let new_level = if debug {
-            LevelFilter::DEBUG
-        } else {
-            LevelFilter::INFO
-        };
-
         self.log_reload_handle
-            .modify(|filter| *filter = new_level)
+            .modify(|filter| *filter = log_filter(debug))
             .context("failed to reload tracing level filter")?;
 
         Ok(())

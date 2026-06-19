@@ -2,10 +2,8 @@ import { faDoorOpen, faMagnifyingGlassChart, faSearch } from '@fortawesome/free-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
 import { join } from 'pathe';
-import { ReactNode, useEffect } from 'react';
+import { ReactNode } from 'react';
 import { createSearchParams, NavLink } from 'react-router';
-import { httpErrorToHuman } from '@/api/axios.ts';
-import getBackup from '@/api/server/backups/getBackup.ts';
 import ActionIcon from '@/elements/ActionIcon.tsx';
 import Breadcrumbs from '@/elements/Breadcrumbs.tsx';
 import Button from '@/elements/Button.tsx';
@@ -13,13 +11,11 @@ import Checkbox from '@/elements/input/Checkbox.tsx';
 import Tooltip from '@/elements/Tooltip.tsx';
 import { useDraggedFileMove } from '@/pages/server/files/hooks/useDraggedFileMove.ts';
 import { useFileManager } from '@/providers/FileManagerProvider.tsx';
-import { useToast } from '@/providers/ToastProvider.tsx';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import { useServerStore } from '@/stores/server.ts';
 
 export default function FileBreadcrumbs({ path, inFileEditor }: { path: string; inFileEditor?: boolean }) {
   const { t } = useTranslations();
-  const { addToast } = useToast();
   const { server } = useServerStore();
   const { isDropTarget, getDropHandlers } = useDraggedFileMove({ disabled: !!inFileEditor });
   const {
@@ -30,7 +26,6 @@ export default function FileBreadcrumbs({ path, inFileEditor }: { path: string; 
     setBrowsingDirectory,
     actingFiles,
     doSelectFiles,
-    setBrowsingBackup,
     doOpenModal,
   } = useFileManager();
 
@@ -42,24 +37,8 @@ export default function FileBreadcrumbs({ path, inFileEditor }: { path: string; 
     };
   });
 
-  useEffect(() => {
-    if (path.startsWith('/.backups/') && !browsingBackup) {
-      let backupUuid = path.slice('/.backups/'.length);
-      if (backupUuid.includes('/')) {
-        backupUuid = backupUuid.slice(0, backupUuid.indexOf('/'));
-      }
-
-      getBackup(server.uuid, backupUuid)
-        .then((data) => {
-          setBrowsingBackup(data);
-        })
-        .catch((msg) => {
-          addToast(httpErrorToHuman(msg), 'error');
-        });
-    } else if (!path.startsWith('/.backups/') && browsingBackup) {
-      setBrowsingBackup(null);
-    }
-  }, [path, browsingBackup]);
+  const isBackupPath = path.startsWith('/.backups/');
+  const backupUuid = isBackupPath ? (splittedPath[1] ?? '') : null;
 
   const breadcrumbClassName = (targetDirectory: string) =>
     classNames(
@@ -68,22 +47,22 @@ export default function FileBreadcrumbs({ path, inFileEditor }: { path: string; 
     );
 
   const items: ReactNode[] = [
-    browsingBackup ? 'backups' : 'home',
+    isBackupPath ? 'backups' : 'home',
     <NavLink
       key='first-segment'
       to={
-        browsingBackup
+        isBackupPath
           ? `/server/${server?.uuidShort}/files?${createSearchParams({
-              directory: `/.backups/${browsingBackup.uuid}`,
+              directory: `/.backups/${backupUuid}`,
             })}`
           : `/server/${server?.uuidShort}/files`
       }
-      className={breadcrumbClassName(browsingBackup ? `/.backups/${browsingBackup.uuid}` : '/')}
-      {...getDropHandlers(browsingBackup ? `/.backups/${browsingBackup.uuid}` : '/')}
+      className={breadcrumbClassName(isBackupPath ? `/.backups/${backupUuid}` : '/')}
+      {...getDropHandlers(isBackupPath ? `/.backups/${backupUuid}` : '/')}
     >
-      {browsingBackup ? browsingBackup.name : 'container'}
+      {isBackupPath ? (browsingBackup?.name ?? backupUuid) : 'container'}
     </NavLink>,
-    ...pathItems.slice(browsingBackup ? 2 : 0).map((item, index) =>
+    ...pathItems.slice(isBackupPath ? 2 : 0).map((item, index) =>
       index === pathItems.length - 1 && inFileEditor ? (
         item.name
       ) : (
@@ -125,7 +104,7 @@ export default function FileBreadcrumbs({ path, inFileEditor }: { path: string; 
       </Breadcrumbs>
 
       <div className='flex flex-row space-x-2'>
-        <NavLink to={`/server/${server?.uuidShort}/files`} hidden={!browsingBackup || inFileEditor}>
+        <NavLink to={`/server/${server?.uuidShort}/files`} hidden={!isBackupPath || inFileEditor}>
           <Button variant='light' leftSection={<FontAwesomeIcon icon={faDoorOpen} />}>
             {t('pages.server.files.button.exitBackup', {})}
           </Button>

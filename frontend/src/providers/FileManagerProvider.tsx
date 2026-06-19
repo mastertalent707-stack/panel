@@ -1,22 +1,24 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { AxiosRequestConfig } from 'axios';
-import { ReactNode, startTransition, useEffect, useRef, useState } from 'react';
+import { ReactNode, startTransition, useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router';
 import { z } from 'zod';
-import { axiosInstance, getEmptyPaginationSet } from '@/api/axios.ts';
+import { axiosInstance, getEmptyPaginationSet, httpErrorToHuman } from '@/api/axios.ts';
+import getBackup from '@/api/server/backups/getBackup.ts';
 import getFileUploadUrl from '@/api/server/files/getFileUploadUrl.ts';
 import loadDirectory from '@/api/server/files/loadDirectory.ts';
 import searchFiles from '@/api/server/files/searchFiles.ts';
 import { ObjectSet } from '@/lib/objectSet.ts';
-import { serverBackupSchema } from '@/lib/schemas/server/backups.ts';
 import { serverDirectoryEntrySchema, serverDirectorySortingModeSchema } from '@/lib/schemas/server/files.ts';
 import { UploadResult, useFileUpload } from '@/plugins/useFileUpload.ts';
 import { ActingFileMode, FileManagerContext, ModalType, SearchInfo } from '@/providers/contexts/fileManagerContext.ts';
+import { useToast } from '@/providers/ToastProvider.tsx';
 import { useServerStore } from '@/stores/server.ts';
 
 const FileManagerProvider = ({ children }: { children: ReactNode }) => {
   const [searchParams, _] = useSearchParams();
   const { server } = useServerStore();
+  const { addToast } = useToast();
   const queryClient = useQueryClient();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -35,12 +37,11 @@ const FileManagerProvider = ({ children }: { children: ReactNode }) => {
   const [selectedFiles, setSelectedFiles] = useState(
     new ObjectSet<z.infer<typeof serverDirectoryEntrySchema>, 'name'>('name'),
   );
-  const [browsingBackup, setBrowsingBackup] = useState<z.infer<typeof serverBackupSchema> | null>(null);
-  const [browsingDirectory, setBrowsingDirectory] = useState('');
+  const [browsingDirectory, setBrowsingDirectory] = useState(() => searchParams.get('directory') || '/');
   const [browsingEntries, setBrowsingEntries] = useState<Pagination<z.infer<typeof serverDirectoryEntrySchema>>>(
     getEmptyPaginationSet(),
   );
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(() => Number(searchParams.get('page')) || 1);
   const [browsingPrimaryFilesystem, setBrowsingPrimaryFilesystem] = useState(true);
   const [browsingWritableDirectory, setBrowsingWritableDirectory] = useState(true);
   const [browsingFastDirectory, setBrowsingFastDirectory] = useState(true);
@@ -72,7 +73,29 @@ const FileManagerProvider = ({ children }: { children: ReactNode }) => {
   const { data, isLoading } = useQuery({
     queryKey: ['server', server.uuid, 'files', { browsingDirectory, page, sortMode }],
     queryFn: () => loadDirectory(server.uuid, browsingDirectory, page, sortMode),
+    staleTime: 30_000,
   });
+
+  const backupUuid = useMemo(() => {
+    if (!browsingDirectory.startsWith('/.backups/')) return null;
+
+    const rest = browsingDirectory.slice('/.backups/'.length);
+    const slash = rest.indexOf('/');
+    return slash === -1 ? rest : rest.slice(0, slash);
+  }, [browsingDirectory]);
+
+  const { data: browsingBackup = null, error: browsingBackupError } = useQuery({
+    queryKey: ['server', server.uuid, 'backup', backupUuid],
+    queryFn: () => getBackup(server.uuid, backupUuid!),
+    enabled: !!backupUuid,
+    staleTime: Infinity,
+  });
+
+  useEffect(() => {
+    if (browsingBackupError) {
+      addToast(httpErrorToHuman(browsingBackupError), 'error');
+    }
+  }, [browsingBackupError]);
 
   useEffect(() => {
     if (!data) return;
@@ -246,7 +269,6 @@ const FileManagerProvider = ({ children }: { children: ReactNode }) => {
         draggingTarget,
         selectedFiles,
         browsingBackup,
-        setBrowsingBackup,
         browsingDirectory,
         setBrowsingDirectory,
         browsingEntries,

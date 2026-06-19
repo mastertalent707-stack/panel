@@ -45,7 +45,6 @@ export interface FileManagerContextType {
   draggingTarget: string | null;
   selectedFiles: ObjectSet<z.infer<typeof serverDirectoryEntrySchema>, 'name'>;
   browsingBackup: z.infer<typeof serverBackupSchema> | null;
-  setBrowsingBackup: (backup: z.infer<typeof serverBackupSchema> | null) => void;
   browsingDirectory: string;
   setBrowsingDirectory: (directory: string) => void;
   browsingEntries: Pagination<z.infer<typeof serverDirectoryEntrySchema>>;

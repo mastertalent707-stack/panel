@@ -3,6 +3,7 @@ import { Extension, ExtensionContext } from 'shared';
 import App from '@/App.tsx';
 
 import.meta.glob('../extensions/*/src/app.css', { eager: true });
+
 import '@/app.css';
 
 const extensionModulesTs = import.meta.glob('../extensions/*/src/index.ts', { eager: true });
