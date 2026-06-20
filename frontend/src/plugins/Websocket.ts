@@ -145,7 +145,7 @@ export class Websocket extends EventEmitter {
       return;
     }
 
-    this.socket.binaryType = 'blob';
+    this.socket.binaryType = 'arraybuffer';
 
     this.socket.onopen = () => {
       this.reconnectAttempts = 0;
@@ -159,16 +159,15 @@ export class Websocket extends EventEmitter {
       this.authenticate();
     };
 
-    this.socket.onmessage = async (e: MessageEvent) => {
+    this.socket.onmessage = (e: MessageEvent) => {
       try {
         this.emit('SOCKET_MESSAGE', e);
 
         if (typeof e.data === 'string') {
           const { event, args } = JSON.parse(e.data) as { event: string; args: string[] };
           this.emit(event, ...args);
-        } else if (e.data instanceof Blob) {
-          const buffer = await e.data.arrayBuffer();
-          const [event, args] = decode(buffer) as [string, string[]];
+        } else if (e.data instanceof ArrayBuffer) {
+          const [event, args] = decode(e.data) as [string, string[]];
           this.emit(event, ...args);
         }
       } catch (ex) {
