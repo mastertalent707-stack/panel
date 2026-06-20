@@ -5,6 +5,7 @@ import { MouseEvent as ReactMouseEvent, Ref, useCallback, useEffect, useRef, use
 import { createSearchParams, useSearchParams } from 'react-router';
 import { z } from 'zod';
 import getAssets from '@/api/admin/assets/getAssets.ts';
+import uploadAssets from '@/api/admin/assets/uploadAssets.ts';
 import Button from '@/elements/Button.tsx';
 import { AdminCan } from '@/elements/Can.tsx';
 import Card from '@/elements/Card.tsx';
@@ -17,6 +18,8 @@ import { queryKeys } from '@/lib/queryKeys.ts';
 import { storageAssetSchema } from '@/lib/schemas/admin/assets.ts';
 import { assetTableColumns } from '@/lib/tableColumns.ts';
 import AssetUpload from '@/pages/admin/assets/AssetUpload.tsx';
+import AssetUploadProgress from '@/pages/admin/assets/AssetUploadProgress.tsx';
+import { useFileUpload } from '@/plugins/useFileUpload.ts';
 import { useKeyboardShortcuts } from '@/plugins/useKeyboardShortcuts.ts';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import AssetActionBar from './AssetActionBar.tsx';
@@ -46,6 +49,15 @@ export default function AdminAssets() {
   const invalidateAssets = useCallback(() => {
     queryClient.invalidateQueries({ queryKey: ['admin', 'assets'] }).catch((e) => console.error(e));
   }, [queryClient]);
+
+  const { uploadingFiles, handleFileSelect, totalUploadProgress, cancelFileUpload, uploadFiles } = useFileUpload(
+    (form, config) =>
+      uploadAssets(form, config, currentDirectory).then(() => {
+        invalidateAssets();
+        return { url: '', continuationToken: null };
+      }),
+    () => null,
+  );
 
   const navigateToDirectory = useCallback(
     (dir: string) => {
@@ -115,6 +127,11 @@ export default function AdminAssets() {
       title={t('pages.admin.assets.title', {})}
       contentRight={
         <AdminCan action='assets.upload'>
+          <AssetUploadProgress
+            uploadingFiles={uploadingFiles}
+            totalUploadProgress={totalUploadProgress}
+            cancelFileUpload={cancelFileUpload}
+          />
           <Button
             color='gray'
             variant='default'
@@ -123,7 +140,7 @@ export default function AdminAssets() {
           >
             {t('pages.admin.assets.button.newDirectory', {})}
           </Button>
-          <AssetUpload invalidateAssets={invalidateAssets} currentDirectory={currentDirectory} />
+          <AssetUpload handleFileSelect={handleFileSelect} uploadFiles={uploadFiles} />
         </AdminCan>
       }
     >

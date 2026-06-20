@@ -62,7 +62,7 @@ export default function VariableContainer({
               disabled={disabled || loading || (!variable.isEditable && !overrideReadonly)}
               label={variable.name}
             />
-          ) : variable.rules.includes('string') && variable.rules.some((rule) => rule.startsWith('in:')) ? (
+          ) : variable.rules.some((rule) => rule.startsWith('in:')) ? (
             <Select
               withAsterisk={variable.rules.includes('required')}
               id={variable.envVariable}

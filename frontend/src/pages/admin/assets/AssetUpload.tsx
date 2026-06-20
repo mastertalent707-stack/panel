@@ -1,37 +1,19 @@
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useRef } from 'react';
-import uploadAssets from '@/api/admin/assets/uploadAssets.ts';
+import { ChangeEvent, RefObject, useRef } from 'react';
 import Button from '@/elements/Button.tsx';
-import CloseButton from '@/elements/CloseButton.tsx';
-import Popover from '@/elements/Popover.tsx';
-import Progress from '@/elements/Progress.tsx';
-import RingProgress from '@/elements/RingProgress.tsx';
-import Text from '@/elements/Text.tsx';
-import Tooltip from '@/elements/Tooltip.tsx';
-import UnstyledButton from '@/elements/UnstyledButton.tsx';
-import { bytesToString } from '@/lib/size.ts';
-import { useFileUpload } from '@/plugins/useFileUpload.ts';
 import { useImportDragAndDrop } from '@/plugins/useImportDragAndDrop.ts';
 import { useTranslations } from '@/providers/TranslationProvider.tsx';
 import AssetDropOverlay from './AssetDropOverlay.tsx';
 
 export default function AssetUpload({
-  invalidateAssets,
-  currentDirectory,
+  handleFileSelect,
+  uploadFiles,
 }: {
-  invalidateAssets: () => void;
-  currentDirectory: string;
+  handleFileSelect: (event: ChangeEvent<HTMLInputElement>, inputRef: RefObject<HTMLInputElement | null>) => void;
+  uploadFiles: (files: File[]) => Promise<void>;
 }) {
   const { t } = useTranslations();
-  const { uploadingFiles, handleFileSelect, totalUploadProgress, cancelFileUpload, uploadFiles } = useFileUpload(
-    (form, config) =>
-      uploadAssets(form, config, currentDirectory).then(() => {
-        invalidateAssets();
-        return { url: '', continuationToken: null };
-      }),
-    () => null,
-  );
 
   const { isDragging } = useImportDragAndDrop({
     onDrop: uploadFiles,
@@ -43,52 +25,6 @@ export default function AssetUpload({
   return (
     <>
       <AssetDropOverlay visible={isDragging} />
-
-      {uploadingFiles.size > 0 ? (
-        <Popover position='bottom-start' shadow='md'>
-          <Popover.Target>
-            <UnstyledButton>
-              <RingProgress
-                size={50}
-                sections={[
-                  {
-                    value: totalUploadProgress,
-                    color: 'green',
-                  },
-                ]}
-                roundCaps
-                thickness={4}
-                label={
-                  <Text c='green' fw={700} ta='center' size='xs'>
-                    {totalUploadProgress.toFixed(0)}%
-                  </Text>
-                }
-              />
-            </UnstyledButton>
-          </Popover.Target>
-          <Popover.Dropdown className='md:min-w-xl max-w-screen max-h-96 overflow-y-auto'>
-            {Array.from(uploadingFiles).map(([key, file]) => (
-              <div key={key} className='flex flex-row items-center mb-2'>
-                <div className='flex flex-col grow'>
-                  <p className='break-all mb-1 text-sm'>
-                    {file.status === 'pending'
-                      ? t('pages.admin.assets.operations.waiting', {})
-                      : t('pages.admin.assets.operations.uploading', {})}
-                    {file.filePath}
-                  </p>
-                  <Tooltip
-                    label={`${bytesToString(file.uploaded)} / ${bytesToString(file.size)}`}
-                    innerClassName='w-full'
-                  >
-                    <Progress value={file.progress} />
-                  </Tooltip>
-                </div>
-                <CloseButton className='ml-3' onClick={() => cancelFileUpload(key)} />
-              </div>
-            ))}
-          </Popover.Dropdown>
-        </Popover>
-      ) : null}
 
       <Button
         onClick={() => fileInputRef.current?.click()}

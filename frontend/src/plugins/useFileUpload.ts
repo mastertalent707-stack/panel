@@ -5,7 +5,7 @@ import { useTranslations } from '@/providers/TranslationProvider.tsx';
 
 type UploadStatus = 'pending' | 'uploading' | 'completed' | 'error';
 
-interface FileUploadProgress {
+export interface FileUploadProgress {
   filePath: string;
   progress: number;
   size: number;
