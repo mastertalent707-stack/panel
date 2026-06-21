@@ -222,7 +222,7 @@ impl Env {
                 .trim_matches('"')
                 .to_string(),
             port: std::env::var("PORT")
-                .unwrap_or("6969".to_string())
+                .unwrap_or("8000".to_string())
                 .parse()
                 .context("Invalid PORT value")?,
 

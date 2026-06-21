@@ -21,7 +21,7 @@ export default function ServerConsole() {
     >
       <div
         id='console-infobar'
-        className='sticky top-0 z-10 bg-(--mantine-color-body) mb-4 py-2 -mx-4 lg:-mx-6 px-4 lg:px-6'
+        className='sticky top-0 z-20 bg-(--mantine-color-body) mb-4 py-2 -mx-4 lg:-mx-6 px-4 lg:px-6'
       >
         <Group justify='space-between'>
           <div className='flex flex-col'>
