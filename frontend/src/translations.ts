@@ -189,6 +189,7 @@ const baseTranslations = defineTranslations({
           size: 'Size',
           lastUsed: 'Last Used',
           created: 'Created',
+          updated: 'Updated',
           actor: 'Actor',
           event: 'Event',
           ip: 'IP',
@@ -2897,6 +2898,9 @@ const baseTranslations = defineTranslations({
                     title: 'Install Egg Repository Eggs',
                     button: 'Install {eggs}',
                   },
+                },
+                drawer: {
+                  noReadme: 'This egg does not have a README.',
                 },
               },
             },

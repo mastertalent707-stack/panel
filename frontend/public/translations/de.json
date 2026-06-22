@@ -2890,6 +2890,9 @@
                     "title": "Egg Repository Eggs installieren",
                     "button": "{eggs} installieren"
                   }
+                },
+                "drawer": {
+                  "noReadme": "Dieses Egg hat keine README."
                 }
               }
             }
