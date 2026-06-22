@@ -328,7 +328,7 @@ export default function BackupConfigurationCreateOrUpdate({
             </AdminCan>
           )}
           <a
-            href='https://calagopus.com/docs/advanced/setting-up-backup-configurations'
+            href='https://calagopus.com/docs/wings/advanced/backup-configurations'
             target='_blank'
             rel='noopener noreferrer'
           >

@@ -247,7 +247,7 @@ export default function DatabaseHostCreateOrUpdate({
             </>
           )}
           <a
-            href='https://calagopus.com/docs/advanced/setting-up-database-hosts'
+            href='https://calagopus.com/docs/additional/database-hosts/'
             target='_blank'
             rel='noopener noreferrer'
           >
