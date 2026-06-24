@@ -94,11 +94,7 @@ export default function StorageS3({ form }: { form: UseFormReturnType<z.infer<ty
       </Group>
 
       <Switch
-        label={
-          form.values.pathStyle
-            ? t('pages.admin.settings.tabs.storage.page.s3.form.pathStyleOn', {})
-            : t('pages.admin.settings.tabs.storage.page.s3.form.pathStyleOff', {})
-        }
+        label={t('pages.admin.settings.tabs.storage.page.s3.form.pathStyle', {})}
         key={form.key('pathStyle')}
         {...form.getInputProps('pathStyle', { type: 'checkbox' })}
       />

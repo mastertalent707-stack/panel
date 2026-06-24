@@ -1487,8 +1487,7 @@ const baseTranslations = defineTranslations({
                     permissionsPublicData: 'This is where extensions can store public data (e.g., images).',
                   },
                   form: {
-                    pathStyleOn: 'Using path-style URLs',
-                    pathStyleOff: 'Using virtual-hosted-style URLs',
+                    pathStyle: 'Using path-style URLs',
                   },
                 },
               },
@@ -3119,6 +3118,7 @@ const baseTranslations = defineTranslations({
                   title: 'S3 Settings',
                   form: {
                     partSize: 'Part Size',
+                    compressionType: 'Compression Type',
                     pathStyle: 'Using path-style URLs',
                   },
                 },
