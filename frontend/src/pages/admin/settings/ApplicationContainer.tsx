@@ -11,6 +11,7 @@ import { AdminCan } from '@/elements/Can.tsx';
 import AdminSubContentContainer from '@/elements/containers/AdminSubContentContainer.tsx';
 import Group from '@/elements/Group.tsx';
 import Autocomplete from '@/elements/input/Autocomplete.tsx';
+import NumberInput from '@/elements/input/NumberInput.tsx';
 import Select from '@/elements/input/Select.tsx';
 import Switch from '@/elements/input/Switch.tsx';
 import TextInput from '@/elements/input/TextInput.tsx';
@@ -180,7 +181,7 @@ export default function ApplicationContainer() {
             label={t('pages.admin.settings.tabs.application.page.form.sessionCookie', {})}
             {...form.getInputProps('sessionCookie')}
           />
-          <TextInput
+          <NumberInput
             withAsterisk
             label={t('pages.admin.settings.tabs.application.page.form.sessionDurationSeconds', {})}
             {...form.getInputProps('sessionDurationSeconds')}

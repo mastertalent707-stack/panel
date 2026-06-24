@@ -340,6 +340,12 @@
           "stopped": "Stopped",
           "restarted": "Restarted",
           "killed": "Killed"
+        },
+        "compressionLevel": {
+          "bestSpeed": "Best Speed",
+          "goodSpeed": "Good Speed",
+          "goodCompression": "Good Compression",
+          "bestCompression": "Best Compression"
         }
       },
       "unit": {

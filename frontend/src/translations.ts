@@ -277,6 +277,12 @@ const baseTranslations = defineTranslations({
           restarted: 'Restarted',
           killed: 'Killed',
         },
+        compressionLevel: {
+          bestSpeed: 'Best Speed',
+          goodSpeed: 'Good Speed',
+          goodCompression: 'Good Compression',
+          bestCompression: 'Best Compression',
+        },
       },
       unit: {
         bytes: {

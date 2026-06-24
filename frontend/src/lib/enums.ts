@@ -80,11 +80,11 @@ export const captchaProviderTypeLabelMapping: Record<
   friendly_captcha: 'Friendly Captcha',
 };
 
-export const compressionLevelLabelMapping: Record<z.infer<typeof compressionLevel>, string> = {
-  best_speed: 'Best Speed',
-  good_speed: 'Good Speed',
-  good_compression: 'Good Compression',
-  best_compression: 'Best Compression',
+export const compressionLevelLabelMapping: Record<z.infer<typeof compressionLevel>, () => string> = {
+  best_speed: () => getTranslations().t('common.enum.compressionLevel.bestSpeed', {}),
+  good_speed: () => getTranslations().t('common.enum.compressionLevel.goodSpeed', {}),
+  good_compression: () => getTranslations().t('common.enum.compressionLevel.goodCompression', {}),
+  best_compression: () => getTranslations().t('common.enum.compressionLevel.bestCompression', {}),
 };
 
 export const processConfigurationParserLabelMapping: Record<
