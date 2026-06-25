@@ -11,12 +11,13 @@ export interface BackupsSlice {
   addBackup: (backups: z.infer<typeof serverBackupWithProgressSchema>) => void;
   removeBackup: (backups: z.infer<typeof serverBackupWithProgressSchema>) => void;
   updateBackup: (uuid: string, updatedProps: Partial<z.infer<typeof serverBackupWithProgressSchema>>) => void;
-  setBackupProgress: (uuid: string, progress: number, total: number) => void;
+  setBackupProgress: (uuid: string, progress: number, total: number, files: number) => void;
 
   backupRestoreProgress: number;
   backupRestoreTotal: number;
+  backupRestoreFiles: number;
 
-  setBackupRestoreProgress: (progress: number, total: number) => void;
+  setBackupRestoreProgress: (progress: number, total: number, files: number) => void;
 }
 
 export const createBackupsSlice: StateCreator<ServerStore, [], [], BackupsSlice> = (set): BackupsSlice => ({
@@ -46,17 +47,23 @@ export const createBackupsSlice: StateCreator<ServerStore, [], [], BackupsSlice>
         data: state.backups.data.map((b) => (b.uuid === uuid ? { ...b, ...updatedProps } : b)),
       },
     })),
-  setBackupProgress: (uuid, progress, total) =>
+  setBackupProgress: (uuid, progress, total, files) =>
     set((state) => ({
       backups: {
         ...state.backups,
-        data: state.backups.data.map((b) => (b.uuid === uuid ? { ...b, progress: { progress, total } } : b)),
+        data: state.backups.data.map((b) => (b.uuid === uuid ? { ...b, progress: { progress, total, files } } : b)),
       },
     })),
 
   backupRestoreProgress: 0,
   backupRestoreTotal: 0,
+  backupRestoreFiles: 0,
 
-  setBackupRestoreProgress: (progress, total) =>
-    set((state) => ({ ...state, backupRestoreProgress: progress, backupRestoreTotal: total })),
+  setBackupRestoreProgress: (progress, total, files) =>
+    set((state) => ({
+      ...state,
+      backupRestoreProgress: progress,
+      backupRestoreTotal: total,
+      backupRestoreFiles: files,
+    })),
 });

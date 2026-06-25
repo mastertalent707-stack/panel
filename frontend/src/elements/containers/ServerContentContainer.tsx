@@ -61,7 +61,7 @@ function ServerContentContainer(props: Props) {
     fullscreen = false,
   } = props;
 
-  const { t } = useTranslations();
+  const { t, tItem } = useTranslations();
   const {
     server,
     serverAnnouncements,
@@ -71,6 +71,8 @@ function ServerContentContainer(props: Props) {
     transferProgressArchive,
     backupRestoreTotal,
     transferProgressTotal,
+    transferProgressFiles,
+    backupRestoreFiles,
   } = useServerStore();
   const { user } = useAuth();
   const { id } = useCurrentWindow();
@@ -137,7 +139,7 @@ function ServerContentContainer(props: Props) {
                 </span>
 
                 <Tooltip
-                  label={`${bytesToString(transferProgressArchive)} / ${bytesToString(transferProgressTotal)}`}
+                  label={`${bytesToString(transferProgressArchive)} / ${bytesToString(transferProgressTotal)} · ${tItem('file', transferProgressFiles)}`}
                   innerClassName='w-full'
                 >
                   <Progress
@@ -177,7 +179,7 @@ function ServerContentContainer(props: Props) {
             </span>
 
             <Tooltip
-              label={`${bytesToString(backupRestoreProgress)} / ${bytesToString(backupRestoreTotal)}`}
+              label={`${bytesToString(backupRestoreProgress)} / ${bytesToString(backupRestoreTotal)} · ${tItem('file', backupRestoreFiles)}`}
               innerClassName='w-full'
             >
               <Progress value={backupRestoreTotal > 0 ? (backupRestoreProgress / backupRestoreTotal) * 100 : 0} />

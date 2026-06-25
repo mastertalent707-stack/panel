@@ -9,6 +9,7 @@ import FormattedTimestamp from '@/elements/time/FormattedTimestamp.tsx';
 import { adminNodeTransferProgressSchema } from '@/lib/schemas/admin/nodes.ts';
 import { adminServerSchema } from '@/lib/schemas/admin/servers.ts';
 import { bytesToString } from '@/lib/size.ts';
+import { useTranslations } from '@/providers/TranslationProvider.tsx';
 
 interface ServerRowProps {
   server: z.infer<typeof adminServerSchema>;
@@ -17,15 +18,16 @@ interface ServerRowProps {
 
 const ServerRow = memo(
   forwardRef<HTMLTableRowElement, ServerRowProps>(function ServerRow({ server, transferProgress }, ref) {
+    const { tItem } = useTranslations();
     const lastProgress = useRef(transferProgress);
 
     const archiveRate =
       lastProgress.current && transferProgress
-        ? transferProgress.archiveProgress - lastProgress.current.archiveProgress
+        ? transferProgress.archiveBytesProcessed - lastProgress.current.archiveBytesProcessed
         : 0;
     const networkRate =
       lastProgress.current && transferProgress
-        ? transferProgress.networkProgress - lastProgress.current.networkProgress
+        ? transferProgress.networkBytesProcessed - lastProgress.current.networkBytesProcessed
         : 0;
 
     if (transferProgress) {
@@ -42,10 +44,12 @@ const ServerRow = memo(
 
         <TableData>
           <Tooltip
-            label={`${bytesToString(transferProgress?.archiveProgress || 0)} / ${bytesToString(transferProgress?.total || 0)}`}
+            label={`${bytesToString(transferProgress?.archiveBytesProcessed || 0)} / ${bytesToString(transferProgress?.bytesTotal || 0)} · ${tItem('file', transferProgress?.filesProcessed || 0)}`}
             innerClassName='w-full'
           >
-            <Progress value={((transferProgress?.archiveProgress || 0) / (transferProgress?.total || 1)) * 100} />
+            <Progress
+              value={((transferProgress?.archiveBytesProcessed || 0) / (transferProgress?.bytesTotal || 1)) * 100}
+            />
           </Tooltip>
         </TableData>
 

@@ -491,6 +491,7 @@ const baseTranslations = defineTranslations({
               },
               copying: {
                 completed: 'Copied `{path}` to `{destination}` in {time}.',
+                completedMany: 'Copied `{path}` to `{destination}` ({files}) in {time}.',
                 failed: 'Failed to copy `{path}` to `{destination}`:\n{error}',
               },
               copyingMany: {

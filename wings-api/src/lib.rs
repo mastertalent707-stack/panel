@@ -576,11 +576,11 @@ nestify::nest! {
 nestify::nest! {
     #[derive(Debug, ToSchema, Deserialize, Serialize, Clone)] pub struct TransferProgress {
         #[schema(inline)]
-        pub archive_progress: u64,
+        pub archive_bytes_processed: u64,
         #[schema(inline)]
-        pub network_progress: u64,
+        pub network_bytes_processed: u64,
         #[schema(inline)]
-        pub total: u64,
+        pub bytes_total: u64,
     }
 }
 

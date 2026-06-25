@@ -548,6 +548,7 @@
               },
               "copying": {
                 "completed": "`{path}` nach `{destination}` kopiert in {time}.",
+                "completedMany": "`{path}` nach `{destination}` kopiert ({files}) in {time}.",
                 "failed": "Kopieren von `{path}` nach `{destination}` fehlgeschlagen:\n{error}"
               },
               "copyingMany": {

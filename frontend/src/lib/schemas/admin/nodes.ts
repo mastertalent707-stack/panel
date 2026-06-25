@@ -93,7 +93,8 @@ export const adminNodeMountSchema = z.object({
 });
 
 export const adminNodeTransferProgressSchema = z.object({
-  archiveProgress: z.number(),
-  networkProgress: z.number(),
-  total: z.number(),
+  archiveBytesProcessed: z.number(),
+  networkBytesProcessed: z.number(),
+  bytesTotal: z.number(),
+  filesProcessed: z.number(),
 });

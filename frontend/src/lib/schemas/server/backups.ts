@@ -22,6 +22,7 @@ export const serverBackupWithProgressSchema = z.lazy(() =>
       .object({
         progress: z.number(),
         total: z.number(),
+        files: z.number(),
       })
       .optional(),
   }),

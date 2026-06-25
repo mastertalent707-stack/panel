@@ -65,9 +65,9 @@ function FileOperationsProgress() {
     let totalSize = 0;
 
     fileOperations.forEach((operation) => {
-      if (operation.total === 0) return;
-      totalProgress += operation.progress;
-      totalSize += operation.total;
+      if (operation.bytesTotal === 0) return;
+      totalProgress += operation.bytesProcessed;
+      totalSize += operation.bytesTotal;
     });
 
     uploadingFiles.forEach((file) => {
@@ -194,7 +194,7 @@ function FileOperationsProgress() {
           })}
 
           {Array.from(fileOperations).map(([uuid, operation]) => {
-            const progress = (operation.progress / operation.total) * 100;
+            const progress = (operation.bytesProcessed / operation.bytesTotal) * 100;
 
             return (
               <div key={uuid} className='flex flex-row items-center mb-2'>
@@ -229,7 +229,14 @@ function FileOperationsProgress() {
                                 : null}
                   </p>
                   <Tooltip
-                    label={`${bytesToString(operation.progress)} / ${bytesToString(operation.total)}`}
+                    label={`${bytesToString(operation.bytesProcessed)} / ${bytesToString(operation.bytesTotal)}${
+                      operation.type === 'compress' ||
+                      operation.type === 'copy' ||
+                      operation.type === 'copy_remote' ||
+                      operation.type === 'copy_many'
+                        ? ` · ${tItem('file', operation.filesProcessed)}`
+                        : ''
+                    }`}
                     innerClassName='w-full'
                   >
                     <Progress value={progress} />

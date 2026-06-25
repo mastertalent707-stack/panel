@@ -60,8 +60,8 @@ export const serverFilesSearchSchema = z.object({
 
 export const serverFileOperationBaseSchema = z.object({
   startTime: z.date(),
-  progress: z.number(),
-  total: z.number(),
+  bytesProcessed: z.number(),
+  bytesTotal: z.number(),
 });
 
 export const serverFileOperationCompressSchema = z.lazy(() =>
@@ -69,6 +69,7 @@ export const serverFileOperationCompressSchema = z.lazy(() =>
     type: z.literal('compress'),
     path: z.string(),
     files: z.array(z.string()),
+    filesProcessed: z.number(),
   }),
 );
 
@@ -92,6 +93,7 @@ export const serverFileOperationCopySchema = z.lazy(() =>
     type: z.literal('copy'),
     path: z.string(),
     destinationPath: z.string(),
+    filesProcessed: z.number(),
   }),
 );
 
@@ -100,6 +102,7 @@ export const serverFileOperationCopyManySchema = z.lazy(() =>
     type: z.literal('copy_many'),
     path: z.string(),
     files: z.array(z.object({ from: z.string(), to: z.string() })),
+    filesProcessed: z.number(),
   }),
 );
 
@@ -111,6 +114,7 @@ export const serverFileOperationCopyRemoteSchema = z.lazy(() =>
     files: z.array(z.string()),
     destinationServer: z.string(),
     destinationPath: z.string(),
+    filesProcessed: z.number(),
   }),
 );
 

@@ -38,7 +38,7 @@ import BackupEditModal from './modals/BackupEditModal.tsx';
 import BackupRestoreModal from './modals/BackupRestoreModal.tsx';
 
 export default function BackupRow({ backup }: { backup: z.infer<typeof serverBackupWithProgressSchema> }) {
-  const { t } = useTranslations();
+  const { t, tItem } = useTranslations();
   const { addToast } = useToast();
   const { server, removeBackup } = useServerStore();
   const navigate = useNavigate();
@@ -191,7 +191,7 @@ export default function BackupRow({ backup }: { backup: z.infer<typeof serverBac
                 ) : (
                   <TableData colSpan={2}>
                     <Tooltip
-                      label={`${bytesToString(backup.progress?.progress || 0)} / ${bytesToString(backup.progress?.total || 0)}`}
+                      label={`${bytesToString(backup.progress?.progress || 0)} / ${bytesToString(backup.progress?.total || 0)} · ${tItem('file', backup.progress?.files || 0)}`}
                       innerClassName='w-full'
                     >
                       <Progress value={((backup.progress?.progress || 0) / (backup.progress?.total || 1)) * 100} />

@@ -67,8 +67,8 @@ export const serverSchema = z.object({
 
 export const serverImagePullProgressSchema = z.object({
   status: z.enum(['pulling', 'extracting']),
-  progress: z.number(),
-  total: z.number(),
+  bytes_processed: z.number(),
+  bytes_total: z.number(),
 });
 
 export const serverResourceUsageSchema = z.object({

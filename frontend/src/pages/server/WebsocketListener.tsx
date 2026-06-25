@@ -94,14 +94,14 @@ export default function WebsocketListener() {
   });
 
   useWebsocketEvent(SocketEvent.BACKUP_PROGRESS, (uuid, data) => {
-    let wsData: { progress: number; total: number };
+    let wsData: { bytes_processed: number; bytes_total: number; files_processed: number };
     try {
       wsData = JSON.parse(data);
     } catch {
       return;
     }
 
-    setBackupProgress(uuid, wsData.progress, wsData.total);
+    setBackupProgress(uuid, wsData.bytes_processed, wsData.bytes_total, wsData.files_processed);
   });
 
   useWebsocketEvent(SocketEvent.BACKUP_COMPLETED, (uuid, data) => {
@@ -142,14 +142,14 @@ export default function WebsocketListener() {
   });
 
   useWebsocketEvent(SocketEvent.BACKUP_RESTORE_PROGRESS, (data) => {
-    let wsData: { progress: number; total: number };
+    let wsData: { bytes_processed: number; bytes_total: number; files_processed: number };
     try {
       wsData = JSON.parse(data);
     } catch {
       return;
     }
 
-    setBackupRestoreProgress(wsData.progress, wsData.total);
+    setBackupRestoreProgress(wsData.bytes_processed, wsData.bytes_total, wsData.files_processed);
   });
 
   useWebsocketEvent(SocketEvent.BACKUP_RESTORE_COMPLETED, () => {
@@ -160,9 +160,10 @@ export default function WebsocketListener() {
 
   useWebsocketEvent(SocketEvent.TRANSFER_PROGRESS, (data) => {
     let wsData: {
-      archive_progress: number;
-      network_progress: number;
-      total: number;
+      archive_bytes_processed: number;
+      network_bytes_processed: number;
+      bytes_total: number;
+      files_processed: number;
     };
     try {
       wsData = JSON.parse(data);
@@ -170,7 +171,12 @@ export default function WebsocketListener() {
       return;
     }
 
-    setTransferProgress(wsData.archive_progress, wsData.network_progress, wsData.total);
+    setTransferProgress(
+      wsData.archive_bytes_processed,
+      wsData.network_bytes_processed,
+      wsData.bytes_total,
+      wsData.files_processed,
+    );
   });
 
   useWebsocketEvent(SocketEvent.INSTALL_STARTED, () => {
@@ -228,7 +234,7 @@ export default function WebsocketListener() {
       case 'compress':
         addToast(
           t('elements.serverWebsocket.listener.toast.operations.compressing.completed', {
-            files: tItem('file', fileOperation.files.length),
+            files: tItem('file', fileOperation.filesProcessed),
             path: fileOperation.path,
             time: totalTime,
           }).md(),
@@ -259,11 +265,19 @@ export default function WebsocketListener() {
         break;
       case 'copy':
         addToast(
-          t('elements.serverWebsocket.listener.toast.operations.copying.completed', {
-            path: fileOperation.path,
-            destination: fileOperation.destinationPath,
-            time: totalTime,
-          }).md(),
+          (fileOperation.filesProcessed > 1
+            ? t('elements.serverWebsocket.listener.toast.operations.copying.completedMany', {
+                path: fileOperation.path,
+                destination: fileOperation.destinationPath,
+                files: tItem('file', fileOperation.filesProcessed),
+                time: totalTime,
+              })
+            : t('elements.serverWebsocket.listener.toast.operations.copying.completed', {
+                path: fileOperation.path,
+                destination: fileOperation.destinationPath,
+                time: totalTime,
+              })
+          ).md(),
           'success',
         );
 
@@ -271,7 +285,7 @@ export default function WebsocketListener() {
       case 'copy_many':
         addToast(
           t('elements.serverWebsocket.listener.toast.operations.copyingMany.completed', {
-            files: tItem('file', fileOperation.files.length),
+            files: tItem('file', fileOperation.filesProcessed),
             time: totalTime,
           }).md(),
           'success',
@@ -282,7 +296,7 @@ export default function WebsocketListener() {
         if (fileOperation.destinationServer === server.uuid) {
           addToast(
             t('elements.serverWebsocket.listener.toast.operations.copyingRemote.completedFrom', {
-              files: tItem('file', fileOperation.files.length),
+              files: tItem('file', fileOperation.filesProcessed),
               time: totalTime,
             }).md(),
             'success',
@@ -290,7 +304,7 @@ export default function WebsocketListener() {
         } else {
           addToast(
             t('elements.serverWebsocket.listener.toast.operations.copyingRemote.completedTo', {
-              files: tItem('file', fileOperation.files.length),
+              files: tItem('file', fileOperation.filesProcessed),
               time: totalTime,
             }).md(),
             'success',
@@ -314,7 +328,7 @@ export default function WebsocketListener() {
       case 'compress':
         addToast(
           t('elements.serverWebsocket.listener.toast.operations.compressing.failed', {
-            files: tItem('file', fileOperation.files.length),
+            files: tItem('file', fileOperation.filesProcessed),
             path: fileOperation.path,
             error,
           }).md(),
@@ -357,7 +371,7 @@ export default function WebsocketListener() {
       case 'copy_many':
         addToast(
           t('elements.serverWebsocket.listener.toast.operations.copyingMany.failed', {
-            files: tItem('file', fileOperation.files.length),
+            files: tItem('file', fileOperation.filesProcessed),
             error,
           }).md(),
           'error',
@@ -368,7 +382,7 @@ export default function WebsocketListener() {
         if (fileOperation.destinationServer === server.uuid) {
           addToast(
             t('elements.serverWebsocket.listener.toast.operations.copyingRemote.failedFrom', {
-              files: tItem('file', fileOperation.files.length),
+              files: tItem('file', fileOperation.filesProcessed),
               error,
             }).md(),
             'error',
@@ -376,7 +390,7 @@ export default function WebsocketListener() {
         } else {
           addToast(
             t('elements.serverWebsocket.listener.toast.operations.copyingRemote.failedTo', {
-              files: tItem('file', fileOperation.files.length),
+              files: tItem('file', fileOperation.filesProcessed),
               error,
             }).md(),
             'error',
