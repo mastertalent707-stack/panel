@@ -98,7 +98,7 @@ jobs:
           cache: false
 
       - name: Dummy Frontend Files
-        run: mkdir -p frontend/dist && echo "Dummy file" > frontend/dist/dummy.txt
+        run: mkdir -p frontend/dist && echo "Dummy file" > frontend/dist/index.html
       
       - name: Run cargo fmt
         run: cargo fmt -- --check
