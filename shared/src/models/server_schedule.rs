@@ -21,7 +21,7 @@ pub struct ExportedServerSchedule {
 
     #[garde(dive)]
     pub triggers: Vec<wings_api::ScheduleTrigger>,
-    #[garde(dive)]
+    #[garde(dive, custom(wings_api::SchedulePreCondition::validate_nesting))]
     pub condition: wings_api::SchedulePreCondition,
 
     #[garde(dive)]
@@ -262,7 +262,7 @@ pub struct CreateServerScheduleOptions {
     pub enabled: bool,
     #[garde(dive)]
     pub triggers: Vec<wings_api::ScheduleTrigger>,
-    #[garde(dive)]
+    #[garde(dive, custom(wings_api::SchedulePreCondition::validate_nesting))]
     pub condition: wings_api::SchedulePreCondition,
 }
 
@@ -317,7 +317,10 @@ pub struct UpdateServerScheduleOptions {
     pub enabled: Option<bool>,
     #[garde(dive)]
     pub triggers: Option<Vec<wings_api::ScheduleTrigger>>,
-    #[garde(dive)]
+    #[garde(
+        dive,
+        custom(wings_api::SchedulePreCondition::validate_optional_nesting)
+    )]
     pub condition: Option<wings_api::SchedulePreCondition>,
 }
 

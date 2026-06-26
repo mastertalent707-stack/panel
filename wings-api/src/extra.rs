@@ -158,12 +158,12 @@ pub struct ScheduleAction {
 #[serde(rename_all = "snake_case", tag = "type")]
 pub enum ScheduleActionInner {
     Sleep {
-        #[garde(range(min = 1, max = 24 * 60 * 60))]
-        #[schema(minimum = 1, maximum = 86400)]
+        #[garde(range(min = 1, max = 24 * 60 * 60 * 1000))]
+        #[schema(minimum = 1, maximum = 86400000)]
         duration: u64,
     },
     Ensure {
-        #[garde(dive)]
+        #[garde(dive, custom(ScheduleCondition::validate_nesting))]
         condition: ScheduleCondition,
     },
     Format {
@@ -194,8 +194,8 @@ pub enum ScheduleActionInner {
         #[garde(skip)]
         #[serde(default)]
         case_insensitive: bool,
-        #[garde(range(min = 1, max = 24 * 60 * 60))]
-        #[schema(minimum = 1, maximum = 86400)]
+        #[garde(range(min = 1, max = 24 * 60 * 60 * 1000))]
+        #[schema(minimum = 1, maximum = 86400000)]
         timeout: u64,
 
         #[garde(dive)]
@@ -446,6 +446,41 @@ pub enum SchedulePreCondition {
     },
 }
 
+impl SchedulePreCondition {
+    pub const MAX_NESTING_DEPTH: usize = 3;
+
+    fn nested_within_limit(&self, depth: usize) -> bool {
+        match self {
+            SchedulePreCondition::And { conditions } | SchedulePreCondition::Or { conditions } => {
+                depth < Self::MAX_NESTING_DEPTH
+                    && conditions.iter().all(|c| c.nested_within_limit(depth + 1))
+            }
+            SchedulePreCondition::Not { condition } => {
+                depth < Self::MAX_NESTING_DEPTH && condition.nested_within_limit(depth + 1)
+            }
+            _ => true,
+        }
+    }
+
+    pub fn validate_nesting(value: &Self, _context: &()) -> garde::Result {
+        if value.nested_within_limit(0) {
+            Ok(())
+        } else {
+            Err(garde::Error::new(format!(
+                "condition may not nest groups more than {} levels deep",
+                Self::MAX_NESTING_DEPTH
+            )))
+        }
+    }
+
+    pub fn validate_optional_nesting(value: &Option<Self>, context: &()) -> garde::Result {
+        match value {
+            Some(condition) => Self::validate_nesting(condition, context),
+            None => Ok(()),
+        }
+    }
+}
+
 #[derive(ToSchema, Deserialize, Serialize, Clone, Validate)]
 #[serde(rename_all = "snake_case", tag = "type")]
 #[schema(no_recursion)]
@@ -491,6 +526,34 @@ pub enum ScheduleCondition {
         #[garde(dive)]
         ends_with: ScheduleDynamicParameter,
     },
+}
+
+impl ScheduleCondition {
+    pub const MAX_NESTING_DEPTH: usize = 3;
+
+    fn nested_within_limit(&self, depth: usize) -> bool {
+        match self {
+            ScheduleCondition::And { conditions } | ScheduleCondition::Or { conditions } => {
+                depth < Self::MAX_NESTING_DEPTH
+                    && conditions.iter().all(|c| c.nested_within_limit(depth + 1))
+            }
+            ScheduleCondition::Not { condition } => {
+                depth < Self::MAX_NESTING_DEPTH && condition.nested_within_limit(depth + 1)
+            }
+            _ => true,
+        }
+    }
+
+    pub fn validate_nesting(value: &Self, _context: &()) -> garde::Result {
+        if value.nested_within_limit(0) {
+            Ok(())
+        } else {
+            Err(garde::Error::new(format!(
+                "condition may not nest groups more than {} levels deep",
+                Self::MAX_NESTING_DEPTH
+            )))
+        }
+    }
 }
 
 const FORBIDDEN_CONFIG_PATHS: &[&str] = &[
