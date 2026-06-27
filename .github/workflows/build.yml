@@ -97,12 +97,6 @@ jobs:
           name: frontend-build
           path: frontend/dist/
 
-      - name: Install Windows extra tools
-        if: runner.os == 'Windows'
-        run: |
-          choco install nasm
-          echo "C:\Program Files\NASM" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-
       - name: Install Rust toolchain
         uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
@@ -111,57 +105,36 @@ jobs:
           cache-key: ${{ matrix.target }}
 
       - name: Install cross
-        if: contains(matrix.target, 'linux')
         run: cargo install cross --git https://github.com/cross-rs/cross
 
-      - name: Build release binaries (Linux)
-        if: contains(matrix.target, 'linux')
+      - name: Build release binaries
         run: |
           RUSTFLAGS="-C target-feature=+crt-static" \
           cross build --release --target ${{ matrix.target }} -p $BIN_NAME
           cross build --release --target ${{ matrix.target }} -p $AIO_BIN_NAME
 
-      - name: Build release binaries (Non-Linux)
-        if: ${{ !contains(matrix.target, 'linux') }}
-        run: |
-          cargo build --release --target ${{ matrix.target }} -p $BIN_NAME
-          cargo build --release --target ${{ matrix.target }} -p $AIO_BIN_NAME
-
-      - name: Prepare binaries (Unix)
-        if: runner.os != 'Windows'
+      - name: Prepare binaries
         run: |
           mkdir -p dist
-          cp "target/${{ matrix.target }}/release/$BIN_NAME${{ matrix.binary_suffix }}" "dist/$BIN_NAME-${{ matrix.build }}"
-          cp "target/${{ matrix.target }}/release/$AIO_BIN_NAME${{ matrix.binary_suffix }}" "dist/$AIO_BIN_NAME-${{ matrix.build }}"
-
-      - name: Prepare binaries (Windows)
-        if: runner.os == 'Windows'
-        shell: pwsh
-        run: |
-          New-Item -ItemType Directory -Force -Path dist
-          Copy-Item "target\${{ matrix.target }}\release\$env:BIN_NAME${{ matrix.binary_suffix }}" "dist\$env:BIN_NAME-${{ matrix.build }}${{ matrix.binary_suffix }}"
-          Copy-Item "target\${{ matrix.target }}\release\$env:AIO_BIN_NAME${{ matrix.binary_suffix }}" "dist\$env:AIO_BIN_NAME-${{ matrix.build }}${{ matrix.binary_suffix }}"
+          cp "target/${{ matrix.target }}/release/$BIN_NAME" "dist/$BIN_NAME-${{ matrix.build }}"
+          cp "target/${{ matrix.target }}/release/$AIO_BIN_NAME" "dist/$AIO_BIN_NAME-${{ matrix.build }}"
 
       - name: Upload binary artifact
         uses: actions/upload-artifact@v7
         with:
           name: ${{ env.PROJECT_NAME }}-${{ matrix.build }}
           path: |
-            dist/${{ env.BIN_NAME }}-${{ matrix.build }}${{ matrix.binary_suffix }}
-            dist/${{ env.AIO_BIN_NAME }}-${{ matrix.build }}${{ matrix.binary_suffix }}
+            dist/${{ env.BIN_NAME }}-${{ matrix.build }}
+            dist/${{ env.AIO_BIN_NAME }}-${{ matrix.build }}
 
-  create-multiarch-image:
-    name: Create multi-arch Docker images
-    needs: [dist]
+  generate-sbom:
+    name: Generate SBOM
     runs-on: ubuntu-24.04
     permissions:
       contents: read
-      packages: write
-      id-token: write
-      attestations: write
 
     steps:
-      - name: Checkout code
+      - name: Checkout sources
         uses: actions/checkout@v6
 
       - name: Generate source SBOM
@@ -170,7 +143,38 @@ jobs:
           path: .
           format: cyclonedx-json
           output-file: sbom-source.cyclonedx.json
-          upload-artifact: false
+          artifact-name: sbom-source.cyclonedx.json
+          upload-artifact: true
+
+  create-multiarch-images:
+    name: Create multi-arch ${{ matrix.variant }} Docker image
+    needs: [dist, generate-sbom]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+      attestations: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - variant: main
+            dockerfile: Dockerfile
+            tag: nightly
+          - variant: aio
+            dockerfile: Dockerfile.aio
+            tag: nightly-aio
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Download source SBOM
+        uses: actions/download-artifact@v8
+        with:
+          name: sbom-source.cyclonedx.json
+          path: sbom
 
       - name: Download all artifacts
         uses: actions/download-artifact@v8
@@ -216,23 +220,23 @@ jobs:
         uses: docker/build-push-action@v7
         with:
           context: .
-          file: ./docker/Dockerfile
+          file: ./docker/${{ matrix.dockerfile }}
           platforms: linux/amd64,linux/arm64,linux/riscv64,linux/ppc64le
           push: true
           tags: |
-            ${{ env.GHCR_IMAGE }}:nightly
-            ${{ env.DOCKERHUB_IMAGE }}:nightly
+            ${{ env.GHCR_IMAGE }}:${{ matrix.tag }}
+            ${{ env.DOCKERHUB_IMAGE }}:${{ matrix.tag }}
           sbom: true
           provenance: true
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=${{ matrix.variant }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.variant }}
 
       - name: Attach source SBOM attestation to image (GHCR)
         uses: actions/attest-sbom@v4
         with:
           subject-name: ${{ env.GHCR_IMAGE }}
           subject-digest: ${{ steps.build.outputs.digest }}
-          sbom-path: sbom-source.cyclonedx.json
+          sbom-path: sbom/sbom-source.cyclonedx.json
           push-to-registry: true
 
       - name: Attach source SBOM attestation to image (Docker Hub)
@@ -240,53 +244,19 @@ jobs:
         with:
           subject-name: ${{ env.DOCKERHUB_IMAGE }}
           subject-digest: ${{ steps.build.outputs.digest }}
-          sbom-path: sbom-source.cyclonedx.json
-          push-to-registry: true
-
-      - name: Build & push multi-arch AIO image
-        id: build-aio
-        uses: docker/build-push-action@v7
-        with:
-          context: .
-          file: ./docker/Dockerfile.aio
-          platforms: linux/amd64,linux/arm64,linux/riscv64,linux/ppc64le
-          push: true
-          tags: |
-            ${{ env.GHCR_IMAGE }}:nightly-aio
-            ${{ env.DOCKERHUB_IMAGE }}:nightly-aio
-          sbom: true
-          provenance: true
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      - name: Attach source SBOM attestation to AIO image (GHCR)
-        uses: actions/attest-sbom@v4
-        with:
-          subject-name: ${{ env.GHCR_IMAGE }}
-          subject-digest: ${{ steps.build-aio.outputs.digest }}
-          sbom-path: sbom-source.cyclonedx.json
-          push-to-registry: true
-
-      - name: Attach source SBOM attestation to AIO image (Docker Hub)
-        uses: actions/attest-sbom@v4
-        with:
-          subject-name: ${{ env.DOCKERHUB_IMAGE }}
-          subject-digest: ${{ steps.build-aio.outputs.digest }}
-          sbom-path: sbom-source.cyclonedx.json
+          sbom-path: sbom/sbom-source.cyclonedx.json
           push-to-registry: true
 
       - name: Install cosign
         uses: sigstore/cosign-installer@v4.1.2
 
-      - name: Sign images with cosign
+      - name: Sign image with cosign
         run: |
           cosign sign --yes ${{ env.GHCR_IMAGE }}@${{ steps.build.outputs.digest }}
           cosign sign --yes ${{ env.DOCKERHUB_IMAGE }}@${{ steps.build.outputs.digest }}
-          cosign sign --yes ${{ env.GHCR_IMAGE }}@${{ steps.build-aio.outputs.digest }}
-          cosign sign --yes ${{ env.DOCKERHUB_IMAGE }}@${{ steps.build-aio.outputs.digest }}
 
-  build-heavy-image:
-    name: Build Heavy Docker image (${{ matrix.platform }})
+  build-heavy-images:
+    name: Build Heavy ${{ matrix.variant }} Docker image (${{ matrix.platform }})
     runs-on: ${{ matrix.runner }}
     permissions:
       contents: read
@@ -297,10 +267,24 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - platform: linux/amd64
+          - variant: heavy
+            dockerfile: Dockerfile.heavy
+            platform: linux/amd64
             runner: ubuntu-24.04
             tag_suffix: amd64
-          - platform: linux/arm64
+          - variant: heavy
+            dockerfile: Dockerfile.heavy
+            platform: linux/arm64
+            runner: ubuntu-24.04-arm
+            tag_suffix: arm64
+          - variant: heavy-aio
+            dockerfile: Dockerfile.heavy.aio
+            platform: linux/amd64
+            runner: ubuntu-24.04
+            tag_suffix: amd64
+          - variant: heavy-aio
+            dockerfile: Dockerfile.heavy.aio
+            platform: linux/arm64
             runner: ubuntu-24.04-arm
             tag_suffix: arm64
 
@@ -324,83 +308,33 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build & push heavy platform image
+      - name: Build & push platform image
         uses: docker/build-push-action@v7
         with:
           context: .
-          file: ./docker/Dockerfile.heavy
+          file: ./docker/${{ matrix.dockerfile }}
           platforms: ${{ matrix.platform }}
           push: true
           tags: |
-            ${{ env.GHCR_IMAGE }}:nightly-heavy-${{ matrix.tag_suffix }}
-            ${{ env.DOCKERHUB_IMAGE }}:nightly-heavy-${{ matrix.tag_suffix }}
+            ${{ env.GHCR_IMAGE }}:nightly-${{ matrix.variant }}-${{ matrix.tag_suffix }}
+            ${{ env.DOCKERHUB_IMAGE }}:nightly-${{ matrix.variant }}-${{ matrix.tag_suffix }}
           sbom: scan-stages=true
           provenance: true
-          cache-from: type=gha,scope=heavy-${{ matrix.tag_suffix }}
-          cache-to: type=gha,mode=max,scope=heavy-${{ matrix.tag_suffix }}
+          cache-from: type=gha,scope=${{ matrix.variant }}-${{ matrix.tag_suffix }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.variant }}-${{ matrix.tag_suffix }}
 
-  build-heavy-aio-image:
-    name: Build Heavy AIO Docker image (${{ matrix.platform }})
-    runs-on: ${{ matrix.runner }}
+  merge-heavy-images:
+    name: Merge Heavy ${{ matrix.variant }} Docker manifest
+    needs: [build-heavy-images]
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
       packages: write
       id-token: write
-      attestations: write
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - platform: linux/amd64
-            runner: ubuntu-24.04
-            tag_suffix: amd64
-          - platform: linux/arm64
-            runner: ubuntu-24.04-arm
-            tag_suffix: arm64
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v4
-
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v4
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Login to Docker Hub
-        uses: docker/login-action@v4
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Build & push heavy AIO platform image
-        uses: docker/build-push-action@v7
-        with:
-          context: .
-          file: ./docker/Dockerfile.heavy.aio
-          platforms: ${{ matrix.platform }}
-          push: true
-          tags: |
-            ${{ env.GHCR_IMAGE }}:nightly-heavy-aio-${{ matrix.tag_suffix }}
-            ${{ env.DOCKERHUB_IMAGE }}:nightly-heavy-aio-${{ matrix.tag_suffix }}
-          sbom: scan-stages=true
-          provenance: true
-          cache-from: type=gha,scope=heavy-aio-${{ matrix.tag_suffix }}
-          cache-to: type=gha,mode=max,scope=heavy-aio-${{ matrix.tag_suffix }}
-
-  merge-heavy-image:
-    name: Merge Heavy Docker manifest
-    needs: [build-heavy-image]
-    runs-on: ubuntu-24.04
-    permissions:
-      contents: read
-      packages: write
-      id-token: write
+        variant: [heavy, heavy-aio]
 
     steps:
       - name: Login to GitHub Container Registry
@@ -418,63 +352,20 @@ jobs:
 
       - name: Create and push multi-arch manifest (GHCR)
         run: |
-          docker buildx imagetools create -t ${{ env.GHCR_IMAGE }}:nightly-heavy \
-            ${{ env.GHCR_IMAGE }}:nightly-heavy-amd64 \
-            ${{ env.GHCR_IMAGE }}:nightly-heavy-arm64
+          docker buildx imagetools create -t ${{ env.GHCR_IMAGE }}:nightly-${{ matrix.variant }} \
+            ${{ env.GHCR_IMAGE }}:nightly-${{ matrix.variant }}-amd64 \
+            ${{ env.GHCR_IMAGE }}:nightly-${{ matrix.variant }}-arm64
 
       - name: Create and push multi-arch manifest (Docker Hub)
         run: |
-          docker buildx imagetools create -t ${{ env.DOCKERHUB_IMAGE }}:nightly-heavy \
-            ${{ env.DOCKERHUB_IMAGE }}:nightly-heavy-amd64 \
-            ${{ env.DOCKERHUB_IMAGE }}:nightly-heavy-arm64
+          docker buildx imagetools create -t ${{ env.DOCKERHUB_IMAGE }}:nightly-${{ matrix.variant }} \
+            ${{ env.DOCKERHUB_IMAGE }}:nightly-${{ matrix.variant }}-amd64 \
+            ${{ env.DOCKERHUB_IMAGE }}:nightly-${{ matrix.variant }}-arm64
 
       - name: Install cosign
         uses: sigstore/cosign-installer@v4.1.2
 
-      - name: Sign heavy image with cosign
+      - name: Sign image with cosign
         run: |
-          cosign sign --yes ${{ env.GHCR_IMAGE }}:nightly-heavy
-          cosign sign --yes ${{ env.DOCKERHUB_IMAGE }}:nightly-heavy
-
-  merge-heavy-aio-image:
-    name: Merge Heavy AIO Docker manifest
-    needs: [build-heavy-aio-image]
-    runs-on: ubuntu-24.04
-    permissions:
-      contents: read
-      packages: write
-      id-token: write
-
-    steps:
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v4
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Login to Docker Hub
-        uses: docker/login-action@v4
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Create and push multi-arch manifest (GHCR)
-        run: |
-          docker buildx imagetools create -t ${{ env.GHCR_IMAGE }}:nightly-heavy-aio \
-            ${{ env.GHCR_IMAGE }}:nightly-heavy-aio-amd64 \
-            ${{ env.GHCR_IMAGE }}:nightly-heavy-aio-arm64
-
-      - name: Create and push multi-arch manifest (Docker Hub)
-        run: |
-          docker buildx imagetools create -t ${{ env.DOCKERHUB_IMAGE }}:nightly-heavy-aio \
-            ${{ env.DOCKERHUB_IMAGE }}:nightly-heavy-aio-amd64 \
-            ${{ env.DOCKERHUB_IMAGE }}:nightly-heavy-aio-arm64
-
-      - name: Install cosign
-        uses: sigstore/cosign-installer@v4.1.2
-
-      - name: Sign heavy AIO image with cosign
-        run: |
-          cosign sign --yes ${{ env.GHCR_IMAGE }}:nightly-heavy-aio
-          cosign sign --yes ${{ env.DOCKERHUB_IMAGE }}:nightly-heavy-aio
+          cosign sign --yes ${{ env.GHCR_IMAGE }}:nightly-${{ matrix.variant }}
+          cosign sign --yes ${{ env.DOCKERHUB_IMAGE }}:nightly-${{ matrix.variant }}
