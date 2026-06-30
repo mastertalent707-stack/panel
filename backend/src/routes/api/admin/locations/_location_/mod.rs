@@ -12,9 +12,8 @@ use shared::{
 };
 use utoipa_axum::{router::OpenApiRouter, routes};
 
-mod duplicate;
-
 mod database_hosts;
+mod duplicate;
 mod nodes;
 
 pub type GetLocation = shared::extract::ConsumingExtension<Location>;
